@@ -32,8 +32,10 @@ class OrderMessage(models.Model):
 
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
+    # TODO: This should probably be a ForeignKey to a Region model.
     region_id = models.PositiveIntegerField(
         help_text="Region ID the order originated from.")
+    # TODO: This should probably be a ForeignKey to a Type model.
     type_id = models.BigIntegerField(
         help_text="The Type ID of the item in the order.")
     price = models.FloatField(
@@ -54,8 +56,10 @@ class OrderMessage(models.Model):
         help_text="When the order was issued.")
     duration = models.PositiveSmallIntegerField(
         help_text="The duration of the order, in seconds.")
+    # TODO: This should probably be a ForeignKey to a Station model.
     station_id = models.PositiveIntegerField(
         help_text="The station that this order is in.")
+    # TODO: This should probably be a ForeignKey to a Solar System model.
     solar_system_id = models.PositiveIntegerField(
         help_text="ID of the solar system the order is in.")
     is_suspicious = models.BooleanField(
