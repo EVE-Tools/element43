@@ -6,6 +6,7 @@ ujson
 # Things required by the web application
 django
 south
+django-devserver
 
 # Consumer stuffs
 emds
