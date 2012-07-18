@@ -3,8 +3,8 @@ element43
 
 This element43 module contains the guts of the web application.
 
-Belief directory overview
--------------------------
+Brief directory overview
+------------------------
 
 * *apps* - This is where app modules reside. These are the components that
   make up the element43 web app.

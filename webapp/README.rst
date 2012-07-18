@@ -4,8 +4,8 @@ element43 webapp
 This directory contains the element43 web application. We keep this separate
 from the consumer and the other components.
 
-Belief directory overview
--------------------------
+Brief directory overview
+------------------------
 
 * The webapp directory you are currently in is the project root directory.
   It contains a ``manage.py`` file which will let you do various things, like
