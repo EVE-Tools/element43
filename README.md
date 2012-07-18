@@ -15,3 +15,11 @@ Setup Instructions
 * Create a ``local_settings.py`` file and copy/paste/modify anything
   from ``settings.py`` that you'd like to change. This file won't be committed
   to git, and is safe to store passwords and dev workstation settings.
+
+Applying DB schema migrations
+-----------------------------
+
+If you receive notice that an update requires a schema modification, you'll
+want to run the following::
+
+    python manage.py migrate
