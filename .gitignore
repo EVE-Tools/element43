@@ -1,0 +1,7 @@
+*.pyc
+*.tmp
+*.swp
+*~
+.DS_Store
+.idea
+.project

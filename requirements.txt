@@ -1,0 +1,13 @@
+# Low-level mumbo jumbo
+pyscopg2
+gevent
+ujson
+
+# Things required by the web application
+django
+south
+
+# Consumer stuffs
+emds
+hotqueue
+git+http://github.com/zeromq/pyzmq.git
