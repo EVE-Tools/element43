@@ -1,15 +1,50 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <link href='/static/stylesheets/bootstrap.css' type='text/css' rel='stylesheet' />
+    <link href='/static/stylesheets/darkstrap.css' type='text/css' rel='stylesheet' />
+    <link href='/static/stylesheets/main.css' type='text/css' rel='stylesheet' />
+    <title>
+     {% block title %}
+      element43
+     {% endblock %}
+    </title>
+  </head>
+  <body>
+    <div class='container'>
+      <header>
+        <div class='navbar'>
+          <div class='navbar-inner'>
+            <div class='container'>
+              <a class='brand' href='#'>element43</a>
+              <ul class='nav'>
+                <li>
+                 <a href='#'>Home</a>
+                </li>
+                <li>
+                 <a href='#'>Market Data</a>
+                </li>
+                <li>
+                 <a href='#'>element43</a>
+                </li>
+                <li>
+                 <a href='#'>Settings</a>
+                </li>
+                <li>
+                 <a href='#'>Stuff</a>
+                </li>
+              </ul>
+              <form class='navbar-search pull-right'>
+                <input class='search-query' placeholder='Search...' type='text' />
+              </form>
+            </div>
+          </div>
+        </div>
+      </header>
+      {% block content %}
 
-<head>
-    <title>Yays</title>
-</head>
+      {% endblock %}
 
-<body>
-<h1>Woohoo</h1>
-
-{% block content %}
-{% endblock content %}
-
-</body>
-
+    </div>
+  </body>
 </html>

@@ -5,7 +5,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'element43.views.home', name='home'),
+    url(r'^$', 'apps.market_data.views.home'),
     # url(r'^element43/', include('element43.foo.urls')),
 
     # admin documentation:
