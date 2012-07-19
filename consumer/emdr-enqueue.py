@@ -19,8 +19,8 @@ DEBUG = False
 
 # Change this to point to whatever relay you want to use
 #receiver_uri = 'tcp://relay-us-central-1.eve-emdr.com:8050'
-#receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
-receiver_uri = 'tcp://localhost:8050'
+receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
+#receiver_uri = 'tcp://localhost:8050'
 
 queue = HotQueue("emdr-messages", unix_socket_path="/var/run/redis/redis.sock")
 
