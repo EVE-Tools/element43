@@ -1,5 +1,5 @@
 # Low-level mumbo jumbo
-pyscopg2
+psycopg2
 gevent
 ujson
 
