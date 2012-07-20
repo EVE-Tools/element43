@@ -19,7 +19,7 @@ from hotqueue import HotQueue
 import gevent
 from gevent.pool import Pool
 from gevent import monkey; gevent.monkey.patch_all()
-import PySQLPool
+import psycopg2
 import hashlib
 
 # Max number of greenlet workers
@@ -29,7 +29,7 @@ MAX_NUM_POOL_WORKERS = 75
 DEBUG = False
 
 # If you want terminal output
-TERM_OUT = False
+TERM_OUT = True
 
 # database stuff
 redisdb = "localhost"
@@ -42,7 +42,7 @@ dbpass = "dbpass"
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
-dbcon = PySQLPool.getNewConnection(username=dbuser, password=dbpass, host=dbhost, db=dbname)
+dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
 
 def main():
     for message in queue.consume():
@@ -54,7 +54,7 @@ def thread(message):
     main flow of the app
     """
     #print "<<< entered thread"
-    query = PySQLPool.getNewQuery(dbcon)
+    curs = dbcon.cursor()
 
     market_json = zlib.decompress(message)
     market_list = unified.parse_from_json(market_json)
@@ -99,7 +99,7 @@ def thread(message):
                 row = (0)
                 statsData.append(row)
             sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)"
-            query.executeMany(sql, insertEmpty)
+            curs.executemany(sql, insertEmpty)
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
@@ -126,20 +126,21 @@ def thread(message):
                             sql = "SELECT COUNT(orderID), STDDEV(price), AVG(price) FROM marketData WHERE typeID=%s AND stationID=%s" % (order.type_id, order.station_id)
                             statTypeID = order.type_id
                             statStationID = order.station_id
-                            if query.query(sql):
-                                for resultRow in query.record:
-                                    resultRow = query.record
-                                    recordCount = resultRow[0]['COUNT(orderID)']
-                                    if resultRow[0]!=None:
-                                        stddev = resultRow[0]['STDDEV(price)']
-                                        mean = resultRow[0]['AVG(price)']
-                                    suspicious = 'N'
-                                    if (stddev!=None) and (recordCount > 5):
-                                        # if price is outside 2 standard deviations of the mean flag as suspicious
-                                        if float(abs(order.price - mean)) > (2*stddev):
-                                            suspicious = 'Y'
-                                    else:
-                                        suspicious = '?'
+                            recordCount = None
+                            curs.execute(sql)
+                            result = curs.fetchone()
+                            if result:
+                                recordCount = result[0]
+                                if recordCount!=None:
+                                    stddev = resultRow[1]
+                                    mean = resultRow[2]
+                                suspicious = 'N'
+                                if (stddev!=None) and (recordCount > 5):
+                                    # if price is outside 2 standard deviations of the mean flag as suspicious
+                                    if float(abs(order.price - mean)) > (2*stddev):
+                                        suspicious = 'Y'
+                                else:
+                                    suspicious = '?'
                     
                         # See if the order already exists, if so, update if needed otherwise insert                
                         sql = "SELECT * FROM marketData WHERE orderID = %s" % order.order_id
@@ -179,7 +180,7 @@ def thread(message):
                 if TERM_OUT==True:
                     print "--- UPDATING "+str(len(updateData))+" ORDERS ---"
                 sql = "UPDATE marketData SET marketData.generatedAt=%s WHERE orderID = %s"
-                query.executeMany(sql, updateData)
+                curs.executemany(sql, updateData)
                 updateData = []
     
             if len(insertData)>0:
@@ -197,12 +198,12 @@ def thread(message):
                     if TERM_OUT==True:
                         print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
     
-                query.executeMany(sql, insertData)
+                curs.executemany(sql, insertData)
                 insertData = []
 
             if len(insertSeen)>0:
                 sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID) values (%s, %s, %s)"
-                query.executeMany(sql, insertSeen)
+                curs.executemany(sql, insertSeen)
                 insertSeen = []
             
             if DEBUG==True:        
