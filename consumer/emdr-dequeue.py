@@ -33,10 +33,10 @@ TERM_OUT = True
 
 # database stuff
 redisdb = "localhost"
-dbhost="localhost"
-dbname = "dbname"
-dbuser = "dbuser"
-dbpass = "dbpass"
+dbhost="192.168.1.41"
+dbname = "element43"
+dbuser = "element43"
+dbpass = "element43"
 
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
@@ -94,13 +94,14 @@ def thread(message):
                 if TERM_OUT==True:
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
                 sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
-                curs.execute(sql)
+                #curs.execute(sql)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id, 0)
                 insertEmpty.append(row)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1, item_region_list.type_id, item_region_list.region_id, 1)
                 insertEmpty.append(row)
                 row = (0,)
                 statsData.append(row)
+            """
             for components in insertEmpty:
                 try:
                     sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)" % components
@@ -108,6 +109,7 @@ def thread(message):
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
+            """
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
@@ -131,7 +133,7 @@ def thread(message):
                         suspicious = '?'
                         if (order.type_id!=statTypeID) or (order.station_id!=statStationID):
                             gevent.sleep()
-                            sql = "SELECT COUNT(orderID), STDDEV(price), AVG(price) FROM marketData WHERE typeID=%s AND stationID=%s" % (order.type_id, order.station_id)
+                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE type_id=%s AND station_id=%s" % (order.type_id, order.station_id)
                             statTypeID = order.type_id
                             statStationID = order.station_id
                             recordCount = None
@@ -140,8 +142,8 @@ def thread(message):
                             if result:
                                 recordCount = result[0]
                                 if recordCount!=None:
-                                    stddev = resultRow[1]
-                                    mean = resultRow[2]
+                                    stddev = result[1]
+                                    mean = result[2]
                                 suspicious = 'N'
                                 if (stddev!=None) and (recordCount > 5):
                                     # if price is outside 2 standard deviations of the mean flag as suspicious
@@ -151,7 +153,7 @@ def thread(message):
                                     suspicious = '?'
                     
                         # See if the order already exists, if so, update if needed otherwise insert                
-                        sql = "SELECT * FROM marketData WHERE orderID = %s" % order.order_id
+                        sql = "SELECT * FROM market_data_orders WHERE order_id = %s" % order.order_id
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result:
@@ -189,7 +191,7 @@ def thread(message):
             if len(updateData)>0:
                 if TERM_OUT==True:
                     print "--- UPDATING "+str(len(updateData))+" ORDERS ---"
-                sql = "UPDATE marketData SET marketData.generatedAt=%s WHERE orderID = %s"
+                sql = "UPDATE market_data_orders SET generated_at=%s WHERE id = %s"
                 curs.executemany(sql, updateData)
                 updateData = []
     
@@ -198,19 +200,20 @@ def thread(message):
                 if TERM_OUT==True:
                     print "--- INSERTING "+str(len(insertData))+" (UPDATES: "+str(updateCounter)+") ORDERS ---"
                 #print insertData
-                sql = "REPLACE INTO marketData (`orderID`,"
-                sql = sql + "`typeID`, `stationID`, `solarSystemID`, `regionID`, `bid`, `price`, `range`,"
-                sql = sql + "`duration`, `volumeRemaining`, `volumeEntered`, `minimumVolume`, `generatedAt`,"
-                sql = sql + "`issueDate`, `msgKey`, `suspicious`, `ipHash`) values (%s, %s, %s, %s, %s, %s, %s, %s,"
-                sql = sql + "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    
-                if duplicateData:
-                    if TERM_OUT==True:
-                        print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
-    
+                sql = "INSERT INTO market_data_orders (id,"
+                sql += "type_id, station_id, solar_system_id, region_id, bid, price, order_range,"
+                sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at,"
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s,"
+                sql += "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                
                 curs.executemany(sql, insertData)
                 insertData = []
-
+    
+            if duplicateData:
+                if TERM_OUT==True:
+                    print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
+    
+            """
             if len(insertSeen)>0:
                 sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID) values (%s, %s, %s)"
                 curs.executemany(sql, insertSeen)
@@ -219,7 +222,7 @@ def thread(message):
             if DEBUG==True:        
                 msgType = "emdr"
                 query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
-    
+            """
     elif market_list.list_type == 'history':
         data = {}
         rowCount = 0
@@ -241,7 +244,7 @@ def thread(message):
             generatedAt = str(history.generated_at).split("+", 1)[0]
             if uniqueKey == "":
                 keyBuilder = str(history.region_id)+"-"+str(history.type_id)
-                uniqueKey = uuid.uuid5(uuid.NAMESPACE_DNS, keyBuilder)
+                uniqueKey = str(uuid.uuid5(uuid.NAMESPACE_DNS, keyBuilder))
                 regionID = history.region_id
                 typeID = history.type_id
             if todayDate!=theDate:
@@ -253,7 +256,7 @@ def thread(message):
                 data[date] = [history.num_orders, history.low_price, history.high_price, history.average_price, history.total_quantity, msgKey]
         
         if regionID!=0:
-            sql = "SELECT * FROM historicalData WHERE `uniqueKey` = '%s'" % uniqueKey
+            sql = "SELECT * FROM market_data_history WHERE id = '%s'" % uniqueKey
             curs.execute(sql)
             result = curs.fetchone()
             if result:
@@ -263,13 +266,13 @@ def thread(message):
                 #decodedData.update(data)
                 data.update(decodedData)
                 encodedData = zlib.compress(json.dumps(data))
-                sql = "UPDATE historicalData SET `historyData`=%s WHERE `uniqueKey` = %s"
+                sql = "UPDATE market_data_history SET history_data=%s WHERE id = %s"
                 params = (encodedData, uniqueKey)
                 if TERM_OUT==True:
                     print "### UPDATING " + str(rowCount) + " HISTORY RECORDS ###"
             elif len(data)>0:
                 encodedData = zlib.compress(json.dumps(data))
-                sql = "INSERT INTO historicalData (`uniqueKey`, `regionId`, `typeID`, `historyData`) VALUES (%s, %s, %s, %s)"
+                sql = "INSERT INTO history (id, region_id, type_id, history_data) VALUES (%s, %s, %s, %s)"
                 params = (uniqueKey, regionID, typeID, encodedData)
 
                 if TERM_OUT==True:
@@ -277,24 +280,24 @@ def thread(message):
 
             if hash(str(data))!=checkHash:
                 #print "region: ", regionID, "type: ", typeID
-                query.query(sql, params)
+                curs.execute(sql, params)
                 # If we need to debug raw messages (commented out for now to save space)
                 if DEBUG==True:
                     msgType = "emdr"
-                    query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
+                    #query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
             elif TERM_OUT==True:
                 print "^^^ DUPLICATED HISTORY ^^^"
 
     gevent.sleep()
+    """
     try:
         sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
         curs.executemany(sql, statsData)
     except psycopg2.DatabaseError, e:
         if TERM_OUT == True:
             print "Key collision: ", statsData
-
-    dbcon.commit()
-
+    """
+    
 if __name__ == '__main__':
     main()
 
