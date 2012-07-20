@@ -42,10 +42,6 @@ TERM_OUT = True
 
 # database stuff
 redisdb = "localhost"
-dbhost="192.168.1.41"
-dbname = "element43"
-dbuser = "element43"
-dbpass = "element43"
 
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
