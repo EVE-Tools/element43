@@ -2,6 +2,14 @@
 """
 Get the data from EMDR and shove it into the database
 Greg Oberfield gregoberfield@gmail.com
+
+TODO:
+1. Documentation
+2. History message processing
+3. wrap try/catch blocks around SQL statements
+4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now
+5. move settings to external file so I don't have to keep changing them
+
 """
 
 from emds.formats import unified
@@ -122,15 +130,15 @@ def thread(message):
                         
                         # convert the bid true/false to binary
                         if order.is_bid:
-                            bid = 1
+                            bid = True
                         else:
-                            bid = 0
+                            bid = False
                         
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
                         # of the mean AND where there are more than 5 orders of like type in the station will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
                         # Flags: 'Y' = Yes (suspicious), 'N' = No (not suspicious), '?' or NULL = not enough information to determine
-                        suspicious = '?'
+                        suspicious = False
                         if (order.type_id!=statTypeID) or (order.station_id!=statStationID):
                             gevent.sleep()
                             sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE type_id=%s AND station_id=%s" % (order.type_id, order.station_id)
@@ -144,16 +152,14 @@ def thread(message):
                                 if recordCount!=None:
                                     stddev = result[1]
                                     mean = result[2]
-                                suspicious = 'N'
+                                suspicious = False
                                 if (stddev!=None) and (recordCount > 5):
                                     # if price is outside 2 standard deviations of the mean flag as suspicious
                                     if float(abs(order.price - mean)) > (2*stddev):
-                                        suspicious = 'Y'
-                                else:
-                                    suspicious = '?'
+                                        suspicious = True
                     
                         # See if the order already exists, if so, update if needed otherwise insert                
-                        sql = "SELECT * FROM market_data_orders WHERE order_id = %s" % order.order_id
+                        sql = "SELECT * FROM market_data_orders WHERE id = %s" % order.order_id
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result:
@@ -201,7 +207,7 @@ def thread(message):
                     print "--- INSERTING "+str(len(insertData))+" (UPDATES: "+str(updateCounter)+") ORDERS ---"
                 #print insertData
                 sql = "INSERT INTO market_data_orders (id,"
-                sql += "type_id, station_id, solar_system_id, region_id, bid, price, order_range,"
+                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range,"
                 sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at,"
                 sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s,"
                 sql += "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -222,6 +228,7 @@ def thread(message):
             if DEBUG==True:        
                 msgType = "emdr"
                 query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
+            """
             """
     elif market_list.list_type == 'history':
         data = {}
@@ -289,6 +296,7 @@ def thread(message):
                 print "^^^ DUPLICATED HISTORY ^^^"
 
     gevent.sleep()
+    """
     """
     try:
         sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
