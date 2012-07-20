@@ -92,14 +92,21 @@ def thread(message):
             for item_region_list in market_list._orders.values():
                 if TERM_OUT==True:
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
+                sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
+                curs.execute(sql)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id, 0)
                 insertEmpty.append(row)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1, item_region_list.type_id, item_region_list.region_id, 1)
                 insertEmpty.append(row)
-                row = (0)
+                row = (0,)
                 statsData.append(row)
-            sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)"
-            curs.executemany(sql, insertEmpty)
+            for components in insertEmpty:
+                try:
+                    sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)" % components
+                    curs.execute(sql)
+                except psycopg2.DatabaseError, e:
+                    if TERM_OUT == True:
+                        print "Key collision: ", components
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
@@ -144,9 +151,11 @@ def thread(message):
                     
                         # See if the order already exists, if so, update if needed otherwise insert                
                         sql = "SELECT * FROM marketData WHERE orderID = %s" % order.order_id
-                        if query.query(sql):
-                            foundOrder = query.record
-                            row=(2)
+                        curs.execute(sql)
+                        result = curs.fetchone()
+                        if result:
+                            foundOrder = result
+                            row=(2,)
                             statsData.append(row)
                             if orderHash != hashlib.md5(str(foundOrder[0]['orderID'])+str(foundOrder[0]['price'])+str(foundOrder[0]['volumeRemaining'])).hexdigest():
                                 row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
@@ -158,7 +167,7 @@ def thread(message):
                                 updateData.append(row)
                         else:
                             # set up the data insert for the specific order
-                            row = (1)
+                            row = (1,)
                             statsData.append(row)
                             row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
@@ -169,7 +178,7 @@ def thread(message):
                         insertSeen.append(row)
                     else:
                         oldCounter = oldCounter+1
-                        row = (3)
+                        row = (3,)
                         statsData.append(row)
                         
             if TERM_OUT==True:
@@ -244,11 +253,12 @@ def thread(message):
         
         if regionID!=0:
             sql = "SELECT * FROM historicalData WHERE `uniqueKey` = '%s'" % uniqueKey
-
-            if query.query(sql):
-                rows = query.record
+            curs.execute(sql)
+            result = curs.fetchone()
+            if result:
+                rows = result
                 checkHash = hash(str(data))
-                decodedData = ast.literal_eval(zlib.decompress(rows[0]['historyData']))
+                decodedData = ast.literal_eval(zlib.decompress(result[3]))
                 #decodedData.update(data)
                 data.update(decodedData)
                 encodedData = zlib.compress(json.dumps(data))
@@ -276,8 +286,8 @@ def thread(message):
 
     gevent.sleep()
     sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
-    query.executeMany(sql, statsData)
-    PySQLPool.getNewPool().Commit()
+    curs.executemany(sql, statsData)
+    curs.commit()
 
 if __name__ == '__main__':
     main()
