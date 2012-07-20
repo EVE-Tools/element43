@@ -29,6 +29,7 @@ from gevent.pool import Pool
 from gevent import monkey; gevent.monkey.patch_all()
 import psycopg2
 import hashlib
+import base64
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
@@ -166,7 +167,7 @@ def thread(message):
                             foundOrder = result
                             row=(2,)
                             statsData.append(row)
-                            if orderHash != hashlib.md5(str(foundOrder[0]['orderID'])+str(foundOrder[0]['price'])+str(foundOrder[0]['volumeRemaining'])).hexdigest():
+                            if orderHash != hashlib.md5(str(foundOrder[8])+str(foundOrder[3])+str(foundOrder[4])).hexdigest():
                                 row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
                                        order.region_id, bid, order.price, order.order_range, order.order_duration,
                                        order.volume_remaining, order.volume_entered, order.minimum_volume, generated_at, issue_date, msgKey, suspicious, ipHash)
@@ -229,7 +230,7 @@ def thread(message):
                 msgType = "emdr"
                 query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
             """
-            """
+            
     elif market_list.list_type == 'history':
         data = {}
         rowCount = 0
@@ -249,11 +250,9 @@ def thread(message):
             todayDate = now_dtime_in_utc().date()
             theDate = history.historical_date.date()
             generatedAt = str(history.generated_at).split("+", 1)[0]
-            if uniqueKey == "":
-                keyBuilder = str(history.region_id)+"-"+str(history.type_id)
-                uniqueKey = str(uuid.uuid5(uuid.NAMESPACE_DNS, keyBuilder))
-                regionID = history.region_id
-                typeID = history.type_id
+            uniqueKey = str(history.region_id)+"-"+str(history.type_id)
+            regionID = history.region_id
+            typeID = history.type_id
             if todayDate!=theDate:
                 # clip the high and low if it's an order of magnitude too high or low to cut out the idiots
                 if history.high_price > (history.average_price*10):
@@ -266,28 +265,27 @@ def thread(message):
             sql = "SELECT * FROM market_data_history WHERE id = '%s'" % uniqueKey
             curs.execute(sql)
             result = curs.fetchone()
+            #print "Result: ", result
             if result:
-                rows = result
                 checkHash = hash(str(data))
-                decodedData = ast.literal_eval(zlib.decompress(result[3]))
+                decodedData = ast.literal_eval(zlib.decompress(base64.standard_b64decode(result[3])))
+                #print base64.decodestring(zlib.decompress(result[3]))
                 #decodedData.update(data)
                 data.update(decodedData)
-                encodedData = zlib.compress(json.dumps(data))
-                sql = "UPDATE market_data_history SET history_data=%s WHERE id = %s"
-                params = (encodedData, uniqueKey)
+                encodedData = base64.standard_b64encode(zlib.compress(json.dumps(data)))
+                sql = "UPDATE market_data_history SET history_data='%s' WHERE id = '%s'" % (encodedData, uniqueKey)
                 if TERM_OUT==True:
                     print "### UPDATING " + str(rowCount) + " HISTORY RECORDS ###"
             elif len(data)>0:
-                encodedData = zlib.compress(json.dumps(data))
-                sql = "INSERT INTO history (id, region_id, type_id, history_data) VALUES (%s, %s, %s, %s)"
-                params = (uniqueKey, regionID, typeID, encodedData)
+                encodedData = base64.standard_b64encode(zlib.compress(json.dumps(data)))
+                sql = "INSERT INTO market_data_history (id, region_id, type_id, history_data) VALUES ('%s', %s, %s, '%s')" % (uniqueKey, regionID, typeID, encodedData)
 
                 if TERM_OUT==True:
                     print "### INSERTING " + str(rowCount) + " HISTORY RECORDS ###"
 
             if hash(str(data))!=checkHash:
                 #print "region: ", regionID, "type: ", typeID
-                curs.execute(sql, params)
+                curs.execute(sql)
                 # If we need to debug raw messages (commented out for now to save space)
                 if DEBUG==True:
                     msgType = "emdr"
@@ -296,7 +294,7 @@ def thread(message):
                 print "^^^ DUPLICATED HISTORY ^^^"
 
     gevent.sleep()
-    """
+    
     """
     try:
         sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
