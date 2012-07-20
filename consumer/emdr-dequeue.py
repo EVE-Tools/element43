@@ -43,6 +43,7 @@ greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
+dbcon.autocommit = True
 
 def main():
     for message in queue.consume():
@@ -285,9 +286,14 @@ def thread(message):
                 print "^^^ DUPLICATED HISTORY ^^^"
 
     gevent.sleep()
-    sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
-    curs.executemany(sql, statsData)
-    curs.commit()
+    try:
+        sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
+        curs.executemany(sql, statsData)
+    except psycopg2.DatabaseError, e:
+        if TERM_OUT == True:
+            print "Key collision: ", statsData
+
+    dbcon.commit()
 
 if __name__ == '__main__':
     main()
