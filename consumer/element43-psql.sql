@@ -32,7 +32,7 @@ SET default_with_oids = false;
 -- Name: emdrJsonmessages; Type: TABLE; Schema: public; Owner: element43; Tablespace: 
 --
 
-CREATE TABLE "emdrJsonmessages" (
+CREATE TABLE "emdrjsonmessages" (
     "msgKey" character(36) NOT NULL,
     "msgReceived" timestamp without time zone NOT NULL,
     "msgType" character varying(16) DEFAULT NULL::character varying,
@@ -40,13 +40,13 @@ CREATE TABLE "emdrJsonmessages" (
 );
 
 
-ALTER TABLE public."emdrJsonmessages" OWNER TO element43;
+ALTER TABLE public."emdrjsonmessages" OWNER TO element43;
 
 --
 -- Name: emdrStats; Type: TABLE; Schema: public; Owner: element43; Tablespace: 
 --
 
-CREATE TABLE "emdrStats" (
+CREATE TABLE "emdrstats" (
     id bigint NOT NULL,
     "statusType" smallint DEFAULT 0::smallint NOT NULL,
     "statusCount" integer DEFAULT 0 NOT NULL,
@@ -54,25 +54,25 @@ CREATE TABLE "emdrStats" (
 );
 
 
-ALTER TABLE public."emdrStats" OWNER TO element43;
+ALTER TABLE public."emdrstats" OWNER TO element43;
 
 --
 -- Name: emdrStatsWorking; Type: TABLE; Schema: public; Owner: element43; Tablespace: 
 --
 
-CREATE TABLE "emdrStatsWorking" (
+CREATE TABLE "emdrstatsworking" (
     id bigint NOT NULL,
     "statusType" smallint DEFAULT 0::smallint NOT NULL
 );
 
 
-ALTER TABLE public."emdrStatsWorking" OWNER TO element43;
+ALTER TABLE public."emdrstatsworking" OWNER TO element43;
 
 --
 -- Name: historicalData; Type: TABLE; Schema: public; Owner: element43; Tablespace: 
 --
 
-CREATE TABLE "historicalData" (
+CREATE TABLE "historicaldata" (
     "uniqueKey" character varying(36) NOT NULL,
     "regionID" integer NOT NULL,
     "typeID" integer NOT NULL,
@@ -80,13 +80,13 @@ CREATE TABLE "historicalData" (
 );
 
 
-ALTER TABLE public."historicalData" OWNER TO element43;
+ALTER TABLE public."historicaldata" OWNER TO element43;
 
 --
 -- Name: marketData; Type: TABLE; Schema: public; Owner: element43; Tablespace: 
 --
 
-CREATE TABLE "marketData" (
+CREATE TABLE "marketdata" (
     "generatedAt" timestamp without time zone,
     "regionID" integer NOT NULL,
     "typeID" integer NOT NULL,

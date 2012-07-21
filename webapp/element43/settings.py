@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'devserver',
 
     'apps.market_data',
+    'apps.static_data',
 )
 
 DEVSERVER_MODULES = (
