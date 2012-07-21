@@ -43,6 +43,9 @@ TERM_OUT = True
 # database stuff
 redisdb = "localhost"
 
+# orders older than this will be ignored.  in hours.
+max_order_age = 8
+
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
@@ -92,8 +95,6 @@ def thread(message):
         for uploadKey in market_list.upload_keys:
             if uploadKey['name'] == 'EMDR':
                 ipHash = uploadKey['key']
-                if TERM_OUT == True:
-                    print "IP Hash: ", ipHash
         if len(market_list)==0:
             for item_region_list in market_list._orders.values():
                 if TERM_OUT==True:
@@ -121,7 +122,7 @@ def thread(message):
                     # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
-                    if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=8))):
+                    if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=max_order_age))):
                     #if True:
                         orderHash = hashlib.md5(str(order.order_id)+str(order.price)+str(order.volume_remaining)).hexdigest()
                         
@@ -163,14 +164,9 @@ def thread(message):
                             foundOrder = result
                             row=(2,)
                             statsData.append(row)
-                            if orderHash != hashlib.md5(str(foundOrder[8])+str(foundOrder[3])+str(foundOrder[4])).hexdigest():
-                                row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
-                                       order.region_id, bid, order.price, order.order_range, order.order_duration,
-                                       order.volume_remaining, order.volume_entered, order.minimum_volume, generated_at, issue_date, msgKey, suspicious, ipHash)
-                                insertData.append(row)
-                            else:
-                                row = (generated_at, order.order_id)
-                                updateData.append(row)
+                            row = (order.price, order.volume_remaining, generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
+                            updateData.append(row)
+
                         else:
                             # set up the data insert for the specific order
                             row = (1,)
@@ -179,11 +175,11 @@ def thread(message):
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
                                 order.volume_remaining, order.volume_entered, order.minimum_volume, generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
-                            updateCounter = updateCounter + 1
+                            updateCounter += 1
                         row = (order.order_id, order.type_id, order.region_id)
                         insertSeen.append(row)
                     else:
-                        oldCounter = oldCounter+1
+                        oldCounter += 1
                         row = (3,)
                         statsData.append(row)
                         
@@ -193,15 +189,15 @@ def thread(message):
     
             if len(updateData)>0:
                 if TERM_OUT==True:
-                    print "--- UPDATING "+str(len(updateData))+" ORDERS ---"
-                sql = "UPDATE market_data_orders SET generated_at=%s WHERE id = %s"
+                    print "::: UPDATING "+str(len(updateData))+" ORDERS :::"
+                sql = "UPDATE market_data_orders SET price=%s, volume_remaining=%s, generated_at=%s, issue_date=%s, message_key=%s, is_suspicious=%s, uploader_ip_hash=%s WHERE id = %s"
                 curs.executemany(sql, updateData)
                 updateData = []
     
             if len(insertData)>0:
                 # Build our SQL statement
                 if TERM_OUT==True:
-                    print "--- INSERTING "+str(len(insertData))+" (UPDATES: "+str(updateCounter)+") ORDERS ---"
+                    print "--- INSERTING "+str(len(insertData))+" ORDERS ---"
                 #print insertData
                 sql = "INSERT INTO market_data_orders (id,"
                 sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range,"
