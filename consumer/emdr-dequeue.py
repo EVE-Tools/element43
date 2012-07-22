@@ -200,10 +200,9 @@ def thread(message):
                     print "--- INSERTING "+str(len(insertData))+" ORDERS ---"
                 #print insertData
                 sql = "INSERT INTO market_data_orders (id,"
-                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range,"
-                sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at,"
-                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s,"
-                sql += "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range, "
+                sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at, "
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 
                 curs.executemany(sql, insertData)
                 insertData = []
@@ -233,7 +232,7 @@ def thread(message):
         rows = []
         regionID = 0
         checkHash = 0
-        row = (4)
+        row = (4,)
         statsData.append(row)
         for history in market_list.get_all_entries_ungrouped():
             rowCount = rowCount+1
@@ -287,14 +286,12 @@ def thread(message):
 
     gevent.sleep()
     
-    """
     try:
-        sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
+        sql = "INSERT INTO market_data_emdrstatsworking (status_type) VALUES (%s)"
         curs.executemany(sql, statsData)
     except psycopg2.DatabaseError, e:
         if TERM_OUT == True:
             print "Key collision: ", statsData
-    """
     
 if __name__ == '__main__':
     main()

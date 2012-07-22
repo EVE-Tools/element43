@@ -4,27 +4,23 @@ Rolls up the stats and shoves them into the database
 Greg Oberfield gregoberfield@gmail.com
 """
 
-import MySQLdb as mdb
+import psycopg2
+from emds.common_utils import now_dtime_in_utc
 
 # Turn on for standard output
 TERM_OUT=False
 
-dbhost="localhost"
-dbname = "dbname"
-dbuser = "dbuser"
-dbpass = "dbpass"
-
 def main():
-    dbcon = mdb.connect(dbhost, dbuser, dbpass, dbname)
+    dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
+    dbcon.autocommit = True
+
     curs = dbcon.cursor()
     
-    sql = "INSERT INTO emdrStats (statusType, statusCount) SELECT statusType, count(id) FROM emdrStatsWorking GROUP BY statusType"
+    sql = "INSERT INTO market_data_emdrstats (status_type, status_count, message_timestamp) SELECT status_type, count(id), now() FROM market_data_emdrstatsworking GROUP BY status_type"
     curs.execute(sql)
     
-    sql = "TRUNCATE emdrStatsWorking"
+    sql = "TRUNCATE market_data_emdrstatsworking"
     curs.execute(sql)
-    
-    dbcon.commit()
     
 if __name__ == '__main__':
     main()
