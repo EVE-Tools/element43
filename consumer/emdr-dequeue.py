@@ -99,7 +99,7 @@ def thread(message):
             for item_region_list in market_list._orders.values():
                 if TERM_OUT==True:
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
-                sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
+                #sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
                 #curs.execute(sql)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id, 0)
                 insertEmpty.append(row)
@@ -107,15 +107,15 @@ def thread(message):
                 insertEmpty.append(row)
                 row = (0,)
                 statsData.append(row)
-            """
+            
             for components in insertEmpty:
                 try:
-                    sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)" % components
+                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id, bid) values (%s, %s, %s, %s)" % components
                     curs.execute(sql)
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
-            """
+            
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
@@ -211,16 +211,18 @@ def thread(message):
                 if TERM_OUT==True:
                     print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
     
-            """
+            
             if len(insertSeen)>0:
-                sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID) values (%s, %s, %s)"
+                try:
+                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
+                except psycopg2.DatabaseError, e:
+                    pass
                 curs.executemany(sql, insertSeen)
                 insertSeen = []
             
             if DEBUG==True:        
                 msgType = "emdr"
-                query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
-            """
+                curs.execute("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
             
     elif market_list.list_type == 'history':
         data = {}

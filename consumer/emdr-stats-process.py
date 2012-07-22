@@ -5,7 +5,6 @@ Greg Oberfield gregoberfield@gmail.com
 """
 
 import psycopg2
-from emds.common_utils import now_dtime_in_utc
 
 # Turn on for standard output
 TERM_OUT=False
