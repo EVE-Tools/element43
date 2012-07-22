@@ -4,7 +4,7 @@ Get the conquerable station list from the API and load it into the SDD database
 Greg Oberfield gregoberfield@gmail.com
 """
 
-import MySQLdb as mdb
+import psycopg2
 import urllib
 from xml.dom import minidom
 

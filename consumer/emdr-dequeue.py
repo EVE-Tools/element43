@@ -30,6 +30,17 @@ from gevent import monkey; gevent.monkey.patch_all()
 import psycopg2
 import hashlib
 import base64
+import ConfigParser
+import os
+
+# Load connection params from the configuration file
+config = ConfigParser.ConfigParser()
+config.read('consumer.conf')
+dbhost = config.get('Database', 'dbhost')
+dbname = config.get('Database', 'dbname')
+dbuser = config.get('Database', 'dbuser')
+dbpass = config.get('Database', 'dbpass')
+redisdb = config.get('Redis', 'redishost')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
@@ -50,7 +61,7 @@ max_order_age = 8
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
+dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname)
 dbcon.autocommit = True
 
 def main():

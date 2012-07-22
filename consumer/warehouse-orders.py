@@ -7,13 +7,24 @@ Greg Oberfield - gregoberfield@gmail.com
 
 import psycopg2
 import time
+import ConfigParser
+import os
 
 # Turn on for standard output
 TERM_OUT=False
 
 
 def main():
-    dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
+    # Load connection params from the configuration file
+    config = ConfigParser.ConfigParser()
+    config.read('consumer.conf')
+    dbhost = config.get('Database', 'dbhost')
+    dbname = config.get('Database', 'dbname')
+    dbuser = config.get('Database', 'dbuser')
+    dbpass = config.get('Database', 'dbpass')
+    redisdb = config.get('Redis', 'redishost')
+    
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname)
     dbcon.autocommit = True
 
     curs = dbcon.cursor()
