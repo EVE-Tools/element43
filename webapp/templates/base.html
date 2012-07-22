@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href='/static/stylesheets/bootstrap.css' type='text/css' rel='stylesheet' />
-    <link href='/static/stylesheets/darkstrap.css' type='text/css' rel='stylesheet' />
-    <link href='/static/stylesheets/main.css' type='text/css' rel='stylesheet' />
+    <link href='static/stylesheets/bootstrap.css' type='text/css' rel='stylesheet' />
+    <link href='static/stylesheets/darkstrap.css' type='text/css' rel='stylesheet' />
+    <link href='static/stylesheets/main.css' type='text/css' rel='stylesheet' />
+    <meta content='width=device-width, initial-scale=1.0' name='viewport' />
     <title>
      {% block title %}
       element43
@@ -40,11 +41,19 @@
             </div>
           </div>
         </div>
+        <div class='panel-wrapper'>
+          <div class='content clearfix'>
+            {% block content %}
+            {% endblock %}
+            <hr />
+            <footer>
+              <p>
+                element43 - 2012
+              </p>
+            </footer>
+          </div>
+        </div>
       </header>
-      {% block content %}
-
-      {% endblock %}
-
     </div>
   </body>
 </html>
