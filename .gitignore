@@ -1,8 +1,1 @@
-*.pyc
-*.tmp
-*.swp
-*~
-.DS_Store
-.idea
-.project
-local_settings.py
+consumer/consumer.conf
