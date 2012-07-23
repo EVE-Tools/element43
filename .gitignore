@@ -1,2 +1,11 @@
+*.pyc
+*.tmp
+*.swp
+*~
+.DS_Store
+.idea
+.project
+local_settings.py
+
 consumer/consumer.conf
 webapp/element43/apps/market_data/migrations/*
