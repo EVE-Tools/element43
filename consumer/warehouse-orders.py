@@ -40,7 +40,10 @@ def main():
     loopsql = "SELECT * FROM market_data_seenordersworking ORDER BY type_id, region_id LIMIT 1"
     execute = True
     while (execute):
-        curs.execute(loopsql)
+        try:
+            curs.execute(loopsql)
+        except psycopg2.DatabaseError, e:
+            pass
         row = curs.fetchone()
         if row:
             regionID = row[1]
@@ -48,13 +51,22 @@ def main():
             sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
                      SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
                      WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
-            curs.execute(sql)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
             sql = "DELETE FROM market_data_orders WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)" % (typeID, regionID, typeID, regionID)
-            curs.execute(sql)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
             if TERM_OUT==True:
                 print "Type: ", typeID, " Region: ", regionID, " (affected: ", curs.rowcount, ")"
             sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, regionID)
-            curs.execute(sql)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
         else:
             execute = False
     
