@@ -22,7 +22,7 @@ DEBUG = False
 receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
 #receiver_uri = 'tcp://localhost:8050'
 
-queue = HotQueue("emdr-messages", unix_socket_path="/var/run/redis/redis.sock")
+HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 
 def main():
     """
