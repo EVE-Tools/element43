@@ -26,10 +26,10 @@ DEBUG = False
 
 # Change this to point to whatever relay you want to use
 #receiver_uri = 'tcp://relay-us-central-1.eve-emdr.com:8050'
-receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
-#receiver_uri = 'tcp://localhost:8050'
+#receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
+receiver_uri = 'tcp://localhost:8050'
 
-HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
+queue =  HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 
 def main():
     """
