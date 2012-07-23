@@ -25,7 +25,7 @@ def main():
     dbport = config.get('Database', 'dbport')
     redisdb = config.get('Redis', 'redishost')
     
-    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="dbport)
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     dbcon.autocommit = True
 
     curs = dbcon.cursor()

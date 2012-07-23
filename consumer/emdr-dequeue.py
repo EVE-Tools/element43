@@ -65,7 +65,7 @@ max_order_age = 8
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="dbport)
+dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 dbcon.autocommit = True
 
 def main():
