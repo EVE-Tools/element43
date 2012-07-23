@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """
 Rolls up the stats and shoves them into the database
+These stats are on a per-row basis for order messages, but only on a per message basis for history.
+This is because we track inserts vs updates for orders.
 Greg Oberfield gregoberfield@gmail.com
 """
 
@@ -27,7 +29,7 @@ def main():
 
     curs = dbcon.cursor()
     
-    sql = "INSERT INTO market_data_emdrstats (status_type, status_count, message_timestamp) SELECT status_type, count(id), now() FROM market_data_emdrstatsworking GROUP BY status_type"
+    sql = "INSERT INTO market_data_emdrstats (status_type, status_count, message_timestamp) SELECT status_type, count(id), date_trunc('minute',now()) FROM market_data_emdrstatsworking GROUP BY status_type"
     curs.execute(sql)
     
     sql = "TRUNCATE market_data_emdrstatsworking"
