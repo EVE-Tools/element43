@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from apps.market_data.models import UUDIFMessage, OrderMessage
+from apps.market_data.models import UUDIFMessage, Orders
 
 class UUDIFMessageAdmin(admin.ModelAdmin):
     """
@@ -14,10 +13,9 @@ class UUDIFMessageAdmin(admin.ModelAdmin):
 
 admin.site.register(UUDIFMessage, UUDIFMessageAdmin)
 
-
-class OrderMessageAdmin(admin.ModelAdmin):
+class OrdersAdmin(admin.ModelAdmin):
     """
-    Admin site definition for the OrderMessage model.
+    Admin site definition for the Orders model.
     """
 
     list_display = ('generated_at', 'is_bid', 'type_id', 'region_id')
@@ -25,4 +23,4 @@ class OrderMessageAdmin(admin.ModelAdmin):
     search_fields = ('message_key', 'uploader_ip_hash')
     date_hierarchy = 'generated_at'
 
-admin.site.register(OrderMessage, OrderMessageAdmin)
+admin.site.register(Orders, OrdersAdmin)

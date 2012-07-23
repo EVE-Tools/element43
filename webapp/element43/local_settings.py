@@ -23,7 +23,7 @@ DATABASES = {
         'USER': 'element43',
         'PASSWORD': 'element43',
         # Set to empty string for localhost.
-        'HOST': '192.168.1.41',
+        'HOST': '',
         # Set to empty string for default.
         'PORT': '',
     }
@@ -90,13 +90,18 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'f%is=((x7m^f&amp;^s1_oy*p#8don$g%stq+=p5#+a7x^nof1^%0y'
+SECRET_KEY = 'f%is=q((x7m^f&amp;^s1_oy*p#8don$g%stq+=p5#+a7x^nof1^%0y'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.messages.context_processors.messages',
+    'django.contrib.auth.context_processors.auth',
 )
 
 MIDDLEWARE_CLASSES = (

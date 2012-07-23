@@ -19,7 +19,6 @@ class UUDIFMessage(models.Model):
     message = models.TextField(
         help_text="Full JSON representation of the message.")
 
-
     class Meta(object):
         verbose_name = "UUDIF Message"
         verbose_name_plural = "UUDIF Messages"
@@ -48,7 +47,7 @@ class EmdrStats(models.Model):
         help_text="Message type for statistics")
     status_count = models.PositiveIntegerField(
         help_text = "Count of messages of specific type")
-    message_timestamp = models.DateTimeField(auto_now_add=True,
+    message_timestamp = models.DateTimeField(auto_now_add=True,db_index=True,
         help_text = "When the stats were counted for this entry")
     
     class Meta(object):
@@ -73,9 +72,9 @@ class History(models.Model):
     
     id = models.CharField(max_length=255, primary_key=True,
         help_text="Primary key, based on UUID")
-    region_id = models.PositiveIntegerField(
+    region_id = models.PositiveIntegerField(db_index=True,
         help_text="Region ID for this history message")
-    type_id = models.PositiveIntegerField(
+    type_id = models.PositiveIntegerField(db_index=True,
         help_text="Type ID for this history message")
     history_data=models.TextField(
         help_text="Compressed zlib data of the JSON message for history")
@@ -96,7 +95,7 @@ class OrdersWarehouse(models.Model):
     region_id = models.PositiveIntegerField(
         help_text="Region ID the order originated from.")
     # TODO: This should probably be a ForeignKey to a Type model.
-    type_id = models.BigIntegerField(
+    type_id = models.BigIntegerField(db_index=True,
         help_text="The Type ID of the item in the order.")
     price = models.FloatField(
         help_text="Item price, as reported in the message.")
@@ -141,7 +140,7 @@ class Orders(models.Model):
     region_id = models.PositiveIntegerField(
         help_text="Region ID the order originated from.")
     # TODO: This should probably be a ForeignKey to a Type model.
-    type_id = models.BigIntegerField(
+    type_id = models.BigIntegerField(db_index=True,
         help_text="The Type ID of the item in the order.")
     price = models.FloatField(
         help_text="Item price, as reported in the message.")
