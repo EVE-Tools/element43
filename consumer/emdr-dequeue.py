@@ -45,6 +45,9 @@ redisdb = config.get('Redis', 'redishost')
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
 
+#set the time format for timestamp to datetime conversion
+TIME_FORMAT = "%b %d"
+
 # DEBUG flag
 DEBUG = False
 
@@ -172,19 +175,22 @@ def thread(message):
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result:
-                            foundOrder = result
-                            row=(2,)
-                            statsData.append(row)
-                            row = (order.price, order.volume_remaining, generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
-                            updateData.append(row)
-
+                            #get_at_dtime = datetime.datetime.strptime(generated_at,"%Y-%m-%d %H:%M:%S+%z")
+                            if result[0]  < order.generated_at:
+                                row=(2,)
+                                statsData.append(row)
+                                row = (order.price, order.volume_remaining, order.generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
+                                updateData.append(row)
+                            else:
+                                if TERM_OUT==True:
+                                    print "||| Older order, not updated |||"
                         else:
                             # set up the data insert for the specific order
                             row = (1,)
                             statsData.append(row)
                             row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
-                                order.volume_remaining, order.volume_entered, order.minimum_volume, generated_at, issue_date, msgKey, suspicious, ipHash)
+                                order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
                             updateCounter += 1
                         row = (order.order_id, order.type_id, order.region_id)
@@ -226,9 +232,9 @@ def thread(message):
             if len(insertSeen)>0:
                 try:
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
+                    curs.executemany(sql, insertSeen)
                 except psycopg2.DatabaseError, e:
                     pass
-                curs.executemany(sql, insertSeen)
                 insertSeen = []
             
             if DEBUG==True:        
