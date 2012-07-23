@@ -7,9 +7,16 @@ Greg Oberfield gregoberfield@gmail.com
 import zlib
 import zmq.green as zmq
 import gevent
+import ConfigParser
 from gevent.pool import Pool
 from gevent import monkey; gevent.monkey.patch_all()
 from hotqueue import HotQueue
+
+# Load connection params from the configuration file
+config = ConfigParser.ConfigParser()
+config.read('consumer.conf')
+redisdb = config.get('Redis', 'redishost')
+
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 200
