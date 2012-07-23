@@ -19,7 +19,7 @@ class OrdersAdmin(admin.ModelAdmin):
     """
 
     list_display = ('id', 'type_id', 'region_id', 'price', 'generated_at', 'is_bid')
-    list_filter = ('is_bid', 'generated_at', 'type_id')
+    list_filter = ('is_bid', 'generated_at')
     search_fields = ('type_id', 'message_key', 'uploader_ip_hash')
     date_hierarchy = 'generated_at'
 
