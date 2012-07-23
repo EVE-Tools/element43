@@ -88,6 +88,8 @@ def thread(message):
         duplicateData = 0
         hashList = []
         statsData = []
+        row=(5,)
+        statsData.append(row)
         sql = ""
         orderHash = 0
         #print "* Recieved Orders from: %s" % market_list.order_generator
