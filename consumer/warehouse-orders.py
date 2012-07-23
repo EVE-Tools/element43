@@ -10,9 +10,6 @@ import time
 import ConfigParser
 import os
 
-# Turn on for standard output
-TERM_OUT=False
-
 
 def main():
     # Load connection params from the configuration file
@@ -24,6 +21,7 @@ def main():
     dbpass = config.get('Database', 'dbpass')
     dbport = config.get('Database', 'dbport')
     redisdb = config.get('Redis', 'redishost')
+    TERM_OUT = config.get('Consumer', 'term_out')
     
     dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     dbcon.autocommit = True

@@ -22,9 +22,6 @@ relay = config.get('EMDR', 'relay')
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 200
 
-# DEBUG flag
-DEBUG = False
-
 queue =  HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 
 def main():
