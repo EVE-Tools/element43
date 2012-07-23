@@ -42,24 +42,12 @@ dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
 redisdb = config.get('Redis', 'redishost')
+max_order_age = config.get('Consumer', 'max_order_age')
+DEBUG = config.get('Consumer', 'debug')
+TERM_OUT = config.get('Consumer', 'term_out')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
-
-#set the time format for timestamp to datetime conversion
-TIME_FORMAT = "%b %d"
-
-# DEBUG flag
-DEBUG = False
-
-# If you want terminal output
-TERM_OUT = True
-
-# database stuff
-redisdb = "localhost"
-
-# orders older than this will be ignored.  in hours.
-max_order_age = 8
 
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
