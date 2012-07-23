@@ -5,46 +5,70 @@ Go through the seenOrders table, find all NOT IN that set for each region/type c
 Greg Oberfield - gregoberfield@gmail.com
 """
 
-import MySQLdb as mdb
+import psycopg2
 import time
+import ConfigParser
+import os
 
-# Turn on for standard output
-TERM_OUT=False
-
-dbhost="localhost"
-dbname = "dbname"
-dbuser = "dbuser"
-dbpass = "dbpass"
 
 def main():
-    dbcon = mdb.connect(dbhost, dbuser, dbpass, dbname)
+    # Load connection params from the configuration file
+    config = ConfigParser.ConfigParser()
+    config.read('consumer.conf')
+    dbhost = config.get('Database', 'dbhost')
+    dbname = config.get('Database', 'dbname')
+    dbuser = config.get('Database', 'dbuser')
+    dbpass = config.get('Database', 'dbpass')
+    dbport = config.get('Database', 'dbport')
+    redisdb = config.get('Redis', 'redishost')
+    TERM_OUT = config.get('Consumer', 'term_out')
+    
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+    dbcon.autocommit = True
+
     curs = dbcon.cursor()
     
     # create and copy the data over
-    sql = "DROP TABLE IF EXISTS seenOrdersWorking"
+    sql = "DROP TABLE IF EXISTS market_data_seenordersworking"
     curs.execute(sql)
-    sql = "CREATE TABLE seenOrdersWorking LIKE seenOrders"
+    sql = "CREATE TABLE market_data_seenordersworking (LIKE market_data_seenorders)"
     curs.execute(sql)
-    sql = "INSERT INTO seenOrdersWorking SELECT * FROM seenOrders"
+    sql = "INSERT INTO market_data_seenordersworking SELECT * FROM market_data_seenorders"
     curs.execute(sql)
-    sql = "TRUNCATE seenOrders"
+    sql = "TRUNCATE market_data_seenorders"
     curs.execute(sql)
-    loopsql = "SELECT * FROM seenOrdersWorking ORDER BY typeID, regionID LIMIT 1"
-    while (curs.execute(loopsql)):
+    loopsql = "SELECT * FROM market_data_seenordersworking ORDER BY type_id, region_id LIMIT 1"
+    execute = True
+    while (execute):
+        try:
+            curs.execute(loopsql)
+        except psycopg2.DatabaseError, e:
+            pass
         row = curs.fetchone()
-        regionID = row[2]
-        typeID = row[1]
-        sql = """INSERT IGNORE INTO marketDataWarehouse (generatedAt, regionID, typeID, price, `range`, orderID, bid, issueDate, duration, volumeEntered, stationID, solarSystemID, ipHash, suspicious) 
-                 SELECT generatedAt, regionID, typeID, price, `range`, orderID, bid, issueDate, duration, volumeEntered, stationID, solarSystemID, ipHash, suspicious FROM marketData
-                 WHERE typeID=%s AND regionID=%s AND marketData.orderID NOT IN (SELECT orderID FROM seenOrdersWorking WHERE typeID=%s AND regionID=%s)""" % (typeID, regionID, typeID, regionID)
-        curs.execute(sql)
-        sql = "DELETE FROM marketData WHERE typeID=%s AND regionID=%s AND marketData.orderID NOT IN (SELECT orderID FROM seenOrdersWorking WHERE typeID=%s AND regionID=%s)" % (typeID, regionID, typeID, regionID)
-        curs.execute(sql)
-        if TERM_OUT==True:
-            print "Type: ", typeID, " Region: ", regionID, " (affected: ", curs.rowcount, ")"
-        sql = "DELETE FROM seenOrdersWorking WHERE typeID=%s AND regionID=%s" % (typeID, regionID)
-        curs.execute(sql)
-        dbcon.commit()
+        if row:
+            regionID = row[1]
+            typeID = row[2]
+            sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
+                     SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
+                     WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
+            sql = "DELETE FROM market_data_orders WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)" % (typeID, regionID, typeID, regionID)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
+            if TERM_OUT==True:
+                print "Type: ", typeID, " Region: ", regionID, " (affected: ", curs.rowcount, ")"
+            sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, regionID)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                pass
+        else:
+            execute = False
     
 if __name__ == '__main__':
     main()

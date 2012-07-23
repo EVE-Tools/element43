@@ -30,27 +30,30 @@ from gevent import monkey; gevent.monkey.patch_all()
 import psycopg2
 import hashlib
 import base64
+import ConfigParser
+import os
+
+# Load connection params from the configuration file
+config = ConfigParser.ConfigParser()
+config.read('consumer.conf')
+dbhost = config.get('Database', 'dbhost')
+dbname = config.get('Database', 'dbname')
+dbuser = config.get('Database', 'dbuser')
+dbpass = config.get('Database', 'dbpass')
+dbport = config.get('Database', 'dbport')
+redisdb = config.get('Redis', 'redishost')
+max_order_age = config.get('Consumer', 'max_order_age')
+DEBUG = config.get('Consumer', 'debug')
+TERM_OUT = config.get('Consumer', 'term_out')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
-
-# DEBUG flag
-DEBUG = False
-
-# If you want terminal output
-TERM_OUT = True
-
-# database stuff
-redisdb = "localhost"
-
-# orders older than this will be ignored.  in hours.
-max_order_age = 8
 
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host=192.168.1.41 user=element43 host=192.168.1.41 password=element43")
+dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 dbcon.autocommit = True
 
 def main():
@@ -85,6 +88,8 @@ def thread(message):
         duplicateData = 0
         hashList = []
         statsData = []
+        row=(5,)
+        statsData.append(row)
         sql = ""
         orderHash = 0
         #print "* Recieved Orders from: %s" % market_list.order_generator
@@ -99,7 +104,7 @@ def thread(message):
             for item_region_list in market_list._orders.values():
                 if TERM_OUT==True:
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
-                sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
+                #sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
                 #curs.execute(sql)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id, 0)
                 insertEmpty.append(row)
@@ -107,15 +112,15 @@ def thread(message):
                 insertEmpty.append(row)
                 row = (0,)
                 statsData.append(row)
-            """
+            
             for components in insertEmpty:
                 try:
-                    sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID, bid) values (%s, %s, %s, %s)" % components
+                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id, bid) values (%s, %s, %s, %s)" % components
                     curs.execute(sql)
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
-            """
+            
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
@@ -161,19 +166,22 @@ def thread(message):
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result:
-                            foundOrder = result
-                            row=(2,)
-                            statsData.append(row)
-                            row = (order.price, order.volume_remaining, generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
-                            updateData.append(row)
-
+                            #get_at_dtime = datetime.datetime.strptime(generated_at,"%Y-%m-%d %H:%M:%S+%z")
+                            if result[0]  < order.generated_at:
+                                row=(2,)
+                                statsData.append(row)
+                                row = (order.price, order.volume_remaining, order.generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
+                                updateData.append(row)
+                            else:
+                                if TERM_OUT==True:
+                                    print "||| Older order, not updated |||"
                         else:
                             # set up the data insert for the specific order
                             row = (1,)
                             statsData.append(row)
                             row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
-                                order.volume_remaining, order.volume_entered, order.minimum_volume, generated_at, issue_date, msgKey, suspicious, ipHash)
+                                order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
                             updateCounter += 1
                         row = (order.order_id, order.type_id, order.region_id)
@@ -200,10 +208,9 @@ def thread(message):
                     print "--- INSERTING "+str(len(insertData))+" ORDERS ---"
                 #print insertData
                 sql = "INSERT INTO market_data_orders (id,"
-                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range,"
-                sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at,"
-                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s,"
-                sql += "%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range, "
+                sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at, "
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 
                 curs.executemany(sql, insertData)
                 insertData = []
@@ -212,16 +219,18 @@ def thread(message):
                 if TERM_OUT==True:
                     print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
     
-            """
+            
             if len(insertSeen)>0:
-                sql = "INSERT IGNORE INTO seenOrders (orderID, typeID, regionID) values (%s, %s, %s)"
-                curs.executemany(sql, insertSeen)
+                try:
+                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
+                    curs.executemany(sql, insertSeen)
+                except psycopg2.DatabaseError, e:
+                    pass
                 insertSeen = []
             
             if DEBUG==True:        
                 msgType = "emdr"
-                query.query("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
-            """
+                curs.execute("INSERT INTO `emdrJsonmessages` (msgKey, msgType, message) VALUES (%s, %s, %s)",(msgKey, msgType, message))
             
     elif market_list.list_type == 'history':
         data = {}
@@ -233,7 +242,7 @@ def thread(message):
         rows = []
         regionID = 0
         checkHash = 0
-        row = (4)
+        row = (4,)
         statsData.append(row)
         for history in market_list.get_all_entries_ungrouped():
             rowCount = rowCount+1
@@ -287,14 +296,12 @@ def thread(message):
 
     gevent.sleep()
     
-    """
     try:
-        sql = "INSERT INTO emdrStatsWorking (statusType) VALUES (%s)"
+        sql = "INSERT INTO market_data_emdrstatsworking (status_type) VALUES (%s)"
         curs.executemany(sql, statsData)
     except psycopg2.DatabaseError, e:
         if TERM_OUT == True:
             print "Key collision: ", statsData
-    """
     
 if __name__ == '__main__':
     main()

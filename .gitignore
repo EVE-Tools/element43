@@ -6,3 +6,7 @@
 .idea
 .project
 local_settings.py
+docs_src/_build/*
+
+consumer/consumer.conf
+webapp/element43/apps/market_data/migrations/*
