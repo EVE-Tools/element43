@@ -16,6 +16,7 @@ from hotqueue import HotQueue
 config = ConfigParser.ConfigParser()
 config.read('consumer.conf')
 redisdb = config.get('Redis', 'redishost')
+relay = config.get('EMDR', 'relay')
 
 
 # Max number of greenlet workers
@@ -23,11 +24,6 @@ MAX_NUM_POOL_WORKERS = 200
 
 # DEBUG flag
 DEBUG = False
-
-# Change this to point to whatever relay you want to use
-#receiver_uri = 'tcp://relay-us-central-1.eve-emdr.com:8050'
-#receiver_uri = 'tcp://relay-us-east-1.eve-emdr.com:8050'
-receiver_uri = 'tcp://localhost:8050'
 
 queue =  HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 
@@ -40,11 +36,11 @@ def main():
     subscriber = context.socket(zmq.SUB)
     
     # connect to the first publicly available relay
-    subscriber.connect(receiver_uri)
+    subscriber.connect(relay)
     # disable filtering
     subscriber.setsockopt(zmq.SUBSCRIBE, "")
     
-    print("Connected to %s" % receiver_uri)
+    print("Connected to %s" % relay)
     
     # use a greenlet pool to cap the number of workers at a reasonable level
     greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
