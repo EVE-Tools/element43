@@ -1,0 +1,87 @@
+/*
+ * Main CSS file for element43
+ */
+
+// General Variables
+$background: 			 #000000;
+$background_grey:  #2F2F2F;
+
+$padding: 				 10px;
+
+// Mixins
+
+@mixin panel {
+	background-color: rgba(255, 255, 255, 0.2); 
+	padding: $padding;
+}
+
+// HTML Elements
+
+body {
+	background: url("../images/background.jpg") no-repeat scroll center top $background;
+}
+
+// Classes
+
+.panel-wrapper {
+	@include panel;
+}
+
+.content {
+	padding: $padding;
+	background: $background_grey;
+}
+
+// Rarely Used Clases
+
+.hero-unit {
+	h1 {
+		color: white;
+	}
+}
+
+// System Security Colors
+
+.sec10 {
+	color: #2FEFEF;
+}
+
+.sec9 {
+	color: #48F0C0;
+}
+
+.sec8 {
+	color: #00EF47;
+}
+
+.sec7 {
+	color: #00F000;
+}
+
+.sec6 {
+	color: #8FEF2F;
+}
+
+.sec5 {
+	color: #EFEF00;
+}
+
+.sec4 {
+	color: #D77700;
+}
+
+.sec3 {
+	color: #F06000;
+}
+
+.sec2 {
+	color: #F04800;
+}
+
+.sec1 {
+	color: #D73000;
+}
+
+.sec0 {
+	color: #F00000;
+}
