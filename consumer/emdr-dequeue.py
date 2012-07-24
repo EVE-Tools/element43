@@ -42,7 +42,7 @@ dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
 redisdb = config.get('Redis', 'redishost')
-max_order_age = config.get('Consumer', 'max_order_age')
+max_order_age = int(config.get('Consumer', 'max_order_age'))
 DEBUG = config.get('Consumer', 'debug')
 TERM_OUT = config.get('Consumer', 'term_out')
 
