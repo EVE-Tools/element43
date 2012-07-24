@@ -43,8 +43,8 @@ dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
 redisdb = config.get('Redis', 'redishost')
 max_order_age = int(config.get('Consumer', 'max_order_age'))
-DEBUG = config.get('Consumer', 'debug')
-TERM_OUT = config.get('Consumer', 'term_out')
+DEBUG = ast.literal_eval(config.get('Consumer', 'debug'))
+TERM_OUT = ast.literal_eval(config.get('Consumer', 'term_out'))
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
