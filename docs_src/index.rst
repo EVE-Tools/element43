@@ -11,7 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   consumer
+   Consumer <consumer>
    license
 
 Indices and tables
