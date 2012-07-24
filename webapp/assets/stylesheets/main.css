@@ -1,0 +1,79 @@
+/*
+ * Main CSS file for element43
+ */
+/* line 20, main.scss */
+body {
+  background: url("../images/background.jpg") no-repeat scroll center top black;
+}
+
+/* line 26, main.scss */
+.panel-wrapper {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+}
+
+/* line 30, main.scss */
+.content {
+  padding: 10px;
+  background: #2f2f2f;
+}
+
+/* line 38, main.scss */
+.hero-unit h1 {
+  color: white;
+}
+
+/* line 45, main.scss */
+.sec10 {
+  color: #2FEFEF;
+}
+
+/* line 49, main.scss */
+.sec9 {
+  color: #48F0C0;
+}
+
+/* line 53, main.scss */
+.sec8 {
+  color: #00EF47;
+}
+
+/* line 57, main.scss */
+.sec7 {
+  color: #00F000;
+}
+
+/* line 61, main.scss */
+.sec6 {
+  color: #8FEF2F;
+}
+
+/* line 65, main.scss */
+.sec5 {
+  color: #EFEF00;
+}
+
+/* line 69, main.scss */
+.sec4 {
+  color: #D77700;
+}
+
+/* line 73, main.scss */
+.sec3 {
+  color: #F06000;
+}
+
+/* line 77, main.scss */
+.sec2 {
+  color: #F04800;
+}
+
+/* line 81, main.scss */
+.sec1 {
+  color: #D73000;
+}
+
+/* line 85, main.scss */
+.sec0 {
+  color: #F00000;
+}
