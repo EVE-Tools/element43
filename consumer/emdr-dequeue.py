@@ -35,16 +35,16 @@ import os
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
-config.read('consumer.conf')
+config.read(['consumer.conf', 'local_consumer.conf'])
 dbhost = config.get('Database', 'dbhost')
 dbname = config.get('Database', 'dbname')
 dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
 redisdb = config.get('Redis', 'redishost')
-max_order_age = int(config.get('Consumer', 'max_order_age'))
-DEBUG = ast.literal_eval(config.get('Consumer', 'debug'))
-TERM_OUT = ast.literal_eval(config.get('Consumer', 'term_out'))
+max_order_age = config.getint('Consumer', 'max_order_age')
+DEBUG = config.getboolean('Consumer', 'debug')
+TERM_OUT = config.getboolean('Consumer', 'term_out')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75

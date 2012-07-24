@@ -14,7 +14,7 @@ from hotqueue import HotQueue
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
-config.read('consumer.conf')
+config.read(['consumer.conf', 'local_consumer.conf'])
 redisdb = config.get('Redis', 'redishost')
 relay = config.get('EMDR', 'relay')
 
