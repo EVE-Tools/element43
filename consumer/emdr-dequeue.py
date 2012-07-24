@@ -269,16 +269,14 @@ def thread(message):
             #print "Result: ", result
             if result:
                 checkHash = hash(str(data))
-                decodedData = ast.literal_eval(zlib.decompress(base64.standard_b64decode(result[3])))
-                #print base64.decodestring(zlib.decompress(result[3]))
-                #decodedData.update(data)
+                decodedData = ast.literal_eval(result[3])
                 data.update(decodedData)
-                encodedData = base64.standard_b64encode(zlib.compress(json.dumps(data)))
+                encodedData = json.dumps(data)
                 sql = "UPDATE market_data_history SET history_data='%s' WHERE id = '%s'" % (encodedData, uniqueKey)
                 if TERM_OUT==True:
                     print "### UPDATING " + str(rowCount) + " HISTORY RECORDS ###"
             elif len(data)>0:
-                encodedData = base64.standard_b64encode(zlib.compress(json.dumps(data)))
+                encodedData = json.dumps(data)
                 sql = "INSERT INTO market_data_history (id, region_id, type_id, history_data) VALUES ('%s', %s, %s, '%s')" % (uniqueKey, regionID, typeID, encodedData)
 
                 if TERM_OUT==True:
