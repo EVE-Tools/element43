@@ -12,9 +12,7 @@ Contents:
    :maxdepth: 2
 
    consumer
-
-License
-=======
+   license
 
 Indices and tables
 ==================

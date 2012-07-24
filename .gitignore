@@ -7,4 +7,4 @@
 .project
 local_settings.py
 docs_src/_build/*
-consumer.conf
+local_consumer.conf
