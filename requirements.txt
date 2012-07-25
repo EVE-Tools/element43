@@ -16,6 +16,7 @@ djaml
 # Consumer stuffs
 emds
 hotqueue
+pylibmc
 
 # Cython is a dependency of pyzmq's development branch
 cython

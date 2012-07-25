@@ -32,6 +32,7 @@ import hashlib
 import base64
 import ConfigParser
 import os
+import pylibmc
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -45,6 +46,8 @@ redisdb = config.get('Redis', 'redishost')
 max_order_age = config.getint('Consumer', 'max_order_age')
 DEBUG = config.getboolean('Consumer', 'debug')
 TERM_OUT = config.getboolean('Consumer', 'term_out')
+mcserver = config.get('Memcache', 'server')
+mckey = config.get('Memcache', 'key')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
@@ -67,6 +70,8 @@ def thread(message):
     """
     #print "<<< entered thread"
     curs = dbcon.cursor()
+
+    mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
 
     market_json = zlib.decompress(message)
     market_list = unified.parse_from_json(market_json)
@@ -114,9 +119,12 @@ def thread(message):
                 statsData.append(row)
             
             for components in insertEmpty:
+                if mckey + str(components[0]) in mc:
+                    continue
                 try:
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)" % components
                     curs.execute(sql)
+                    mc[mckey + str(components[0])] = True
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
@@ -185,7 +193,10 @@ def thread(message):
                             insertData.append(row)
                             updateCounter += 1
                         row = (order.order_id, order.type_id, order.region_id)
+                        if mckey + str(row[0]) in mc:
+                            continue
                         insertSeen.append(row)
+                        mc[mckey + str(row[0])] = True
                     else:
                         oldCounter += 1
                         row = (3,)

@@ -10,7 +10,7 @@ import psycopg2.extras
 import time
 import ConfigParser
 import os
-
+import pylibmc
 
 def main():
     # Load connection params from the configuration file
@@ -23,6 +23,8 @@ def main():
     dbport = config.get('Database', 'dbport')
     redisdb = config.get('Redis', 'redishost')
     TERM_OUT = config.get('Consumer', 'term_out')
+    mcserver = config.get('Memcache', 'server')
+    mckey = config.get('Memcache', 'key')
     
     dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     dbcon.autocommit = True
@@ -31,6 +33,8 @@ def main():
 
     curs = dbcon.cursor()
     sscurs = transdbcon.cursor('loopcurs', cursor_factory=psycopg2.extras.DictCursor)
+    mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+
     # create and copy the data over
     sql = "DROP TABLE IF EXISTS market_data_seenordersworking"
     curs.execute(sql)
@@ -42,12 +46,12 @@ def main():
     curs.execute(sql)
     sscurs.execute("SELECT * FROM market_data_seenordersworking ORDER BY type_id, region_id")
     for row in sscurs:
-        print row
+        del mc[mckey + str(row[0])]
         regionID = row[1]
         typeID = row[2]
         sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
                  SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
-                 WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s) AND market_data_orders.id""" % (typeID, regionID, typeID, regionID)
+                 WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
         try:
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
