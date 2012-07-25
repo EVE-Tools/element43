@@ -225,7 +225,8 @@ def thread(message):
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
                     curs.executemany(sql, insertSeen)
                 except psycopg2.DatabaseError, e:
-                    print e.pgerror
+                    if TERM_OUT==True:
+                        print e.pgerror
                 insertSeen = []
             
             if DEBUG==True:        
