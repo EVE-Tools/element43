@@ -14,7 +14,7 @@ def main():
         
     # Load connection params from the configuration file
     config = ConfigParser.ConfigParser()
-    config.read('consumer.conf')
+    config.read(['consumer.conf', 'local_consumer.conf'])
     dbhost = config.get('Database', 'dbhost')
     dbname = config.get('Database', 'dbname')
     dbuser = config.get('Database', 'dbuser')
