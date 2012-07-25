@@ -115,7 +115,7 @@ def thread(message):
             
             for components in insertEmpty:
                 try:
-                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id, bid) values (%s, %s, %s, %s)" % components
+                    sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)" % components
                     curs.execute(sql)
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
@@ -225,7 +225,7 @@ def thread(message):
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
                     curs.executemany(sql, insertSeen)
                 except psycopg2.DatabaseError, e:
-                    pass
+                    print e.pgerror
                 insertSeen = []
             
             if DEBUG==True:        
