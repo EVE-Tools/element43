@@ -120,6 +120,11 @@ def thread(message):
                 if mckey + str(components[0]) in mc:
                     continue
                 try:
+                    sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % components[0]
+                    curs.execute(sql)
+                    result = curs.fetchone()
+                    if result is not None:
+                        continue
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)" % components
                     curs.execute(sql)
                     mc[mckey + str(components[0])] = True
@@ -132,8 +137,13 @@ def thread(message):
                 for order in item_region_list:
                     sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
                     curs.execute(sql)
-                    if curs.fetchone():
+                    result = curs.fetchone()
+                    if result is not None:
+                        if TERM_OUT==True:
+                            print "/// Ignoring order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                         continue
+                    if TERM_OUT==True:
+                        print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                     # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
