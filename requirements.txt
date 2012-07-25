@@ -8,6 +8,11 @@ django
 south
 django-devserver
 
+# HAML support
+pygments
+hamlpy
+djaml
+
 # Consumer stuffs
 emds
 hotqueue
