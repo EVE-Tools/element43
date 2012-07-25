@@ -6,7 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'apps.market_data.views.home'),
-    url(r'^gregtest/', 'apps.market_data.views.home-test'),
     # url(r'^element43/', include('element43.foo.urls')),
 
     # admin documentation:
