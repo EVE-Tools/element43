@@ -132,6 +132,10 @@ def thread(message):
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
+                    sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                    curs.execute(sql)
+                    if curs.fetchone():
+                        continue
                     # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
