@@ -146,6 +146,7 @@ INSTALLED_APPS = (
 
     'apps.market_data',
     'apps.static_data',
+    'eve_db',
 )
 
 DEVSERVER_MODULES = (

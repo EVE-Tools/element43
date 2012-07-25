@@ -8,3 +8,5 @@
 local_settings.py
 docs_src/_build/*
 local_consumer.conf
+eve_db
+*.db3
