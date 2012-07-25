@@ -111,9 +111,7 @@ def thread(message):
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
                 #sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
                 #curs.execute(sql)
-                row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id, 0)
-                insertEmpty.append(row)
-                row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1, item_region_list.type_id, item_region_list.region_id, 1)
+                row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id)
                 insertEmpty.append(row)
                 row = (0,)
                 statsData.append(row)
