@@ -127,7 +127,7 @@ def thread(message):
                         continue
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)" % components
                     curs.execute(sql)
-                    mc[mckey + str(components[0])] = True
+                    mc.set([mckey + str(components[0])], True, time=2)
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
@@ -208,7 +208,7 @@ def thread(message):
                         if mckey + str(row[0]) in mc:
                             continue
                         insertSeen.append(row)
-                        mc[mckey + str(row[0])] = True
+                        mc.set([mckey + str(row[0])], True, time=2)
                     else:
                         oldCounter += 1
                         row = (3,)

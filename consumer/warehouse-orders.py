@@ -10,7 +10,7 @@ import psycopg2.extras
 import time
 import ConfigParser
 import os
-import pylibmc
+import re
 
 def main():
     # Load connection params from the configuration file
@@ -26,14 +26,19 @@ def main():
     mcserver = config.get('Memcache', 'server')
     mckey = config.get('Memcache', 'key')
     
+    # Connect to PostgreSQL, auto commit.
     dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     dbcon.autocommit = True
 
+    # Connect to PostgreSQL, no auto commit
     transdbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 
+    # Activate all cursors
     curs = dbcon.cursor()
     sscurs = transdbcon.cursor('loopcurs', cursor_factory=psycopg2.extras.DictCursor)
-    mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+
+    # Fire up the regex cannon
+    recannon = re.compile("\((\d+),(\d+)\)")
 
     # create and copy the data over
     sql = "DROP TABLE IF EXISTS market_data_seenordersworking"
@@ -44,6 +49,7 @@ def main():
     curs.execute(sql)
     sql = "TRUNCATE market_data_seenorders"
     curs.execute(sql)
+    """
     loopsql = "SELECT * FROM market_data_seenordersworking ORDER BY type_id, region_id LIMIT 1"
     execute = True
     while (execute):
@@ -55,9 +61,9 @@ def main():
         if row:
             regionID = row[1]
             typeID = row[2]
-            sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
+            sql = INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
                      SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
-                     WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
+                     WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s) % (typeID, regionID, typeID, regionID)
             try:
                 curs.execute(sql)
             except psycopg2.DatabaseError, e:
@@ -77,14 +83,15 @@ def main():
         else:
             execute = False
     """
-    sscurs.execute("SELECT * FROM market_data_seenordersworking ORDER BY type_id, region_id")
+    
+    sscurs.execute("SELECT distinct(region_id, type_id) FROM market_data_seenorders")
     for row in sscurs:
-        del mc[mckey + str(row[0])]
-        regionID = row[1]
-        typeID = row[2]
-        sql = INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
+        rowdata = recannon.match(row[0])
+        regionID = rowdata[1]
+        typeID = rowdata[2]
+        sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
                  SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
-                 WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s) % (typeID, regionID, typeID, regionID)
+                 WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
         try:
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
@@ -101,7 +108,7 @@ def main():
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
             pass
-    """
+    
     
 if __name__ == '__main__':
     main()
