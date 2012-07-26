@@ -97,9 +97,9 @@ class OrdersWarehouse(models.Model):
         help_text="Region ID the order originated from.")
     invtype = models.ForeignKey('eve_db.InvType',
         help_text="The Type ID of the item in the order.")
-    stastation = models.ForeignKey('eve_db.stastation',
+    stastation = models.ForeignKey('eve_db.StaStation',
         help_text="The station that this order is in.")
-    mapsolarsystem = models.ForeignKey('eve_db.mapsolarsystem',
+    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
         help_text="ID of the solar system the order is in.")
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
@@ -174,11 +174,11 @@ class Orders(models.Model):
         help_text="When the order was issued.")
     duration = models.PositiveSmallIntegerField(
         help_text="The duration of the order, in days.")
-    stastation = models.ForeignKey('eve_db.stastation',
+    stastation = models.ForeignKey('eve_db.StaStation',
         help_text="The station that this order is in.")
     station_id = models.PositiveIntegerField(
         help_text="The station that this order is in.")
-    mapsolarsystem = models.ForeignKey('eve_db.mapsolarsystem',
+    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
         help_text="ID of the solar system the order is in.")
     solar_system_id = models.PositiveIntegerField(
         help_text="ID of the solar system the order is in.")
