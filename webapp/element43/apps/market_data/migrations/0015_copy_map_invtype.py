@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from django.db.utils import IntegrityError
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -11,7 +12,11 @@ class Migration(DataMigration):
         for order in Orders.objects.all():
             order.mapregion_id = order.region_id
             order.invtype_id = order.type_id
-            order.save()
+            try:
+                order.save()
+            except IntegrityError:
+                print("Error: Orders id %d has invalid invType ID %d" % (order.id, order.type_id))
+                continue
 
 
     def backwards(self, orm):
