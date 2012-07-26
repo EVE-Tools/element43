@@ -7,16 +7,24 @@ Greg Oberfield gregoberfield@gmail.com
 import psycopg2
 import urllib
 from xml.dom import minidom
+import ConfigParser
+import os
+import pylibmc
 
-TERM_OUT = True
+# Load connection params from the configuration file
+config = ConfigParser.ConfigParser()
+config.read(['consumer.conf', 'local_consumer.conf'])
+dbhost = config.get('Database', 'dbhost')
+dbname = config.get('Database', 'dbname')
+dbuser = config.get('Database', 'dbuser')
+dbpass = config.get('Database', 'dbpass')
+dbport = config.get('Database', 'dbport')
+DEBUG = config.getboolean('Consumer', 'debug')
+TERM_OUT = config.getboolean('Consumer', 'term_out')
 
-dbhost="localhost"
-dbname = "dbname"
-dbuser = "dbuser"
-dbpass = "dbpass"
 
 def main():
-    dbcon = mdb.connect(dbhost, dbuser, dbpass, dbname)
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     curs = dbcon.cursor()
 
     apiURL = 'https://api.eveonline.com/eve/ConquerableStationList.xml.aspx'
@@ -31,16 +39,18 @@ def main():
     dataNodes = XMLData.getElementsByTagName("row")
     
     for row, dataNode in enumerate(dataNodes):
+        sql = "DELETE FROM eve_db_stastation WHERE id=%s" % dataNode.attributes['stationID'].value
+        curs.execute(sql)
         if TERM_OUT == True:
             print "sID: ", dataNode.attributes['stationID'].value, "sName: ", dataNode.attributes['stationName'].value, "sSID: ", dataNode.attributes['solarSystemID'].value
-        sql = "SELECT constellationID, regionID FROM eve_sdd.mapSolarSystems WHERE solarSystemID=%s" % dataNode.attributes['solarSystemID'].value
+        sql = "SELECT constellation_id, region_id FROM eve_db_mapsolarsystem WHERE id=%s" % dataNode.attributes['solarSystemID'].value
         curs.execute(sql)
         row = curs.fetchone()
-        dataRow = (dataNode.attributes['stationID'].value, dataNode.attributes['stationName'].value, dataNode.attributes['solarSystemID'].value, dataNode.attributes['corporationID'].value, dataNode.attributes['stationTypeID'].value, row[0], row[1])
+        dataRow = (dataNode.attributes['stationID'].value, dataNode.attributes['stationName'].value, dataNode.attributes['solarSystemID'].value, dataNode.attributes['stationTypeID'].value, row[0], row[1])
         insertData.append(dataRow)
         
     if len(insertData)>0:
-        sql = "REPLACE INTO eve_sdd.staStations (stationID, stationName, solarSystemID, corporationID, stationTypeID, constellationID, regionID) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO eve_db_stastation (id, name, solar_system_id, type_id, constellation_id, region_id) VALUES (%s, %s, %s, %s, %s, %s)"
         curs.executemany(sql, insertData)
         
     dbcon.commit()
