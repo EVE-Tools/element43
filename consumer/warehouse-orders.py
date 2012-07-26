@@ -87,8 +87,8 @@ def main():
     sscurs.execute("SELECT distinct(region_id, type_id) FROM market_data_seenordersworking")
     for row in sscurs:
         rowdata = recannon.match(row[0])
-        regionID = rowdata[1]
-        typeID = rowdata[2]
+        regionID = rowdata.group(1)
+        typeID = rowdata.group(2)
         sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious) 
                  SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious FROM market_data_orders
                  WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
