@@ -137,6 +137,12 @@ class Orders(models.Model):
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
     # TODO: This should probably be a ForeignKey to a Region model.
+    mapregion = models.ForeignKey('eve_db.MapRegion', null=True,
+        help_text="Region ID the order originated from.")
+    # TODO: This should probably be a ForeignKey to a Type model.
+    invtype = models.ForeignKey('eve_db.InvType', null=True,
+        help_text="The Type ID of the item in the order.")
+    # TODO: This should probably be a ForeignKey to a Region model.
     region_id = models.PositiveIntegerField(
         help_text="Region ID the order originated from.")
     # TODO: This should probably be a ForeignKey to a Type model.
