@@ -84,7 +84,7 @@ def main():
             execute = False
     """
     
-    sscurs.execute("SELECT distinct(region_id, type_id) FROM market_data_seenorders")
+    sscurs.execute("SELECT distinct(region_id, type_id) FROM market_data_seenordersworking")
     for row in sscurs:
         rowdata = recannon.match(row[0])
         regionID = rowdata[1]
