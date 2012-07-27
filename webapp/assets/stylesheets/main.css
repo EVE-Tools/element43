@@ -18,62 +18,139 @@ body {
   background: #2f2f2f;
 }
 
-/* line 38, main.scss */
+/* line 39, main.scss */
+.clock {
+  float: right;
+  color: #fff;
+  margin: 0 auto;
+  padding: 0;
+}
+/* line 45, main.scss */
+.clock ul {
+  float: left;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+/* line 52, main.scss */
+.clock ul li {
+  display: inline;
+  text-shadow: 0 0 2px #00c6ff;
+  padding: 0;
+}
+
+/* line 59, main.scss */
+#date {
+  float: left;
+  padding-right: 5px;
+  text-shadow: 0 0 2px #00c6ff;
+}
+
+/* line 65, main.scss */
+#point {
+  position: relative;
+  -moz-animation: clktrans 1s ease infinite;
+  -webkit-animation: clktrans 1s ease infinite;
+  padding: 0;
+}
+
+/* Simple Animation */
+@-webkit-keyframes clktrans {
+  /* line 76, main.scss */
+  0% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+  }
+
+  /* line 77, main.scss */
+  50% {
+    opacity: 0;
+    text-shadow: none;
+  }
+
+  /* line 78, main.scss */
+  100% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+  }
+}
+
+@-moz-keyframes clktrans {
+  /* line 83, main.scss */
+  0% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+  }
+
+  /* line 84, main.scss */
+  50% {
+    opacity: 0;
+    text-shadow: none;
+  }
+
+  /* line 85, main.scss */
+  100% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+  }
+}
+
+/* line 91, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 45, main.scss */
+/* line 98, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 49, main.scss */
+/* line 102, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 53, main.scss */
+/* line 106, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 57, main.scss */
+/* line 110, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 61, main.scss */
+/* line 114, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 65, main.scss */
+/* line 118, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 69, main.scss */
+/* line 122, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 73, main.scss */
+/* line 126, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 77, main.scss */
+/* line 130, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 81, main.scss */
+/* line 134, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 85, main.scss */
+/* line 138, main.scss */
 .sec0 {
   color: #F00000;
 }

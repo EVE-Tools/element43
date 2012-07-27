@@ -34,6 +34,59 @@ body {
 
 // Rarely Used Clases
 
+// Fancy clock
+
+.clock {
+	float: right;
+	color:#fff;
+	margin:0 auto;
+	padding: 0;
+	
+	ul {
+		float:left;
+		list-style:none;
+		margin:0 auto;
+		padding:0;
+	}
+
+	ul li {
+		display:inline;
+		text-shadow:0 0 2px #00c6ff;
+		padding: 0;
+	}
+}
+
+#date {
+	float: left;
+	padding-right: 5px;
+	text-shadow:0 0 2px #00c6ff;
+}
+
+#point {
+	position:relative;
+	-moz-animation:clktrans 1s ease infinite;
+	-webkit-animation:clktrans 1s ease infinite;
+	padding: 0;
+}
+
+
+/* Simple Animation */
+@-webkit-keyframes clktrans 
+{
+0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+50% {opacity:0; text-shadow:none; }
+100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+}
+
+@-moz-keyframes clktrans 
+{
+0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+50% {opacity:0; text-shadow:none; }
+100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+}
+
+// Hero font color fix
+
 .hero-unit {
 	h1 {
 		color: white;
