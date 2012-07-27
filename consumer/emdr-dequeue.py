@@ -164,7 +164,7 @@ def thread(message):
                         suspicious = False
                         if (order.type_id!=statTypeID) or (order.station_id!=statStationID):
                             gevent.sleep()
-                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE type_id=%s AND station_id=%s" % (order.type_id, order.station_id)
+                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND stastation_id=%s" % (order.type_id, order.station_id)
                             statTypeID = order.type_id
                             statStationID = order.station_id
                             recordCount = None
@@ -200,7 +200,6 @@ def thread(message):
                             row = (1,)
                             statsData.append(row)
                             row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
-                                order.region_id, order.type_id, order.station_id, order.solar_system_id,
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
                                 order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
@@ -232,9 +231,9 @@ def thread(message):
                     print "--- INSERTING "+str(len(insertData))+" ORDERS ---"
                 #print insertData
                 sql = "INSERT INTO market_data_orders (id, invtype_id, stastation_id, mapsolarsystem_id, mapregion_id,"
-                sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range, "
+                sql += "is_bid, price, order_range, "
                 sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at, "
-                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 
                 curs.executemany(sql, insertData)
                 insertData = []
@@ -294,7 +293,7 @@ def thread(message):
             #print "Result: ", result
             if result:
                 checkHash = hash(str(data))
-                decodedData = ast.literal_eval(result[3])
+                decodedData = ast.literal_eval(result[1])
                 data.update(decodedData)
                 encodedData = json.dumps(data)
                 sql = "UPDATE market_data_history SET history_data='%s' WHERE id = '%s'" % (encodedData, uniqueKey)
@@ -302,7 +301,7 @@ def thread(message):
                     print "### UPDATING " + str(rowCount) + " HISTORY RECORDS ###"
             elif len(data)>0:
                 encodedData = json.dumps(data)
-                sql = "INSERT INTO market_data_history (id, region_id, type_id, mapregion_id, invtype_id, history_data) VALUES ('%s', %s, %s, %s, %s, '%s')" % (uniqueKey, regionID, typeID, regionID, typeID, encodedData)
+                sql = "INSERT INTO market_data_history (id, mapregion_id, invtype_id, history_data) VALUES ('%s', %s, %s, '%s')" % (uniqueKey, regionID, typeID, encodedData)
 
                 if TERM_OUT==True:
                     print "### INSERTING " + str(rowCount) + " HISTORY RECORDS ###"

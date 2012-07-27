@@ -72,14 +72,10 @@ class History(models.Model):
     
     id = models.CharField(max_length=255, primary_key=True,
         help_text="Primary key, based on UUID")
-    mapregion = models.ForeignKey('eve_db.MapRegion',
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
         help_text="Region ID the order originated from.")
-    invtype = models.ForeignKey('eve_db.InvType',
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
         help_text="The Type ID of the item in the order.")
-    region_id = models.PositiveIntegerField(db_index=True,
-        help_text="Region ID for this history message")
-    type_id = models.PositiveIntegerField(db_index=True,
-        help_text="Type ID for this history message")
     history_data=models.TextField(
         help_text="Compressed zlib data of the JSON message for history")
     
@@ -93,22 +89,16 @@ class OrdersWarehouse(models.Model):
     This represents a single line in a UUDIF rowset.
     """
 
-    mapregion = models.ForeignKey('eve_db.MapRegion',
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
         help_text="Region ID the order originated from.")
-    invtype = models.ForeignKey('eve_db.InvType',
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
         help_text="The Type ID of the item in the order.")
-    stastation = models.ForeignKey('eve_db.StaStation',
+    stastation = models.ForeignKey('eve_db.StaStation', db_index=True,
         help_text="The station that this order is in.")
     mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
         help_text="ID of the solar system the order is in.")
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
-    # TODO: This should probably be a ForeignKey to a Region model.
-    region_id = models.PositiveIntegerField(
-        help_text="Region ID the order originated from.")
-    # TODO: This should probably be a ForeignKey to a Type model.
-    type_id = models.BigIntegerField(db_index=True,
-        help_text="The Type ID of the item in the order.")
     price = models.FloatField(
         help_text="Item price, as reported in the message.")
     volume_entered = models.PositiveIntegerField(
@@ -123,17 +113,11 @@ class OrdersWarehouse(models.Model):
         help_text="When the order was issued.")
     duration = models.PositiveSmallIntegerField(
         help_text="The duration of the order, in days.")
-    # TODO: This should probably be a ForeignKey to a Station model.
-    station_id = models.PositiveIntegerField(
-        help_text="The station that this order is in.")
-    # TODO: This should probably be a ForeignKey to a Solar System model.
-    solar_system_id = models.PositiveIntegerField(
-        help_text="ID of the solar system the order is in.")
     is_suspicious = models.BooleanField(
         help_text="If this is True, we have reason to question this order's validity")
     message_key = models.CharField(max_length=255, 
         help_text="The unique hash of the market message.")
-    uploader_ip_hash = models.CharField(max_length=255,
+    uploader_ip_hash = models.CharField(max_length=255, db_index=True,
         help_text="The unique hash for the person who uploaded this message.")
 
     class Meta(object):
@@ -148,13 +132,9 @@ class Orders(models.Model):
 
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
-    mapregion = models.ForeignKey('eve_db.MapRegion',
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
         help_text="Region ID the order originated from.")
-    invtype = models.ForeignKey('eve_db.InvType',
-        help_text="The Type ID of the item in the order.")
-    region_id = models.PositiveIntegerField(
-        help_text="Region ID the order originated from.")
-    type_id = models.BigIntegerField(db_index=True,
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
         help_text="The Type ID of the item in the order.")
     price = models.FloatField(
         help_text="Item price, as reported in the message.")
@@ -174,21 +154,17 @@ class Orders(models.Model):
         help_text="When the order was issued.")
     duration = models.PositiveSmallIntegerField(
         help_text="The duration of the order, in days.")
-    stastation = models.ForeignKey('eve_db.StaStation',
-        help_text="The station that this order is in.")
-    station_id = models.PositiveIntegerField(
+    stastation = models.ForeignKey('eve_db.StaStation', db_index=True,
         help_text="The station that this order is in.")
     mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
-        help_text="ID of the solar system the order is in.")
-    solar_system_id = models.PositiveIntegerField(
         help_text="ID of the solar system the order is in.")
     is_suspicious = models.BooleanField(
         help_text="If this is True, we have reason to question this order's validity")
     message_key = models.CharField(max_length=255, 
         help_text="The unique hash that of the market message.")
-    uploader_ip_hash = models.CharField(max_length=255,
+    uploader_ip_hash = models.CharField(max_length=255, db_index=True,
         help_text="The unique hash for the person who uploaded this message.")
 
     class Meta(object):
-        verbose_name = "Market Data"
-        verbose_name_plural = "Market Data"
+        verbose_name = "Market Order"
+        verbose_name_plural = "Market Orders"

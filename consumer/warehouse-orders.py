@@ -55,14 +55,14 @@ def main():
         rowdata = recannon.match(row[0])
         regionID = rowdata.group(1)
         typeID = rowdata.group(2)
-        sql = """INSERT INTO market_data_orderswarehouse (generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
-                 SELECT generated_at, region_id, type_id, price, order_range, id, is_bid, issue_date, duration, volume_entered, station_id, solar_system_id, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
-                 WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)""" % (typeID, regionID, typeID, regionID)
+        sql = """INSERT INTO market_data_orderswarehouse (generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
+                 SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
+                 WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, regionID, typeID, regionID)
         try:
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
             pass
-        sql = "DELETE FROM market_data_orders WHERE type_id=%s AND region_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s)" % (typeID, regionID, typeID, regionID)
+        sql = "DELETE FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)" % (typeID, regionID, typeID, regionID)
         try:
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
