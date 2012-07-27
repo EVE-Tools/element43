@@ -9,14 +9,9 @@ from apps.market_data.models import Orders
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for order in Orders.objects.all():
-            order.mapregion_id = order.region_id
-            order.invtype_id = order.type_id
-            try:
-                order.save()
-            except IntegrityError:
-                print("Error: Orders id %d has invalid invType ID %d" % (order.id, order.type_id))
-                continue
+        db.execute('TRUNCATE market_data_orders')
+        db.execute('TRUNCATE market_data_history')
+        db.execute('TRUNCATE market_data_emdrstats')
 
 
     def backwards(self, orm):

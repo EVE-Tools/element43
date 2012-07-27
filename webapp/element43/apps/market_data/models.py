@@ -72,6 +72,10 @@ class History(models.Model):
     
     id = models.CharField(max_length=255, primary_key=True,
         help_text="Primary key, based on UUID")
+    mapregion = models.ForeignKey('eve_db.MapRegion',
+        help_text="Region ID the order originated from.")
+    invtype = models.ForeignKey('eve_db.InvType',
+        help_text="The Type ID of the item in the order.")
     region_id = models.PositiveIntegerField(db_index=True,
         help_text="Region ID for this history message")
     type_id = models.PositiveIntegerField(db_index=True,
@@ -89,6 +93,14 @@ class OrdersWarehouse(models.Model):
     This represents a single line in a UUDIF rowset.
     """
 
+    mapregion = models.ForeignKey('eve_db.MapRegion',
+        help_text="Region ID the order originated from.")
+    invtype = models.ForeignKey('eve_db.InvType',
+        help_text="The Type ID of the item in the order.")
+    stastation = models.ForeignKey('eve_db.StaStation',
+        help_text="The station that this order is in.")
+    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
+        help_text="ID of the solar system the order is in.")
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
     # TODO: This should probably be a ForeignKey to a Region model.
@@ -136,16 +148,12 @@ class Orders(models.Model):
 
     generated_at = models.DateTimeField(blank=True, null=True,
         help_text="When the market data was generated on the user's machine.")
-    # TODO: This should probably be a ForeignKey to a Region model.
-    mapregion = models.ForeignKey('eve_db.MapRegion', null=True,
+    mapregion = models.ForeignKey('eve_db.MapRegion',
         help_text="Region ID the order originated from.")
-    # TODO: This should probably be a ForeignKey to a Type model.
-    invtype = models.ForeignKey('eve_db.InvType', null=True,
+    invtype = models.ForeignKey('eve_db.InvType',
         help_text="The Type ID of the item in the order.")
-    # TODO: This should probably be a ForeignKey to a Region model.
     region_id = models.PositiveIntegerField(
         help_text="Region ID the order originated from.")
-    # TODO: This should probably be a ForeignKey to a Type model.
     type_id = models.BigIntegerField(db_index=True,
         help_text="The Type ID of the item in the order.")
     price = models.FloatField(
@@ -166,10 +174,12 @@ class Orders(models.Model):
         help_text="When the order was issued.")
     duration = models.PositiveSmallIntegerField(
         help_text="The duration of the order, in days.")
-    # TODO: This should probably be a ForeignKey to a Station model.
+    stastation = models.ForeignKey('eve_db.StaStation',
+        help_text="The station that this order is in.")
     station_id = models.PositiveIntegerField(
         help_text="The station that this order is in.")
-    # TODO: This should probably be a ForeignKey to a Solar System model.
+    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
+        help_text="ID of the solar system the order is in.")
     solar_system_id = models.PositiveIntegerField(
         help_text="ID of the solar system the order is in.")
     is_suspicious = models.BooleanField(

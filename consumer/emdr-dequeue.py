@@ -200,6 +200,7 @@ def thread(message):
                             row = (1,)
                             statsData.append(row)
                             row = (order.order_id, order.type_id, order.station_id, order.solar_system_id,
+                                order.region_id, order.type_id, order.station_id, order.solar_system_id,
                                 order.region_id, bid, order.price, order.order_range, order.order_duration,
                                 order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
@@ -230,10 +231,10 @@ def thread(message):
                 if TERM_OUT==True:
                     print "--- INSERTING "+str(len(insertData))+" ORDERS ---"
                 #print insertData
-                sql = "INSERT INTO market_data_orders (id,"
+                sql = "INSERT INTO market_data_orders (id, invtype_id, stastation_id, mapsolarsystem_id, mapregion_id,"
                 sql += "type_id, station_id, solar_system_id, region_id, is_bid, price, order_range, "
                 sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at, "
-                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 
                 curs.executemany(sql, insertData)
                 insertData = []
@@ -301,7 +302,7 @@ def thread(message):
                     print "### UPDATING " + str(rowCount) + " HISTORY RECORDS ###"
             elif len(data)>0:
                 encodedData = json.dumps(data)
-                sql = "INSERT INTO market_data_history (id, region_id, type_id, history_data) VALUES ('%s', %s, %s, '%s')" % (uniqueKey, regionID, typeID, encodedData)
+                sql = "INSERT INTO market_data_history (id, region_id, type_id, mapregion_id, invtype_id, history_data) VALUES ('%s', %s, %s, %s, %s, '%s')" % (uniqueKey, regionID, typeID, regionID, typeID, encodedData)
 
                 if TERM_OUT==True:
                     print "### INSERTING " + str(rowCount) + " HISTORY RECORDS ###"
