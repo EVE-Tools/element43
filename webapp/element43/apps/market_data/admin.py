@@ -19,8 +19,8 @@ class OrdersAdmin(admin.ModelAdmin):
     """
 
     list_display = ('id', 'invtype', 'mapregion', 'price', 'generated_at', 'is_bid')
-    list_filter = ('is_bid', 'generated_at')
-    search_fields = ('invtype_id', 'message_key', 'uploader_ip_hash')
+    list_filter = ('is_bid', 'generated_at', 'mapregion')
+    search_fields = ('invtype', 'mapregion', 'message_key', 'uploader_ip_hash')
     date_hierarchy = 'generated_at'
 
 admin.site.register(Orders, OrdersAdmin)
