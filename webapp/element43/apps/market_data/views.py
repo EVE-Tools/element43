@@ -13,7 +13,7 @@ def home(request):
 		"""
 		Returns our static home template.
 		"""
-    return render_to_response('home.haml')
+		return render_to_response('home.haml')
 
 def live_search(request, query='a'):
 	
