@@ -18,9 +18,9 @@ class OrdersAdmin(admin.ModelAdmin):
     Admin site definition for the Orders model.
     """
 
-    list_display = ('id', 'invtype_id', 'mapregion_id', 'price', 'generated_at', 'is_bid')
+    list_display = ('id', 'invtype', 'mapregion', 'price', 'generated_at', 'is_bid')
     list_filter = ('is_bid', 'generated_at')
-    search_fields = ('type_id', 'message_key', 'uploader_ip_hash')
+    search_fields = ('invtype_id', 'message_key', 'uploader_ip_hash')
     date_hierarchy = 'generated_at'
 
 admin.site.register(Orders, OrdersAdmin)
