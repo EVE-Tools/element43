@@ -18,12 +18,16 @@
               %li
                 %a{'href':'#'} Home
               %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} Market
+                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
+                  Market
                   %b{'class':'caret'}
                 %ul{'class':'dropdown-menu'}
-                  %a{'href':'#'} Item Details
-                  %a{'href':'#'} Item Quick Look
-                  %a{'href':'/market/scanner'} Market Scanner
+                  %li
+                    %a{'href':'#'} Item Details
+                  %li
+                    %a{'href':'#'} Item Quick Look
+                  %li
+                    %a{'href':'/market/scanner'} Market Scanner
               %li
                 %a{'href':'#'} Trading
               %li
@@ -31,10 +35,12 @@
               %li
                 %a{'href':'#'} Production
               %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} Reports
+                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
+                  Reports
                   %b{'class':'caret'}
                 %ul{'class':'dropdown-menu'}
-                  %a User Reports
+                  %li
+                    %a{'href':'#'} User Reports
             %form.navbar-search.pull-right
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':''}
       .container
