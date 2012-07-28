@@ -32,6 +32,17 @@ body {
 	background: $background_grey;
 }
 
+.navbar {
+	padding: $padding;
+	background: rgba(0, 0, 0, 0.4);
+	border-bottom: 1px solid #313F41;
+}
+
+.navbar-inner {
+	//width: 940px;
+	background: transparent;
+}
+
 // Rarely Used Clases
 
 // Fancy clock
