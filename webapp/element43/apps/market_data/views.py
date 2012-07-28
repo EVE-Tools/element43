@@ -10,6 +10,7 @@ from django.utils import simplejson
 from eve_db.models import InvType
 
 def home(request):
+		
 		"""
 		Returns our static home template.
 		"""
@@ -43,3 +44,11 @@ def live_search(request, query='a'):
 		
 		# Return JSON without using any template
 		return HttpResponse(types_json, mimetype = 'application/json')
+		
+def quicklook(request, type="34"):
+		
+		"""
+		Generated a market overview for a certain type. Default to tritanium.
+		"""
+		
+		return render_to_response('quicklook.haml')
