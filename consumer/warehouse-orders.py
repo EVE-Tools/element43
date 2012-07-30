@@ -69,7 +69,7 @@ def main():
     except psycopg2.DatabaseError, e:
         print e.pgerror
         sys.exit(1)
-        
+    
     sql = "SELECT DISTINCT region_id FROM market_data_seenordersworking"
     curs.execute(sql)
     for result in curs:
@@ -81,32 +81,36 @@ def thread(region):
     
     sql = "SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s" % int(region)
     curs.execute(sql)
-    for row in curs:
-        print "Region: ", region, "Type: ", row[0]
-        #rowdata = recannon.match(row[0])
-        typeID = row[0]
-        sql = """INSERT INTO market_data_orderswarehouse (generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
-                 SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
-                 WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
-        try:
-            curs.execute(sql)
-        except psycopg2.DatabaseError, e:
-            print e.pgerror
-            pass
-        sql = "DELETE FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)" % (typeID, region, typeID, region)
-        try:
-            curs.execute(sql)
-        except psycopg2.DatabaseError, e:
-            print e.pgerror
-            pass
-        if TERM_OUT==True:
-            print "Type: ", typeID, " Region: ", region, " (affected: ", curs.rowcount, ")"
-        sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, region)
-        try:
-            curs.execute(sql)
-        except psycopg2.DatabaseError, e:
-            print e.pgerror
-            pass  
+    try:
+        for row in curs:
+            if TERM_OUT==True:
+                print "Region: ", region, "Type: ", row[0]
+            #rowdata = recannon.match(row[0])
+            typeID = row[0]
+            sql = """INSERT INTO market_data_orderswarehouse (generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
+                     SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
+                     WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                print e.pgerror
+                pass
+            sql = "DELETE FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)" % (typeID, region, typeID, region)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                print e.pgerror
+                pass
+            if TERM_OUT==True:
+                print "Type: ", typeID, " Region: ", region, " (affected: ", curs.rowcount, ")"
+            sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, region)
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                print e.pgerror
+                pass
+    except:
+        pass
     
 if __name__ == '__main__':
     main()
