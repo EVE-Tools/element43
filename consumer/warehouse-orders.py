@@ -16,7 +16,6 @@ from gevent.pool import Pool
 from gevent import monkey; gevent.monkey.patch_all()
 import sys
 
-
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
 config.read(['consumer.conf', 'local_consumer.conf'])
@@ -36,16 +35,12 @@ transdbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass
 
 # Activate all cursors
 curs = dbcon.cursor()
-sscurs = transdbcon.cursor('loopcurs', cursor_factory=psycopg2.extras.DictCursor)
+#sscurs = transdbcon.cursor('loopcurs', cursor_factory=psycopg2.extras.DictCursor)
 
 # Fire up the regex cannon
 recannon = re.compile("\((\d+),(\d+)\)")
 
-# Max number of greenlet workers
-MAX_NUM_POOL_WORKERS = 75
-
-# use a greenlet pool to cap the number of workers at a reasonable level
-greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
+workers = []
     
 def main():
     
@@ -78,17 +73,18 @@ def main():
     sql = "SELECT DISTINCT region_id FROM market_data_seenordersworking"
     curs.execute(sql)
     for result in curs:
-        print "Region: ", result[0]
-        greenlet_pool.spawn(thread, result)
+        workers.append(gevent.spawn(thread, result[0]))
     
-def thread(result):
+    gevent.joinall(workers)
     
-    region = result[0]
-    sscurs.execute("SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s") % region
-    for row in sscurs:
-        print row
-        rowdata = recannon.match(row[0])
-        typeID = rowdata.group(2)
+def thread(region):
+    
+    sql = "SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s" % int(region)
+    curs.execute(sql)
+    for row in curs:
+        print "Region: ", region, "Type: ", row[0]
+        #rowdata = recannon.match(row[0])
+        typeID = row[0]
         sql = """INSERT INTO market_data_orderswarehouse (generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
                  SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
                  WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
