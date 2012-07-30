@@ -142,8 +142,8 @@ def thread(message):
                         if TERM_OUT==True:
                             print "/// Ignoring order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                         continue
-                    if TERM_OUT==True:
-                        print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
+                    #if TERM_OUT==True:
+                    #    print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                     # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
