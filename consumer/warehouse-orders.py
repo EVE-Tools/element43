@@ -44,8 +44,6 @@ workers = []
     
 def main():
 
-    curs = dbcon.cursor()
-    
     # create and copy the data over
     sql = "CREATE TABLE IF NOT EXISTS market_data_seenordersworking (LIKE market_data_seenorders)"
     try:
@@ -80,7 +78,9 @@ def main():
     gevent.joinall(workers)
     
 def thread(region):
-    
+
+    curs = dbcon.cursor()    
+
     sql = "SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s" % int(region)
     curs.execute(sql)
     try:
