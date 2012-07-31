@@ -21,6 +21,17 @@ body {
 	background: url("../images/background.jpg") no-repeat scroll center top $background;
 }
 
+// Table highlight fix
+
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+  background-color: transparent;
+}
+
+.table-striped tbody tr:nth-child(odd):hover td {
+   background-color: rgb(68, 68, 68);
+}
+
 // Classes
 
 .panel-wrapper {
@@ -39,7 +50,6 @@ body {
 }
 
 .navbar-inner {
-	//width: 940px;
 	background: transparent;
 }
 

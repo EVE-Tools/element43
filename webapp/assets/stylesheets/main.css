@@ -6,59 +6,70 @@ body {
   background: url("../images/background.jpg") no-repeat scroll center top black;
 }
 
-/* line 26, main.scss */
+/* line 27, main.scss */
+.table tbody tr:hover td,
+.table tbody tr:hover th {
+  background-color: transparent;
+}
+
+/* line 31, main.scss */
+.table-striped tbody tr:nth-child(odd):hover td {
+  background-color: #444444;
+}
+
+/* line 37, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 30, main.scss */
+/* line 41, main.scss */
 .content {
   padding: 10px;
   background: #2f2f2f;
 }
 
-/* line 35, main.scss */
+/* line 46, main.scss */
 .navbar {
   padding: 10px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41;
 }
 
-/* line 41, main.scss */
+/* line 52, main.scss */
 .navbar-inner {
   background: transparent;
 }
 
-/* line 50, main.scss */
+/* line 60, main.scss */
 .clock {
   float: right;
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 56, main.scss */
+/* line 66, main.scss */
 .clock ul {
   float: left;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 63, main.scss */
+/* line 73, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 2px #00c6ff;
   padding: 0;
 }
 
-/* line 70, main.scss */
+/* line 80, main.scss */
 #date {
   float: left;
   padding-right: 5px;
   text-shadow: 0 0 2px #00c6ff;
 }
 
-/* line 76, main.scss */
+/* line 86, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -68,19 +79,19 @@ body {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 87, main.scss */
+  /* line 97, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #00c6ff;
   }
 
-  /* line 88, main.scss */
+  /* line 98, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 89, main.scss */
+  /* line 99, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #00c6ff;
@@ -88,81 +99,81 @@ body {
 }
 
 @-moz-keyframes clktrans {
-  /* line 94, main.scss */
+  /* line 104, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #00c6ff;
   }
 
-  /* line 95, main.scss */
+  /* line 105, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 96, main.scss */
+  /* line 106, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #00c6ff;
   }
 }
 
-/* line 102, main.scss */
+/* line 112, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 109, main.scss */
+/* line 119, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 113, main.scss */
+/* line 123, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 117, main.scss */
+/* line 127, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 121, main.scss */
+/* line 131, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 125, main.scss */
+/* line 135, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 129, main.scss */
+/* line 139, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 133, main.scss */
+/* line 143, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 137, main.scss */
+/* line 147, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 141, main.scss */
+/* line 151, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 145, main.scss */
+/* line 155, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 149, main.scss */
+/* line 159, main.scss */
 .sec0 {
   color: #F00000;
 }
