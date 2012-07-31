@@ -135,6 +135,10 @@ def thread(message):
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
+                    if order.generated_at > now_dtime_in_utc():
+                        if TERM_OUT==True:
+                            print "000 Order has gen_at in the future 000"
+                        continue
                     sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
                     curs.execute(sql)
                     result = curs.fetchone()
@@ -187,7 +191,7 @@ def thread(message):
                         result = curs.fetchone()
                         if result:
                             #get_at_dtime = datetime.datetime.strptime(generated_at,"%Y-%m-%d %H:%M:%S+%z")
-                            if result[0]  < order.generated_at:
+                            if result[0] < order.generated_at:
                                 row=(2,)
                                 statsData.append(row)
                                 row = (order.price, order.volume_remaining, order.generated_at, issue_date, msgKey, suspicious, ipHash, order.order_id)
