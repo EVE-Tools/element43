@@ -1,7 +1,7 @@
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from django.template import Context
+from django.template import RequestContext
 
 # JSON for the live search
 from django.utils import simplejson
@@ -9,13 +9,46 @@ from django.utils import simplejson
 # eve_db models
 from eve_db.models import InvType
 
+"""
+Those are our views. We have to use the RequestContext for CSRF protection, since we have a form (search) in every single of our views, as they extend 'base.haml'.
+"""
+
 def home(request):
 		
 		"""
-		Returns our static home template.
+		Returns our static home template with a CSRF protection for our search.
 		"""
-		return render_to_response('home.haml')
-
+		
+		# Create context for CSRF protection
+		rcontext = RequestContext(request, {})
+		
+		return render_to_response('home.haml', rcontext)
+		
+def search(request):
+	
+		"""
+		This adds a basic search view to element43.
+		The names in the invTypes table are searched with a case insensitive LIKE query.
+		"""
+		
+		# Get query from request
+		query = request.POST.get('query', '')
+		
+		# Prepare list
+		types = []
+		
+		# Only if the string is longer than 2 characters start looking in the DB
+		if len(query) > 2:
+			
+				# Load published type objects matching the name
+				types = InvType.objects.filter(name__icontains = query, is_published = True)
+				
+		# Create Context
+		rcontext = RequestContext(request, {'types':types})		
+		
+		# Render template
+		return render_to_response('search.haml', rcontext)
+		
 def live_search(request, query='a'):
 	
 		"""

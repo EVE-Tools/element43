@@ -41,26 +41,27 @@
                 %ul{'class':'dropdown-menu'}
                   %li
                     %a{'href':'#'} User Reports
-            %form.navbar-search.pull-right
-              %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':''}
-      .container
-        .panel-wrapper
-          .content.clearfix
-            - block content
-            %hr
-            %footer
-              .row
-                .span2
-                  %p
-                    element43 - 2012
-                .clock
-                  #date
-                  %ul
-                    %li#hours
-                    %li#point :
-                    %li#min
-                    %li#point :
-                    %li#sec
+            %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search'}
+              - csrf_token
+              %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
+    .container
+      .panel-wrapper
+        .content.clearfix
+          - block content
+          %hr
+          %footer
+            .row
+              .span2
+                %p
+                  element43 - 2012
+              .clock
+                #date
+                %ul
+                  %li#hours
+                  %li#point :
+                  %li#min
+                  %li#point :
+                  %li#sec
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/jquery-1.7.2.min.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}

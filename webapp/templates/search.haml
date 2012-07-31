@@ -1,0 +1,27 @@
+- extends "base.haml"
+- block title
+  element43 - Search
+- block content
+  %h1
+    Search
+  - ifequal types|length 0
+    .alert.alert-info
+      %i.icon-white.icon-warning-sign
+      We could not find anything with that name or your request was too generic.
+  - else
+    %table.table-striped
+      %tbody
+      - for type in types
+        %tr
+          %td{'width':'64px'}
+            %img{'src':format('http://image.eveonline.com/type/{{type.id}}_64.png'), 'alt':'type image'}
+          %td
+            %h3
+              = type.name
+            = type.description
+          %td{'width':'32px'}
+            %a{'href':'/quicklook/{{type.name}}'}
+              %i.icon-white.icon-circle-arrow-right
+              
+            
+      

@@ -9,14 +9,14 @@ urlpatterns = patterns('',
     # url(r'^element43/', include('element43.foo.urls')),
     url(r'^market/scanner/', 'apps.market_data.scanners.random'),
 
-		# Live search
-		url(r'live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
-		
 		# Search
-		url(r'search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.search'),
+		url(r'^search', 'apps.market_data.views.search'),
+
+		# Live search
+		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
 		
 		# Quicklook
-		url(r'market/(?P<type>[0-9]+)', 'apps.market_data.views.quicklook'),
+		url(r'^market/(?P<type>[0-9a-zA-Z_.-]+)', 'apps.market_data.views.quicklook'),
 
     # admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
