@@ -1,6 +1,7 @@
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 
 # JSON for the live search
@@ -46,6 +47,12 @@ def search(request):
 			
 				# Load published type objects matching the name
 				types = InvType.objects.filter(name__icontains = query, is_published = True)
+				
+		# If there is only one hit, directly redirect to quicklook
+		if len(types) == 1:
+			type_id = str(types[0].id)
+			print type_id
+			return HttpResponseRedirect('/market/' + type_id)
 				
 		# Create Context
 		rcontext = RequestContext(request, {'types':types})		
