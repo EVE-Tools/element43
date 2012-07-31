@@ -84,8 +84,13 @@ def thread(region):
     tcurs = dbcon.cursor()
     sql = "SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s" % int(region)
     tcurs.execute(sql)
-    try:
-        for row in tcurs:
+    result = tcurs.fetchall()
+    if result == None:
+        if TERM_OUT==True:
+            print "No Results"
+    else:
+        for row in result:
+            #print "Region: ", region, " Type: ", row[0]
             if TERM_OUT==True:
                 print "Region: ", region, "Type: ", row[0]
             #rowdata = recannon.match(row[0])
@@ -112,8 +117,6 @@ def thread(region):
             except psycopg2.DatabaseError, e:
                 print e.pgerror
                 pass
-    except:
-        pass
     
 if __name__ == '__main__':
     main()
