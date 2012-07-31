@@ -105,14 +105,14 @@ TEMPLATE_LOADERS = (
 		
     #'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-	#'django.template.loaders.eggs.Loader',
+		#'django.template.loaders.eggs.Loader',
 )
 
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+		'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -140,6 +140,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+
+		'django.contrib.humanize',
 
     'south',
     'devserver',
