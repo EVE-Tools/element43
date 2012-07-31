@@ -81,10 +81,11 @@ def main():
     
 def thread(region):
     
+    tcurs = dbcon.cursor()
     sql = "SELECT DISTINCT type_id FROM market_data_seenordersworking WHERE region_id=%s" % int(region)
-    curs.execute(sql)
+    tcurs.execute(sql)
     try:
-        for row in curs:
+        for row in tcurs:
             if TERM_OUT==True:
                 print "Region: ", region, "Type: ", row[0]
             #rowdata = recannon.match(row[0])
@@ -93,21 +94,21 @@ def thread(region):
                      SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
                      WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
             try:
-                curs.execute(sql)
+                tcurs.execute(sql)
             except psycopg2.DatabaseError, e:
                 print e.pgerror
                 pass
             sql = "DELETE FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)" % (typeID, region, typeID, region)
             try:
-                curs.execute(sql)
+                tcurs.execute(sql)
             except psycopg2.DatabaseError, e:
                 print e.pgerror
                 pass
             if TERM_OUT==True:
-                print "Type: ", typeID, " Region: ", region, " (affected: ", curs.rowcount, ")"
+                print "Type: ", typeID, " Region: ", region, " (affected: ", tcurs.rowcount, ")"
             sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, region)
             try:
-                curs.execute(sql)
+                tcurs.execute(sql)
             except psycopg2.DatabaseError, e:
                 print e.pgerror
                 pass

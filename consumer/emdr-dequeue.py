@@ -96,7 +96,6 @@ def thread(message):
         row=(5,)
         statsData.append(row)
         sql = ""
-        orderHash = 0
         #print "* Recieved Orders from: %s" % market_list.order_generator
         statTypeID = 0
         statStationID = 0
@@ -151,10 +150,7 @@ def thread(message):
                     # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
-                    if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=max_order_age))):
-                    #if True:
-                        orderHash = hashlib.md5(str(order.order_id)+str(order.price)+str(order.volume_remaining)).hexdigest()
-                        
+                    if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=max_order_age))):                   
                         # convert the bid true/false to binary
                         if order.is_bid:
                             bid = True
