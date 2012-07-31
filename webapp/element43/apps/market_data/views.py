@@ -6,11 +6,15 @@ from django.template import RequestContext
 # JSON for the live search
 from django.utils import simplejson
 
+# market_data models
+from models import Orders
+
 # eve_db models
 from eve_db.models import InvType
 
 """
-Those are our views. We have to use the RequestContext for CSRF protection, since we have a form (search) in every single of our views, as they extend 'base.haml'.
+Those are our views. We have to use the RequestContext for CSRF protection, 
+since we have a form (search) in every single of our views, as they extend 'base.haml'.
 """
 
 def home(request):
@@ -78,10 +82,17 @@ def live_search(request, query='a'):
 		# Return JSON without using any template
 		return HttpResponse(types_json, mimetype = 'application/json')
 		
-def quicklook(request, type="34"):
+def quicklook(request, type_id="34"):
 		
 		"""
 		Generated a market overview for a certain type. Default to tritanium.
 		"""
 		
-		return render_to_response('quicklook.haml')
+		type_object = InvType.objects.get(id = type_id)
+		
+		buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True).order_by('-price')[:50]
+		sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False).order_by('price')[:50]
+
+		rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders, 'sell_orders':sell_orders})
+		
+		return render_to_response('quicklook.haml', rcontext)

@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
 		
 		# Quicklook
-		url(r'^market/(?P<type>[0-9a-zA-Z_.-]+)', 'apps.market_data.views.quicklook'),
+		url(r'^market/(?P<type_id>[0-9]+)', 'apps.market_data.views.quicklook'),
 
     # admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
