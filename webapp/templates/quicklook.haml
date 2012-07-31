@@ -34,6 +34,8 @@
               Price
             %th
               Last Seen
+            %th
+              ID
         %tbody
           - for order in sell_orders
             %tr
@@ -48,6 +50,8 @@
                 = order.price
               %td
                 = order.generated_at|naturaltime
+              %td
+                = order.id
       %h3
         Buy
       %table.table.table-striped.table-condensed
@@ -61,6 +65,8 @@
               Price
             %th
               Last Seen
+            %th
+              ID
         %tbody
           - for order in buy_orders
             %tr
@@ -75,6 +81,8 @@
                 = order.price
               %td
                 = order.generated_at|naturaltime
+              %td
+                = order.id
     #regions.tab-pane.fade
       %h3 Trade Hubs
       %table.table.table-striped.table-condensed
