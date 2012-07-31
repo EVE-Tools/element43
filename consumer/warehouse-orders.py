@@ -43,6 +43,8 @@ recannon = re.compile("\((\d+),(\d+)\)")
 workers = []
     
 def main():
+
+    curs = dbcon.cursor()
     
     # create and copy the data over
     sql = "CREATE TABLE IF NOT EXISTS market_data_seenordersworking (LIKE market_data_seenorders)"
