@@ -84,7 +84,7 @@
               %td
                 = order.id
     #regions.tab-pane.fade
-      %h3 Trade Hubs
+      %h3 Regions
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -106,116 +106,41 @@
             %th
               Volume
         %tbody
-          %tr
-            %td
-              Jita
-            %td
-              Ask
-            %td
-              6.58
-            %td
-              21,000,000,000.00
-            %td
-              268,203,831.47
-            %td
-              7.00
-            %td
-              2,354,987,244.41
-            %td
-              157
-            %td
-              26,758,508,569
-          %tr
-            %td
-            %td
-              Bid
-              %td
-                6.58
-              %td
-                21,000,000,000.00
-              %td
-                268,203,831.47
-              %td
-                7.00
-              %td
-                2,354,987,244.41
-              %td
-                157
-              %td
-                26,758,508,569
+        - for region in regions
             %tr
               %td
-                Jita
+                = region.0
               %td
                 Ask
               %td
-                6.58
+                = region.1
               %td
-                21,000,000,000.00
+                = region.2
               %td
-                268,203,831.47
+                = region.3
               %td
-                7.00
+                = region.4
               %td
-                2,354,987,244.41
+                = region.5
               %td
-                157
+                = region.6
               %td
-                26,758,508,569
+                = region.7
             %tr
               %td
               %td
                 Bid
-                %td
-                  6.58
-                %td
-                  21,000,000,000.00
-                %td
-                  268,203,831.47
-                %td
-                  7.00
-                %td
-                  2,354,987,244.41
-                %td
-                  157
-                %td
-                  26,758,508,569
-              %tr
-                %td
-                  Jita
-                %td
-                  Ask
-                %td
-                  6.58
-                %td
-                  21,000,000,000.00
-                %td
-                  268,203,831.47
-                %td
-                  7.00
-                %td
-                  2,354,987,244.41
-                %td
-                  157
-                %td
-                  26,758,508,569
-              %tr
-                %td
-                %td
-                  Bid
-                  %td
-                    6.58
-                  %td
-                    21,000,000,000.00
-                  %td
-                    268,203,831.47
-                  %td
-                    7.00
-                  %td
-                    2,354,987,244.41
-                  %td
-                    157
-                  %td
-                    26,758,508,569
-        
-  
+              %td
+                = region.8
+              %td
+                = region.9
+              %td
+                = region.10
+              %td
+                = region.11
+              %td
+                = region.12
+              %td
+                = region.13
+              %td
+                = region.14

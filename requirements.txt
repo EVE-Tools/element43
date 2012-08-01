@@ -8,6 +8,7 @@ django
 south
 django-devserver
 git+http://github.com/gtaylor/django-eve-db.git
+numpy
 
 # HAML support
 pygments
