@@ -137,9 +137,9 @@ def quicklook(request, type_id="34"):
 				# Ask values calculated via numpy
 				temp_data.append(np.min(region_ask_prices))
 				temp_data.append(np.max(region_ask_prices))
-				temp_data.append(np.average(region_ask_prices))
+				temp_data.append(round(np.average(region_ask_prices),2))
 				temp_data.append(np.median(region_ask_prices))
-				temp_data.append(np.std(region_ask_prices))
+				temp_data.append(round(np.std(region_ask_prices),2))
 				temp_data.append(len(region_ask_prices))
 				temp_data.append(Orders.objects.filter(mapregion_id = region, invtype = type_id, is_bid = False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
 			else:
@@ -150,9 +150,9 @@ def quicklook(request, type_id="34"):
 				# Bid values calculated via numpy
 				temp_data.append(np.min(region_bid_prices))
 				temp_data.append(np.max(region_bid_prices))
-				temp_data.append(np.average(region_bid_prices))
+				temp_data.append(round(np.average(region_bid_prices),2))
 				temp_data.append(np.median(region_bid_prices))
-				temp_data.append(np.std(region_bid_prices))
+				temp_data.append(round(np.std(region_bid_prices),2))
 				temp_data.append(len(region_bid_prices))
 				temp_data.append(Orders.objects.filter(mapregion_id = region, invtype = type_id, is_bid = True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
 			else:
