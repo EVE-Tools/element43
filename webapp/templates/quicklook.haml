@@ -45,9 +45,9 @@
                 {{order.mapregion.name}} -
                 = order.stastation.name
               %td
-                = order.volume_remaining
+                = order.volume_remaining|intcomma
               %td
-                = order.price
+                = order.price|intcomma
               %td
                 = order.generated_at|naturaltime
               %td
@@ -76,9 +76,9 @@
                 {{order.mapregion.name}} -
                 = order.stastation.name
               %td
-                = order.volume_remaining
+                = order.volume_remaining|intcomma
               %td
-                = order.price
+                = order.price|intcomma
               %td
                 = order.generated_at|naturaltime
               %td
