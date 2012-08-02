@@ -1,10 +1,9 @@
 - extends "base.haml"
 - block title
-   element43 - {{parent.name}}
+   element43 - Browse Market
 - block content
-  - include '_group_breadcrumbs.haml'
   %h1
-    = parent.name
+    Browse Market
   %table.table.table-striped
     %tbody
       - for group in groups
@@ -14,4 +13,3 @@
               = group.name
           %td
             = group.description
-  

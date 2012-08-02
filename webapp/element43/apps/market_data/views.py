@@ -13,6 +13,9 @@ from django.utils import simplejson
 # market_data models
 from models import Orders
 
+# Helper functions
+from util import group_breadcrumbs
+
 # eve_db models
 from eve_db.models import InvType
 from eve_db.models import InvMarketGroup
@@ -97,7 +100,7 @@ def live_search(request, query='a'):
 		# Return JSON without using any template
 		return HttpResponse(types_json, mimetype = 'application/json')
 		
-def quicklook(request, type_id="34"):
+def quicklook(request, type_id = 34):
 		
 		"""
 		Generates a market overview for a certain type. Default to tritanium.
@@ -163,12 +166,13 @@ def quicklook(request, type_id="34"):
 			# Append temp_data to region_data
 			region_data.append(temp_data)
 		
+		breadcrumbs = group_breadcrumbs(type_object.market_group_id)
 		# Use the 50 'best' orders for quicklook and add the region_data to the context
-		rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data})
+		rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
 		
 		return render_to_response('quicklook.haml', rcontext)
 		
-def browser(request, group=0):
+def browser(request, group = 0):
 		"""
 		This returns the groups/types in a group.
 		There are three types of groups:
@@ -179,19 +183,24 @@ def browser(request, group=0):
 		groups = []
 		
 		if group == 0:
+			
 			# Default to root groups
 			groups = InvMarketGroup.objects.extra(where={'"parent_id" IS NULL'})
-			parent_name = "Browse Market"
+			rcontext = RequestContext(request, {'groups':groups})
+			return render_to_response('browse_root.haml', rcontext)
+			
 		elif InvMarketGroup.objects.get(id = group).has_items == True:
+			
 			# If there are types in this group render type template
-			rcontext = RequestContext(request, {'parent_name':InvMarketGroup.objects.get(id = group).name, 'types':InvType.objects.filter(market_group = group)})
+			breadcrumbs = group_breadcrumbs(group)
+			rcontext = RequestContext(request, {'parent_name':InvMarketGroup.objects.get(id = group).name, 'types':InvType.objects.filter(market_group = group), 'breadcrumbs':breadcrumbs})
 			return render_to_response('browse_types.haml', rcontext)
+			
 		else:
+			
 			# 3'rd type
-			parent_name = InvMarketGroup.objects.get(id = group).name
+			breadcrumbs = group_breadcrumbs(group)
 			groups = InvMarketGroup.objects.filter(parent = group)
-		
-		# Render group layout
-		rcontext = RequestContext(request, {'parent_name':parent_name, 'groups':groups})
-		return render_to_response('browse_groups.haml', rcontext)
+			rcontext = RequestContext(request, {'parent': InvMarketGroup.objects.get(id = group), 'groups':groups, 'breadcrumbs':breadcrumbs})
+			return render_to_response('browse_groups.haml', rcontext)
 		

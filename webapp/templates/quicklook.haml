@@ -4,12 +4,13 @@
 - block title
   element43 - Market - {{type.name}}
 - block content
+  - include '_group_breadcrumbs.haml'
   %h1
     = type.name
   .row
     .span2
       %img{'src':'http://image.eveonline.com/type/{{type.id}}_64.png', 'alt':'type image'}
-    .span6
+    .span9
       %p
         Volume: {{type.volume}}m&#179;
       %p
