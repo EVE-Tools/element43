@@ -85,7 +85,7 @@ td {
 }
 
 .navbar {
-	padding: $padding;
+	padding: $padding * 1.5;
 	background: rgba(0, 0, 0, 0.4);
 	border-bottom: 1px solid #313F41;
 }
@@ -113,7 +113,7 @@ td {
 
 	ul li {
 		display:inline;
-		text-shadow:0 0 2px #00c6ff;
+		text-shadow:0 0 2px $contrast_blue;
 		padding: 0;
 	}
 }
@@ -121,7 +121,7 @@ td {
 #date {
 	float: left;
 	padding-right: 5px;
-	text-shadow:0 0 2px #00c6ff;
+	text-shadow:0 0 2px $contrast_blue;
 }
 
 #point {
@@ -135,16 +135,16 @@ td {
 /* Simple Animation */
 @-webkit-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast_blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast_blue; }	
 }
 
 @-moz-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast_blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast_blue; }	
 }
 
 // Hero font color fix

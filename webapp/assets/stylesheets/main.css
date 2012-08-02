@@ -63,7 +63,7 @@ td a:visited {
 
 /* line 87, main.scss */
 .navbar {
-  padding: 10px;
+  padding: 15px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41;
 }
@@ -90,7 +90,7 @@ td a:visited {
 /* line 114, main.scss */
 .clock ul li {
   display: inline;
-  text-shadow: 0 0 2px #00c6ff;
+  text-shadow: 0 0 2px #6ea8e5;
   padding: 0;
 }
 
@@ -98,7 +98,7 @@ td a:visited {
 #date {
   float: left;
   padding-right: 5px;
-  text-shadow: 0 0 2px #00c6ff;
+  text-shadow: 0 0 2px #6ea8e5;
 }
 
 /* line 127, main.scss */
@@ -114,7 +114,7 @@ td a:visited {
   /* line 138, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
+    text-shadow: 0 0 20px #6ea8e5;
   }
 
   /* line 139, main.scss */
@@ -126,7 +126,7 @@ td a:visited {
   /* line 140, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
+    text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
@@ -134,7 +134,7 @@ td a:visited {
   /* line 145, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
+    text-shadow: 0 0 20px #6ea8e5;
   }
 
   /* line 146, main.scss */
@@ -146,7 +146,7 @@ td a:visited {
   /* line 147, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
+    text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
