@@ -10,15 +10,16 @@ urlpatterns = patterns('',
     url(r'^market/scanner/', 'apps.market_data.scanners.random'),
 
 		# Search
-		url(r'^search', 'apps.market_data.views.search'),
+		url(r'^search/', 'apps.market_data.views.search'),
 
 		# Live search
 		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
 		
 		# Quicklook
 		url(r'^market/(?P<type_id>[0-9]+)', 'apps.market_data.views.quicklook'),
-
-    # admin documentation:
+		
+		
+    # Admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
