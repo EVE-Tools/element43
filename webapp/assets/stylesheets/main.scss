@@ -3,8 +3,15 @@
  */
 
 // General Variables
-$background: 			 #000000;
-$background_grey:  #2F2F2F;
+$background: 		 #000000;
+$background_grey:#2F2F2F;
+$blue:           #019CFF;
+$contrast_blue:  #6EA8E5;
+$white:          #FFFFFF;
+$red:						 #FF0000;
+$green:					 #50C878;
+$orange:         #E68A17;
+$grey:					 #333333;
 
 $padding: 				 10px;
 
@@ -15,10 +22,44 @@ $padding: 				 10px;
 	padding: $padding;
 }
 
+@mixin heading {
+	color: $contrast_blue;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 1em;
+}
+
 // HTML Elements
 
+h1, h2, h3 {
+	@include heading;
+}
+
 body {
+	color: $white;
 	background: url("../images/background.jpg") no-repeat scroll center top $background;
+}
+
+a {
+	color: $contrast_blue;
+}
+
+td {
+	a {
+		color: $orange;
+		text-decoration: none;
+
+		&:hover {
+			background-color: $orange;
+			color: $white !important;
+			text-shadow: 1px 1px $grey;
+			text-decoration: none;
+		}
+		&:visited {
+			color: $orange;
+			text-decoration: none;
+		}
+	}
 }
 
 // Table highlight fix
