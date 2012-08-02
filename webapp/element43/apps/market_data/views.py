@@ -15,6 +15,7 @@ from models import Orders
 
 # eve_db models
 from eve_db.models import InvType
+from eve_db.models import InvMarketGroup
 from eve_db.models import MapRegion
 
 # numpy processing imports
@@ -166,3 +167,31 @@ def quicklook(request, type_id="34"):
 		rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data})
 		
 		return render_to_response('quicklook.haml', rcontext)
+		
+def browser(request, group=0):
+		"""
+		This returns the groups/types in a group.
+		There are three types of groups:
+			1. Root groups. Their parent_id is NULL, since they are at the root of the tree.
+			2. Groups in the middle of the tree. They originate from another group and contain other groups as well.
+			3. Groups which contain types and originate from another group.
+		"""
+		groups = []
+		
+		if group == 0:
+			# Default to root groups
+			groups = InvMarketGroup.objects.extra(where={'"parent_id" IS NULL'})
+			parent_name = "Browse Market"
+		elif InvMarketGroup.objects.get(id = group).has_items == True:
+			# If there are types in this group render type template
+			rcontext = RequestContext(request, {'parent_name':InvMarketGroup.objects.get(id = group).name, 'types':InvType.objects.filter(market_group = group)})
+			return render_to_response('browse_types.haml', rcontext)
+		else:
+			# 3'rd type
+			parent_name = InvMarketGroup.objects.get(id = group).name
+			groups = InvMarketGroup.objects.filter(parent = group)
+		
+		# Render group layout
+		rcontext = RequestContext(request, {'parent_name':parent_name, 'groups':groups})
+		return render_to_response('browse_groups.haml', rcontext)
+		

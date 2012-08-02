@@ -1,0 +1,16 @@
+- extends "base.haml"
+- block title
+   element43 - {{parent_name}}
+- block content
+  %h1
+    {{parent_name}}
+  %table.table.table-striped
+    %tbody
+      - for group in groups
+        %tr
+          %td
+            %a{'href':'/browse/{{group.id}}/'}
+              = group.name
+          %td
+            = group.description
+  

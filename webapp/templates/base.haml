@@ -15,32 +15,15 @@
           .container
             %a.brand{'href':'/'} element43
             %ul.nav
-              %li
-                %a{'href':'/'} Home
               %li{'class':'dropdown'}
                 %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
                   Market
                   %b{'class':'caret'}
                 %ul{'class':'dropdown-menu'}
                   %li
-                    %a{'href':'#'} Item Details
+                    %a{'href':'/browse/'} Browse Market
                   %li
-                    %a{'href':'#'} Item Quick Look
-                  %li
-                    %a{'href':'/market/scanner'} Market Scanner
-              %li
-                %a{'href':'#'} Trading
-              %li
-                %a{'href':'#'} Industry
-              %li
-                %a{'href':'#'} Production
-              %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
-                  Reports
-                  %b{'class':'caret'}
-                %ul{'class':'dropdown-menu'}
-                  %li
-                    %a{'href':'#'} User Reports
+                    %a{'href':'/market/scanner/'} Market Scanner
             %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
               - csrf_token
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}

@@ -14,10 +14,10 @@
         - for type in types
           %tr
             %td{'width':'32px'}
-              %a{'href':'/market/{{type.id}}'}
+              %a{'href':'/market/{{type.id}}/'}
                 %img{'src':format('http://image.eveonline.com/type/{{type.id}}_32.png'), 'alt':'type image'}
             %td
-              %a{'href':'/market/{{type.id}}'}
+              %a{'href':'/market/{{type.id}}/'}
                 = type.name
             %td
                 = type.description|truncatechars:128
