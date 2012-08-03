@@ -26,6 +26,9 @@ $(document).ready(function() {
 				// Show page in market browser
 				CCPEVE.showMarketDetails(table_ids[i]);
 				
+				// Get slider value just to be sure
+				interval = $("#slider").slider("value") * 1000;
+				
 				// Remove Row
 				if (i != 0) {
 					$('#' + table_ids[i-1]).children('td').animate({padding: 0}).wrapInner('<div />').children().slideUp(function(){$(this).closest('tr').remove();});
@@ -70,5 +73,35 @@ $(document).ready(function() {
 			scan();
 		}, 3000);
 	}
+	
+	// Initialize slider
+	$('#slider').slider({
+				value: 3,
+				min: 0.5,
+				max: 5,
+				step: 0.5,
+				slide: function(event, ui) {
+					
+					// Get singular correct
+					if (ui.value == 1) {
+						$('#slider-label').html(ui.value + ' second per item');
+					} 
+					else {
+						$('#slider-label').html(ui.value + ' seconds per item');
+					}
+					
+					// Show notice if speed is (too) fast
+					if (ui.value < 3) {
+						$('#speed-notice').show();
+					} 
+					else {
+						$('#speed-notice').hide();
+					}
+					
+					interval = $("#slider").slider("value") * 1000;
+				}
+			});
+	$('#speed-notice').hide();
+	$("#slider-label").html($("#slider").slider("value") + ' seconds per item');
 	
 });

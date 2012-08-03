@@ -20,31 +20,34 @@ def random(request):
 		return render_to_response('market/randomscanner.haml', rcontext)
 
 def region(request):
-	
-		if MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID']) != None:
-			# Pick types based on region and age
-			types = []
-			orders = []
+		if 'HTTP_EVE_REGIONID' in request.META:
+			if MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID']) != None:
+				# Pick types based on region and age
+				types = []
+				orders = []
 			
-			# Get all orders in this region ordered by age (limit to 1500 for performance)
-			orders += Orders.objects.filter(mapregion = MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
+				# Get all orders in this region ordered by age (limit to 1500 for performance)
+				orders += Orders.objects.filter(mapregion = MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
 			
-			print len(orders)
+				print len(orders)
 			
-			# Collect as many types as possible until we reach 50
-			counter = 0
-			for order in orders:
-					counter += 1
-					if not order.invtype in types:
-						types.append(order.invtype)
-					if len(types) >= 50:
-						break
+				# Collect as many types as possible until we reach 50
+				counter = 0
+				for order in orders:
+						counter += 1
+						if not order.invtype in types:
+							types.append(order.invtype)
+						if len(types) >= 50:
+							break
 			
-			print counter
+				print counter
 
-			rcontext = RequestContext(request, {'types':types, 'region':MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])})
-		else:
-			# Else do nothing
-			rcontext = RequestContext(request, {})
+				rcontext = RequestContext(request, {'types':types, 'region':MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])})
+			else:
+				# Else do nothing
+				rcontext = RequestContext(request, {})
 
-		return render_to_response('market/regionscanner.haml', rcontext)
+			return render_to_response('market/regionscanner.haml', rcontext)
+			
+		rcontext = RequestContext(request, {})
+		return render_to_response('home.haml', rcontext)

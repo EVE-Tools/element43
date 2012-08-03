@@ -5,8 +5,19 @@
   %h1
     Market Scanner
   .row
-    .span6.offset3.progress
-      #scan_progress.bar{'style':'width:0%;'}
+    .span5
+      %h2{'style':'margin-bottom:0.4em;'}
+        Speed
+      %span#slider-label
+        3 seconds per Item
+      #slider
+    .span6
+      %h2
+        Progress
+      .progress
+        #scan_progress.bar{'style':'width:0%;'}
+  #speed-notice.alert.alert-info
+    If your market window does not update anymore, reopen the IGB and pick a slower speed (3 seconds should be a good value).
   #scan_table_container
     %table#scan_table.table.table-condensed
       %tbody
