@@ -32,6 +32,15 @@
     .container
       .panel-wrapper
         .content.clearfix
+          - if request|is_igb and not request|igb_is_trusted
+            .alert.alert-info
+              %strong
+                Hey!
+              %p
+                It appears that you are accessing this page from the IGB, but have not granted trust to element43, yet. Some functions will not work properly if element43 is untrusted. Please reload the page manually after granting trust.
+              %a#btn-trust.btn.btn-success{'href':'#', 'onclick':'CCPEVE.requestTrust($(location).attr("href"))'}
+                 %i.icon-check
+                 Grant Trust
           - block content
           %hr
           %footer
