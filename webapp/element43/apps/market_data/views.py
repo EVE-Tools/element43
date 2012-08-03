@@ -57,7 +57,7 @@ def search(request):
 		if len(query) > 2:
 			
 				# Load published type objects matching the name
-				types = InvType.objects.filter(name__icontains = query, is_published = True)
+				types = InvType.objects.filter(name__icontains = query, is_published = True, market_group__isnull = False)
 				
 		# If there is only one hit, directly redirect to quicklook
 		if len(types) == 1:
@@ -89,7 +89,7 @@ def live_search(request, query='a'):
 		if len(query) > 2:
 			
 				# Load published type objects matching the name
-				types = InvType.objects.filter(name__icontains = query, is_published = True)
+				types = InvType.objects.filter(name__icontains = query, is_published = True, market_group__isnull = False)
 				
 				for single_type in types:
 					type_names.append(single_type.name)
@@ -173,6 +173,7 @@ def quicklook(request, type_id = 34):
 		return render_to_response('quicklook.haml', rcontext)
 		
 def browser(request, group = 0):
+	
 		"""
 		This returns the groups/types in a group.
 		There are three types of groups:
@@ -180,6 +181,7 @@ def browser(request, group = 0):
 			2. Groups in the middle of the tree. They originate from another group and contain other groups as well.
 			3. Groups which contain types and originate from another group.
 		"""
+		
 		groups = []
 		
 		if group == 0:
@@ -193,7 +195,7 @@ def browser(request, group = 0):
 			
 			# If there are types in this group render type template
 			breadcrumbs = group_breadcrumbs(group)
-			rcontext = RequestContext(request, {'parent_name':InvMarketGroup.objects.get(id = group).name, 'types':InvType.objects.filter(market_group = group), 'breadcrumbs':breadcrumbs})
+			rcontext = RequestContext(request, {'parent_name':InvMarketGroup.objects.get(id = group).name, 'types':InvType.objects.filter(market_group = group, is_published = True), 'breadcrumbs':breadcrumbs})
 			return render_to_response('browse_types.haml', rcontext)
 			
 		else:
