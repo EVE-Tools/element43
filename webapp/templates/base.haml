@@ -1,3 +1,4 @@
+- load custom_filters
 <!DOCTYPE html>
 %html
   %head
@@ -22,8 +23,9 @@
                 %ul{'class':'dropdown-menu'}
                   %li
                     %a{'href':'/browse/'} Browse Market
-                  %li
-                    %a{'href':'/market/scanner/'} Market Scanner
+                  - if request|is_igb
+                    %li
+                      %a{'href':'/market/scanner/random/'} Market Scanner
             %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
               - csrf_token
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
@@ -48,3 +50,4 @@
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/jquery-1.7.2.min.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+    - block scripts

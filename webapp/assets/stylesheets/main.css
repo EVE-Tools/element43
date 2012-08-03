@@ -73,35 +73,40 @@ td a:visited {
   background: transparent;
 }
 
-/* line 101, main.scss */
+/* line 99, main.scss */
+.scan_done {
+  background: #50c878;
+}
+
+/* line 105, main.scss */
 .clock {
   float: right;
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 107, main.scss */
+/* line 111, main.scss */
 .clock ul {
   float: left;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 114, main.scss */
+/* line 118, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 2px #6ea8e5;
   padding: 0;
 }
 
-/* line 121, main.scss */
+/* line 125, main.scss */
 #date {
   float: left;
   padding-right: 5px;
   text-shadow: 0 0 2px #6ea8e5;
 }
 
-/* line 127, main.scss */
+/* line 131, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -111,19 +116,19 @@ td a:visited {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 138, main.scss */
+  /* line 142, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 139, main.scss */
+  /* line 143, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 140, main.scss */
+  /* line 144, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
@@ -131,81 +136,81 @@ td a:visited {
 }
 
 @-moz-keyframes clktrans {
-  /* line 145, main.scss */
+  /* line 149, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 146, main.scss */
+  /* line 150, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 147, main.scss */
+  /* line 151, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
-/* line 153, main.scss */
+/* line 157, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 160, main.scss */
+/* line 164, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 164, main.scss */
+/* line 168, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 168, main.scss */
+/* line 172, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 172, main.scss */
+/* line 176, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 176, main.scss */
+/* line 180, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 180, main.scss */
+/* line 184, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 184, main.scss */
+/* line 188, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 188, main.scss */
+/* line 192, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 192, main.scss */
+/* line 196, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 196, main.scss */
+/* line 200, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 200, main.scss */
+/* line 204, main.scss */
 .sec0 {
   color: #F00000;
 }

@@ -35,3 +35,27 @@ def sec0to10(val):
 	return retval
 
 register.filter('sec0to10', sec0to10)
+
+def is_igb(request):
+	"""
+	Checks the headers for IGB headers.
+	"""
+	
+	if 'HTTP_EVE_TRUSTED' in request.META:
+		return True
+	
+	return False
+	
+register.filter('is_igb', is_igb)
+
+def igb_is_trusted(request):
+	"""
+	Checks the headers for IGB trust.
+	"""
+	
+	if request.META['HTTP_EVE_TRUSTED'] == 'Yes':
+		return True
+	
+	return False
+	
+register.filter('igb_is_trusted', igb_is_trusted)

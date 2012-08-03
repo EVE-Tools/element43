@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'apps.market_data.views.home'),
     # url(r'^element43/', include('element43.foo.urls')),
-    url(r'^market/scanner/', 'apps.market_data.scanners.random'),
+    url(r'^market/scanner/random/', 'apps.market_data.scanners.random'),
 
 		# Search
 		url(r'^search/', 'apps.market_data.views.search'),
