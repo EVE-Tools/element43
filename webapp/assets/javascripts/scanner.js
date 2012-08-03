@@ -68,7 +68,7 @@ $(document).ready(function() {
 		
 			// Invoke scan process
 			scan();
-		}, 200);
+		}, 1000);
 	}
 	
 });
