@@ -25,7 +25,10 @@
                     %a{'href':'/browse/'} Browse Market
                   - if request|is_igb
                     %li
-                      %a{'href':'/market/scanner/random/'} Market Scanner
+                      %a{'href':'/market/scanner/random/'} Market Scanner - Random
+                    - if request|igb_is_trusted
+                      %li
+                        %a{'href':'/market/scanner/region/'} Market Scanner - Region
             %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
               - csrf_token
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}

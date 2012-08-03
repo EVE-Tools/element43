@@ -1,0 +1,23 @@
+- extends "base.haml"
+- ifnotequal region None
+  - block title
+    element43 - Scanner - {{region.name}}
+  - block content
+    %h1
+      Market Scanner for {{region.name}}
+    .row
+      .span6.offset3.progress
+        #scan_progress.bar{'style':'width:0%;'}
+    #scan_table_container
+      %table#scan_table.table.table-condensed
+        %tbody
+          - for type in types
+            %tr{'id':'{{type.id}}'}
+              %td
+                %img{'src':format('http://image.eveonline.com/type/{{type.id}}_32.png'), 'alt':'type image'}
+              %td
+                = type.name
+  - block scripts
+    %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/scanner.js'}

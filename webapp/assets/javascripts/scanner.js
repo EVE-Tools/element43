@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	//
-	// Random Market Scanner for element43
+	// Market Scanner for element43
 	//
 	
 	// Scanning interval
