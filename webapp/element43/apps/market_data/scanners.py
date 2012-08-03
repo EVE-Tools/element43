@@ -26,14 +26,21 @@ def region(request):
 			types = []
 			orders = []
 			
-			# Get the 300 oldest orders in current region
-			# Currently we need this large number until we can get distnict types.
-			orders += Orders.objects.filter(mapregion = MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:300]
+			# Get all orders in this region ordered by age (limit to 1500 for performance)
+			orders += Orders.objects.filter(mapregion = MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
 			
-			# Get the types of the orders and add them to the type array if they're not already in there
+			print len(orders)
+			
+			# Collect as many types as possible until we reach 50
+			counter = 0
 			for order in orders:
+					counter += 1
 					if not order.invtype in types:
 						types.append(order.invtype)
+					if len(types) >= 50:
+						break
+			
+			print counter
 
 			rcontext = RequestContext(request, {'types':types, 'region':MapRegion.objects.get(id = request.META['HTTP_EVE_REGIONID'])})
 		else:
