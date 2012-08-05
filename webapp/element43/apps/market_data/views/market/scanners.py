@@ -1,9 +1,9 @@
-# Template and HTTP handling
+# Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 # market_data models
-from models import Orders
+from apps.market_data.models import Orders
 
 # eve_db models
 from eve_db.models import InvType
@@ -17,7 +17,7 @@ def random(request):
 
 		rcontext = RequestContext(request, {'types':types})
 
-		return render_to_response('market/randomscanner.haml', rcontext)
+		return render_to_response('market/scanners/randomscanner.haml', rcontext)
 
 def region(request):
 		if 'HTTP_EVE_REGIONID' in request.META:
@@ -47,7 +47,7 @@ def region(request):
 				# Else do nothing
 				rcontext = RequestContext(request, {})
 
-			return render_to_response('market/regionscanner.haml', rcontext)
+			return render_to_response('market/scanners/regionscanner.haml', rcontext)
 			
 		rcontext = RequestContext(request, {})
 		return render_to_response('home.haml', rcontext)

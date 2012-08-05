@@ -4,26 +4,38 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^$', 'apps.market_data.views.home'),
-    # url(r'^element43/', include('element43.foo.urls')),
+    
+		#
+		# Base URLs
+		#
 
-		# Scanners
-    url(r'^market/scanner/random/', 'apps.market_data.scanners.random'),
-		url(r'^market/scanner/region/', 'apps.market_data.scanners.region'),
+		# Home
+    url(r'^$', 'apps.market_data.views.base.home'),
 
 		# Search
-		url(r'^search/', 'apps.market_data.views.search'),
+		url(r'^search/', 'apps.market_data.views.base.search'),
 
 		# Live search
-		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
+		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.base.live_search'),
+		
+		#
+		# Market URLs
+		#
 		
 		# Quicklook
-		url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.quicklook'),
+		url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook'),
 		
 		# Market browser
-		url(r'^browse/(?P<group>[0-9]+)/', 'apps.market_data.views.browser'),
-		url(r'^browse/', 'apps.market_data.views.browser'),
+		url(r'^market/browse/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.browser'),
+		url(r'^market/browse/', 'apps.market_data.views.market.browser.browser'),
+		
+		# Scanners
+    url(r'^market/scanner/random/', 'apps.market_data.views.market.scanners.random'),
+		url(r'^market/scanner/region/', 'apps.market_data.views.market.scanners.region'),
+		
+		#
+		# Administration URLs
+		#
 		
     # Admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
