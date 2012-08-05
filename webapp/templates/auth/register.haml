@@ -1,0 +1,82 @@
+- extends "base.haml"
+- block title
+  element43 - Register
+- block content
+  %h1
+    Get started now
+  .alert.alert-info
+    %i.icon-white.icon-info-sign
+    %b This is only a dummy page!
+    Right now you cannot register here.
+  .row
+    .span7
+      %form.form-horizontal.well{'action':'', 'method':'post'}
+        %fieldset
+          - csrf_token
+          %legend
+            Registration
+          .control-group
+            %label.control-label{'for':'username'} Username
+            .controls
+              %input.input-xlarge{'name':'username', 'type':'text'}
+          .control-group
+            %label.control-label{'for':'e-mail'} E-Mail
+            .controls
+              %input.input-xlarge{'name':'e-mail', 'type':'text'}
+          .control-group
+            %label.control-label{'for':'password'} Password
+            .controls
+              %input.input-xlarge{'name':'password', 'type':'password'}
+              %p.help-block
+                %b Note:
+                %i Never ever 
+                use the same password as for EVE!
+          .control-group
+            %label.control-label{'for':'password-repeat'} Repeat Password
+            .controls
+              %input.input-xlarge{'name':'password-repeat', 'type':'password'}
+          %legend
+            API Key
+          .control-group
+            %label.control-label{'for':'username'} ID
+            .controls
+              %input.input-xlarge.span1{'name':'username', 'type':'text'}
+          .control-group
+            %label.control-label{'for':'username'} Verification Code
+            .controls
+              %input.input-xlarge{'name':'username', 'type':'text'}
+        %hr
+        .control-group
+          .controls
+            %button.btn.btn-success{'type':'submit'}
+              %i.icon-white.icon-check
+              Register now
+    .span4
+      %h4
+        API Key
+      %hr
+      %p
+        To generate an API key for Element43 visit
+        %code
+          %a{'href':'https://support.eveonline.com/api', 'target':'_blank'} support.eveonline.com/api
+      %p
+        Element43 needs the following permissions:
+      .well
+        %b Account and Market
+        %ul
+          %li WalletTransactions
+          %li WalletJournal
+          %li MarketOrders
+          %li AccountBalance
+        %b Private Information
+        %ul
+          %li AssetList
+        %b Science and Industry
+        %ul
+          %li Research
+          %li IndustryJobs
+      %p
+        Your access mask should read 
+        %code 6361219
+        now.
+        

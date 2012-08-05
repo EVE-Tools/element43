@@ -17,11 +17,11 @@
           .container
             %a.brand{'href':'/'} element43
             %ul.nav
-              %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
                   Market
-                  %b{'class':'caret'}
-                %ul{'class':'dropdown-menu'}
+                  %b.caret
+                %ul.dropdown-menu
                   %li
                     %a{'href':'/market/browse/'} Browse Market
                   - if request|is_igb
@@ -30,6 +30,10 @@
                     - if request|igb_is_trusted
                       %li
                         %a{'href':'/market/scanner/region/'} Market Scanner - Region
+              - if not user.is_authenticated
+                %li
+                  %a{'href':'/register/'}
+                    Register
             %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
               - csrf_token
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
