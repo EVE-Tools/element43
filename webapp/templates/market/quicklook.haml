@@ -12,7 +12,7 @@
       %img{'src':'http://image.eveonline.com/type/{{type.id}}_64.png', 'alt':'type image'}
     .span9
       %p
-        Volume: {{type.volume}}m&#179;
+        Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description
   %ul#tabs.nav.nav-tabs
@@ -47,8 +47,8 @@
                 = order.stastation.name
               %td
                 = order.volume_remaining|intcomma
-              %td
-                = order.price|intcomma
+              %td{'align':'right'}
+                = order.price|floatformat:"2"|intcomma
               %td
                 = order.generated_at|naturaltime
               %td
@@ -78,8 +78,8 @@
                 = order.stastation.name
               %td
                 = order.volume_remaining|intcomma
-              %td
-                = order.price|intcomma
+              %td{'align':'right'}
+                = order.price|floatformat:"2"|intcomma
               %td
                 = order.generated_at|naturaltime
               %td
