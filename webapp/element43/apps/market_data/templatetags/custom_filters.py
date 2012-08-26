@@ -59,3 +59,15 @@ def igb_is_trusted(request):
 	return False
 	
 register.filter('igb_is_trusted', igb_is_trusted)
+
+def css_error(field):
+	"""
+	Returns " error" if field has an error. 
+	"""
+	
+	if field.errors:
+			return " error"
+	
+	return ""
+	
+register.filter('css_error', css_error)

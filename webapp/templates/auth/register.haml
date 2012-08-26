@@ -1,50 +1,75 @@
 - extends "base.haml"
+- load custom_filters
 - block title
   element43 - Register
 - block content
   %h1
     Get started now
-  .alert.alert-info
-    %i.icon-white.icon-info-sign
-    %b This is only a dummy page!
-    Right now you cannot register here.
+  - if form.non_field_errors
+    .alert.alert-error
+      %i.icon-white.icon-warning-sign
+      = form.non_field_errors
   .row
     .span7
-      %form.form-horizontal.well{'action':'', 'method':'post'}
+      %form.form-horizontal.well{'action':'/register/', 'method':'post'}
         %fieldset
           - csrf_token
           %legend
             Registration
-          .control-group
+          %div{'class':'control-group{{form.username|css_error}}'}
             %label.control-label{'for':'username'} Username
             .controls
-              %input.input-xlarge{'name':'username', 'type':'text'}
-          .control-group
-            %label.control-label{'for':'e-mail'} E-Mail
+              = form.username
+              - if form.username.errors
+                %span.help-inline
+                  - for error in form.username.errors
+                    = error|escape
+          %div{'class':'control-group{{form.email|css_error}}'}
+            %label.control-label{'for':'email'} E-Mail
             .controls
-              %input.input-xlarge{'name':'e-mail', 'type':'text'}
-          .control-group
+              = form.email
+              - if form.email.errors
+                %span.help-inline
+                  - for error in form.email.errors
+                    = error|escape
+          %div{'class':'control-group{{form.password|css_error}}'}
             %label.control-label{'for':'password'} Password
             .controls
-              %input.input-xlarge{'name':'password', 'type':'password'}
+              = form.password
+              - if form.password.errors
+                %span.help-inline
+                  - for error in form.password.errors
+                    = error|escape
               %p.help-block
                 %b Note:
                 %i Never ever 
                 use the same password as for EVE!
-          .control-group
-            %label.control-label{'for':'password-repeat'} Repeat Password
+          %div{'class':'control-group{{form.password_repeat|css_error}}'}
+            %label.control-label{'for':'password_repeat'} Repeat Password
             .controls
-              %input.input-xlarge{'name':'password-repeat', 'type':'password'}
+              = form.password_repeat
+              - if form.password_repeat.errors
+                %span.help-inline
+                  - for error in form.password_repeat.errors
+                    = error|escape
           %legend
             API Key
-          .control-group
-            %label.control-label{'for':'username'} ID
+          %div{'class':'control-group{{form.api_id|css_error}}'}
+            %label.control-label{'for':'api_id'} ID
             .controls
-              %input.input-xlarge.span1{'name':'username', 'type':'text'}
-          .control-group
-            %label.control-label{'for':'username'} Verification Code
+              = form.api_id
+              - if form.api_id.errors
+                %span.help-inline
+                  - for error in form.api_id.errors
+                    = error|escape
+          %div{'class':'control-group{{form.api_verification_code|css_error}}'}
+            %label.control-label{'for':'api_verification_code'} Verification Code
             .controls
-              %input.input-xlarge{'name':'username', 'type':'text'}
+              = form.api_verification_code
+              - if form.api_verification_code.errors
+                %span.help-inline
+                  - for error in form.api_verification_code.errors
+                    = error|escape
         %hr
         .control-group
           .controls

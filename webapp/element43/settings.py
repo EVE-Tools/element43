@@ -10,9 +10,20 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Add the 'element43' module to the path.
 sys.path.insert(0, os.path.join(ROOT_DIR, 'element43'))
 
+# Our User profile class
+AUTH_PROFILE_MODULE = "market_data.Profile"
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+
+# E-Mail settings
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'no_reply@element43.com'
 
 MANAGERS = ADMINS
 
@@ -96,14 +107,10 @@ SECRET_KEY = 'f%is=((x7m^f&amp;^s1_oy*p#8don$g%stq+=p5#+a7x^nof1^%0y'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
 
-		#
-		# Only parse HAML files - HTML files will be ignored!
-		#
-
     'element43.template_loaders.DjamlFilesystemLoader',
     'element43.template_loaders.DjamlAppDirectoriesLoader',
 		
-    #'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 		#'django.template.loaders.eggs.Loader',
 )

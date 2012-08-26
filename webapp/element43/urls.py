@@ -23,6 +23,8 @@ urlpatterns = patterns('',
 		#
 		
 		# Registration
+		url(r'^register/activate/(?P<key>[a-zA-Z0-9]+)/$', 'apps.market_data.views.auth.auth.activate'),
+		url(r'^register/success/$', 'apps.market_data.views.auth.auth.registration_success'),
 		url(r'^register/$', 'apps.market_data.views.auth.auth.register'),
 		
 		# Login

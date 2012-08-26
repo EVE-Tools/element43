@@ -1,15 +1,58 @@
 """
-Model definitions for storing market data messages.
+Model definitions for storing market data messages and user profiles.
 """
 
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+
+
+#
+# User Profile
+#
+
+class Profile(models.Model):
+		"""
+		Holds additional profile fields of every User like the API keys. 
+		Can be retrieved by the method get_profile() of the User class.
+		"""
+		# Link to User
+		user = models.OneToOneField(User)
+		
+		# Registration and profile data
+		activation_key = models.CharField(max_length=255,
+				help_text="E-mail activation key.")
+		key_expires = models.DateTimeField(null=True,
+				help_text="Expiration date of activation key.")
+	
+		# API Data
+		api_valid = models.BooleanField(
+				help_text="Flag if the API key is invalid to prevent errors.")
+		api_id = models.IntegerField(null=True,
+				help_text="The user's API ID.")
+		api_verification_code = models.CharField(max_length=255,
+				help_text="The user's API verification code.")
+				
+		class Meta(object):
+	  		verbose_name = "User Profile"
+	  		verbose_name_plural = "User Profiles"
+	
+# Signal handler for creating a profile when users are created
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)
+
+#
+# Market Data Models
+#
 
 class UUDIFMessage(models.Model):
     """
     A raw JSON UUDIF market message. This is typically only used on local
     development workstations.
     """
-
     key = models.CharField(max_length=255, unique=True,
         help_text="I'm assuming this is a unique hash for the message.")
     received_dtime = models.DateTimeField(auto_now_add=True,
@@ -27,7 +70,6 @@ class SeenOrders(models.Model):
     """
     Track which orders we've seen in this last cycle.
     """
-    
     id = models.BigIntegerField(primary_key=True,
         help_text="Order ID")
     region_id = models.PositiveIntegerField(
