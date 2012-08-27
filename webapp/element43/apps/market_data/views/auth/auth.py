@@ -5,7 +5,7 @@ from django.template import Context
 from django.template import RequestContext
 
 # Registration-related imports
-from apps.market_data.forms import RegistrationForm
+from apps.market_data.forms.auth import RegistrationForm
 from django.contrib.auth.models import User
 
 # Settings and e-mail
