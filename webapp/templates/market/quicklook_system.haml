@@ -19,7 +19,7 @@
     %li.active
       %a{'href':'#orders', 'data_toggle':'tab'} Orders
     %li
-      %a{'href':'#regions', 'data_toggle':'tab'} Regions
+      %a{'href':'#systems', 'data_toggle':'tab'} Systems
   .tab-content
     #orders.tab-pane.fade.active.in
       %h3
@@ -84,13 +84,13 @@
                 = order.generated_at|naturaltime
               %td
                 = order.id
-    #regions.tab-pane.fade
-      %h3 Regions
+    #systems.tab-pane.fade
+      %h3 Systems
       %table.table.table-striped.table-condensed
         %thead
           %tr
             %th
-              Region
+              System
             %th
             %th
               Low
@@ -107,42 +107,41 @@
             %th
               Volume
         %tbody
-        - for region in regions
+        - for system in systems
             %tr
               %td
-                %a{'href':'/marketsystemdetail/{{type.id}}/{{region.8}}/'}
-                    = region.0
+                = system.0
               %td
                 Bid
               %td
-                = region.1|intcomma
+                = system.1|intcomma
               %td
-                = region.2|intcomma
+                = system.2|intcomma
               %td
-                = region.3|intcomma
+                = system.3|intcomma
               %td
-                = region.4|intcomma
+                = system.4|intcomma
               %td
-                = region.5|intcomma
+                = system.5|intcomma
               %td
-                = region.6|intcomma
+                = system.6|intcomma
               %td
-                = region.7|intcomma
+                = system.7|intcomma
             %tr
               %td
               %td
                 Ask
               %td
-                = region.9|intcomma
+                = system.8|intcomma
               %td
-                = region.10|intcomma
+                = system.9|intcomma
               %td
-                = region.11|intcomma
+                = system.10|intcomma
               %td
-                = region.12|intcomma
+                = system.11|intcomma
               %td
-                = region.13|intcomma
+                = system.12|intcomma
               %td
-                = region.14|intcomma
+                = system.13|intcomma
               %td
-                = region.15|intcomma
+                = system.14|intcomma
