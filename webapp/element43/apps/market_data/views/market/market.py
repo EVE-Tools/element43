@@ -29,7 +29,7 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
     type_object = InvType.objects.get(id = type_id)
     
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('price')
+    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapregion_id = region_id).order_by('price')
     
     orders = []
     orders += buy_orders
