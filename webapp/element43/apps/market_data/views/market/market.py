@@ -80,6 +80,8 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
                 
         # Append temp_data to system_data
         system_data.append(temp_data)
+        # sort alphabetically by system name
+        system_data = sorted(system_data, key=lambda system: system[0])
 
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the system_data to the context
@@ -121,7 +123,7 @@ def quicklook(request, type_id = 34):
         region_ask_prices = np.array([order.price for order in buy_orders if order.mapregion_id == region])
         region_bid_prices = np.array([order.price for order in sell_orders if order.mapregion_id == region])
         
-        # Order of array entries: Name, Bid/Ask(Low, High, Average, Median, Standard Deviation, Lots, Volume)
+        # Order of array entries: Name, Bid/Ask(Low, High, Average, Median, Standard Deviation, Lots, Volume, region id)
         temp_data.append(MapRegion.objects.get(id=region).name)
         
         if len(region_ask_prices) > 0:
@@ -156,6 +158,8 @@ def quicklook(request, type_id = 34):
             
         # Append temp_data to region_data
         region_data.append(temp_data)
+        # sort alphabetically by region name
+        region_data = sorted(region_data, key=lambda region: region[0])
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
