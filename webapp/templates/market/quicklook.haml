@@ -15,6 +15,13 @@
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description
+    .span5
+      %h3{'style':'margin-bottom:0.4em;'}
+        Filters
+      %span#slider-label
+        Lowest security status: 0.0
+      #slider
+      %p
   %ul#tabs.nav.nav-tabs
     %li.active
       %a{'href':'#regions', 'data_toggle':'tab'} Regions
@@ -153,3 +160,8 @@
                 = region.14|intcomma
               %td
                 = region.15|intcomma
+
+  - block scripts
+    %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
