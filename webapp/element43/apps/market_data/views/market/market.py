@@ -28,7 +28,7 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
     # Get the item type
     type_object = InvType.objects.get(id = type_id)
     
-# Fetch all buy/sell orders from DB
+    # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')
     sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapregion_id = region_id).order_by('price')
     
@@ -41,6 +41,7 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
         if not order.mapsolarsystem_id in systems:
             systems.append(order.mapsolarsystem_id)
             
+    # Gather system-based data for this type      
     system_data = []
     for system in systems:
         temp_data = []
