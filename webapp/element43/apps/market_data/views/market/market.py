@@ -28,6 +28,9 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
     # Get the item type
     type_object = InvType.objects.get(id = type_id)
     
+    # Get the region type
+    region_object = MapRegion.objects.get(id = region_id)
+    
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')
     sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapregion_id = region_id).order_by('price')
@@ -85,7 +88,7 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
 
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the system_data to the context
-    rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook_system.haml', rcontext)
 
