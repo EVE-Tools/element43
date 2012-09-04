@@ -19,7 +19,7 @@ import numpy as np
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 
-def quicklook_system(request, type_id = 34, region_id = 10000002):
+def quicklook_region(request, type_id = 34, region_id = 10000002):
     """
     Generates system level overview for a specific type.
     Defaults to tritanium & the forge.
@@ -83,19 +83,20 @@ def quicklook_system(request, type_id = 34, region_id = 10000002):
                 
         # Append temp_data to system_data
         system_data.append(temp_data)
-        # sort alphabetically by system name
+        # Sort alphabetically by system name
         system_data = sorted(system_data, key=lambda system: system[0])
 
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
-    # Use the 50 'best' orders for quicklook and add the system_data to the context
-    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    # Use all orders for quicklook and add the system_data to the context
+		# We shouldn't need to limit the amount of orders displayed here as they all are in the same region
+    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
-    return render_to_response('market/quicklook_system.haml', rcontext)
+    return render_to_response('market/quicklook_region.haml', rcontext)
 
 def quicklook(request, type_id = 34):
 		
     """
-    Generates a market overview for a certain type. Default to tritanium.
+    Generates a market overview for a certain type. Defaults to tritanium.
     """
     
     # Get requested type
@@ -161,7 +162,7 @@ def quicklook(request, type_id = 34):
             
         # Append temp_data to region_data
         region_data.append(temp_data)
-        # sort alphabetically by region name
+        # Sort alphabetically by region name
         region_data = sorted(region_data, key=lambda region: region[0])
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)

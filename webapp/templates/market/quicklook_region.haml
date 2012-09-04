@@ -2,12 +2,11 @@
 - load humanize
 - load custom_filters
 - block title
-  element43 - Market - Region: {{region.name}} - {{type.name}}
+  element43 - Market - {{region.name}} - {{type.name}}
 - block content
   - include 'market/_group_breadcrumbs.haml'
   %h1
-    = type.name
-    ({{region.name}})
+    {{region.name}} - {{type.name}}
   .row
     .span2
       %img{'src':'http://image.eveonline.com/type/{{type.id}}_64.png', 'alt':'type image'}

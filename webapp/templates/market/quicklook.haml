@@ -30,74 +30,6 @@
     %li
       %a{'href':'#sell', 'data_toggle':'tab'} Sell
   .tab-content
-    #buy.tab-pane.fade
-      %h3
-        Buy
-      %table.table.table-striped.table-condensed
-        %thead
-          %tr
-            %th
-              Location
-            %th
-              Remaining
-            %th
-              Price
-            %th
-              Last Seen
-            %th
-              ID
-        %tbody
-          - for order in buy_orders
-            %tr
-              %td
-                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
-                  • {{order.mapsolarsystem.security_level|sec0to1}}
-                %a{'href':'/marketsystemdetail/{{type.id}}/{{region.8}}/'}
-                  {{order.mapregion.name}}
-                \- 
-                = order.stastation.name
-              %td
-                = order.volume_remaining|intcomma
-              %td{'align':'right'}
-                = order.price|floatformat:"2"|intcomma
-              %td
-                = order.generated_at|naturaltime
-              %td
-                = order.id
-    #sell.tab-pane.fade
-      %h3
-        Sell
-      %table.table.table-striped.table-condensed
-        %thead
-          %tr
-            %th
-              Location
-            %th
-              Remaining
-            %th
-              Price
-            %th
-              Last Seen
-            %th
-              ID
-        %tbody
-          - for order in sell_orders
-            %tr
-              %td
-                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
-                  • {{order.mapsolarsystem.security_level|sec0to1}}
-                %a{'href':'/marketsystemdetail/{{type.id}}/{{region.8}}/'}
-                  {{order.mapregion.name}}
-                \- 
-                = order.stastation.name
-              %td
-                = order.volume_remaining|intcomma
-              %td{'align':'right'}
-                = order.price|floatformat:"2"|intcomma
-              %td
-                = order.generated_at|naturaltime
-              %td
-                = order.id
     #regions.tab-pane.fade.active.in
       %h3 Regions
       %table.table.table-striped.table-condensed
@@ -124,7 +56,7 @@
         - for region in regions
             %tr
               %td
-                %a{'href':'/marketsystemdetail/{{type.id}}/{{region.8}}/'}
+                %a{'href':'/market/region/{{region.8}}/{{type.id}}/'}
                     = region.0
               %td
                 Bid
@@ -160,7 +92,74 @@
                 = region.14|intcomma
               %td
                 = region.15|intcomma
-
+    #buy.tab-pane.fade
+      %h3
+        Buy
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th
+              Remaining
+            %th
+              Price
+            %th
+              Last Seen
+            %th
+              ID
+        %tbody
+          - for order in buy_orders
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+                  {{order.mapregion.name}}
+                \- 
+                = order.stastation.name
+              %td
+                = order.volume_remaining|intcomma
+              %td{'align':'right'}
+                = order.price|floatformat:"2"|intcomma
+              %td
+                = order.generated_at|naturaltime
+              %td
+                = order.id
+    #sell.tab-pane.fade
+      %h3
+        Sell
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th
+              Remaining
+            %th
+              Price
+            %th
+              Last Seen
+            %th
+              ID
+        %tbody
+          - for order in sell_orders
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+                  {{order.mapregion.name}}
+                \- 
+                = order.stastation.name
+              %td
+                = order.volume_remaining|intcomma
+              %td{'align':'right'}
+                = order.price|floatformat:"2"|intcomma
+              %td
+                = order.generated_at|naturaltime
+              %td
+                = order.id
   - block scripts
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}

@@ -36,9 +36,9 @@ urlpatterns = patterns('',
 		# Market URLs
 		#
 
-                # Quicklook
-                url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook'),
-                url(r'^marketsystemdetail/(?P<type_id>[0-9]+)/(?P<region_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_system'),
+    # Quicklook
+    url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook'),
+		url(r'^market/region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_region'),
 
 		# Market browser
 		url(r'^market/browse/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.browser'),
