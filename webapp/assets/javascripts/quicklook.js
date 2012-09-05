@@ -260,7 +260,7 @@ $(document).ready(function () {
     var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 
 
-    $.getJSON('http://localhost:8000/market/history/' + mapRegionID + '/' + invTypeID + '/', function (data) {
+    $.getJSON('/market/history/' + mapRegionID + '/' + invTypeID + '/', function (data) {
         // Parse data
         var data_ohlc = [],
             data_high = [],
