@@ -112,7 +112,7 @@
                 = order.stastation.name
               %td.text-right
                 = order.volume_remaining|intcomma
-              %td.text-right{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
                 = order.generated_at|naturaltime
@@ -149,9 +149,9 @@
                   {{order.mapregion.name}}
                 \- 
                 = order.stastation.name
-              %td
+              %td.text-right
                 = order.volume_remaining|intcomma
-              %td.text-right{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
                 = order.generated_at|naturaltime
