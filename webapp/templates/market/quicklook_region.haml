@@ -30,13 +30,13 @@
           %tr
             %th
               Location
-            %th
+            %th.text-right
               Remaining
-            %th
+            %th.text-right
               Price
-            %th
+            %th.text-right
               Last Seen
-            %th
+            %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
@@ -46,13 +46,13 @@
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 {{order.mapregion.name}} - {{order.stastation.name}}
-              %td
+              %td.text-right
                 = order.volume_remaining|intcomma
-              %td{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
-              %td
+              %td.text-right
                 = order.generated_at|naturaltime
-              %td
+              %td.text-center
                 - if order.is_suspicious
                   %span.sec0
                     •
@@ -66,13 +66,13 @@
           %tr
             %th
               Location
-            %th
+            %th.text-right
               Remaining
-            %th
+            %th.text-right
               Price
-            %th
+            %th.text-right
               Last Seen
-            %th
+            %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
@@ -82,13 +82,13 @@
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 {{order.mapregion.name}} - {{order.stastation.name}}
-              %td
+              %td.text-right
                 = order.volume_remaining|intcomma
-              %td{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
-              %td
+              %td.text-right
                 = order.generated_at|naturaltime
-              %td
+              %td.text-center
                 - if order.is_suspicious
                   %span.sec0
                     •
@@ -104,19 +104,19 @@
             %th
               System
             %th
-            %th
+            %th.text-right
               Low
-            %th
+            %th.text-right
               High
-            %th
+            %th.text-right
               Avg
-            %th
+            %th.text-right
               Median
-            %th
+            %th.text-right
               Standard Deviation
-            %th
+            %th.text-right
               Lots
-            %th
+            %th.text-right
               Volume
         %tbody
         - for system in systems
@@ -125,37 +125,37 @@
                 = system.0
               %td
                 Ask
-              %td
+              %td.text-right
                 = system.8|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.9|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.10|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.11|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.12|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.13|intcomma
-              %td
+              %td.text-right
                 = system.14|intcomma
             %tr
               %td
               %td
                 Bid
-              %td
+              %td.text-right
                 = system.1|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.2|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.3|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.4|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.5|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = system.6|intcomma
-              %td
+              %td.text-right
                 = system.7|intcomma
                 
 - block scripts

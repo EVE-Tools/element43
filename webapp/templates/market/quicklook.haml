@@ -31,19 +31,19 @@
             %th
               Region
             %th
-            %th
+            %th.text-right
               Low
-            %th
+            %th.text-right
               High
-            %th
+            %th.text-right
               Avg
-            %th
+            %th.text-right
               Median
-            %th
+            %th.text-right
               Standard Deviation
-            %th
+            %th.text-right
               Lots
-            %th
+            %th.text-right
               Volume
         %tbody
         - for region in regions
@@ -53,37 +53,37 @@
                     = region.0
               %td
                 Ask
-              %td
+              %td.text-right
                 = region.9|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.10|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.11|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.12|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.13|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.14|intcomma
-              %td
+              %td.text-right
                 = region.15|intcomma
             %tr
               %td
               %td
                 Bid
-              %td
+              %td.text-right
                 = region.1|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.2|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.3|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.4|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.5|floatformat:2|intcomma
-              %td
+              %td.text-right
                 = region.6|intcomma
-              %td
+              %td.text-right
                 = region.7|intcomma
     #bid.tab-pane.fade
       %table.table.table-striped.table-condensed
@@ -91,13 +91,13 @@
           %tr
             %th
               Location
-            %th
+            %th.text-right
               Remaining
-            %th
+            %th.text-right
               Price
-            %th
+            %th.text-right
               Last Seen
-            %th
+            %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
@@ -110,13 +110,13 @@
                   {{order.mapregion.name}}
                 \- 
                 = order.stastation.name
-              %td
+              %td.text-right
                 = order.volume_remaining|intcomma
-              %td{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
-              %td
+              %td.text-right
                 = order.generated_at|naturaltime
-              %td
+              %td.text-center
                 - if order.is_suspicious
                   %span.sec0
                     •
@@ -130,13 +130,13 @@
           %tr
             %th
               Location
-            %th
+            %th.text-right
               Remaining
-            %th
+            %th.text-right
               Price
-            %th
+            %th.text-right
               Last Seen
-            %th
+            %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
@@ -149,13 +149,13 @@
                   {{order.mapregion.name}}
                 \- 
                 = order.stastation.name
-              %td
+              %td.text-right
                 = order.volume_remaining|intcomma
-              %td{'align':'right'}
+              %td.text-right
                 = order.price|floatformat:"2"|intcomma
-              %td
+              %td.text-right
                 = order.generated_at|naturaltime
-              %td
+              %td.text-center
                 - if order.is_suspicious
                   %span.sec0
                     •
