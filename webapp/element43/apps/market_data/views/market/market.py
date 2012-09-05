@@ -1,4 +1,5 @@
 # Template and context-related imports
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -7,6 +8,15 @@ from django.db.models import Sum
 
 # market_data models
 from apps.market_data.models import Orders
+from apps.market_data.models import History
+
+# JSON for the history API
+from django.utils import simplejson
+
+# Parsing
+import ast
+import time
+import datetime
 
 # eve_db models
 from eve_db.models import InvType
@@ -19,7 +29,43 @@ import numpy as np
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 
-def quicklook_region(request, type_id = 34, region_id = 10000002):
+def history_json(request, region_id = 10000002, type_id = 34):
+	
+		"""
+		Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
+		"""
+		
+		# Prepare lists
+		ohlc_data = []
+		ohlc_list = []
+		
+		# If we do not have any data for this region, return an empty array
+		try:
+			# Load history and parse data (unsorted)
+			data = ast.literal_eval(History.objects.get(mapregion = region_id, invtype = type_id).history_data)
+		
+			# Convert to Highstocks compatible timestamp first
+			for key, value in data.iteritems():
+				ohlc_data.append([int(time.mktime(datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
+			
+			# Sort by date
+			ohlc_data.sort(key=lambda k: k[0])
+		
+			last_avg = ohlc_data[0][1][3]
+		
+			for data_point in ohlc_data:
+				# Format the list: [timestamp, open(last_average), high, low, close(this day's avg), volume]
+				ohlc_list.append([data_point[0], last_avg, data_point[1][2], data_point[1][1], data_point[1][3], data_point[1][4]])
+				last_avg = data_point[1][3]
+		except:
+			ohlc_list = []
+		
+		json = simplejson.dumps(ohlc_list)
+		
+		# Return JSON without using any template
+		return HttpResponse(json, mimetype = 'application/json')
+
+def quicklook_region(request, region_id = 10000002, type_id = 34):
     """
     Generates system level overview for a specific type.
     Defaults to tritanium & the forge.
@@ -27,9 +73,13 @@ def quicklook_region(request, type_id = 34, region_id = 10000002):
     
     # Get the item type
     type_object = InvType.objects.get(id = type_id)
-    
+
     # Get the region type
     region_object = MapRegion.objects.get(id = region_id)
+
+		#
+		# Orders
+		#
     
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')

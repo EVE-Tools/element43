@@ -15,6 +15,7 @@
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description
+  #history
   %ul#tabs.nav.nav-tabs
     %li.active
       %a{'href':'#systems', 'data_toggle':'tab'} Systems
@@ -148,3 +149,11 @@
                 = system.13|intcomma
               %td
                 = system.14|intcomma
+                
+- block scripts
+  %script{'type':'text/javascript'}
+    var invTypeID = {{type.id}};
+    var invTypeName = "{{type.name}}";
+    var mapRegionID = {{region.id}};
+    var mapRegionName = "{{region.name}}";
+  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
