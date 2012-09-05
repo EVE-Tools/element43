@@ -9,6 +9,7 @@ south
 django-devserver
 git+http://github.com/gtaylor/django-eve-db.git
 numpy
+python-memcached
 
 # HAML support
 pygments
