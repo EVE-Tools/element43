@@ -15,16 +15,23 @@
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description
-  #history
+    .span5
+      %h3{'style':'margin-bottom:0.4em;'}
+        Filters
+      %span#slider-label
+        Lowest security status: 0.0
+      #slider
+      %p
   %ul#tabs.nav.nav-tabs
     %li.active
       %a{'href':'#regions', 'data_toggle':'tab'} Regions
     %li
-      %a{'href':'#ask', 'data_toggle':'tab'} Ask
+      %a{'href':'#buy', 'data_toggle':'tab'} Buy
     %li
-      %a{'href':'#bid', 'data_toggle':'tab'} Bid
+      %a{'href':'#sell', 'data_toggle':'tab'} Sell
   .tab-content
     #regions.tab-pane.fade.active.in
+      %h3 Regions
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -52,79 +59,42 @@
                 %a{'href':'/market/region/{{region.8}}/{{type.id}}/'}
                     = region.0
               %td
-                Ask
-              %td
-                = region.9|floatformat:2|intcomma
-              %td
-                = region.10|floatformat:2|intcomma
-              %td
-                = region.11|floatformat:2|intcomma
-              %td
-                = region.12|floatformat:2|intcomma
-              %td
-                = region.13|floatformat:2|intcomma
-              %td
-                = region.14|intcomma
-              %td
-                = region.15|intcomma
-            %tr
-              %td
-              %td
                 Bid
               %td
-                = region.1|floatformat:2|intcomma
+                = region.1|intcomma
               %td
-                = region.2|floatformat:2|intcomma
+                = region.2|intcomma
               %td
-                = region.3|floatformat:2|intcomma
+                = region.3|intcomma
               %td
-                = region.4|floatformat:2|intcomma
+                = region.4|intcomma
               %td
-                = region.5|floatformat:2|intcomma
+                = region.5|intcomma
               %td
                 = region.6|intcomma
               %td
                 = region.7|intcomma
-    #bid.tab-pane.fade
-      %table.table.table-striped.table-condensed
-        %thead
-          %tr
-            %th
-              Location
-            %th
-              Remaining
-            %th
-              Price
-            %th
-              Last Seen
-            %th
-              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
-                %i.icon-white.icon-question-sign
-        %tbody
-          - for order in sell_orders
             %tr
               %td
-                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
-                  • {{order.mapsolarsystem.security_level|sec0to1}}
-                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
-                  {{order.mapregion.name}}
-                \- 
-                = order.stastation.name
               %td
-                = order.volume_remaining|intcomma
-              %td{'align':'right'}
-                = order.price|floatformat:"2"|intcomma
+                Ask
               %td
-                = order.generated_at|naturaltime
+                = region.9|intcomma
               %td
-                - if order.is_suspicious
-                  %span.sec0
-                    •
-                - else
-                  %span.sec8
-                    •
-              // ID: {{order.id}}
-    #ask.tab-pane.fade
+                = region.10|intcomma
+              %td
+                = region.11|intcomma
+              %td
+                = region.12|intcomma
+              %td
+                = region.13|intcomma
+              %td
+                = region.14|intcomma
+              %td
+                = region.15|intcomma
+    #buy.tab-pane.fade
+      %h3
+        Buy
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -137,8 +107,7 @@
             %th
               Last Seen
             %th
-              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
-                %i.icon-white.icon-question-sign
+              ID
         %tbody
           - for order in buy_orders
             %tr
@@ -156,18 +125,42 @@
               %td
                 = order.generated_at|naturaltime
               %td
-                - if order.is_suspicious
-                  %span.sec0
-                    •
-                - else
-                  %span.sec8
-                    •
-              // ID: {{order.id}}
-                
-- block scripts
-  %script{'type':'text/javascript'}
-    var invTypeID = {{type.id}};
-    var invTypeName = "{{type.name}}";
-    var mapRegionID = 10000002;
-    var mapRegionName = "The Forge";
-  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
+                = order.id
+    #sell.tab-pane.fade
+      %h3
+        Sell
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th
+              Remaining
+            %th
+              Price
+            %th
+              Last Seen
+            %th
+              ID
+        %tbody
+          - for order in sell_orders
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+                  {{order.mapregion.name}}
+                \- 
+                = order.stastation.name
+              %td
+                = order.volume_remaining|intcomma
+              %td{'align':'right'}
+                = order.price|floatformat:"2"|intcomma
+              %td
+                = order.generated_at|naturaltime
+              %td
+                = order.id
+  - block scripts
+    %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
