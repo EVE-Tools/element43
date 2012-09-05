@@ -20,13 +20,11 @@
     %li.active
       %a{'href':'#systems', 'data_toggle':'tab'} Systems
     %li
-      %a{'href':'#buy', 'data_toggle':'tab'} Buy
+      %a{'href':'#ask', 'data_toggle':'tab'} Ask
     %li
-      %a{'href':'#sell', 'data_toggle':'tab'} Sell
+      %a{'href':'#bid', 'data_toggle':'tab'} Bid
   .tab-content
-    #buy.tab-pane.fade
-      %h3
-        Buy
+    #ask.tab-pane.fade
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -42,7 +40,7 @@
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
-          - for order in buy_orders
+          - for order in sell_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
@@ -62,9 +60,7 @@
                   %span.sec8
                     •
               // ID: {{order.id}}
-    #sell.tab-pane.fade
-      %h3
-        Sell
+    #bid.tab-pane.fade
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -80,7 +76,7 @@
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
-          - for order in sell_orders
+          - for order in buy_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
@@ -128,39 +124,39 @@
               %td
                 = system.0
               %td
-                Bid
-              %td.text-right
-                = system.1|intcomma
-              %td.text-right
-                = system.2|intcomma
-              %td.text-right
-                = system.3|intcomma
-              %td.text-right
-                = system.4|intcomma
-              %td.text-right
-                = system.5|intcomma
-              %td.text-right
-                = system.6|intcomma
-              %td.text-right
-                = system.7|intcomma
-            %tr
-              %td
-              %td
                 Ask
               %td.text-right
-                = system.8|intcomma
+                = system.8|floatformat:2|intcomma
               %td.text-right
-                = system.9|intcomma
+                = system.9|floatformat:2|intcomma
               %td.text-right
-                = system.10|intcomma
+                = system.10|floatformat:2|intcomma
               %td.text-right
-                = system.11|intcomma
+                = system.11|floatformat:2|intcomma
               %td.text-right
-                = system.12|intcomma
+                = system.12|floatformat:2|intcomma
               %td.text-right
                 = system.13|intcomma
               %td.text-right
                 = system.14|intcomma
+            %tr
+              %td
+              %td
+                Bid
+              %td.text-right
+                = system.1|floatformat:2|intcomma
+              %td.text-right
+                = system.2|floatformat:2|intcomma
+              %td.text-right
+                = system.3|floatformat:2|intcomma
+              %td.text-right
+                = system.4|floatformat:2|intcomma
+              %td.text-right
+                = system.5|floatformat:2|intcomma
+              %td.text-right
+                = system.6|intcomma
+              %td.text-right
+                = system.7|intcomma
                 
 - block scripts
   %script{'type':'text/javascript'}
