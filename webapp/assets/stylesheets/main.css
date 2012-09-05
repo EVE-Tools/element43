@@ -50,6 +50,14 @@ td a:visited {
 }
 
 /* line 78, main.scss */
+.text-right {
+  text-align: right !important;
+}
+
+/* line 82, main.scss */
+.text-center {
+  text-align: center !important;
+}
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;

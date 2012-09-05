@@ -75,6 +75,13 @@ td {
 
 // Classes
 
+.text-right {
+	text-align: right !important;
+}
+
+.text-center {
+	text-align: center !important;
+}
 .panel-wrapper {
 	@include panel;
 }
