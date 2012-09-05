@@ -39,15 +39,15 @@
             %th
               Last Seen
             %th
-              ID
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
+                %i.icon-white.icon-question-sign
         %tbody
           - for order in buy_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
-                {{order.mapregion.name}} -
-                = order.stastation.name
+                {{order.mapregion.name}} - {{order.stastation.name}}
               %td
                 = order.volume_remaining|intcomma
               %td{'align':'right'}
@@ -55,7 +55,13 @@
               %td
                 = order.generated_at|naturaltime
               %td
-                = order.id
+                - if order.is_suspicious
+                  %span.sec0
+                    •
+                - else
+                  %span.sec8
+                    •
+              // ID: {{order.id}}
     #sell.tab-pane.fade
       %h3
         Sell
@@ -71,15 +77,15 @@
             %th
               Last Seen
             %th
-              ID
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
+                %i.icon-white.icon-question-sign
         %tbody
           - for order in sell_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
-                {{order.mapregion.name}} -
-                = order.stastation.name
+                {{order.mapregion.name}} - {{order.stastation.name}}
               %td
                 = order.volume_remaining|intcomma
               %td{'align':'right'}
@@ -87,7 +93,13 @@
               %td
                 = order.generated_at|naturaltime
               %td
-                = order.id
+                - if order.is_suspicious
+                  %span.sec0
+                    •
+                - else
+                  %span.sec8
+                    •
+              // ID: {{order.id}}
     #systems.tab-pane.fade.active.in
       %h3 Systems
       %table.table.table-striped.table-condensed

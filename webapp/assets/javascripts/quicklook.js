@@ -3,6 +3,9 @@ $(document).ready(function () {
     // Market Quicklook for element43
     //
 
+		// Activate tooltips
+		$("[rel=tooltip]").tooltip();
+
     /**
      * Gray theme for Highcharts JS
      * @author Torstein HÃ¸nsi modified by zweizeichen for Element43
