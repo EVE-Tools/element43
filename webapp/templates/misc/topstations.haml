@@ -1,0 +1,11 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  element43 - Market - Top Stations
+- block content
+  - include 'market/_group_breadcrumbs.haml'
+  %h1
+    Top Stations by Orders
+  - for station in rank_list
+    {{stastation__name}}

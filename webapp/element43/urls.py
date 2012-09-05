@@ -46,6 +46,9 @@ urlpatterns = patterns('',
 		# Market browser
 		url(r'^market/browse/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.browser'),
 		url(r'^market/browse/', 'apps.market_data.views.market.browser.browser'),
+
+		# Misc "static" pages
+		url(r'^market/topstations/', 'apps.market_data.views.market.stationranking.stationranking'),
 		
 		# Scanners
     url(r'^market/scanner/random/', 'apps.market_data.views.market.scanners.random'),
