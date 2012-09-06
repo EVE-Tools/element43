@@ -11,12 +11,12 @@ from eve_db.models import StaStation
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 
-def stationranking(request, group = 0):
+def ranking(request, group = 0):
     
     """
     This file generates the station ranks based on active orders in the DB
     """
-    rank_list = Orders.objects.values('stastation__name').annotate(ordercount=Count('id')).order_by('-ordercount')[:20]
+    rank_list = Orders.objects.values('stastation__name').annotate(ordercount=Count('id')).order_by('-ordercount')[:50]
     
     rcontext = RequestContext(request, {'rank_list': rank_list})
-    return render_to_response('market/misc/topstations.haml', rcontext)
+    return render_to_response('trading/station/ranking.haml', rcontext)

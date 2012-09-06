@@ -30,6 +30,13 @@
                     - if request|igb_is_trusted
                       %li
                         %a{'href':'/market/scanner/region/'} Market Scanner - Region
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                  Trading
+                  %b.caret
+                %ul.dropdown-menu
+                  %li
+                    %a{'href':'/trading/station/ranking/'} Top Stations
               - if not user.is_authenticated
                 %li
                   %a{'href':'/register/'}
