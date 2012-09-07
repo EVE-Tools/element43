@@ -6,7 +6,7 @@
 - block content
   %h1
     Top Stations by Active Orders
-  - cache 86400 topstations
+  - cache 3600 topstations
     %table.table.table-striped.table-condensed
       %thead
         %tr
@@ -21,4 +21,7 @@
               {{station.stastation__name}}
             %td
               {{station.ordercount}}
+    %p
+      %i
+        Generated {{generated_at|naturaltime}}.
     
