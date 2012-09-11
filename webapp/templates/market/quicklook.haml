@@ -101,7 +101,7 @@
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
-          - for order in sell_orders
+          - for order in buy_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
@@ -140,7 +140,7 @@
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
         %tbody
-          - for order in buy_orders
+          - for order in sell_orders
             %tr
               %td
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
