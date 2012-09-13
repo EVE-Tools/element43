@@ -142,6 +142,9 @@
             %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
+            %th.text-center
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the average cost of its components'}
+                %i.icon-white.icon-question-sign
         %tbody
           - for order in sell_orders
             %tr
@@ -165,6 +168,10 @@
                 - else
                   %span.sec8
                     •
+              %td.text-center
+                - if order.price < totalprice
+                  %span.sec0
+                    !
               // ID: {{order.id}}
     #mats.tab-pane.fade.active.in
       .span8
