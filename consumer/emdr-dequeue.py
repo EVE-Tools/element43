@@ -138,14 +138,6 @@ def thread(message):
                         if TERM_OUT==True:
                             print "000 Order has gen_at in the future 000"
                         continue
-                    sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
-                    curs.execute(sql)
-                    result = curs.fetchone()
-                    if result is not None:
-                        if TERM_OUT==True:
-                            print "/// Bad order in warehouse, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                            sql = "DELETE FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
-                            curs.execute(sql)
                     #if TERM_OUT==True:
                     #    print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                     # set up the dates so MySQL won't barf
@@ -157,6 +149,15 @@ def thread(message):
                             bid = True
                         else:
                             bid = False
+                            
+                        sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                        curs.execute(sql)
+                        result = curs.fetchone()
+                        if result is not None:
+                            if TERM_OUT==True:
+                                print "/// Bad order in warehouse, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
+                                sql = "DELETE FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                                curs.execute(sql)
                         
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
                         # of the mean AND where there are more than 5 orders of like type in the station will be flagged.  Flagging could
