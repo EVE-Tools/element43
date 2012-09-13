@@ -179,9 +179,12 @@
           - for material in materials
             %tr
               %td
-                {{material.material_type__name}}
+                %a{'href':'/market/{{material.material_type__id}}'}
+                  {{material.material_type__name}}
               %td.text-right
                 {{material.quantity}}
+        
+        * Assumes perfect refining
                 
 - block scripts
   %script{'type':'text/javascript'}

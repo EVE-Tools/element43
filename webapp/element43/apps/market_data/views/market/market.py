@@ -76,7 +76,7 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     type_object = InvType.objects.get(id = type_id)
 
     # Get list of materials to build
-    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity').filter(type=type_id)
+    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
 
     # Get the region type
     region_object = MapRegion.objects.get(id = region_id)
@@ -157,7 +157,7 @@ def quicklook(request, type_id = 34):
     type_object = InvType.objects.get(id = type_id)
     
     # Get list of materials to build
-    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity').filter(type=type_id)
+    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
     
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True).order_by('-price')
