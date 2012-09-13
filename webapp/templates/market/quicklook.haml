@@ -23,6 +23,9 @@
       %a{'href':'#ask', 'data_toggle':'tab'} Ask
     %li
       %a{'href':'#bid', 'data_toggle':'tab'} Bid
+    - if materials
+      %li
+        %a{'href':'#mats', 'data_toggle':'tab'} Materials
   .tab-content
     #regions.tab-pane.fade.active.in
       %table.table.table-striped.table-condensed
@@ -163,6 +166,22 @@
                   %span.sec8
                     •
               // ID: {{order.id}}
+    #mats.tab-pane.fade.active.in
+      .span4
+        %table.table.table-striped.table-condensed
+          %thead
+            %tr
+              %th
+                Material
+              %th.text-right
+                Quantity
+          %tbody
+          - for material in materials
+            %tr
+              %td
+                {{material.material_type__name}}
+              %td.text-right
+                {{material.quantity}}
                 
 - block scripts
   %script{'type':'text/javascript'}

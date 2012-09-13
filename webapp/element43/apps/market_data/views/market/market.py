@@ -20,6 +20,7 @@ import datetime
 
 # eve_db models
 from eve_db.models import InvType
+from eve_db.models import InvTypeMaterial
 from eve_db.models import MapRegion
 from eve_db.models import MapSolarSystem
 
@@ -73,6 +74,9 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     
     # Get the item type
     type_object = InvType.objects.get(id = type_id)
+
+    # Get list of materials to build
+    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity').filter(type=type_id)
 
     # Get the region type
     region_object = MapRegion.objects.get(id = region_id)
@@ -139,7 +143,7 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
 		# We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'materials':materials, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook_region.haml', rcontext)
 
@@ -151,6 +155,9 @@ def quicklook(request, type_id = 34):
     
     # Get requested type
     type_object = InvType.objects.get(id = type_id)
+    
+    # Get list of materials to build
+    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity').filter(type=type_id)
     
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True).order_by('-price')
@@ -217,6 +224,6 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'type':type_object, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'type':type_object, 'materials':materials, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook.haml', rcontext)

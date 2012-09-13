@@ -1,7 +1,6 @@
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.db.models import F
 from django.db.models import Count
 
 # eve_db models
