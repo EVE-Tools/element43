@@ -174,7 +174,7 @@ INSTALLED_APPS = (
     'devserver',
 
     'apps.market_data',
-    'apps.static_data',
+    'apps.api',
     'eve_db',
 )
 

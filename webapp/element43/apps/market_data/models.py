@@ -12,31 +12,23 @@ from django.db.models.signals import post_save
 #
 
 class Profile(models.Model):
-		"""
-		Holds additional profile fields of every User like the API keys. 
-		Can be retrieved by the method get_profile() of the User class.
-		"""
-		# Link to User
-		user = models.OneToOneField(User)
-		
-		# Registration and profile data
-		activation_key = models.CharField(max_length=255,
-				help_text="E-mail activation key.")
-		key_expires = models.DateTimeField(null=True,
-				help_text="Expiration date of activation key.")
-	
-		# API Data
-		api_valid = models.BooleanField(
-				help_text="Flag if the API key is invalid to prevent errors.")
-		api_id = models.IntegerField(null=True,
-				help_text="The user's API ID.")
-		api_verification_code = models.CharField(max_length=255,
-				help_text="The user's API verification code.")
-				
-		class Meta(object):
-	  		verbose_name = "User Profile"
-	  		verbose_name_plural = "User Profiles"
-	
+    """
+    Holds additional profile fields of every User like the API keys. 
+    Can be retrieved by the method get_profile() of the User class.
+    """
+    # Link to User
+    user = models.OneToOneField(User)
+    
+    # Registration and profile data
+    activation_key = models.CharField(max_length=255,
+                                      help_text="E-mail activation key.")
+    key_expires = models.DateTimeField(null=True,
+                                       help_text="Expiration date of activation key.")
+
+    class Meta(object):
+            verbose_name = "User Profile"
+            verbose_name_plural = "User Profiles"
+
 # Signal handler for creating a profile when users are created
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
