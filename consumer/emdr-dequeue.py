@@ -143,8 +143,9 @@ def thread(message):
                     result = curs.fetchone()
                     if result is not None:
                         if TERM_OUT==True:
-                            print "/// Ignoring order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                        continue
+                            print "/// Bad order in warehouse, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
+                            sql = "DELETE FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                            curs.execute(sql)
                     #if TERM_OUT==True:
                     #    print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                     # set up the dates so MySQL won't barf
