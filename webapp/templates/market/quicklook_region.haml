@@ -161,7 +161,7 @@
               %td.text-right
                 = system.7|intcomma
     #mats.tab-pane.fade.active.in
-      .span4
+      .span8
         %table.table.table-striped.table-condensed
           %thead
             %tr
@@ -169,13 +169,34 @@
                 Material
               %th.text-right
                 Quantity
+              %th.text-right
+                Jita Avg Price Per Unit
+              %th.text-right
+                Total Materials Cost
           %tbody
           - for material in materials
             %tr
               %td
-                {{material.material_type__name}}
+                %a{'href':'/market/{{material.material_type__id}}'}
+                  {{material.material_type__name}}
               %td.text-right
                 {{material.quantity}}
+              %td.text-right
+                = material.price|floatformat:"2"|intcomma
+              %td.text-right
+                = material.total|floatformat:"2"|intcomma
+          %tr
+          %tr
+            %td.text-right
+              %b
+                TOTAL PRICE:
+            %td
+            %td
+            %td.text-right
+              %b
+                = totalprice|floatformat:"2"|intcomma
+        
+        * Assumes perfect refining
                 
 - block scripts
   %script{'type':'text/javascript'}

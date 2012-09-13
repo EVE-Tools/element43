@@ -5,6 +5,7 @@ from django.template import RequestContext
 
 # Aggregation
 from django.db.models import Sum
+from django.db.models import Avg
 
 # market_data models
 from apps.market_data.models import Orders
@@ -77,13 +78,19 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
 
     # Get list of materials to build
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
+    totalprice = 0
+    for material in materials:
+        price = Orders.objects.filter(invtype=material['material_type__id'], mapregion_id = 10000002).aggregate(Avg('price'))
+        material['price']=price['price__avg']
+        material['total']=price['price__avg']*material['quantity']
+        totalprice += material['total']
 
     # Get the region type
     region_object = MapRegion.objects.get(id = region_id)
 
-		#
-		# Orders
-		#
+    #
+    # Orders
+    #
     
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')
@@ -142,8 +149,8 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
 
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
-		# We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'materials':materials, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
+    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook_region.haml', rcontext)
 
@@ -158,6 +165,12 @@ def quicklook(request, type_id = 34):
     
     # Get list of materials to build
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
+    totalprice = 0
+    for material in materials:
+        price = Orders.objects.filter(invtype=material['material_type__id'], mapregion_id = 10000002).aggregate(Avg('price'))
+        material['price']=price['price__avg']
+        material['total']=price['price__avg']*material['quantity']
+        totalprice += material['total']
     
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True).order_by('-price')
@@ -224,6 +237,6 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'type':type_object, 'materials':materials, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook.haml', rcontext)
