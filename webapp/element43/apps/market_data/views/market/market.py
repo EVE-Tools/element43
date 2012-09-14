@@ -9,6 +9,7 @@ from django.db.models import Avg
 
 # market_data models
 from apps.market_data.models import Orders
+from apps.market_data.models import ItemRegionStat
 from apps.market_data.models import History
 
 # JSON for the history API
@@ -80,9 +81,9 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
     totalprice = 0
     for material in materials:
-        price = Orders.objects.filter(invtype=material['material_type__id'], mapregion_id = 10000002).aggregate(Avg('price'))
-        material['price']=price['price__avg']
-        material['total']=price['price__avg']*material['quantity']
+        price = ItemRegionStat.objects.values('sellmedian').filter(invtype=material['material_type__id'], mapregion_id = 10000002)
+        material['price']=price
+        material['total']=price*material['quantity']
         totalprice += material['total']
 
     # Get the region type
@@ -167,9 +168,10 @@ def quicklook(request, type_id = 34):
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
     totalprice = 0
     for material in materials:
-        price = Orders.objects.filter(invtype=material['material_type__id'], mapregion_id = 10000002).aggregate(Avg('price'))
-        material['price']=price['price__avg']
-        material['total']=price['price__avg']*material['quantity']
+        # Get jita pricing
+        stat_object = ItemRegionStat.objects.filter(invtype=material['material_type__id'], mapregion = 10000002)[:0]
+        material['price']=stat_object.sellavg
+        material['total']=stat_object.sellavg*material['quantity']
         totalprice += material['total']
     
     # Fetch all buy/sell orders from DB
