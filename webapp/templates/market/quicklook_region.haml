@@ -44,6 +44,7 @@
                 %i.icon-white.icon-question-sign
             %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
+                %i.icon-white.icon-question-sign
         %tbody
           - for order in sell_orders
             %tr
@@ -59,11 +60,10 @@
                 = order.generated_at|naturaltime
               %td.text-center
                 - if order.is_suspicious
-                  %span.sec0
-                    •
-                - else
-                  %span.sec8
-                    •
+                  %img{'src':'/static/images/icons/exclamation.png'}
+              %td.text-center
+                - if order.price < totalprice
+                  %img{'src':'/static/images/icons/cart.png'}
               // ID: {{order.id}}
     #bid.tab-pane.fade
       %table.table.table-striped.table-condensed
