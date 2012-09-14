@@ -81,9 +81,14 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
     totalprice = 0
     for material in materials:
-        price = ItemRegionStat.objects.values('sellmedian').filter(invtype=material['material_type__id'], mapregion_id = 10000002)
-        material['price']=price
-        material['total']=price*material['quantity']
+        # Get jita pricing
+        stat_object = ItemRegionStat()
+        try:
+            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
+        except:
+            stat_object.sellavg = 0
+        material['price']=stat_object.sellmedian
+        material['total']=stat_object.sellmedian*material['quantity']
         totalprice += material['total']
 
     # Get the region type

@@ -42,6 +42,8 @@
             %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
+            %th.text-center
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
         %tbody
           - for order in sell_orders
             %tr
@@ -196,6 +198,7 @@
               = totalprice|floatformat:"2"|intcomma
       
       * Assumes perfect refining
+      
       ** If pricing shows "0" it means we do not have enough data from Jita to estimate
                 
 - block scripts
