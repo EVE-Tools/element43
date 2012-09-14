@@ -86,7 +86,7 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
         except:
-            stat_object.sellavg = 0
+            stat_object.sellmedian = 0
         material['price']=stat_object.sellmedian
         material['total']=stat_object.sellmedian*material['quantity']
         totalprice += material['total']
@@ -178,7 +178,7 @@ def quicklook(request, type_id = 34):
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
         except:
-            stat_object.sellavg = 0
+            stat_object.sellmedian = 0
         material['price']=stat_object.sellmedian
         material['total']=stat_object.sellmedian*material['quantity']
         totalprice += material['total']
