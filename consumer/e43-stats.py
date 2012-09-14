@@ -58,6 +58,7 @@ def thread(data):
     curs = dbcon.cursor()
     
     sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
+    curs.execute(sql)
     sql = "SELECT price, is_bid, volume_remaining FROM market_data_orders WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
     curs.execute(sql)
     for record in curs:
