@@ -169,9 +169,13 @@ def quicklook(request, type_id = 34):
     totalprice = 0
     for material in materials:
         # Get jita pricing
-        stat_object = ItemRegionStat.objects.filter(invtype=material['material_type__id'], mapregion = 10000002)[:0]
-        material['price']=stat_object.sellavg
-        material['total']=stat_object.sellavg*material['quantity']
+        stat_object = ItemRegionStat()
+        try:
+            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
+        except:
+            stat_object.sellavg = 0
+        material['price']=stat_object.sellmedian
+        material['total']=stat_object.sellmedian*material['quantity']
         totalprice += material['total']
     
     # Fetch all buy/sell orders from DB

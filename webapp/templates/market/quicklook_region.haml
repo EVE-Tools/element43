@@ -169,7 +169,7 @@
             %th.text-right
               Quantity
             %th.text-right
-              Jita Avg Price Per Unit
+              Jita Median Price Per Unit
             %th.text-right
               Total Materials Cost
         %tbody
@@ -196,6 +196,7 @@
               = totalprice|floatformat:"2"|intcomma
       
       * Assumes perfect refining
+      ** If pricing shows "0" it means we do not have enough data from Jita to estimate
                 
 - block scripts
   %script{'type':'text/javascript'}
