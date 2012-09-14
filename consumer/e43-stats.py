@@ -70,7 +70,7 @@ def thread(data):
             buycount.append(record[2])
             
     if len(buyprice) > 1:
-        top = stats.scoreatpercentile(buyprice, 95)
+        top = stats.scoreatpercentile(buyprice, 99)
         bottom = stats.scoreatpercentile(buyprice, 5)
         buy_masked = ma.masked_outside(buyprice, bottom, top)
         tempmask = buy_masked.mask
@@ -88,7 +88,7 @@ def thread(data):
         
     if len(sellprice) > 1:
         top = stats.scoreatpercentile(sellprice, 95)
-        bottom = stats.scoreatpercentile(sellprice, 5)
+        bottom = stats.scoreatpercentile(sellprice, 1)
         sell_masked = ma.masked_outside(sellprice, bottom, top)
         tempmask = sell_masked.mask
         sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)
