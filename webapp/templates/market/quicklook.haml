@@ -163,17 +163,12 @@
                 = order.generated_at|naturaltime
               %td.text-center
                 - if order.is_suspicious
-                  %span.sec0
-                    •
-                - else
-                  %span.sec8
-                    •
+                  %img{'src':'/static/images/icons/exclamation.png'}
               %td.text-center
                 - if order.price < totalprice
-                  %span.sec0
-                    !
+                  %img{'src':'/static/images/icons/cart.png'}
               // ID: {{order.id}}
-    #mats.tab-pane.fade.active.in
+    #mats.tab-pane.fade
       .span8
         %table.table.table-striped.table-condensed
           %thead

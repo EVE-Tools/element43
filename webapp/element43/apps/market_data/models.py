@@ -98,6 +98,25 @@ class EmdrStatsWorking(models.Model):
     class Meta(object):
         verbose_name = "Message Statistics Live Data"
         verbose_name_plural = "Message Statistics Live Data"
+        
+class ItemRegionStat(models.Model):
+    """
+    Stats for items on a per region basis
+    processed when new orders come in during warehousing
+    """
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text = "FK to type table")
+    buymean = models.FloatField(help_text = "Mean of buy price")
+    buyavg = models.FloatField(help_text = "Average of buy price")
+    sellmean = models.FloatField(help_text = "Mean of sell price")
+    sellavg = models.FloatField(help_text = "Avg of sell price")
+    buymedian = models.FloatField(help_text = "Median of buy price")
+    sellmedian = models.FloatField(help_text = "Median of sell price")
+    
+    class Meta(object):
+        verbose_name = "Stat Data"
+        verbose_name_plural = "Stats Data"
+    
 
 class History(models.Model):
     """
