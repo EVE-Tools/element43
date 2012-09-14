@@ -169,42 +169,41 @@
                   %img{'src':'/static/images/icons/cart.png'}
               // ID: {{order.id}}
     #mats.tab-pane.fade
-      .span8
-        %table.table.table-striped.table-condensed
-          %thead
-            %tr
-              %th
-                Material
-              %th.text-right
-                Quantity
-              %th.text-right
-                Jita Median Price Per Unit
-              %th.text-right
-                Total Materials Cost
-          %tbody
-          - for material in materials
-            %tr
-              %td
-                %a{'href':'/market/{{material.material_type__id}}'}
-                  {{material.material_type__name}}
-              %td.text-right
-                {{material.quantity}}
-              %td.text-right
-                = material.price|floatformat:"2"|intcomma
-              %td.text-right
-                = material.total|floatformat:"2"|intcomma
+      %table.table.table-striped.table-condensed
+        %thead
           %tr
+            %th
+              Material
+            %th.text-right
+              Quantity
+            %th.text-right
+              Jita Avg Price Per Unit
+            %th.text-right
+              Total Materials Cost
+        %tbody
+        - for material in materials
           %tr
-            %td.text-right
-              %b
-                TOTAL PRICE:
             %td
-            %td
+              %a{'href':'/market/{{material.material_type__id}}'}
+                {{material.material_type__name}}
             %td.text-right
-              %b
-                = totalprice|floatformat:"2"|intcomma
-        
-        * Assumes perfect refining
+              {{material.quantity}}
+            %td.text-right
+              = material.price|floatformat:"2"|intcomma
+            %td.text-right
+              = material.total|floatformat:"2"|intcomma
+        %tr
+        %tr
+          %td
+          %td
+          %td.text-right
+            %b
+              TOTAL PRICE:
+          %td.text-right
+            %b
+              = totalprice|floatformat:"2"|intcomma
+      
+      * Assumes perfect refining
                 
 - block scripts
   %script{'type':'text/javascript'}
