@@ -5,10 +5,10 @@ Greg Oberfield gregoberfield@gmail.com
 
 TODO:
 1. Documentation
-2. History message processing (sort of done: 7/20/12)
-3. wrap try/catch blocks around SQL statements
-4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now
-5. move settings to external file so I don't have to keep changing them
+2. History message processing (sort of done: 7/20/12) - DONE
+3. wrap try/catch blocks around SQL statements - mostly done
+4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now - DONE
+5. move settings to external file so I don't have to keep changing them - DONE
 
 """
 

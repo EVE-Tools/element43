@@ -14,6 +14,7 @@ import re
 import gevent
 from gevent.pool import Pool
 from gevent import monkey; gevent.monkey.patch_all()
+from hotqueue import HotQueue
 import sys
 
 # Load connection params from the configuration file
@@ -24,6 +25,7 @@ dbname = config.get('Database', 'dbname')
 dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
+redisdb = config.get('Redis', 'redishost')
 TERM_OUT = config.get('Consumer', 'term_out')
 
 # Connect to PostgreSQL, auto commit.
@@ -40,7 +42,11 @@ curs = dbcon.cursor()
 # Fire up the regex cannon
 recannon = re.compile("\((\d+),(\d+)\)")
 
+# get a handle to the redis queue
+queue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
+
 workers = []
+combo = {}
     
 def main():
 
@@ -90,6 +96,9 @@ def thread(region):
             print "No Results"
     else:
         for row in result:
+            combo['region']=region
+            combo['item']=row[0]
+            queue.put(combo)
             #print "Region: ", region, " Type: ", row[0]
             if TERM_OUT==True:
                 print "Region: ", region, "Type: ", row[0]
