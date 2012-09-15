@@ -57,11 +57,14 @@ def thread(data):
     
     curs = dbcon.cursor()
     
+    # Delete the old region/item stats from the DB if it exists
     sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
     curs.execute(sql)
+    # Grab all the live orders for this item/region combo
     sql = "SELECT price, is_bid, volume_remaining FROM market_data_orders WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
     curs.execute(sql)
     for record in curs:
+        # Depending on buy/sell status, append to the proper list pricing and volume
         if record[1] == False:
             sellprice.append(record[0])
             sellcount.append(record[2])
@@ -69,9 +72,11 @@ def thread(data):
             buyprice.append(record[0])
             buycount.append(record[2])
             
+    # process the buy side
     if len(buyprice) > 1:
         top = stats.scoreatpercentile(buyprice, 99)
         bottom = stats.scoreatpercentile(buyprice, 5)
+        # mask out the top 1% and bottom 5% of orders so we can try to eliminate the BS
         buy_masked = ma.masked_outside(buyprice, bottom, top)
         tempmask = buy_masked.mask
         buycount_masked = ma.array(buycount, mask=tempmask, fill_value = 0)
@@ -86,6 +91,7 @@ def thread(data):
         buyprice.sort()
         buy = buyprice.pop()
         
+    # same processing for sell side as buy side
     if len(sellprice) > 1:
         top = stats.scoreatpercentile(sellprice, 95)
         bottom = stats.scoreatpercentile(sellprice, 1)
@@ -103,6 +109,7 @@ def thread(data):
         sellprice.sort()
         sell = sellprice.pop()
         
+    # insert it into the DB
     sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'])
     try:
         curs.execute(sql)
