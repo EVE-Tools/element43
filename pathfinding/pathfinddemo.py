@@ -60,12 +60,15 @@ def main():
     path_tuple = tuple(path)
     print path
     
+    """
     sql = "SELECT name, security_level FROM eve_db_mapsolarsystem WHERE id IN %s"
     curs.execute(sql, [path_tuple])
     result = curs.fetchall()
+    """
+    
     output = ""
-    for system in result:
-        output += " %s (%s) / " % (system[0], system[1])
+    for system in path:
+        output += " %s (%s) / " % (G.node[system]['name'], G.node[system]['seclevel'])
     print "Path:", output
 
 if __name__ == '__main__':
