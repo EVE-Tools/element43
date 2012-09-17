@@ -12,15 +12,15 @@
         %tr
           %th
             Station
-          %th
-            Number of Active Orders
+          %th.text-right
+            Active Orders
       %tbody
         - for station in rank_list
           %tr
             %td
               {{station.stastation__name}}
-            %td
-              {{station.ordercount}}
+            %td.text-right
+              {{station.ordercount}}|intcomma
     %p
       %i
         Generated {{generated_at|naturaltime}}.
