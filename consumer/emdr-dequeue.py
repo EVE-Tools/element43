@@ -138,9 +138,6 @@ def thread(message):
                         if TERM_OUT==True:
                             print "000 Order has gen_at in the future 000"
                         continue
-                    #if TERM_OUT==True:
-                    #    print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                    # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
                     if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=max_order_age))):                   

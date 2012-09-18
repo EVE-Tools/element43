@@ -14,6 +14,7 @@ import re
 import networkx as nx
 from hotqueue import HotQueue
 import sys
+from flask import Flask
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -36,40 +37,35 @@ dbcon.autocommit = True
 G = nx.Graph()
 system_list={}
 
-def main():
-    curs = dbcon.cursor()
-    sql = "SELECT id, name, security_level FROM eve_db_mapsolarsystem WHERE region_id IN %s"
-    curs.execute(sql, [region_list])
-    systems = curs.fetchall()
-    for system in systems:
-        # Add a node for each accessible system
-        G.add_node(system[0], name=system[1], seclevel=system[2])
-    sql = "SELECT from_solar_system_id, to_solar_system_id FROM eve_db_mapsolarsystemjump WHERE from_region_id IN %s"
-    curs.execute(sql, [region_list])
-    results = curs.fetchall()
-    for row in results:
-        # add an edge for each jumpgate
-        cost = 1
-        if (G.node[row[0]]['seclevel']<0.5) or (G.node[row[1]]['seclevel']<0.5):
-            cost = 50
-        G.add_edge(row[0], row[1], weight=cost)
+curs = dbcon.cursor()
+sql = "SELECT id, name, security_level FROM eve_db_mapsolarsystem WHERE region_id IN %s"
+curs.execute(sql, [region_list])
+systems = curs.fetchall()
+for system in systems:
+    # Add a node for each accessible system
+    G.add_node(system[0], name=system[1], seclevel=system[2])
+sql = "SELECT from_solar_system_id, to_solar_system_id FROM eve_db_mapsolarsystemjump WHERE from_region_id IN %s"
+curs.execute(sql, [region_list])
+results = curs.fetchall()
+for row in results:
+    # add an edge for each jumpgate
+    cost = 1
+    if (G.node[row[0]]['seclevel']<0.5) or (G.node[row[1]]['seclevel']<0.5):
+        cost = 50
+    G.add_edge(row[0], row[1], weight=cost)
+
+app = Flask(__name__)
+
+@app.route('/path/<int:source_system>/<int:target_system>')
+def pathfind_demo(source_system, target_system):
     
-    print len(results)
-    print "Jita neighbors: ", G.neighbors(30000142)
-    path = nx.shortest_path(G, source=30000001, target=30000142, weight='weight')
-    path_tuple = tuple(path)
-    print path
-    
-    """
-    sql = "SELECT name, security_level FROM eve_db_mapsolarsystem WHERE id IN %s"
-    curs.execute(sql, [path_tuple])
-    result = curs.fetchall()
-    """
+    path = nx.shortest_path(G, source=source_system, target=target_system, weight='weight')
     
     output = ""
     for system in path:
         output += " %s (%s) / " % (G.node[system]['name'], G.node[system]['seclevel'])
-    print "Path:", output
+    return "Path: %s" % output
 
 if __name__ == '__main__':
-    main()
+    #app.config['Debug'] = True
+    app.run(port=8082)
