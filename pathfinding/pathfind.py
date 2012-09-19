@@ -18,13 +18,12 @@ from flask import Flask
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
-config.read(['processor.conf', 'local_processor.conf'])
+config.read(['pathfind.conf', 'local_pathfind.conf'])
 dbhost = config.get('Database', 'dbhost')
 dbname = config.get('Database', 'dbname')
 dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
-redisdb = config.get('Redis', 'redishost')
 TERM_OUT = config.get('Consumer', 'term_out')
 
 # list of accessible regions, use this as the base set to identify navigable systems in the DB
@@ -49,23 +48,34 @@ curs.execute(sql, [region_list])
 results = curs.fetchall()
 for row in results:
     # add an edge for each jumpgate
-    cost = 1
-    if (G.node[row[0]]['seclevel']<0.5) or (G.node[row[1]]['seclevel']<0.5):
-        cost = 50
-    G.add_edge(row[0], row[1], weight=cost)
+    #if (G.node[row[0]]['seclevel']<0.5) or (G.node[row[1]]['seclevel']<0.5):
+        #cost = 50
+    G.add_edge(row[0], row[1])
 
 app = Flask(__name__)
 
-@app.route('/path/<int:source_system>/<int:target_system>')
-def pathfind_demo(source_system, target_system):
+@app.route('/path/<int:source_system>/<int:target_system>/<int:seclevel>/<int:invert>')
+def pathfind_demo(source_system, target_system, seclevel, invert):
     
-    path = nx.shortest_path(G, source=source_system, target=target_system, weight='weight')
+    working_graph = G.copy()
+        
+    for e in working_graph.edges_iter():
+        cost = 1
+        if (invert):
+            if (working_graph.node[e[0]]['seclevel']>(float(seclevel)/10)) or (working_graph.node[e[1]]['seclevel']>(float(seclevel)/10)):
+                cost = 50
+        else:
+            if (working_graph.node[e[0]]['seclevel']<(float(seclevel)/10)) or (working_graph.node[e[1]]['seclevel']<(float(seclevel)/10)):
+                cost = 50
+        working_graph[e[0]][e[1]]['weight']=cost
+    
+    path = nx.shortest_path(working_graph, source=source_system, target=target_system, weight='weight')
     
     output = ""
     for system in path:
-        output += " %s (%s) / " % (G.node[system]['name'], G.node[system]['seclevel'])
+        output += " %s (%s) / " % (working_graph.node[system]['name'], working_graph.node[system]['seclevel'])
     return "Path: %s" % output
 
 if __name__ == '__main__':
-    #app.config['Debug'] = True
+    app.debug = True
     app.run(port=8082)
