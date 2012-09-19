@@ -7,14 +7,15 @@ Greg Oberfield - gregoberfield@gmail.com
 
 import psycopg2
 import psycopg2.extras
-import time
 import ConfigParser
 import os
 import re
 import networkx as nx
-from hotqueue import HotQueue
 import sys
+import ujson as json
 from flask import Flask
+from flask import request
+from flask import Response
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -54,8 +55,19 @@ for row in results:
 
 app = Flask(__name__)
 
-@app.route('/path/<int:source_system>/<int:target_system>/<int:seclevel>/<int:invert>')
-def pathfind_demo(source_system, target_system, seclevel, invert):
+@app.route('/path', methods=['POST', 'GET'])
+def pathfind():
+    
+    if request.method == "POST":
+        source_system = int(request.form['source'])
+        target_system = int(request.form['target'])
+        seclevel = int(request.form['seclevel'])
+        invert = int(request.form['invert'])
+    else:
+        source_system = int(request.args.get('source'))
+        target_system = int(request.args.get('target'))
+        seclevel = int(request.args.get('seclevel'))
+        invert = int(request.args.get('invert'))
     
     working_graph = G.copy()
         
@@ -71,10 +83,10 @@ def pathfind_demo(source_system, target_system, seclevel, invert):
     
     path = nx.shortest_path(working_graph, source=source_system, target=target_system, weight='weight')
     
-    output = ""
-    for system in path:
-        output += " %s (%s) / " % (working_graph.node[system]['name'], working_graph.node[system]['seclevel'])
-    return "Path: %s" % output
+    #output = ""
+    #for system in path:
+    #    output += " %s (%s) / " % (working_graph.node[system]['name'], working_graph.node[system]['seclevel'])
+    return Response(json.dumps(path), mimetype='application/json')
 
 if __name__ == '__main__':
     app.debug = True
