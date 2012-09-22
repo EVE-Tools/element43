@@ -56,6 +56,15 @@
               %a#btn-trust.btn.btn-success{'href':'#', 'onclick':'CCPEVE.requestTrust($(location).attr("href"))'}
                  %i.icon-check
                  Grant Trust
+          - if messages
+            - for message in messages
+              - if message.tags
+                  .alert{'class':'alert-{{message.tags}}'}
+                    %strong {{message.tags}}
+                    %p {{message}}
+              - else
+                .alert{'class':'alert-info'}
+                  %p {{message}}
           - block content
           %hr
           %footer
