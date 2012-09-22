@@ -6,21 +6,20 @@
 - block content
   %h1
     Top Stations by Active Orders
-  - cache 3600 topstations
-    %table.table.table-striped.table-condensed
-      %thead
-        %tr
-          %th
-            Station
-          %th.text-right
-            Active Orders
-      %tbody
-        - for station in rank_list
-          %tr
-            %td
-              {{station.stastation__name}}
-            %td.text-right
-              {{station.ordercount|intcomma}}
-  %p
-    %i
-      Generated {{generated_at|naturaltime}}.
+	%table.table.table-striped.table-condensed
+	  %thead
+	    %tr
+	      %th
+	        Station
+	      %th.text-right
+	        Active Orders
+	  %tbody
+	    - for station in rank_list
+	      %tr
+	        %td
+	          {{station.stastation__name}}
+	        %td.text-right
+	          {{station.ordercount|intcomma}}
+	%p
+	  %i
+	    Generated at {{generated_at}} UTC

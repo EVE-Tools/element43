@@ -13,6 +13,11 @@ import datetime
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 
+# Caching
+from django.views.decorators.cache import cache_page
+
+# Caches this view 1 hour long
+@cache_page(60 * 60)
 def ranking(request, group = 0):
 	"""
 	This file generates the station ranks based on active orders in the DB
