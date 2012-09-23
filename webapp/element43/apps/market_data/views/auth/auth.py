@@ -148,7 +148,7 @@ def reset_password(request):
 			text_content = text.render(mail_context)
 			html_content = html.render(mail_context)
 			
-			message = EmailMultiAlternatives('Welcome to Element43!', text_content, settings.DEFAULT_FROM_EMAIL, [form.cleaned_data.get('email')])
+			message = EmailMultiAlternatives('Element43 password reset', text_content, settings.DEFAULT_FROM_EMAIL, [form.cleaned_data.get('email')])
 			message.attach_alternative(html_content, "text/html")
 			message.send()
 			
