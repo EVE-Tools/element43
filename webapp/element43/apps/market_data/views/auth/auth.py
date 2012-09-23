@@ -66,7 +66,7 @@ def login(request):
 				
 			else:
 				# Add error message
-				messages.error(request, 'There is no such account.')
+				messages.error(request, 'Incorrect username or password. Try again!')
 	else:
 		form = LoginForm()
   
