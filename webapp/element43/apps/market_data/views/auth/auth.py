@@ -116,11 +116,18 @@ def activate(request, key):
 	user = User.objects.filter(profile__activation_key = key)
 	
 	if user:
+		# Activate user
 		user[0].is_active = True
 		user[0].save()
-		success = True
+		
+		# Add error message
+		messages.success(request, 'Thank you for activating you account. You can use all features of Element43 now!')
 	else:
-		success = False
+		# Add success message
+		messages.error(request, 'There is no account associated with this key!')
+	
+	# Redirect home
+	return HttpResponseRedirect('/')
 		
 	rcontext = RequestContext(request, {'success':success})
 	return render_to_response('auth/activate.haml', rcontext)
