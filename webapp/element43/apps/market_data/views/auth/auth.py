@@ -5,9 +5,15 @@ from django.template import Context
 from django.template import RequestContext
 from django.contrib import messages
 
+# Authentication
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
+
 # Registration-related imports
 from apps.market_data.forms.auth import RegistrationForm
 from apps.market_data.forms.auth import ResetPasswordForm
+from apps.market_data.forms.auth import LoginForm
 from django.contrib.auth.models import User
 
 # Settings and e-mail
@@ -19,6 +25,43 @@ from django.template.loader import get_template
 # Utility imports
 import uuid
 import datetime
+
+def login(request):
+	if request.method == 'POST':
+		form = LoginForm(request.POST)
+		
+		if form.is_valid():
+			username = form.cleaned_data.get('username')
+			password = form.cleaned_data.get('password')
+			user = authenticate(username = username, password = password)
+		
+			if user is not None:
+				if user.is_active:
+					django_login(request, user)
+					# Add success message
+					messages.success(request, 'Hello ' + user.username + '! You were logged in successfully.')
+					# Redirect home
+					return HttpResponseRedirect('/')
+				
+				else:
+					# Add error message
+					messages.error(request, 'Your account is not active.')
+				
+			else:
+				# Add error message
+				messages.error(request, 'There is no such account.')
+	else:
+		form = LoginForm()
+  
+	rcontext = RequestContext(request, {})
+	return render_to_response('auth/login.haml', {'form': form}, rcontext)
+	
+def logout(request):
+	if request.user.is_authenticated():
+		django_logout(request)
+		# Redirect
+		messages.info(request, 'You were logged out successfully.')
+	return HttpResponseRedirect('/')
 
 def register(request):
 	if request.method == 'POST': # If the form has been submitted...
@@ -81,7 +124,7 @@ def reset_password(request):
 			new_password = User.objects.make_random_password(length=12, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
 			user = User.objects.get(username__exact = form.cleaned_data.get('username'), email__exact = form.cleaned_data.get('email'))
 			
-			user.password = new_password
+			user.set_password(new_password)
 			user.save()
 			
 			# Send password reset mail

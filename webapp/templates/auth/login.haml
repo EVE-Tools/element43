@@ -1,0 +1,34 @@
+- extends "base.haml"
+- load custom_filters
+- block title
+  element43 - Login
+- block content
+  %h1
+    Login
+  %form.form-horizontal.well{'action':'/login/', 'method':'post'}
+    %fieldset
+      - csrf_token
+      %legend
+        Log into Element43 
+      %div{'class':'control-group{{form.username|css_error}}'}
+        %label.control-label{'for':'username'} Username
+        .controls
+          = form.username
+          - if form.username.errors
+            %span.help-inline
+              - for error in form.username.errors
+                = error|escape
+      %div{'class':'control-group{{form.password|css_error}}'}
+        %label.control-label{'for':'password'} Password
+        .controls
+          = form.password
+          - if form.password.errors
+            %span.help-inline
+              - for error in form.password.errors
+                = error|escape
+      .control-group
+        .controls
+          %button.btn.btn-primary{'type':'submit'}
+            Login
+      %hr
+    %a{'href':'/register/reset_password/'} Forgot your password?

@@ -39,32 +39,22 @@
                     %a{'href':'/trading/station/ranking/'} Top Stations
               - if not user.is_authenticated
                 %li
+                  %a{'href':'/login/'}
+                    Login
+                %li
                   %a{'href':'/register/'}
                     Register
+              - else
+                %li
+                  %a{'href':'/logout/'}
+                    Logout
             %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
               - csrf_token
               %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
     .container
       .panel-wrapper
         .content.clearfix
-          - if request|is_igb and not request|igb_is_trusted
-            .alert.alert-info
-              %strong
-                Hey!
-              %p
-                It appears that you are accessing this page from the IGB, but have not granted trust to element43, yet. Some functions will not work properly if element43 is untrusted. Please reload the page manually after granting trust.
-              %a#btn-trust.btn.btn-success{'href':'#', 'onclick':'CCPEVE.requestTrust($(location).attr("href"))'}
-                 %i.icon-check
-                 Grant Trust
-          - if messages
-            - for message in messages
-              - if message.tags
-                  .alert{'class':'alert-{{message.tags}}'}
-                    %strong {{message.tags}}
-                    %p {{message}}
-              - else
-                .alert{'class':'alert-info'}
-                  %p {{message}}
+          - include '_base_messages.haml'
           - block content
           %hr
           %footer

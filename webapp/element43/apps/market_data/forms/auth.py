@@ -14,6 +14,16 @@ from element43 import eveapi
 # lands in trunk, this will no longer be necessary.
 attrs_dict = {'class': 'input-xlarge required'}
 
+class LoginForm(forms.Form):
+	"""
+	Login form.
+	"""
+	username = forms.RegexField(regex=r'^[\w.@+-]+$', max_length=30, widget=forms.TextInput(attrs=attrs_dict), error_messages={'invalid': "Your username may contain only letters, numbers and @/./+/-/_ characters."})
+	password = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
+	
+	def clean(self):
+		return self.cleaned_data
+
 class RegistrationForm(forms.Form):
 	"""
 	Form for registering a new user account.

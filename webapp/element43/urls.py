@@ -30,9 +30,9 @@ urlpatterns = patterns('',
     url(r'^register/reset_password/$', 'apps.market_data.views.auth.auth.reset_password'),
 		
 	# Login
-	#
+	url(r'^login/$', 'apps.market_data.views.auth.auth.login'),
 	# Logout
-	#
+	url(r'^logout/$', 'apps.market_data.views.auth.auth.logout'),
 		
 	#
 	# Market URLs
