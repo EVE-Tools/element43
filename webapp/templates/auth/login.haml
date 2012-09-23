@@ -5,7 +5,7 @@
 - block content
   %h1
     Login
-  %form.form-horizontal.well{'action':'/login/', 'method':'post'}
+  %form.form-horizontal.well{'action':'/login/?next={{request.GET.next}}', 'method':'post'}
     %fieldset
       - csrf_token
       %legend

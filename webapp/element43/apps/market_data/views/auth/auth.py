@@ -25,6 +25,7 @@ from django.template.loader import get_template
 # Utility imports
 import uuid
 import datetime
+from urlparse import urlparse, urlunparse
 
 def login(request):
 	if request.method == 'POST':
@@ -40,8 +41,24 @@ def login(request):
 					django_login(request, user)
 					# Add success message
 					messages.success(request, 'Hello ' + user.username + '! You were logged in successfully.')
-					# Redirect home
-					return HttpResponseRedirect('/')
+					
+					# Redirection
+					# Default to default
+					redirect_to = request.REQUEST.get('next', '')
+					
+					if redirect_to:
+						netloc = urlparse(redirect_to)[1]
+						# Heavier security check -- don't allow redirection to a different
+						# host.
+						if netloc and netloc != request.get_host():
+							# Warn user
+							messages.warning(request, 'External login redirect URL detected! It looks like someone tried to trick you. Do not trust the person who gave you this link!')
+							redirect_to = settings.LOGIN_REDIRECT_URL
+						   
+					else:
+						redirect_to = settings.LOGIN_REDIRECT_URL
+						
+					return HttpResponseRedirect(redirect_to)
 				
 				else:
 					# Add error message

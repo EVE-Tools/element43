@@ -39,7 +39,7 @@
                     %a{'href':'/trading/station/ranking/'} Top Stations
               - if not user.is_authenticated
                 %li
-                  %a{'href':'/login/'}
+                  %a{'href':'/login/?next={{request.path}}'}
                     Login
                 %li
                   %a{'href':'/register/'}

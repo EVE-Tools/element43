@@ -25,6 +25,10 @@ EMAIL_HOST_PASSWORD = ""
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'no_reply@element-43.com'
 
+# Login
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+
 MANAGERS = ADMINS
 
 DATABASES = {
