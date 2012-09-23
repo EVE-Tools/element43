@@ -6,8 +6,6 @@ Forms and validation code for user registration.
 from django.contrib.auth.models import User
 from django import forms
 
-from element43 import eveapi
-
 # I put this on all required fields, because it's easier to pick up
 # on them with CSS or JavaScript if they have a class of "required"
 # in the HTML. Your mileage may vary. If/when Django ticket #3515
@@ -36,10 +34,6 @@ class RegistrationForm(forms.Form):
 	email = forms.EmailField(widget=forms.TextInput(attrs=attrs_dict))
 	password = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
 	password_repeat = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
-
-	# API Key
-	api_id = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'span1 input-xlarge required'}))
-	api_verification_code = forms.CharField(widget=forms.TextInput(attrs=attrs_dict))
 
 	def clean_username(self):
 		"""
@@ -71,29 +65,7 @@ class RegistrationForm(forms.Form):
 		"""
 		if 'password' in self.cleaned_data and 'password_repeat' in self.cleaned_data:
 			if self.cleaned_data['password'] != self.cleaned_data['password_repeat']:
-				raise forms.ValidationError("The two password fields didn't match.")		
-		
-		"""
-		Validate key / ID combination. If it's valid, check security bitmask.
-		"""
-		api_id = self.cleaned_data.get("api_id")
-		api_verification_code = self.cleaned_data.get("api_verification_code")
-		
-		# Try to authenticate with supplied key / ID pair and fetch api key meta data.
-		try:
-			# Fetch info
-			api = eveapi.EVEAPIConnection()
-			auth = api.auth(keyID=api_id, vCode=api_verification_code)
-			key_info = auth.account.APIKeyInfo()
-		except:
-			raise forms.ValidationError("Verification of your API key failed. Please follow the instructions on the right half of this page to generate a valid one.")
-			
-		# Now check the access mask
-		min_access_mask = 6361219
-		
-		# Do a simple bitwise operation to determine if we have sufficient rights with this key.
-		if not ((min_access_mask & key_info.key.accessMask) == min_access_mask):
-			raise forms.ValidationError("The API key you supplied does not have sufficient rights. Please follow the instructions on the right half of this page to generate a valid one.")
+				raise forms.ValidationError("The two password fields didn't match.")
 			
 		return self.cleaned_data
     

@@ -9,99 +9,51 @@
     .alert.alert-error
       %i.icon-white.icon-warning-sign
       = form.non_field_errors
-  .row
-    .span7
-      %form.form-horizontal.well{'action':'/register/', 'method':'post'}
-        %fieldset
-          - csrf_token
-          %legend
-            Registration
-          %div{'class':'control-group{{form.username|css_error}}'}
-            %label.control-label{'for':'username'} Username
-            .controls
-              = form.username
-              - if form.username.errors
-                %span.help-inline
-                  - for error in form.username.errors
-                    = error|escape
-          %div{'class':'control-group{{form.email|css_error}}'}
-            %label.control-label{'for':'email'} E-Mail
-            .controls
-              = form.email
-              - if form.email.errors
-                %span.help-inline
-                  - for error in form.email.errors
-                    = error|escape
-          %div{'class':'control-group{{form.password|css_error}}'}
-            %label.control-label{'for':'password'} Password
-            .controls
-              = form.password
-              - if form.password.errors
-                %span.help-inline
-                  - for error in form.password.errors
-                    = error|escape
-              %p.help-block
-                %b Note:
-                %i Never ever 
-                use the same password as for EVE!
-          %div{'class':'control-group{{form.password_repeat|css_error}}'}
-            %label.control-label{'for':'password_repeat'} Repeat Password
-            .controls
-              = form.password_repeat
-              - if form.password_repeat.errors
-                %span.help-inline
-                  - for error in form.password_repeat.errors
-                    = error|escape
-          %legend
-            API Key
-          %div{'class':'control-group{{form.api_id|css_error}}'}
-            %label.control-label{'for':'api_id'} ID
-            .controls
-              = form.api_id
-              - if form.api_id.errors
-                %span.help-inline
-                  - for error in form.api_id.errors
-                    = error|escape
-          %div{'class':'control-group{{form.api_verification_code|css_error}}'}
-            %label.control-label{'for':'api_verification_code'} Verification Code
-            .controls
-              = form.api_verification_code
-              - if form.api_verification_code.errors
-                %span.help-inline
-                  - for error in form.api_verification_code.errors
-                    = error|escape
-        %hr
-        .control-group
-          .controls
-            %button.btn.btn-success{'type':'submit'}
-              %i.icon-white.icon-check
-              Register now
-    .span4
-      %h4
-        API Key
-      %hr
-      %p
-        To generate an API key for Element43 visit
-        %code
-          %a{'href':'https://support.eveonline.com/api', 'target':'_blank'} support.eveonline.com/api
-      %p
-        Element43 needs the following permissions:
-      .well
-        %b Account and Market
-        %ul
-          %li WalletTransactions
-          %li WalletJournal
-          %li MarketOrders
-          %li AccountBalance
-        %b Private Information
-        %ul
-          %li AssetList
-        %b Science and Industry
-        %ul
-          %li Research
-          %li IndustryJobs
-      %p
-        Your access mask should read 
-        %code 6361219
-        now.
+  %form.form-horizontal.well{'action':'/register/', 'method':'post'}
+    %fieldset
+      - csrf_token
+      %legend
+        Registration
+      %div{'class':'control-group{{form.username|css_error}}'}
+        %label.control-label{'for':'username'} Username
+        .controls
+          = form.username
+          - if form.username.errors
+            %span.help-inline
+              - for error in form.username.errors
+                = error|escape
+      %div{'class':'control-group{{form.email|css_error}}'}
+        %label.control-label{'for':'email'} E-Mail
+        .controls
+          = form.email
+          - if form.email.errors
+            %span.help-inline
+              - for error in form.email.errors
+                = error|escape
+      %div{'class':'control-group{{form.password|css_error}}'}
+        %label.control-label{'for':'password'} Password
+        .controls
+          = form.password
+          - if form.password.errors
+            %span.help-inline
+              - for error in form.password.errors
+                = error|escape
+          %p.help-block
+            %b Note:
+            %i Never ever 
+            use the same password as for EVE!
+      %div{'class':'control-group{{form.password_repeat|css_error}}'}
+        %label.control-label{'for':'password_repeat'} Repeat Password
+        .controls
+          = form.password_repeat
+          - if form.password_repeat.errors
+            %span.help-inline
+              - for error in form.password_repeat.errors
+                = error|escape
+    %hr
+    .control-group
+      .controls
+        %button.btn.btn-success{'type':'submit'}
+          %i.icon-white.icon-check
+          Register now
         

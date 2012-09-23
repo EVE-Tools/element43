@@ -97,14 +97,9 @@ def register(request):
 			profile = user.get_profile()
 			
 			# Generate activation key
-			email_key = uuid.uuid4().hex
+			email_key = user.username + uuid.uuid4().hex
 			profile.activation_key = email_key
 			profile.key_expires = datetime.datetime.now() + datetime.timedelta(days=2)
-			
-			# Store API information
-			profile.api_valid = True
-			profile.api_id = form.cleaned_data.get('api_id')
-			profile.api_verification_code = form.cleaned_data.get('api_verification_code')
 			
 			# Save Profile
 			profile.save()
@@ -123,7 +118,7 @@ def register(request):
 			message.send()
 			
 			# Add success message
-			message.success('Your account has been created and an e-mail message containing your activation key has been sent to the address you specified. You have to activate your account within the next 48 hours.')
+			messages.success(request, 'Your account has been created and an e-mail message containing your activation key has been sent to the address you specified. You have to activate your account within the next 48 hours.')
 			# Redirect home
 			return HttpResponseRedirect('/')
 	else:
