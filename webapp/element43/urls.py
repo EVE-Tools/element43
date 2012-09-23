@@ -43,8 +43,9 @@ urlpatterns = patterns('',
 	url(r'^settings/$', 'apps.market_data.views.settings.profile'),
 	url(r'^settings/profile/$', 'apps.market_data.views.settings.profile'),
 	url(r'^settings/characters/$', 'apps.market_data.views.settings.characters'),
+	url(r'^settings/characters/remove/(?P<char_id>[0-9]+)/$', 'apps.market_data.views.settings.remove_character'),
 	url(r'^settings/api/key/$', 'apps.market_data.views.settings.api_key'),
-	url(r'^settings/api/character/$', 'apps.market_data.views.settings.api_character'),
+	url(r'^settings/api/character/(?P<api_id>[0-9]+)/(?P<api_verification_code>[a-zA-Z0-9]+)/$', 'apps.market_data.views.settings.api_character'),
 	
 		
 	#

@@ -18,6 +18,18 @@
           %a{'href':'/settings/api/key/'}
             Manage API Keys
     .span9
+      %table.table.table-striped
+        %tbody
+          - for char in characters
+            %tr
+              %td
+                %img{'src':'http://image.eveonline.com/Character/{{char.id}}_32.jpg'}
+              %td
+                = char.name
+              %td.text-right
+                %a{'href':'/settings/characters/remove/{{char.id}}/'}
+                  .btn.btn-danger
+                    Remove
 
             
             

@@ -19,7 +19,63 @@
             Manage API Keys
     .span9
       %h3
-        API Keys
+        Your API Keys
+      %strong
+        %i Currently not implemented.
       %hr
       %h3
         Add API Key
+      %form.form-horizontal.well{'action':'/settings/api/key/', 'method':'post'}
+        %fieldset
+          - csrf_token
+          %legend
+            API Key
+          %div{'class':'control-group{{form.api_id|css_error}}'}
+            %label.control-label{'for':'api_id'} ID
+            .controls
+              = form.api_id
+              - if form.api_id.errors
+                %span.help-inline
+                  - for error in form.api_id.errors
+                    = error|escape
+          %div{'class':'control-group{{form.api_verification_code|css_error}}'}
+            %label.control-label{'for':'api_verification_code'} Verification Code
+            .controls
+              = form.api_verification_code
+              - if form.api_verification_code.errors
+                %span.help-inline
+                  - for error in form.api_verification_code.errors
+                    = error|escape
+        %hr
+        .control-group
+          .controls
+            %button.btn.btn-success{'type':'submit'}
+              %i.icon-white.icon-check
+              Add API Key
+      %hr
+      %h3
+        How to
+      %p
+        To generate an API key for Element43 visit
+        %code
+          %a{'href':'https://support.eveonline.com/api', 'target':'_blank'} support.eveonline.com/api
+      %p
+        Element43 needs the following permissions:
+      .well
+        %b Account and Market
+        %ul
+          %li WalletTransactions
+          %li WalletJournal
+          %li MarketOrders
+          %li AccountBalance
+        %b Private Information
+        %ul
+          %li AssetList
+        %b Science and Industry
+        %ul
+          %li Research
+          %li IndustryJobs
+      %p
+        Your access mask should read 
+        %code 6361219
+        now.

@@ -1,25 +1,49 @@
 - extends "base.haml"
+- load custom_filters
 - block title
   element43 - {{user.username}} - Settings
 - block content
   %h1
-    Settings
+    {{user.username}}
   .row
-    .span3
-      %ul.nav.nav-list
-        %li.nav-header
-          %b {{user.username}}
-        %li.divider
-        %li.active
+    .span2
+      %ul.nav.nav-tabs.nav-stacked
+        %li
           %a{'href':'/settings/profile/'}
             Modify Profile
         %li
           %a{'href':'/settings/characters/'}
             Manage Characters  
-        %li
+        %li.active
           %a{'href':'/settings/api/key/'}
             Manage API Keys
-    .span7.well
-            
-            
-      
+    .span9
+      %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}
+        %fieldset
+          - csrf_token
+          %table.table.table-striped
+            %thead
+              %tr
+                %th
+                %th
+                  Name
+                %th
+                  Corporation
+                %td
+                  Add
+            %tbody
+              - for char in chars
+                %tr
+                  %td
+                    %img{'src':'http://image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
+                  %td
+                    = char.name
+                  %td
+                    = char.corporationName
+                  %td
+                    %input{'type':'checkbox', 'name':'characters', 'value':'{{char.characterID}}'}
+          .control-group
+            .controls
+              %button.btn.btn-primary{'type':'submit'}
+                Add Characters
+          
