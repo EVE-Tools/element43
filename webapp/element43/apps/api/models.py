@@ -14,6 +14,7 @@ class APIKey(models.Model):
     expires = models.DateTimeField(help_text = "Expiry date for the key")
     accessmask = models.BigIntegerField(help_text="Access mask for this key")
     is_valid = models.BooleanField(help_text="Is this key valid?")
+    user = models.ForeignKey('auth.User', help_text="Fkey relationship to user table")
     
     class Meta(object):
         verbose_name = "API Key"
@@ -31,6 +32,7 @@ class Character(models.Model):
                                 help_text="Unique key for this character, uses CCP character ID")
     name = models.TextField(help_text="Character name")
     user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
+    apikey = models.ForeignKey('api.APIKey', help_text='FKey relationship to api key table')
     
     class Meta(object):
         verbose_name = "Character"
