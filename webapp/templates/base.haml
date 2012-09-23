@@ -37,9 +37,6 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'/trading/station/ranking/'} Top Stations
-              %form.navbar-search{'id':'search','method':'post','action':'/search/'}
-                - csrf_token
-                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
@@ -59,13 +56,16 @@
                         %i.icon-home
                         Dashboard
                     %li
-                      %a{'href':'/'}
+                      %a{'href':'/settings/'}
                         %i.icon-wrench
                         Settings
                     %li
                       %a{'href':'/logout/'}
                         %i.icon-off
                         Logout
+              %form.navbar-search{'id':'search','method':'post','action':'/search/'}
+                - csrf_token
+                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
     .container
       .panel-wrapper
         .content.clearfix
