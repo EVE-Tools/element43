@@ -35,7 +35,7 @@ class RegistrationForm(forms.Form):
 		"""
 		Validate that the username is alphanumeric and is not already
 		in use.
-	  """
+	  	"""
 		existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
 		if existing.exists():
 			raise forms.ValidationError("A user with that username already exists.")
@@ -85,4 +85,22 @@ class RegistrationForm(forms.Form):
 		if not ((min_access_mask & key_info.key.accessMask) == min_access_mask):
 			raise forms.ValidationError("The API key you supplied does not have sufficient rights. Please follow the instructions on the right half of this page to generate a valid one.")
 			
+		return self.cleaned_data
+    
+class ResetPasswordForm(forms.Form):
+	"""
+	Form for resetting a given user's password.
+	TODO: Add API ID field associated with this user/email combination to prevent unauthorized resets
+	"""
+	# Reset data
+	username = forms.RegexField(regex=r'^[\w.@+-]+$', max_length=30, widget=forms.TextInput(attrs=attrs_dict), error_messages={'invalid': "The username may contain only letters, numbers and @/./+/-/_ characters."})
+	email = forms.EmailField(widget=forms.TextInput(attrs=attrs_dict))
+  
+	def clean(self):
+		
+		try:
+			user = User.objects.get(username__exact=self.cleaned_data.get('username'), email__exact=self.cleaned_data.get('email'))
+		except:
+			raise forms.ValidationError("There is no such account.")
+    
 		return self.cleaned_data
