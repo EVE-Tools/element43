@@ -37,6 +37,10 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'/trading/station/ranking/'} Top Stations
+              %form.navbar-search{'id':'search','method':'post','action':'/search/'}
+                - csrf_token
+                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
+            %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
                   %a{'href':'/login/?next={{request.path}}'}
@@ -45,12 +49,23 @@
                   %a{'href':'/register/'}
                     Register
               - else
-                %li
-                  %a{'href':'/logout/'}
-                    Logout
-            %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search/'}
-              - csrf_token
-              %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
+                %li.dropdown
+                  %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                    %b {{user.username}}
+                    %b.caret
+                  %ul.dropdown-menu
+                    %li
+                      %a{'href':'/'}
+                        %i.icon-home
+                        Dashboard
+                    %li
+                      %a{'href':'/'}
+                        %i.icon-wrench
+                        Settings
+                    %li
+                      %a{'href':'/logout/'}
+                        %i.icon-off
+                        Logout
     .container
       .panel-wrapper
         .content.clearfix
