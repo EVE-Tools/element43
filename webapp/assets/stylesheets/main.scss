@@ -82,6 +82,19 @@ td {
 .text-center {
 	text-align: center !important;
 }
+
+// Navbar container fix
+
+.navbar-top .container {
+	width: 940px;
+}
+
+@media (min-width: 1200px) {
+	.navbar-top .container {
+    width: 1170px;
+	}
+}
+
 .panel-wrapper {
 	@include panel;
 }

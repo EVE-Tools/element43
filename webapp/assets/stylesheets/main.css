@@ -58,63 +58,76 @@ td a:visited {
 .text-center {
   text-align: center !important;
 }
+
+/* line 88, main.scss */
+.navbar-top .container {
+  width: 940px;
+}
+
+@media (min-width: 1200px) {
+  /* line 93, main.scss */
+  .navbar-top .container {
+    width: 1170px;
+  }
+}
+/* line 98, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 82, main.scss */
+/* line 102, main.scss */
 .content {
   padding: 10px;
   background: #2f2f2f;
 }
 
-/* line 87, main.scss */
+/* line 107, main.scss */
 .navbar {
   padding: 15px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41;
 }
 
-/* line 93, main.scss */
+/* line 113, main.scss */
 .navbar-inner {
   background: transparent;
 }
 
-/* line 99, main.scss */
+/* line 119, main.scss */
 .scan_done {
   background: #50c878;
 }
 
-/* line 105, main.scss */
+/* line 125, main.scss */
 .clock {
   float: right;
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 111, main.scss */
+/* line 131, main.scss */
 .clock ul {
   float: left;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 118, main.scss */
+/* line 138, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 2px #6ea8e5;
   padding: 0;
 }
 
-/* line 125, main.scss */
+/* line 145, main.scss */
 #date {
   float: left;
   padding-right: 5px;
   text-shadow: 0 0 2px #6ea8e5;
 }
 
-/* line 131, main.scss */
+/* line 151, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -124,19 +137,19 @@ td a:visited {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 142, main.scss */
+  /* line 162, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 143, main.scss */
+  /* line 163, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 144, main.scss */
+  /* line 164, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
@@ -144,81 +157,81 @@ td a:visited {
 }
 
 @-moz-keyframes clktrans {
-  /* line 149, main.scss */
+  /* line 169, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 150, main.scss */
+  /* line 170, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 151, main.scss */
+  /* line 171, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
-/* line 157, main.scss */
+/* line 177, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 164, main.scss */
+/* line 184, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 168, main.scss */
+/* line 188, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 172, main.scss */
+/* line 192, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 176, main.scss */
+/* line 196, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 180, main.scss */
+/* line 200, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 184, main.scss */
+/* line 204, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 188, main.scss */
+/* line 208, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 192, main.scss */
+/* line 212, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 196, main.scss */
+/* line 216, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 200, main.scss */
+/* line 220, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 204, main.scss */
+/* line 224, main.scss */
 .sec0 {
   color: #F00000;
 }
