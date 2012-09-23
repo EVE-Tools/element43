@@ -33,6 +33,19 @@ urlpatterns = patterns('',
 	url(r'^login/$', 'apps.market_data.views.auth.auth.login'),
 	# Logout
 	url(r'^logout/$', 'apps.market_data.views.auth.auth.logout'),
+	
+	
+	#
+	# Account management
+	#
+	
+	# Settings
+	url(r'^settings/$', 'apps.market_data.views.settings.profile'),
+	url(r'^settings/profile/$', 'apps.market_data.views.settings.profile'),
+	url(r'^settings/characters/$', 'apps.market_data.views.settings.characters'),
+	url(r'^settings/api/key/$', 'apps.market_data.views.settings.api_key'),
+	url(r'^settings/api/character/$', 'apps.market_data.views.settings.api_character'),
+	
 		
 	#
 	# Market URLs

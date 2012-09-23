@@ -1,0 +1,25 @@
+- extends "base.haml"
+- block title
+  element43 - {{user.username}} - Settings
+- block content
+  %h1
+    Settings
+  .row
+    .span3
+      %ul.nav.nav-list
+        %li.nav-header
+          %b {{user.username}}
+        %li.divider
+        %li.active
+          %a{'href':'/settings/profile/'}
+            Modify Profile
+        %li
+          %a{'href':'/settings/characters/'}
+            Manage Characters  
+        %li
+          %a{'href':'/settings/api/key/'}
+            Manage API Keys
+    .span7.well
+            
+            
+      
