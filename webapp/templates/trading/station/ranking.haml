@@ -1,4 +1,5 @@
 - extends "base.haml"
+- load custom_filters
 - load humanize
 - block title
   element43 - Market - Stations by Number of Active Orders
@@ -8,23 +9,20 @@
 	%table.table.table-striped.table-condensed
 	  %thead
 	    %tr
-              %th
-                Rank
+        %th
 	      %th
 	        Station
-              %th
-                Region
 	      %th.text-right
 	        Active Orders
 	  %tbody
 	    - for station in rank_list
 	      %tr
-                %td
-                  {{forloop.counter}}.
+          %td
+            = forloop.counter
 	        %td
-	          = station.stastation__name
-                %td
-                  = station.mapregion__name
+            %span{'class':'sec{{station.system.security_level|sec0to10}}'}
+              • {{station.system.security_level|sec0to1}} 
+            {{station.region.name}} - {{station.name}}
 	        %td.text-right
 	          = station.ordercount|intcomma
 	%p
