@@ -31,6 +31,7 @@
             %td
               Verification Code
             %td
+            %td
         %tbody
           - for key in keys
             %tr
@@ -42,6 +43,10 @@
                 = key.keyid
               %td
                 = key.vcode
+              %td.text-right
+                %a{'href':'/settings/api/character/{{key.keyid}}/{{key.vcode}}/'}
+                  .btn.btn-primary
+                    Add Chars
               %td.text-right
                 %a{'href':'/settings/api/key/remove/{{key.keyid}}/'}
                   .btn.btn-danger
