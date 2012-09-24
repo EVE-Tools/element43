@@ -1,5 +1,6 @@
 - extends "base.haml"
 - load custom_filters
+- load humanize
 - block title
   element43 - {{user.username}} - Settings
 - block content
@@ -20,8 +21,31 @@
     .span9
       %h3
         Your API Keys
-      %strong
-        %i Currently not implemented.
+      %table.table.table-striped
+        %thead
+          %tr
+            %td
+              Characters
+            %td
+              ID
+            %td
+              Verification Code
+            %td
+        %tbody
+          - for key in keys
+            %tr
+              %td
+                - for char in key.character_set.all
+                  {{char.name}}
+                  %br
+              %td
+                = key.keyid
+              %td
+                = key.vcode
+              %td.text-right
+                %a{'href':'/settings/api/key/remove/{{key.keyid}}/'}
+                  .btn.btn-danger
+                    Remove
       %hr
       %h3
         Add API Key

@@ -77,6 +77,7 @@ def remove_character(request, char_id):
 
 def api_key(request):
 	# Get Keys
+	keys = APIKey.objects.filter(user = request.user)
 	
 	# Form
 	if request.method == 'POST':
@@ -91,7 +92,21 @@ def api_key(request):
 		form = APIKeyForm()
 
 	rcontext = RequestContext(request, {})
-	return render_to_response('settings/api_key.haml', {'form': form}, rcontext)
+	return render_to_response('settings/api_key.haml', {'form': form, 'keys': keys}, rcontext)
+	
+def remove_api_key(request, apikey_id):
+	try:
+		# Delete only matching character to prevent unauthorized deletions
+		key = APIKey.objects.get(user = request.user, keyid = apikey_id)
+		key.delete()
+	except:
+		# Message and redirect
+		messages.error(request, 'There is no such key.')
+		return HttpResponseRedirect('/settings/api/key/')
+		
+	# Message and redirect
+	messages.info(request, 'The key and all associated characters were removed.')
+	return HttpResponseRedirect('/settings/api/key/')
 
 
 def api_character(request, api_id, api_verification_code):
@@ -140,11 +155,11 @@ def api_character(request, api_id, api_verification_code):
 					else:
 						key_expiration = key_info.key.expires
 						
-					key = APIKey(keyid = api_id, vcode = api_verification_code, expires = key_expiration, accessmask = key_info.key.accessMask, is_valid = True)
+					key = APIKey(user = request.user, keyid = api_id, vcode = api_verification_code, expires = key_expiration, accessmask = key_info.key.accessMask, is_valid = True)
 					key.save()
 				
 				# Add character
-				new_char = Character(id = char.characterID, name = char.name, user = request.user)
+				new_char = Character(id = char.characterID, name = char.name, user = request.user, apikey = key)
 				new_char.save()
 				
 				added_chars = True
