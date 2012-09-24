@@ -9,6 +9,7 @@
 	%table.table.table-striped.table-condensed
 	  %thead
 	    %tr
+        %th
 	      %th
 	        Station
 	      %th.text-right
@@ -16,10 +17,12 @@
 	  %tbody
 	    - for station in rank_list
 	      %tr
+          %td
+            = forloop.counter
 	        %td
-	          {{station.stastation__name}}
+	          = station.stastation__name
 	        %td.text-right
-	          {{station.ordercount|intcomma}}
+	          = station.ordercount|intcomma
 	%p
 	  %i
 	    Generated at {{generated_at}} UTC
