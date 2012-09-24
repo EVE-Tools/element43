@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template import Context
 from django.template import RequestContext
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Models
 from django.contrib.auth.models import User
@@ -19,11 +20,13 @@ import datetime
 
 # API
 from element43 import eveapi
-	
+
+@login_required
 def settings(request):
 	rcontext = RequestContext(request, {})
 	return render_to_response('settings/settings.haml', rcontext)
-	
+
+@login_required
 def profile(request):
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, request = request)
@@ -49,7 +52,7 @@ def profile(request):
 	rcontext = RequestContext(request, {})
 	return render_to_response('settings/settings.haml', {'form': form}, rcontext)
 	
-
+@login_required
 def characters(request):
 	characters = Character.objects.filter(user = request.user)
 	
@@ -61,6 +64,7 @@ def characters(request):
 	rcontext = RequestContext(request, {'characters': characters})
 	return render_to_response('settings/characters.haml', rcontext)
 
+@login_required
 def remove_character(request, char_id):
 	try:
 		# Delete only matching character to prevent unauthorized deletions
@@ -75,6 +79,7 @@ def remove_character(request, char_id):
 	messages.info(request, 'Character was removed.')
 	return HttpResponseRedirect('/settings/characters/')
 
+@login_required
 def api_key(request):
 	# Get Keys
 	keys = APIKey.objects.filter(user = request.user)
@@ -93,7 +98,8 @@ def api_key(request):
 
 	rcontext = RequestContext(request, {})
 	return render_to_response('settings/api_key.haml', {'form': form, 'keys': keys}, rcontext)
-	
+
+@login_required	
 def remove_api_key(request, apikey_id):
 	try:
 		# Delete only matching character to prevent unauthorized deletions
@@ -108,7 +114,7 @@ def remove_api_key(request, apikey_id):
 	messages.info(request, 'The key and all associated characters were removed.')
 	return HttpResponseRedirect('/settings/api/key/')
 
-
+@login_required
 def api_character(request, api_id, api_verification_code):
 	
 	"""
