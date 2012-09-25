@@ -112,11 +112,31 @@ class ItemRegionStat(models.Model):
     sellavg = models.FloatField(help_text = "Avg of sell price")
     buymedian = models.FloatField(help_text = "Median of buy price")
     sellmedian = models.FloatField(help_text = "Median of sell price")
+    lastupdate = models.DateTimeField(blank=True, null=True, help_text = "Date the stats were updated")
     
     class Meta(object):
         verbose_name = "Stat Data"
         verbose_name_plural = "Stats Data"
+        
+class ItemRegionStatHistory(models.Model):
+    """
+    Stats for items on a per region basis
+    processed when new orders come in during warehousing
+    """
     
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text = "FK to type table")
+    buymean = models.FloatField(help_text = "Mean of buy price")
+    buyavg = models.FloatField(help_text = "Average of buy price")
+    sellmean = models.FloatField(help_text = "Mean of sell price")
+    sellavg = models.FloatField(help_text = "Avg of sell price")
+    buymedian = models.FloatField(help_text = "Median of buy price")
+    sellmedian = models.FloatField(help_text = "Median of sell price")
+    date = models.DateTimeField(blank=True, null=True, help_text = "Date the stats were inserted")
+    
+    class Meta(object):
+        verbose_name = "Stat History Data"
+        verbose_name_plural = "Stat History Data"
 
 class History(models.Model):
     """
