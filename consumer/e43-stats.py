@@ -14,6 +14,7 @@ import psycopg2
 import numpy.ma as ma
 import numpy as np
 import scipy.stats as stats
+import datetime
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -54,6 +55,7 @@ def thread(data):
     sellmean = 0
     buymedian = 0
     sellmedian = 0
+    timestamp = datetime.datetime.utcnow()
     
     curs = dbcon.cursor()
     
@@ -110,7 +112,8 @@ def thread(data):
         sell = sellprice.pop()
         
     # insert it into the DB
-    sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'])
+    sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
+    print sql
     try:
         curs.execute(sql)
     except psycopg2.DatabaseError, e:
