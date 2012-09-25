@@ -98,7 +98,7 @@ def thread(message):
         sql = ""
         #print "* Recieved Orders from: %s" % market_list.order_generator
         statTypeID = 0
-        statStationID = 0
+        statRegionID = 0
         oldCounter = 0
         ipHash = None
         for uploadKey in market_list.upload_keys:
@@ -157,15 +157,15 @@ def thread(message):
                                 curs.execute(sql)
                         
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
-                        # of the mean AND where there are more than 5 orders of like type in the station will be flagged.  Flagging could
+                        # of the mean AND where there are more than 5 orders of like type in the region will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
                         # Flags: 'Y' = Yes (suspicious), 'N' = No (not suspicious), '?' or NULL = not enough information to determine
                         suspicious = False
-                        if (order.type_id!=statTypeID) or (order.station_id!=statStationID):
+                        if (order.type_id!=statTypeID) or (order.region_id!=statRegionID):
                             gevent.sleep()
-                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND stastation_id=%s" % (order.type_id, order.station_id)
+                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s" % (order.type_id, order.region_id)
                             statTypeID = order.type_id
-                            statStationID = order.station_id
+                            statRegionID = order.region_id
                             recordCount = None
                             curs.execute(sql)
                             result = curs.fetchone()
