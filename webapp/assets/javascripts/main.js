@@ -6,7 +6,7 @@ $(document).ready(function () {
 		'maxHeight':800,
 		'width':300,
 		'serviceUrl': '/live_search/',
-		'onSelect': function(value, data){ window.location.href = "/market/" + data; },
+		'onSelect': function(value, data){ window.location.href = "/market/" + data + "/"; },
 	};
 	a = $('#main-search').autocomplete(options);
 
