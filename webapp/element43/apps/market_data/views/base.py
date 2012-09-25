@@ -72,9 +72,10 @@ def live_search(request):
 	# Prepare lists
 	types = []
 	type_names = []
+	type_ids = []
 	
 	# Default to empty array
-	types_json = "{query:'" + query + "', suggestions:[]}"
+	types_json = "{query:'" + query + "', suggestions:[], data:[]}"
 	
 	# Only if the string is longer than 2 characters start looking in the DB
 	if len(query) > 2:
@@ -84,9 +85,10 @@ def live_search(request):
 		
 		for single_type in types:
 			type_names.append(single_type.name)
+			type_ids.append(single_type.id)
 		
 		# Add additional data for Ajax AutoComplete
-		types_json = {'query': query, 'suggestions': type_names}
+		types_json = {'query': query, 'suggestions': type_names, 'data': type_ids}
 		
 		# Turn names into JSON
 		types_json = simplejson.dumps(types_json)

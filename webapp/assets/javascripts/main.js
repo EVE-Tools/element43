@@ -5,7 +5,8 @@ $(document).ready(function () {
 		'minChars':3,
 		'maxHeight':800,
 		'width':300,
-		'serviceUrl': '/live_search/'
+		'serviceUrl': '/live_search/',
+		'onSelect': function(value, data){ window.location.href = "/market/" + data; },
 	};
 	a = $('#main-search').autocomplete(options);
 

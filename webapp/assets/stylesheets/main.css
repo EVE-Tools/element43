@@ -1,7 +1,7 @@
 /*
  * Main CSS file for element43
  */
-/* line 34, main.scss */
+/* line 35, main.scss */
 h1, h2, h3 {
   color: #6ea8e5;
   font-weight: bold;
@@ -9,57 +9,57 @@ h1, h2, h3 {
   margin-bottom: 1em;
 }
 
-/* line 38, main.scss */
+/* line 39, main.scss */
 body {
   color: white;
   background: url("../images/background.jpg") no-repeat scroll center top black;
 }
 
-/* line 43, main.scss */
+/* line 44, main.scss */
 a {
   color: #6ea8e5;
 }
 
-/* line 48, main.scss */
+/* line 49, main.scss */
 td a {
   color: #e68a17;
   text-decoration: none;
 }
-/* line 52, main.scss */
+/* line 53, main.scss */
 td a:hover {
   background-color: #e68a17;
   color: white !important;
   text-shadow: 1px 1px #333333;
   text-decoration: none;
 }
-/* line 58, main.scss */
+/* line 59, main.scss */
 td a:visited {
   color: #e68a17;
   text-decoration: none;
 }
 
-/* line 68, main.scss */
+/* line 69, main.scss */
 .table tbody tr:hover td,
 .table tbody tr:hover th {
   background-color: transparent;
 }
 
-/* line 72, main.scss */
+/* line 73, main.scss */
 .table-striped tbody tr:nth-child(odd):hover td {
   background-color: #444444;
 }
 
-/* line 78, main.scss */
+/* line 79, main.scss */
 .text-right {
   text-align: right !important;
 }
 
-/* line 82, main.scss */
+/* line 83, main.scss */
 .text-center {
   text-align: center !important;
 }
 
-/* line 88, main.scss */
+/* line 89, main.scss */
 .autocomplete-w1 {
   background-color: #2f2f2f;
   position: absolute;
@@ -68,7 +68,7 @@ td a:visited {
   margin: 6px 0 0 6px;
 }
 
-/* line 89, main.scss */
+/* line 90, main.scss */
 .autocomplete {
   border: 1px solid #333333;
   background: #2f2f2f;
@@ -77,93 +77,93 @@ td a:visited {
   overflow: auto;
 }
 
-/* line 90, main.scss */
+/* line 91, main.scss */
 .autocomplete .selected {
-  background: #333333;
+  background: #444444;
 }
 
-/* line 91, main.scss */
+/* line 92, main.scss */
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden;
 }
 
-/* line 92, main.scss */
+/* line 93, main.scss */
 .autocomplete strong {
   font-weight: normal;
   color: #6ea8e5;
 }
 
-/* line 96, main.scss */
+/* line 97, main.scss */
 .navbar-top .container {
   width: 940px;
 }
 
 @media (min-width: 1200px) {
-  /* line 101, main.scss */
+  /* line 102, main.scss */
   .navbar-top .container {
     width: 1170px;
   }
 }
-/* line 106, main.scss */
+/* line 107, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 110, main.scss */
+/* line 111, main.scss */
 .content {
   padding: 10px;
   background: #2f2f2f;
 }
 
-/* line 115, main.scss */
+/* line 116, main.scss */
 .navbar {
   padding: 15px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41;
 }
 
-/* line 121, main.scss */
+/* line 122, main.scss */
 .navbar-inner {
   background: transparent;
 }
 
-/* line 127, main.scss */
+/* line 128, main.scss */
 .scan_done {
   background: #50c878;
 }
 
-/* line 133, main.scss */
+/* line 134, main.scss */
 .clock {
   float: right;
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 139, main.scss */
+/* line 140, main.scss */
 .clock ul {
   float: left;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 146, main.scss */
+/* line 147, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 2px #6ea8e5;
   padding: 0;
 }
 
-/* line 153, main.scss */
+/* line 154, main.scss */
 #date {
   float: left;
   padding-right: 5px;
   text-shadow: 0 0 2px #6ea8e5;
 }
 
-/* line 159, main.scss */
+/* line 160, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -173,19 +173,19 @@ td a:visited {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 170, main.scss */
+  /* line 171, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 171, main.scss */
+  /* line 172, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 172, main.scss */
+  /* line 173, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
@@ -193,81 +193,81 @@ td a:visited {
 }
 
 @-moz-keyframes clktrans {
-  /* line 177, main.scss */
+  /* line 178, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 178, main.scss */
+  /* line 179, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 179, main.scss */
+  /* line 180, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
-/* line 185, main.scss */
+/* line 186, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 192, main.scss */
+/* line 193, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 196, main.scss */
+/* line 197, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 200, main.scss */
+/* line 201, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 204, main.scss */
+/* line 205, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 208, main.scss */
+/* line 209, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 212, main.scss */
+/* line 213, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 216, main.scss */
+/* line 217, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 220, main.scss */
+/* line 221, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 224, main.scss */
+/* line 225, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 228, main.scss */
+/* line 229, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 232, main.scss */
+/* line 233, main.scss */
 .sec0 {
   color: #F00000;
 }

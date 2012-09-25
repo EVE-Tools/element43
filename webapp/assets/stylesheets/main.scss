@@ -3,17 +3,18 @@
  */
 
 // General Variables
-$background: 		 #000000;
-$background_grey:#2F2F2F;
-$blue:           #019CFF;
-$contrast_blue:  #6EA8E5;
-$white:          #FFFFFF;
-$red:						 #FF0000;
-$green:					 #50C878;
-$orange:         #E68A17;
-$grey:					 #333333;
+$background:		#000000;
+$background-grey:	#2F2F2F;
+$blue:			 	#019CFF;
+$contrast-blue:	 	#6EA8E5;
+$white:			 	#FFFFFF;
+$red:				#FF0000;
+$green:				#50C878;
+$orange:		 	#E68A17;
+$grey:				#333333;
+$light-grey:		#444444;
 
-$padding: 				 10px;
+$padding:				 10px;
 
 // Mixins
 
@@ -23,7 +24,7 @@ $padding: 				 10px;
 }
 
 @mixin heading {
-	color: $contrast_blue;
+	color: $contrast-blue;
 	font-weight: bold;
 	text-transform: uppercase;
 	margin-bottom: 1em;
@@ -41,7 +42,7 @@ body {
 }
 
 a {
-	color: $contrast_blue;
+	color: $contrast-blue;
 }
 
 td {
@@ -87,9 +88,9 @@ td {
 
 .autocomplete-w1 { background-color: $background-grey; position:absolute; top:0px; left:0px; margin:6px 0 0 6px;}
 .autocomplete { border:1px solid $grey; background: $background-grey; cursor:default; text-align:left; overflow:auto;}
-.autocomplete .selected { background: $grey; }
+.autocomplete .selected { background: $light-grey; }
 .autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
-.autocomplete strong { font-weight:normal; color: $contrast_blue; }
+.autocomplete strong { font-weight:normal; color: $contrast-blue; }
 
 // Navbar container fix
 
@@ -99,7 +100,7 @@ td {
 
 @media (min-width: 1200px) {
 	.navbar-top .container {
-    width: 1170px;
+	width: 1170px;
 	}
 }
 
@@ -109,7 +110,7 @@ td {
 
 .content {
 	padding: $padding;
-	background: $background_grey;
+	background: $background-grey;
 }
 
 .navbar {
@@ -145,7 +146,7 @@ td {
 
 	ul li {
 		display:inline;
-		text-shadow:0 0 2px $contrast_blue;
+		text-shadow:0 0 2px $contrast-blue;
 		padding: 0;
 	}
 }
@@ -153,7 +154,7 @@ td {
 #date {
 	float: left;
 	padding-right: 5px;
-	text-shadow:0 0 2px $contrast_blue;
+	text-shadow:0 0 2px $contrast-blue;
 }
 
 #point {
@@ -167,16 +168,16 @@ td {
 /* Simple Animation */
 @-webkit-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px $contrast_blue;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast_blue; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }	
 }
 
 @-moz-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px $contrast_blue;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast_blue; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }	
 }
 
 // Hero font color fix
