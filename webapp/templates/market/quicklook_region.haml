@@ -182,10 +182,11 @@
         - for material in materials
           %tr
             %td
-              %a{'href':'/market/{{material.material_type__id}}'}
-                {{material.material_type__name}}
+              %img{'src':'http://image.eveonline.com/type/{{material.material_type__id}}_32.png', 'width':'16', 'height':'16', 'alt':'type image'}
+                %a{'href':'/market/{{material.material_type__id}}'}
+                  {{material.material_type__name}}
             %td.text-right
-              {{material.quantity}}
+              = material.quantity|intcomma
             %td.text-right
               = material.price|floatformat:"2"|intcomma
             %td.text-right
