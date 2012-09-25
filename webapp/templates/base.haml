@@ -65,7 +65,7 @@
                         Logout
               %form.navbar-search{'id':'search','method':'post','action':'/search/'}
                 - csrf_token
-                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
+                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'name':'query'}
     .container
       .panel-wrapper
         .content.clearfix
@@ -89,5 +89,6 @@
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.min.js'}
     %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
     - block scripts

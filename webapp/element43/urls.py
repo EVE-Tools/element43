@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 	url(r'^search/', 'apps.market_data.views.base.search'),
 
 	# Live search
-	url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.base.live_search'),
+	url(r'^live_search/', 'apps.market_data.views.base.live_search'),
 		
 	#
 	# Authentication and Registration URLs

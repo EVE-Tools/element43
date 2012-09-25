@@ -60,74 +60,110 @@ td a:visited {
 }
 
 /* line 88, main.scss */
+.autocomplete-w1 {
+  background-color: #2f2f2f;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin: 6px 0 0 6px;
+}
+
+/* line 89, main.scss */
+.autocomplete {
+  border: 1px solid #333333;
+  background: #2f2f2f;
+  cursor: default;
+  text-align: left;
+  overflow: auto;
+}
+
+/* line 90, main.scss */
+.autocomplete .selected {
+  background: #333333;
+}
+
+/* line 91, main.scss */
+.autocomplete div {
+  padding: 2px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* line 92, main.scss */
+.autocomplete strong {
+  font-weight: normal;
+  color: #6ea8e5;
+}
+
+/* line 96, main.scss */
 .navbar-top .container {
   width: 940px;
 }
 
 @media (min-width: 1200px) {
-  /* line 93, main.scss */
+  /* line 101, main.scss */
   .navbar-top .container {
     width: 1170px;
   }
 }
-/* line 98, main.scss */
+/* line 106, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 102, main.scss */
+/* line 110, main.scss */
 .content {
   padding: 10px;
   background: #2f2f2f;
 }
 
-/* line 107, main.scss */
+/* line 115, main.scss */
 .navbar {
   padding: 15px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41;
 }
 
-/* line 113, main.scss */
+/* line 121, main.scss */
 .navbar-inner {
   background: transparent;
 }
 
-/* line 119, main.scss */
+/* line 127, main.scss */
 .scan_done {
   background: #50c878;
 }
 
-/* line 125, main.scss */
+/* line 133, main.scss */
 .clock {
   float: right;
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 131, main.scss */
+/* line 139, main.scss */
 .clock ul {
   float: left;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 138, main.scss */
+/* line 146, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 2px #6ea8e5;
   padding: 0;
 }
 
-/* line 145, main.scss */
+/* line 153, main.scss */
 #date {
   float: left;
   padding-right: 5px;
   text-shadow: 0 0 2px #6ea8e5;
 }
 
-/* line 151, main.scss */
+/* line 159, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -137,19 +173,19 @@ td a:visited {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 162, main.scss */
+  /* line 170, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 163, main.scss */
+  /* line 171, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 164, main.scss */
+  /* line 172, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
@@ -157,81 +193,81 @@ td a:visited {
 }
 
 @-moz-keyframes clktrans {
-  /* line 169, main.scss */
+  /* line 177, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 
-  /* line 170, main.scss */
+  /* line 178, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 171, main.scss */
+  /* line 179, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5;
   }
 }
 
-/* line 177, main.scss */
+/* line 185, main.scss */
 .hero-unit h1 {
   color: white;
 }
 
-/* line 184, main.scss */
+/* line 192, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 188, main.scss */
+/* line 196, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 192, main.scss */
+/* line 200, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 196, main.scss */
+/* line 204, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 200, main.scss */
+/* line 208, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 204, main.scss */
+/* line 212, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 208, main.scss */
+/* line 216, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 212, main.scss */
+/* line 220, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 216, main.scss */
+/* line 224, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 220, main.scss */
+/* line 228, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 224, main.scss */
+/* line 232, main.scss */
 .sec0 {
   color: #F00000;
 }

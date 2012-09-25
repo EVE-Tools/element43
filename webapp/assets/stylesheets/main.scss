@@ -83,6 +83,14 @@ td {
 	text-align: center !important;
 }
 
+// Search field
+
+.autocomplete-w1 { background-color: $background-grey; position:absolute; top:0px; left:0px; margin:6px 0 0 6px;}
+.autocomplete { border:1px solid $grey; background: $background-grey; cursor:default; text-align:left; overflow:auto;}
+.autocomplete .selected { background: $grey; }
+.autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
+.autocomplete strong { font-weight:normal; color: $contrast_blue; }
+
 // Navbar container fix
 
 .navbar-top .container {
