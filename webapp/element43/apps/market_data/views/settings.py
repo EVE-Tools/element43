@@ -163,6 +163,9 @@ def api_character(request, api_id, api_verification_code):
 						
 					key = APIKey(user = request.user, keyid = api_id, vcode = api_verification_code, expires = key_expiration, accessmask = key_info.key.accessMask, is_valid = True)
 					key.save()
+					
+				else:
+					key = APIKey.objects.get(user = request.user, keyid = api_id, vcode = api_verification_code)
 				
 				# Add character
 				new_char = Character(id = char.characterID, name = char.name, user = request.user, apikey = key)
@@ -170,12 +173,12 @@ def api_character(request, api_id, api_verification_code):
 				
 				added_chars = True
 				
-			# Change message depending on what we did
-			if added_chars:
-				messages.success(request, "Successfully added the selected character(s) to your account.")
-			else:
-				messages.info(request, "No characters were added.")
-			return HttpResponseRedirect('/settings/characters/')
+		# Change message depending on what we did
+		if added_chars:
+			messages.success(request, "Successfully added the selected character(s) to your account.")
+		else:
+			messages.info(request, "No characters were added.")
+		return HttpResponseRedirect('/settings/characters/')
 			
 	rcontext = RequestContext(request, {'chars': characters})
 	return render_to_response('settings/api_character.haml', rcontext)
