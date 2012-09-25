@@ -60,10 +60,14 @@
                 = order.generated_at|naturaltime
               %td.text-center
                 - if order.is_suspicious
-                  %img{'src':'/static/images/icons/exclamation.png'}
+                  %span.sec0
+                    •
+                - else
+                  %span.sec8
+                    •
               %td.text-center
                 - if order.price < totalprice
-                  %img{'src':'/static/images/icons/cart.png'}
+                  %i.icon-white.icon-shopping-cart
               // ID: {{order.id}}
     #bid.tab-pane.fade
       %table.table.table-striped.table-condensed
