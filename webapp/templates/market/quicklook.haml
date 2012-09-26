@@ -7,10 +7,10 @@
   - include 'market/_group_breadcrumbs.haml'
   %h1
     = type.name
-  .row
-    .span2
+  .row-fluid
+    .span1
       %img{'src':'http://image.eveonline.com/type/{{type.id}}_64.png', 'alt':'type image'}
-    .span9
+    .span11
       %p
         Volume: {{type.volume|intcomma}}m&#179;
       %p
