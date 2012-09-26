@@ -209,16 +209,16 @@ def thread(message):
                                 order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
                             updateCounter += 1
-                        if order.type_id in fastupdate:
-                            print "??? update stat queue ??? (", order.type_id, ")"
-                            combo['region'] = order.region_id
-                            combo['item'] = order.type_id
-                            fastupdatepush.append(combo)
                         row = (order.order_id, order.type_id, order.region_id)
                         if mckey + str(row[0]) in mc:
                             continue
                         insertSeen.append(row)
                         mc.set(mckey + str(row[0]), True, time=2)
+                        if order.type_id in fastupdate:
+                            print "??? update stat queue ??? (", order.type_id, ")"
+                            combo['region'] = order.region_id
+                            combo['item'] = order.type_id
+                            fastupdatepush.append(combo)
                     else:
                         oldCounter += 1
                         row = (3,)
