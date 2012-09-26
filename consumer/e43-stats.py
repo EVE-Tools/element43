@@ -110,10 +110,36 @@ def thread(data):
             sellMean = np.nan_to_num(ma.mean(sellprice))
         sellprice.sort()
         sell = sellprice.pop()
+    
+    # get the current record so we can compare dates and see if we need to move current records to the history table
+    sql = "SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
+    try:
+        curs.execute(sql)
+    except psycopg2.DatabaseError, e:
+        print "Error: ", e
+        print "SQL: ", sql
+    result = curs.fetchone()
+    if result is not None:
+        if result[6].date() <> timestamp.date():
+            # dates differ, need to move the data
+            sql = "INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (result[0], result[1], result[2], result[3], result[4], result[5], data['region'], data['item'], result[6])
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                print "Error: ", e
+                print "SQL: ", sql
+    else:
+        sql = "INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
+        try:
+            curs.execute(sql)
+        except psycopg2.DatabaseError, e:
+            print "Error: ", e
+            print "SQL: ", sql
+        
         
     # insert it into the DB
     sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
-    print sql
+    #print sql
     try:
         curs.execute(sql)
     except psycopg2.DatabaseError, e:
