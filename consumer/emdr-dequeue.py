@@ -52,10 +52,14 @@ mckey = config.get('Memcache', 'key')
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
 
+# item list of stuff we want immediately updated in stats
+fastupdate = [34, 35, 36, 37, 38, 39, 40, 29668]
+
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
+statqueue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
 dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 dbcon.autocommit = True
 
@@ -93,6 +97,7 @@ def thread(message):
         duplicateData = 0
         hashList = []
         statsData = []
+        combo = {}
         row=(5,)
         statsData.append(row)
         sql = ""
@@ -203,6 +208,11 @@ def thread(message):
                                 order.volume_remaining, order.volume_entered, order.minimum_volume, order.generated_at, issue_date, msgKey, suspicious, ipHash)
                             insertData.append(row)
                             updateCounter += 1
+                        if order.type_id in fastupdate:
+                            print "??? update stat queue ??? (", order.type_id, ")"
+                            combo['region'] = order.region_id
+                            combo['item'] = order.type_id
+                            statqueue.put(combo)
                         row = (order.order_id, order.type_id, order.region_id)
                         if mckey + str(row[0]) in mc:
                             continue
@@ -241,7 +251,6 @@ def thread(message):
                 if TERM_OUT==True:
                     print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
     
-            
             if len(insertSeen)>0:
                 try:
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
