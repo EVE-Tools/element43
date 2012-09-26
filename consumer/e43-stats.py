@@ -15,6 +15,7 @@ import numpy.ma as ma
 import numpy as np
 import scipy.stats as stats
 import datetime
+from datetime import date
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -25,6 +26,8 @@ dbname = config.get('Database', 'dbname')
 dbuser = config.get('Database', 'dbuser')
 dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
+DEBUG = config.getboolean('Consumer', 'debug')
+TERM_OUT = config.getboolean('Consumer', 'term_out')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 10
@@ -55,10 +58,18 @@ def thread(data):
     sellmean = 0
     buymedian = 0
     sellmedian = 0
-    timestamp = datetime.datetime.utcnow()
+    timestamp = date.today()
     
     curs = dbcon.cursor()
-    
+
+    # get the current record so we can compare dates and see if we need to move current records to the history table (this is for history use)
+    sql = "SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
+    try:
+        curs.execute(sql)
+    except psycopg2.DatabaseError, e:
+        print "Error: ", e
+        print "SQL: ", sql
+    history = curs.fetchone()
     # Delete the old region/item stats from the DB if it exists
     sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
     curs.execute(sql)
@@ -111,24 +122,23 @@ def thread(data):
         sellprice.sort()
         sell = sellprice.pop()
     
-    # get the current record so we can compare dates and see if we need to move current records to the history table
-    sql = "SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
-    try:
-        curs.execute(sql)
-    except psycopg2.DatabaseError, e:
-        print "Error: ", e
-        print "SQL: ", sql
-    result = curs.fetchone()
-    if result is not None:
-        if result[6].date() <> timestamp.date():
+    # process for history
+    if (history is not None) and (history[6] is not None):
+        if history[6].date() <> timestamp:
+            if (TERM_OUT==True):
+                print "--- New date, new insert", data['region'], " / ", data['item'], "(", history[6].date(), " - ", timestamp, ")"
             # dates differ, need to move the data
-            sql = "INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (result[0], result[1], result[2], result[3], result[4], result[5], data['region'], data['item'], result[6])
+            sql = "INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (history[0], history[1], history[2], history[3], history[4], history[5], data['region'], data['item'], history[6])
             try:
                 curs.execute(sql)
             except psycopg2.DatabaseError, e:
                 print "Error: ", e
                 print "SQL: ", sql
+        elif (TERM_OUT==True):
+            print "/// Timestamps match:", data['region'], " / ", data['item'], "(", history[6].date(), " - ", timestamp, ")"
     else:
+        if (TERM_OUT==True):
+            print "--- No history, new insert", data['region'], " / ", data['item']
         sql = "INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
         try:
             curs.execute(sql)
