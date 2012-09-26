@@ -98,6 +98,7 @@ def thread(message):
         hashList = []
         statsData = []
         combo = {}
+        fastupdatepush = []
         row=(5,)
         statsData.append(row)
         sql = ""
@@ -212,7 +213,7 @@ def thread(message):
                             print "??? update stat queue ??? (", order.type_id, ")"
                             combo['region'] = order.region_id
                             combo['item'] = order.type_id
-                            statqueue.put(combo)
+                            fastupdatepush.append(combo)
                         row = (order.order_id, order.type_id, order.region_id)
                         if mckey + str(row[0]) in mc:
                             continue
@@ -246,6 +247,11 @@ def thread(message):
                 
                 curs.executemany(sql, insertData)
                 insertData = []
+            
+            if len(fastupdatepush)>0:
+                # push to the stats queue immediately
+                for item in fastupdatepush:
+                    statqueue.put(item)
     
             if duplicateData:
                 if TERM_OUT==True:
