@@ -24,59 +24,91 @@
       %p
         Analyze your trades one item at a time. Stay aware of your current situation.
   %hr
-  #stats.row-fluid
-    .span8
-     %h3 Mineral Index and PLEX - The Forge
-     %table.table.table-striped.table-condensed
-       %thead
-         %th
-         %th
-           Buy
-         %th
-           Sell
-         %th
-           Mean
-       %tbody
-         - for item in typestats
+  #stats
+    .row-fluid
+      .span12
+       %h3 Mineral Index and PLEX - The Forge
+       %table.table.table-striped.table-condensed
+         %thead
            %tr
-             %td
-             %td
-             %td
-             %td
-    .span4
-      %h3 Platform Stats
-      %table.table.table-striped.table-condensed
-        %tbody
-          %tr
-            %td
-              Active Orders
-            %td
-          %tr
-            %td
-              Archived Orders
-            %td
-          %tr
-            %td
-              History Records
-            %td
-      %h3 EMDR Stats (per minute)
-      %table.table.table-striped.table-condensed
-        %tbody
-          %tr
-            %td
-              New Orders
-            %td
-          %tr  
-            %td
-              Updated Orders
-            %td
-          %tr
-            %td
-              Old Orders
-            %td  
-          %tr
-            %td
-              History messages
-            %td
+             %th
+             %th{'colspan':'2'}
+               Bid
+             %th{'colspan':'2'}
+               Ask
+             %th
+         %tbody
+           %tr
+             %th
+             %th
+               Buy
+             %th
+               Weighted Avg
+             %th
+               Sell
+             %th
+               Weighted Avg
+             %th
+               Mean
+           - for item in typestats
+             %tr
+               %td
+               %td
+                 0.00
+               %td
+                 %span.green
+                   0.00 (+0.00)
+               %td
+                 0.00
+               %td
+                 %span.green
+                   0.00 (+0.00)
+               %td
+                 %span.green
+                   0.00 (+0.00)
+    .row-fluid
+      .span6
+        %h3 EMDR Stats (per minute)
+        %table.table.table-striped.table-condensed
+          %tbody
+            %tr
+              %td
+                New Orders
+              %td
+                0
+            %tr  
+              %td
+                Updated Orders
+              %td
+                0
+            %tr
+              %td
+                Old Orders
+              %td  
+                0
+            %tr
+              %td
+                History messages
+              %td
+                0
+      .span6
+        %h3 Platform Stats
+        %table.table.table-striped.table-condensed
+          %tbody
+            %tr
+              %td
+                Active Orders
+              %td
+                0
+            %tr
+              %td
+                Archived Orders
+              %td
+                0
+            %tr
+              %td
+                History Records
+              %td
+                0
 - block scripts
   %script{'type':'text/javascript', 'src':'/static/javascripts/home.js'}
