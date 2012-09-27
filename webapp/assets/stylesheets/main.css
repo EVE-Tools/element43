@@ -221,56 +221,66 @@ footer {
 }
 
 /* line 195, main.scss */
+.red {
+  color: red;
+}
+
+/* line 199, main.scss */
+.green {
+  color: #50c878;
+}
+
+/* line 205, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 199, main.scss */
+/* line 209, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 203, main.scss */
+/* line 213, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 207, main.scss */
+/* line 217, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 211, main.scss */
+/* line 221, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 215, main.scss */
+/* line 225, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 219, main.scss */
+/* line 229, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 223, main.scss */
+/* line 233, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 227, main.scss */
+/* line 237, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 231, main.scss */
+/* line 241, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 235, main.scss */
+/* line 245, main.scss */
 .sec0 {
   color: #F00000;
 }

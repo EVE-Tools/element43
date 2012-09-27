@@ -8,7 +8,11 @@
        %th
          Buy
        %th
+         Weighted Avg
+       %th
          Sell
+       %th
+         Weighted Avg
        %th
          Mean
      %tbody
@@ -18,26 +22,30 @@
              %a{'href':'/market/{{item.type.id}}/'} 
                {{item.type.name}}
            %td
-             - if item.stats.buy_move < 0
-               %span.sec0
-                 {{item.stats.buy|floatformat:2|intcomma}} ({{item.stats.buy_move|floatformat:2|intcomma}})
-             - else
-               %span.sec8
-                 {{item.stats.buy|floatformat:2|intcomma}} ({{item.stats.buy_move|floatformat:2|intcomma}})
+             {{item.stats.buy|floatformat:2|intcomma}}
            %td
-             - if item.stats.sell_move < 0
-               %span.sec0
-                 {{item.stats.sell|floatformat:2|intcomma}} ({{item.stats.sell_move|floatformat:2|intcomma}})
+             - if item.stats.avg_buy_move < 0
+               %span.red
+                 {{item.stats.avg_buy|floatformat:2|intcomma}} ({{item.stats.avg_buy_move|floatformat:2|intcomma}})
              - else
-               %span.sec8
-                 {{item.stats.sell|floatformat:2|intcomma}} ({{item.stats.sell_move|floatformat:2|intcomma}})
+               %span.green
+                 {{item.stats.avg_buy|floatformat:2|intcomma}} (+{{item.stats.avg_buy_move|floatformat:2|intcomma}})
+           %td
+             {{item.stats.sell|floatformat:2|intcomma}}
+           %td
+             - if item.stats.avg_sell_move < 0
+               %span.red
+                 {{item.stats.avg_sell|floatformat:2|intcomma}} ({{item.stats.avg_sell_move|floatformat:2|intcomma}})
+             - else
+               %span.green
+                 {{item.stats.avg_sell|floatformat:2|intcomma}} (+{{item.stats.avg_sell_move|floatformat:2|intcomma}})
            %td
              - if item.stats.mean_move < 0
-               %span.sec0
+               %span.red
                  {{item.stats.mean|floatformat:2|intcomma}} ({{item.stats.mean_move|floatformat:2|intcomma}})
              - else
-               %span.sec8
-                 {{item.stats.mean|floatformat:2|intcomma}} ({{item.stats.mean_move|floatformat:2|intcomma}})
+               %span.green
+                 {{item.stats.mean|floatformat:2|intcomma}} (+{{item.stats.mean_move|floatformat:2|intcomma}})
   .span4
     %h3 Platform Stats
     %table.table.table-striped.table-condensed

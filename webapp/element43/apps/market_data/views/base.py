@@ -59,12 +59,17 @@ def stats(request):
 		try:
 			region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item).order_by("lastupdate")[:1][0]
 			region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region, invtype_id = item).order_by("date")[:1][0]
-			stats = {'buy': region_stats.buymean,
-					 'buy_move': region_stats_history.buymean - region_stats.buymean,
-					 'sell': region_stats.sellmean,
-					 'sell_move': region_stats_history.sellmean - region_stats.sellmean,
-					 'mean': (region_stats.buymean + region_stats.sellmean) / 2,
-					 'mean_move': ((region_stats_history.buymean + region_stats_history.sellmean) / 2) - ((region_stats.buymean + region_stats.sellmean) / 2)}
+			buy = Orders.objects.filter(mapregion = region, invtype = item, is_bid = True).order_by("-price")[:1][0].price
+			sell = Orders.objects.filter(mapregion = region, invtype = item, is_bid = False).order_by("price")[:1][0].price
+			
+			stats = {'buy': buy,
+					 'sell': sell,
+					 'avg_buy': region_stats.buyavg,
+					 'avg_buy_move': region_stats_history.buyavg - region_stats.buyavg,
+					 'avg_sell': region_stats.sellavg,
+					 'avg_sell_move': region_stats_history.sellavg - region_stats.sellavg,
+					 'mean': (region_stats.buyavg + region_stats.sellavg) / 2,
+					 'mean_move': ((region_stats_history.buyavg + region_stats_history.sellavg) / 2) - ((region_stats.buyavg + region_stats.sellavg) / 2)}
 		
 			typestats.append({'type':InvType.objects.get(id = item), 'stats':stats})
 		
