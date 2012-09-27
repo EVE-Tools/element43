@@ -18,7 +18,7 @@ $(document).ready(function () {
 	var min = 60 * 1000;
 
 	// Output the day, date, month and year	  
-	$('#date').html("EVE Time ");
+	$('#date').html("EVE Time - ");
 
 	setInterval(function () {
 		now = new Date();

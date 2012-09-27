@@ -1,0 +1,83 @@
+- load humanize
+#stats.row-fluid
+  .span8
+   %h3 Mineral Index and PLEX - The Forge
+   %table.table.table-striped.table-condensed
+     %thead
+       %th
+       %th
+         Buy
+       %th
+         Sell
+       %th
+         Mean
+     %tbody
+       - for item in typestats
+         %tr
+           %td
+             %a{'href':'/market/{{item.type.id}}/'} 
+               {{item.type.name}}
+           %td
+             - if item.stats.buy_move < 0
+               %span.sec0
+                 {{item.stats.buy|floatformat:2|intcomma}} ({{item.stats.buy_move|floatformat:2|intcomma}})
+             - else
+               %span.sec8
+                 {{item.stats.buy|floatformat:2|intcomma}} ({{item.stats.buy_move|floatformat:2|intcomma}})
+           %td
+             - if item.stats.sell_move < 0
+               %span.sec0
+                 {{item.stats.sell|floatformat:2|intcomma}} ({{item.stats.sell_move|floatformat:2|intcomma}})
+             - else
+               %span.sec8
+                 {{item.stats.sell|floatformat:2|intcomma}} ({{item.stats.sell_move|floatformat:2|intcomma}})
+           %td
+             - if item.stats.mean_move < 0
+               %span.sec0
+                 {{item.stats.mean|floatformat:2|intcomma}} ({{item.stats.mean_move|floatformat:2|intcomma}})
+             - else
+               %span.sec8
+                 {{item.stats.mean|floatformat:2|intcomma}} ({{item.stats.mean_move|floatformat:2|intcomma}})
+  .span4
+    %h3 Platform Stats
+    %table.table.table-striped.table-condensed
+      %tbody
+        %tr
+          %td
+            Active Orders
+          %td
+            {{active_orders|intcomma}}
+        %tr
+          %td
+            Archived Orders
+          %td
+            {{archived_orders|intcomma}}
+        %tr
+          %td
+            History Records
+          %td
+            {{history|intcomma}}
+    %h3 EMDR Stats (per minute)
+    %table.table.table-striped.table-condensed
+      %tbody
+        %tr
+          %td
+            New Orders
+          %td
+            {{new_orders_per_minute|intcomma}}
+        %tr  
+          %td
+            Updated Orders
+          %td
+            {{old_orders_per_minute|intcomma}}
+        %tr
+          %td
+            Old Orders
+          %td  
+            {{updated_orders_per_minute|intcomma}}
+        %tr
+          %td
+            History messages
+          %td
+            {{history_messages_per_minute|intcomma}} 
+%i Updated at {{update}}

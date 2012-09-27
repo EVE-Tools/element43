@@ -14,7 +14,7 @@ $orange:		 	#E68A17;
 $grey:				#333333;
 $light-grey:		#444444;
 
-$padding:				 10px;
+$padding:			10px;
 
 // Mixins
 
@@ -61,6 +61,10 @@ td {
 			text-decoration: none;
 		}
 	}
+}
+
+footer {
+	text-align: center;
 }
 
 // Table highlight fix
@@ -132,29 +136,27 @@ td {
 // Fancy clock
 
 .clock {
-	float: right;
-	color:#fff;
-	margin:0 auto;
+	color: #fff;
+	margin: 0 auto;
 	padding: 0;
 	
 	ul {
-		float:left;
+		display: inline-block;
 		list-style:none;
 		margin:0 auto;
 		padding:0;
 	}
 
 	ul li {
-		display:inline;
-		text-shadow:0 0 2px $contrast-blue;
+		display: inline;
+		text-shadow: 0 0 3px $contrast-blue;
 		padding: 0;
 	}
 }
 
 #date {
-	float: left;
-	padding-right: 5px;
-	text-shadow:0 0 2px $contrast-blue;
+	display: inline-block;
+	text-shadow: 0 0 2px $contrast-blue;
 }
 
 #point {

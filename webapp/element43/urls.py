@@ -11,6 +11,7 @@ urlpatterns = patterns('',
 
 	# Home
     url(r'^$', 'apps.market_data.views.base.home'),
+	url(r'^stats/$', 'apps.market_data.views.base.stats'),
 
 	# Search
 	url(r'^search/', 'apps.market_data.views.base.search'),

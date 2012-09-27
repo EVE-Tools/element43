@@ -1,4 +1,5 @@
 - extends "base.haml"
+- load humanize
 - block title
   element43 - Home
 - block content
@@ -6,7 +7,7 @@
     %h1{'style':'text-transform: none;'} More bang for the buck!
     %p Welcome to element43, a tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
     %p
-      %a.btn.btn-primary.btn-large{'href':'/register/'}
+      %a.btn.btn-warning.btn-large{'href':'/register/'}
         Get started now »
   .row-fluid
     .span4
@@ -21,3 +22,60 @@
       %h2 Wallet Manager
       %p
         Analyze your trades one item at a time. Stay aware of your current situation.
+  %hr
+  #stats.row-fluid
+    .span8
+     %h3 Mineral Index and PLEX - The Forge
+     %table.table.table-striped.table-condensed
+       %thead
+         %th
+         %th
+           Buy
+         %th
+           Sell
+         %th
+           Mean
+       %tbody
+         - for item in typestats
+           %tr
+             %td
+             %td
+             %td
+             %td
+    .span4
+      %h3 Platform Stats
+      %table.table.table-striped.table-condensed
+        %tbody
+          %tr
+            %td
+              Active Orders
+            %td
+          %tr
+            %td
+              Archived Orders
+            %td
+          %tr
+            %td
+              History Records
+            %td
+      %h3 EMDR Stats (per minute)
+      %table.table.table-striped.table-condensed
+        %tbody
+          %tr
+            %td
+              New Orders
+            %td
+          %tr  
+            %td
+              Updated Orders
+            %td
+          %tr
+            %td
+              Old Orders
+            %td  
+          %tr
+            %td
+              History messages
+            %td
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/home.js'}
