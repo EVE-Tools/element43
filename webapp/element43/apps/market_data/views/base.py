@@ -13,6 +13,9 @@ from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegion
 
 # Utils
 import datetime
+import pylibmc
+import ujson as json
+import logging
 
 """
 Those are our views. We have to use the RequestContext for CSRF protection, 
@@ -34,7 +37,13 @@ def stats(request):
 	"""
 	Returns stats page
 	"""
-	
+        
+        logger = logging.getLogger(__name__)
+
+        #connect to memcache
+        mc = pylibmc.Client('127.0.0.1', binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+        # need to clean that up and put that in a config file (memcache server location)
+
 	# Collect stats
 	
 	# 1. Platform stats
@@ -52,24 +61,37 @@ def stats(request):
 	types = [34,35,36,37,38,39,40,29668]
 	region = 10000002
 	typestats = []
+        cache_item = {}
+        buyavg = 0
+        sellavg = 0
 	
 	for item in types:
 		
 		# Still works if we have no data for that item
 		try:
-			region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item).order_by("lastupdate")[:1][0]
-			region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region, invtype_id = item).order_by("date")[:1][0]
+                        # check to see if it's in the cache, if so use those values
+                        if "e43-stats"+str(item) in mc:
+                            cache_item = json.loads(mc.get("e43-stats"+str(item)))
+                            #print "Item: ", item, " cache: ", cache_item
+                            buyavg = cache_item['buyavg']
+                            sellavg = cache_item['sellavg']
+                        # otherwise go to the DB for it
+                        else:
+                            region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item)[:1][0]
+                            buyavg = region_stats.buyavg
+                            sellavg = region_stats.sellavg
+			region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region, invtype_id = item).order_by("-date")[:1][0]
 			buy = Orders.objects.filter(mapregion = region, invtype = item, is_bid = True).order_by("-price")[:1][0].price
 			sell = Orders.objects.filter(mapregion = region, invtype = item, is_bid = False).order_by("price")[:1][0].price
 			
 			stats = {'buy': buy,
 					 'sell': sell,
-					 'avg_buy': region_stats.buyavg,
-					 'avg_buy_move': region_stats_history.buyavg - region_stats.buyavg,
-					 'avg_sell': region_stats.sellavg,
-					 'avg_sell_move': region_stats_history.sellavg - region_stats.sellavg,
-					 'mean': (region_stats.buyavg + region_stats.sellavg) / 2,
-					 'mean_move': ((region_stats_history.buyavg + region_stats_history.sellavg) / 2) - ((region_stats.buyavg + region_stats.sellavg) / 2)}
+					 'avg_buy': buyavg,
+					 'avg_buy_move': region_stats_history.buyavg - buyavg,
+					 'avg_sell': sellavg,
+					 'avg_sell_move': region_stats_history.sellavg - sellavg,
+					 'mean': (buyavg + sellavg) / 2,
+					 'mean_move': ((region_stats_history.buyavg + region_stats_history.sellavg) / 2) - ((buyavg + sellavg) / 2)}
 		
 			typestats.append({'type':InvType.objects.get(id = item), 'stats':stats})
 		
