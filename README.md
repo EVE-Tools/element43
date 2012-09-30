@@ -13,7 +13,8 @@ Setup Instructions
 * Create a ``element43`` user and DB on Postgres.
 * ``cd webapp`` then ``python manage.py syncdb`` and *do not create a superuser*
 * Run ``python manage.py migrate``
-* Download the latest dump from [https://github.com/gtaylor/django-eve-db/downloads](https://github.com/gtaylor/django-eve-db/downloads)
+* Download and extract the latest dump from [https://github.com/gtaylor/django-eve-db/downloads](https://github.com/gtaylor/django-eve-db/downloads)
+* Import the dump with ``python manage eve_import_ccp_dump <dump>``
 * You should then be ready to run the development webserver: ``python manage.py runserver``
 * Create a ``local_settings.py`` file and copy/paste/modify anything
   from ``settings.py`` that you'd like to change. This file won't be committed
