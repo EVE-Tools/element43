@@ -37,12 +37,12 @@ def stats(request):
 	"""
 	Returns stats page
 	"""
-        
-        logger = logging.getLogger(__name__)
+		
+	logger = logging.getLogger(__name__)
 
-        #connect to memcache
-        mc = pylibmc.Client('127.0.0.1', binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
-        # need to clean that up and put that in a config file (memcache server location)
+	#connect to memcache
+	mc = pylibmc.Client('127.0.0.1', binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+	# need to clean that up and put that in a config file (memcache server location)
 
 	# Collect stats
 	
@@ -61,25 +61,25 @@ def stats(request):
 	types = [34,35,36,37,38,39,40,29668]
 	region = 10000002
 	typestats = []
-        cache_item = {}
-        buyavg = 0
-        sellavg = 0
+	cache_item = {}
+	buyavg = 0
+	sellavg = 0
 	
 	for item in types:
 		
 		# Still works if we have no data for that item
 		try:
-                        # check to see if it's in the cache, if so use those values
-                        if "e43-stats"+str(item) in mc:
-                            cache_item = json.loads(mc.get("e43-stats"+str(item)))
-                            #print "Item: ", item, " cache: ", cache_item
-                            buyavg = cache_item['buyavg']
-                            sellavg = cache_item['sellavg']
-                        # otherwise go to the DB for it
-                        else:
-                            region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item)[:1][0]
-                            buyavg = region_stats.buyavg
-                            sellavg = region_stats.sellavg
+			# check to see if it's in the cache, if so use those values
+			if "e43-stats"+str(item) in mc:
+				cache_item = json.loads(mc.get("e43-stats"+str(item)))
+				#print "Item: ", item, " cache: ", cache_item
+				buyavg = cache_item['buyavg']
+				sellavg = cache_item['sellavg']
+			# otherwise go to the DB for it
+			else:
+				region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item)[:1][0]
+				buyavg = region_stats.buyavg
+				sellavg = region_stats.sellavg
 			region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region, invtype_id = item).order_by("-date")[:1][0]
 			buy = Orders.objects.filter(mapregion = region, invtype = item, is_bid = True).order_by("-price")[:1][0].price
 			sell = Orders.objects.filter(mapregion = region, invtype = item, is_bid = False).order_by("price")[:1][0].price
@@ -109,6 +109,7 @@ def stats(request):
 										'history_messages_per_minute': history_messages_per_minute,
 										'typestats': typestats,
 										'update': datetime.datetime.now()})
+										
 	return render_to_response('stats.haml', rcontext)
 	
 def search(request):

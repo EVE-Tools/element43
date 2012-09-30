@@ -1,19 +1,33 @@
-- extends "base.haml"
-- block title
-   element43 - {{parent_name}}
-- block content
-  - include 'market/_group_breadcrumbs.haml'
-  %h1
-    {{parent_name}}
-  %table.table.table-striped
-    %tbody
-      - for type in types
-        %tr
-          %td{'width':'32px'}
-            %a{'href':'/market/{{type.id}}/'}
-              %img{'src':format('http://image.eveonline.com/type/{{type.id}}_32.png'), 'alt':'type image'}
-          %td
-            %a{'href':'/market/{{type.id}}/'}
-              = type.name
-          %td
-              = type.description|truncatechars:128
+- load humanize
+%h1
+  = parent_name
+- for type in types
+  .row-fluid
+    .span12
+      %h3
+        {{type.name}}
+  .row-fluid
+    .span2
+      %a{'href':'/market/{{type.id}}/'}
+        %img{'src':format('http://image.eveonline.com/type/{{type.id}}_64.png'), 'alt':'type image'}
+    .span10
+      %p
+        = type.description|striptags
+  .row-fluid.typeinfo
+    .span4
+      ASK
+      %span.price
+        - for key, value in prices.items
+          - if key == type.id
+            {{value.ask|intcomma}} ISK
+    .span4
+      BID
+      %span.price
+        - for key, value in prices.items
+          - if key == type.id
+            {{value.bid|intcomma}} ISK
+    %a{'href':'/market/{{type.id}}/'}
+      .span4.text-right
+        .btn.btn-primary
+          More Info
+  %hr

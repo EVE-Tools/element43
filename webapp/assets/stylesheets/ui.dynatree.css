@@ -1,0 +1,197 @@
+/*******************************************************************************
+ * Tree container
+ */
+ul.dynatree-container
+{
+	font-family: tahoma, arial, helvetica;
+	font-size: 10pt; /* font size should not be too big */
+	white-space: nowrap;
+	padding: 3px;
+	margin: 0; /* issue 201 */
+	overflow: auto;
+	height: 100%; /* issue 263 */
+}
+
+ul.dynatree-container ul
+{
+	padding: 0 0 0 16px;
+	margin: 0;
+}
+
+ul.dynatree-container li
+{
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	-moz-background-clip:border;
+	-moz-background-inline-policy: continuous;
+	-moz-background-origin: padding;
+	background-attachment: scroll;
+	background-color: transparent;
+	background-repeat: repeat-y;
+	
+	cursor: pointer;
+
+	background-position: 0 0;
+	margin: 0;
+	padding: 5px 0 0 0;
+}
+/* Suppress lines for last child node */
+ul.dynatree-container li.dynatree-lastsib
+{
+	background-image: none;
+}
+/* Suppress lines if level is fixed expanded (option minExpandLevel) */
+ul.dynatree-no-connector > li
+{
+	background-image: none;
+}
+
+/* Style, when control is disabled */
+.ui-dynatree-disabled ul.dynatree-container
+{
+	opacity: 0.5;
+/*	filter: alpha(opacity=50); /* Yields a css warning */
+	background-color: silver;
+}
+
+/*******************************************************************************
+ * Common icon definitions
+ */
+span.dynatree-empty,
+span.dynatree-expander,
+span.dynatree-icon,
+span.dynatree-checkbox,
+span.dynatree-radio,
+span.dynatree-drag-helper-img,
+#dynatree-drop-marker
+{
+	width: 16px;
+	height: 16px;
+	display: inline-block; /* Required to make a span sizeable */
+	vertical-align: top;
+	background-repeat: no-repeat;
+	background-position: left;
+	background-image: url("../images/glyphicons-halflings-white.png");
+	background-position: 0 0;
+}
+
+/** Used by 'icon' node option: */
+ul.dynatree-container img
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 3px;
+	vertical-align: top;
+	border-style: none;
+}
+
+/*******************************************************************************
+ * Expander icon
+ * Note: IE6 doesn't correctly evaluate multiples class names,
+ *		 so we create combined class names that can be used in the CSS.
+ *
+ * Prefix: dynatree-exp-
+ * 1st character: 'e': expanded, 'c': collapsed
+ * 2nd character (optional): 'd': lazy (Delayed)
+ * 3rd character (optional): 'l': Last sibling
+ */
+
+span.dynatree-expander
+{
+	background-position: -456px -72px;
+	cursor: pointer;
+}
+.dynatree-exp-cl span.dynatree-expander /* Collapsed, not delayed, last sibling */
+{
+	background-position: -456px -72px;
+}
+.dynatree-exp-cd span.dynatree-expander /* Collapsed, delayed, not last sibling */
+{
+	background-position: -456px -72px;
+}
+.dynatree-exp-cdl span.dynatree-expander /* Collapsed, delayed, last sibling */
+{
+	background-position: -456px -72px;
+}
+.dynatree-exp-e span.dynatree-expander,  /* Expanded, not delayed, not last sibling */
+.dynatree-exp-ed span.dynatree-expander  /* Expanded, delayed, not last sibling */
+{
+	background-position: -313px -119px;
+}
+.dynatree-exp-el span.dynatree-expander,  /* Expanded, not delayed, last sibling */
+.dynatree-exp-edl span.dynatree-expander  /* Expanded, delayed, last sibling */
+{
+	background-position: -313px -119px;
+}
+.dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
+{
+	background-position: 0 0;
+	background-image: url(".../images/loading.gif");
+}
+
+/* Status node icons */
+
+.dynatree-statusnode-wait span.dynatree-icon
+{
+	background-image: url(".../images/loading.gif");
+}
+
+.dynatree-statusnode-error span.dynatree-icon
+{
+	background-position: -144px -120px;
+}
+
+/*******************************************************************************
+ * Node titles
+ */
+
+/* @Chrome: otherwise hit area of node titles is broken (issue 133)
+   Removed again for issue 165; (133 couldn't be reproduced) */
+span.dynatree-node
+{
+/*	display: -moz-inline-box; /* issue 133, 165, 172, 192. removed for issue 221*/
+/*	-moz-box-align: start; /* issue 221 */
+/*  display: inline-block; /* Required to make a span sizeable */
+}
+
+span.dynatree-node a
+{
+	font-size: 10pt; /* required for IE, quirks mode */
+	display: inline-block; /* Better alignment, when title contains <br> */
+	padding-left: 3px;
+	padding-right: 3px; /* Otherwise italic font will be outside bounds */
+}
+span.dynatree-folder a
+{
+	font-weight: bold;
+}
+
+ul.dynatree-container a:focus,
+span.dynatree-focused a:link  /* @IE */
+{
+	background-color: #EFEBDE; /* gray */
+}
+
+span.dynatree-selected a
+{
+	color: green;
+	font-style: italic;
+}
+
+span.dynatree-active a
+{
+	border-radius: 3px;
+	background-color: #3169C6 !important;
+	color: white !important; /* @ IE6 */
+}
+
+/*******************************************************************************
+ * Custom node classes (sample)
+ */
+
+span.custom1 a
+{
+	background-color: maroon;
+	color: yellow;
+}

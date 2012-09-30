@@ -62,7 +62,11 @@ urlpatterns = patterns('',
 	url(r'^market/history/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.history_json'),
 
 	# Market browser
+	url(r'^market/browse/tree/(?P<group>[0-9]+)/$', 'apps.market_data.views.market.browser.tree'),
+	url(r'^market/browse/tree/$', 'apps.market_data.views.market.browser.tree'),
+	
 	url(r'^market/browse/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.browser'),
+	url(r'^market/browse/panel/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.panel'),
 	url(r'^market/browse/', 'apps.market_data.views.market.browser.browser'),
 		
 	# Scanners
