@@ -11,7 +11,9 @@ Setup Instructions
 * Create a virtualenv.
 * ``pip install -r requirements.txt``
 * Create a ``element43`` user and DB on Postgres.
-* ``cd webapp`` then ``python manage.py syncdb``, and ``python manage.py migrate``
+* ``cd webapp`` then ``python manage.py syncdb`` and *do not create a superuser*
+* Run ``python manage.py migrate``
+* Download the latest dump from [https://github.com/gtaylor/django-eve-db/downloads](https://github.com/gtaylor/django-eve-db/downloads)
 * You should then be ready to run the development webserver: ``python manage.py runserver``
 * Create a ``local_settings.py`` file and copy/paste/modify anything
   from ``settings.py`` that you'd like to change. This file won't be committed
