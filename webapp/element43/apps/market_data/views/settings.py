@@ -156,10 +156,10 @@ def api_character(request, api_id, api_verification_code):
 				if not APIKey.objects.filter(keyid = api_id, vcode = api_verification_code):
 					
 					# Handle keys which never expire
-					if len(key_info.key.expires) == 0:
+					try:
+						key_expiration = datetime.datetime.fromtimestamp(key_info.key.expires)
+					except:
 						key_expiration = "9999-12-31 00:00:00"
-					else:
-						key_expiration = key_info.key.expires
 						
 					key = APIKey(user = request.user, keyid = api_id, vcode = api_verification_code, expires = key_expiration, accessmask = key_info.key.accessMask, is_valid = True)
 					key.save()

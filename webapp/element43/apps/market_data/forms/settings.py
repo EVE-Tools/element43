@@ -79,7 +79,7 @@ class APIKeyForm(forms.Form):
 	"""
 	
 	# API Key
-	api_id = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'span1 input-xlarge required'}))
+	api_id = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'span2 input-xlarge required'}))
 	api_verification_code = forms.CharField(widget=forms.TextInput(attrs=attrs_dict))
 	
 	def clean(self):
