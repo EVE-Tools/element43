@@ -1,11 +1,13 @@
 - load custom_filters
+- load compress
 <!DOCTYPE html>
 %html
   %head
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/jquery-ui-1.8.22.custom.css'}
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/darkstrap.css'}
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
+    - compress css
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/jquery-ui-1.8.22.custom.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/darkstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
     %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
@@ -87,8 +89,9 @@
                 %li#sec
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/jquery-1.7.2.min.js'}
     %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.min.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+    - compress js
+      %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
     - block scripts

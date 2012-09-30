@@ -16,6 +16,9 @@ pygments
 hamlpy
 djaml
 
+# Asset compression
+django_compressor
+
 # Consumer stuffs
 emds
 hotqueue

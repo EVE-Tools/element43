@@ -112,7 +112,8 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+	#'django.contrib.staticfiles.finders.DefaultStorageFinder',
+	'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -126,7 +127,7 @@ TEMPLATE_LOADERS = (
 		
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-		#'django.template.loaders.eggs.Loader',
+	#'django.template.loaders.eggs.Loader',
 )
 
 # Template Context processors
@@ -145,7 +146,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-		'django.middleware.csrf.CsrfViewMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -174,8 +175,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+	'django.contrib.humanize',
 
-		'django.contrib.humanize',
+	"compressor",
 
     'south',
     'devserver',
