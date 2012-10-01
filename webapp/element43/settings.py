@@ -100,6 +100,7 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
 
 # Compression
+COMPRESS_ENABLED = False
 COMPRESS_ROOT = os.path.join(ROOT_DIR, 'assets')
 COMPRESS_OUTPUT_DIR = 'cache'
 
@@ -187,7 +188,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 	'django.contrib.humanize',
 
-	"compressor",
+	'compressor',
 	
 	'raven.contrib.django',
 
