@@ -58,7 +58,7 @@ def main():
         result = curs.fetchone()
         item_stats['buyavg']=result[0]
         item_stats['sellavg'] = result[1]
-        print "Addeding to cache, item: ", item, " cache info: ", item_stats
+        print "Added to cache, item: ", item, " cache info: ", item_stats
         mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
     
     for message in queue.consume():
@@ -173,6 +173,7 @@ def thread(data):
         item_stats['buyavg']=buyavg
         item_stats['sellavg'] = sellavg
         mc.set(mckey + str(data['item']), json.dumps(item_stats), time=86400)
+        print "CACHE INSERT: ", data['item'], "[", item_stats['buyavg'], " / ", item_stats['sellavg'], "]"
         
     # insert it into the DB or update if already exists
     if history == None:
