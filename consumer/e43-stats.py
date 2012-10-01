@@ -81,9 +81,7 @@ def thread(data):
     buymedian = 0
     sellmedian = 0
     timestamp = date.today()
-    
-    foundrecord = False
-    
+        
     curs = dbcon.cursor()
 
     # get the current record so we can compare dates and see if we need to move current records to the history table (this is for history use)
@@ -95,8 +93,8 @@ def thread(data):
         print "SQL: ", sql
     history = curs.fetchone()
     # Delete the old region/item stats from the DB if it exists
-    sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
-    curs.execute(sql)
+    #sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
+    #curs.execute(sql)
     # Grab all the live orders for this item/region combo
     sql = "SELECT price, is_bid, volume_remaining FROM market_data_orders WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
     curs.execute(sql)
@@ -176,8 +174,11 @@ def thread(data):
         item_stats['sellavg'] = sellavg
         mc.set(mckey + str(data['item']), json.dumps(item_stats), time=86400)
         
-    # insert it into the DB
-    sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
+    # insert it into the DB or update if already exists
+    if history == None:
+        sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
+    else:
+        sql = "UPDATE market_data_itemregionstat SET buymean = %s, buyavg = %s, buymedian = %s, sellmean = %s, sellavg = %s, sellmedian = %s, lastupdate = '%s' WHERE mapregion_id = %s AND invtype_id = %s" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, timestamp, data['region'], data['item'])
     #print sql
     try:
         curs.execute(sql)
