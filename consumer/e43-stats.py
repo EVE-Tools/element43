@@ -16,6 +16,8 @@ import numpy as np
 import scipy.stats as stats
 import datetime
 from datetime import date
+import pylibmc
+import ujson as json
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -28,18 +30,37 @@ dbpass = config.get('Database', 'dbpass')
 dbport = config.get('Database', 'dbport')
 DEBUG = config.getboolean('Consumer', 'debug')
 TERM_OUT = config.getboolean('Consumer', 'term_out')
+mcserver = config.get('Memcache', 'server')
+mckey = config.get('Memcache', 'statkey')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 10
+
+# item list of stuff we want immediately updated in stats
+fastupdateitems = [34, 35, 36, 37, 38, 39, 40, 29668]
 
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
 dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
-dbcon.autocommit = True
+
+#connect to memcache
+mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
 
 def main():
+    item_stats = {}
+    curs = dbcon.cursor()
+    ### preload the memcache here with initial data
+    for item in fastupdateitems:
+        sql = "SELECT buyavg, sellavg FROM market_data_itemregionstat WHERE mapregion_id = 10000002 AND invtype_id = %s" % item
+        curs.execute(sql)
+        result = curs.fetchone()
+        item_stats['buyavg']=result[0]
+        item_stats['sellavg'] = result[1]
+        print "Addeding to cache, item: ", item, " cache info: ", item_stats
+        mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
+    
     for message in queue.consume():
         #print ">>> spawning"
         greenlet_pool.spawn(thread, message)
@@ -52,6 +73,7 @@ def thread(data):
     sellprice = []
     buycount = []
     sellcount = []
+    item_stats = {}
     buyavg = 0
     buymean = 0
     sellavg = 0
@@ -59,6 +81,7 @@ def thread(data):
     buymedian = 0
     sellmedian = 0
     timestamp = date.today()
+    foundrecord = False
     
     curs = dbcon.cursor()
 
@@ -146,6 +169,11 @@ def thread(data):
             print "Error: ", e
             print "SQL: ", sql
         
+    # if it's an item in fastupdate, stick it in the cache
+    if data['item'] in fastupdateitems:
+        item_stats['buyavg']=buyavg
+        item_stats['sellavg'] = sellavg
+        mc.set(mckey + str(data['item']), json.dumps(item_stats), time=86400)
         
     # insert it into the DB
     sql = "INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, data['region'], data['item'], timestamp)
@@ -155,6 +183,8 @@ def thread(data):
     except psycopg2.DatabaseError, e:
         print "Error: ", e
         print "SQL: ", sql
+        
+    dbcon.commit()
 
 if __name__ == '__main__':
     main()
