@@ -1,33 +1,39 @@
 - load humanize
-%h1
-  = parent_name
-- for type in types
-  .row-fluid
-    .span12
-      %h3
-        {{type.name}}
-  .row-fluid
-    .span2
+#panel{'style':'display: none;'}
+  %script{'type':'text/javascript'}
+    $(document).ready(function(){	
+    	$('#panel').fadeIn(400);
+      $('.typeimage').hide().fadeIn(400);
+    });
+  %h1
+    = parent_name
+  - for type in types
+    .row-fluid
+      .span12
+        %h3
+          {{type.name}}
+    .row-fluid
+      .span2
+        %a{'href':'/market/{{type.id}}/'}
+          %img.typeimage{'src':format('http://image.eveonline.com/type/{{type.id}}_64.png'), 'alt':'type image', 'width':'64px', 'height':'64px'}
+      .span10
+        %p
+          = type.description|striptags
+    .row-fluid.typeinfo
+      .span4
+        ASK
+        %span.price
+          - for key, value in prices.items
+            - if key == type.id
+              {{value.ask|intcomma}} ISK
+      .span4
+        BID
+        %span.price
+          - for key, value in prices.items
+            - if key == type.id
+              {{value.bid|intcomma}} ISK
       %a{'href':'/market/{{type.id}}/'}
-        %img{'src':format('http://image.eveonline.com/type/{{type.id}}_64.png'), 'alt':'type image'}
-    .span10
-      %p
-        = type.description|striptags
-  .row-fluid.typeinfo
-    .span4
-      ASK
-      %span.price
-        - for key, value in prices.items
-          - if key == type.id
-            {{value.ask|intcomma}} ISK
-    .span4
-      BID
-      %span.price
-        - for key, value in prices.items
-          - if key == type.id
-            {{value.bid|intcomma}} ISK
-    %a{'href':'/market/{{type.id}}/'}
-      .span4.text-right
-        .btn.btn-primary
-          More Info
-  %hr
+        .span4.text-right
+          .btn.btn-primary
+            More Info
+    %hr

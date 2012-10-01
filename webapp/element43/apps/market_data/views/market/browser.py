@@ -40,13 +40,16 @@ def tree(request, group = 0):
 								'isLazy': True,
 								'isFolder': True,
 								'noLink': True})
+		
+		group_json = sorted(group_json, key=lambda k: k['title']) 
 								
 		group_json = simplejson.dumps(group_json)
 		return HttpResponse(group_json, mimetype = 'application/json')
 			
 	else:
 
-		group_json = []
+		items = []
+		no_items = []
 		groups = InvMarketGroup.objects.filter(parent = group)
 
 		for group in groups:
@@ -54,19 +57,23 @@ def tree(request, group = 0):
 			icon_name = "/static/images/icons/eve/22_32_42.png"
 				
 			if group.has_items:
-				group_json.append({'title': group.name,
+				items.append({'title': group.name,
 									'key': str(group.id),
 									'icon': icon_name,
 									'hasItems': True,
 									'isFolder': False,
 									'noLink': False})
 			else:
-				group_json.append({'title': group.name,
+				no_items.append({'title': group.name,
 									'key': str(group.id),
 									'isLazy': True,
 									'icon': icon_name,
 									'isFolder': True,
 									'noLink': True})
+									
+		group_json = []
+		group_json += sorted(no_items, key=lambda k: k['title'])
+		group_json += sorted(items, key=lambda k: k['title'])
 						
 		group_json = simplejson.dumps(group_json)
 		return HttpResponse(group_json, mimetype = 'application/json')
