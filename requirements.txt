@@ -19,6 +19,9 @@ djaml
 # Asset compression
 django_compressor
 
+# Debugging
+raven
+
 # Consumer stuffs
 emds
 hotqueue

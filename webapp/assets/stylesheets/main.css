@@ -13,7 +13,7 @@ h1, h2, h3 {
 /* line 42, main.scss */
 body {
   color: white;
-  background: url("../images/background.jpg") no-repeat scroll center top black;
+  background: url("/static/images/background.jpg") no-repeat scroll center top black;
 }
 
 /* line 47, main.scss */

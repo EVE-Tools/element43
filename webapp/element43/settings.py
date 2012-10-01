@@ -31,6 +31,10 @@ LOGIN_REDIRECT_URL = '/'
 
 MANAGERS = ADMINS
 
+RAVEN_CONFIG = {
+    'dsn': 'http://public:secret@example.com/1',
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -150,6 +154,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+	# Catch 404s with sentry
+	'raven.contrib.django.middleware.Sentry404CatchMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -178,6 +184,8 @@ INSTALLED_APPS = (
 	'django.contrib.humanize',
 
 	"compressor",
+	
+	'raven.contrib.django',
 
     'south',
     'devserver',

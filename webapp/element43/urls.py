@@ -3,6 +3,10 @@ from django.contrib import admin
 
 admin.autodiscover()
 
+handler403 = 'apps.market_data.views.errors.handler_403'
+handler404 = 'apps.market_data.views.errors.handler_404'
+handler500 = 'apps.market_data.views.errors.handler_500'
+
 urlpatterns = patterns('',
     
 	#
@@ -76,6 +80,9 @@ urlpatterns = patterns('',
 	#
 	# Trading URLs
 	#
+	
+	# Station
+	url(r'^trading/station/(?P<station_id>[0-9]+)/', 'apps.market_data.views.trading.station.margins'),
 		
 	# Station ranking
 	url(r'^trading/station/ranking/', 'apps.market_data.views.trading.station.ranking'),

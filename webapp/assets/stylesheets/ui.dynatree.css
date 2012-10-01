@@ -72,7 +72,7 @@ span.dynatree-drag-helper-img,
 	vertical-align: top;
 	background-repeat: no-repeat;
 	background-position: left;
-	background-image: url("../images/glyphicons-halflings-white.png");
+	background-image: url("/static/images/glyphicons-halflings-white.png");
 	background-position: 0 0;
 }
 
@@ -127,14 +127,14 @@ span.dynatree-expander
 .dynatree-loading span.dynatree-expander  /* 'Loading' status overrides all others */
 {
 	background-position: 0 0;
-	background-image: url(".../images/loading.gif");
+	background-image: url("/static/images/loading.gif");
 }
 
 /* Status node icons */
 
 .dynatree-statusnode-wait span.dynatree-icon
 {
-	background-image: url(".../images/loading.gif");
+	background-image: url("/static/images/loading.gif");
 }
 
 .dynatree-statusnode-error span.dynatree-icon
