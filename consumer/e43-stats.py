@@ -81,6 +81,7 @@ def thread(data):
     buymedian = 0
     sellmedian = 0
     timestamp = date.today()
+    
     foundrecord = False
     
     curs = dbcon.cursor()
