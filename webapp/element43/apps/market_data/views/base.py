@@ -72,7 +72,7 @@ def stats(request):
 			# check to see if it's in the cache, if so use those values
 			if "e43-stats"+str(item) in mc:
 				cache_item = json.loads(mc.get("e43-stats"+str(item)))
-				#print "Item: ", item, " cache: ", cache_item
+				print "Item: ", item, " cache: ", cache_item
 				buyavg = cache_item['buyavg']
 				sellavg = cache_item['sellavg']
 			# otherwise go to the DB for it
