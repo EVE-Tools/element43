@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 	'django.contrib.humanize',
+	'django.contrib.formtools',
 
 	"compressor",
 
@@ -184,6 +185,7 @@ INSTALLED_APPS = (
 
     'apps.market_data',
     'apps.api',
+    'apps.manufacturing',
     'eve_db',
 )
 

@@ -1,0 +1,115 @@
+- extends "base.haml"
+- load custom_filters humanize element43_humanize
+- block content
+  
+  %ul.breadcrumb
+    %li
+      Manufacturing
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_select_blueprint %}'}
+        Select Blueprint
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_calculator data.blueprint_id %}'}
+        Change Data
+    %li
+      %span.divider >
+      Result
+  
+  %h3
+    Bill of Materials
+  
+  %table.table.table-striped
+    %thead
+      %th
+        Material
+      %th.text-right
+        Quantity
+      %th.text-right
+        Price
+      %th.text-right
+        Volume
+    %tfoot
+      %tr
+        %td
+        %td.text-right
+          %strong
+            Total
+        %td.text-right
+          %strong
+            = data.material_cost_total|floatformat:2|intcomma
+            ISK
+        %td.text-right
+          %strong
+            = data.material_volume_total|floatformat:2|intcomma
+            m³
+    %tbody
+    - for material in data.materials
+      %tr
+        %td
+          %img{'src': 'http://images.element-43.com/Type/{{ material.material_type__id }}_16.png' }
+          = material.material_type__name
+        %td.text-right
+          = material.quantity|intcomma
+        %td.text-right
+          = material.total|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = material.volume_total|floatformat:2|intcomma
+          m³
+    
+  %h3
+    Cost and Profit Overview
+    
+  %table.table.table-striped
+    %thead
+      %tr
+        %th
+        %th.text-right
+          Per Unit
+        %th.text-right
+          Total
+    %tbody
+      %tr
+        %td
+          Build time:
+        %td.text-right
+          = data.production_time_unit|humanize_time:"seconds"
+        %td.text-right
+          = data.production_time_total|humanize_time:"seconds"
+      %tr
+        %td
+          Material cost:
+        %td.text-right
+          = data.material_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = data.material_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Blueprint cost:
+        %td.text-right
+          = data.blueprint_cost_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          0 ISK
+      %tr
+        %td
+          Revenue:
+        %td.text-right
+          = data.revenue_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          = data.renenue_total|floatformat:2|intcomma 
+          ISK
+      %tr
+        %td
+          Profit:
+        %td.text-right
+          = data.profit_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          = data.profit_total|floatformat:2|intcomma 
+          ISK

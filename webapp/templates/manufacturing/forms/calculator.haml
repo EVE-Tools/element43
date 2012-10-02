@@ -1,0 +1,159 @@
+- extends "base.haml"
+- load custom_filters
+- block content
+  
+  %ul.breadcrumb
+    %li
+      Manufacturing
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_select_blueprint %}'}
+        Select Blueprint
+    %li
+      %span.divider >
+        Change Data
+        
+  %form.form-horizontal.well{'action':'{% url manufacturing_calculator blueprint_type_id %}', 'method':'post'}
+    - csrf_token
+    
+    -#
+    -# Fieldset for all the information concerning the blueprint:
+    -#
+    -# - Material Level (ME)
+    -# - Productivity Level (PE)
+    -# - Number of runs left
+    -# - Price (optional)
+    -#
+    
+    %fieldset
+      %legend
+        Blueprint information
+      
+      %div{'class':'control-group{{ form.bpc_material_efficiency|css_error }}'}
+        %label.control-label{'for':'bpc_material_efficiency'} Material level (ME)
+        .controls
+          = form.bpc_material_efficiency
+          - if form.bpc_material_efficiency.errors
+            %span.help-inline
+              - for error in form.bpc_material_efficiency.errors
+                = error|escape
+  
+      %div{'class':'control-group{{ form.bpc_production_efficiency|css_error }}'}
+        %label.control-label{'for':'bpc_production_efficiency'} Productivity Level (PE)
+        .controls
+          = form.bpc_production_efficiency
+          - if form.bpc_production_efficiency.errors
+            %span.help-inline
+              - for error in form.bpc_production_efficiency.errors
+                = error|escape
+        
+      %div{'class':'control-group{{ form.bpc_runs|css_error }}'}
+        %label.control-label{'for':'bpc_runs'} Number of runs
+        .controls
+          = form.bpc_runs
+          - if form.bpc_runs.errors
+            %span.help-inline
+              - for error in form.bpc_runs.errors
+                = error|escape
+      
+      %div{'class':'control-group{{ form.bpc_price|css_error }}'}
+        %label.control-label{'for':'bpc_price'} Blueprint copy price
+        .controls
+          %div.input-append
+            = form.bpc_price
+            - if form.bpc_price.errors
+              %span.help-inline
+                - for error in form.bpc_price.errors
+                  = error|escape
+
+    -#
+    -# Fieldset for the players skills and hardwirings:
+    -#
+    -# - Industry skill level
+    -# - Production efficiency skill level
+    -# - Hardwiring
+    -#
+
+    %fieldset
+      %legend
+        Your skills and hardwirings
+  
+      %div{'class':'control-group{{ form.skill_industry|css_error }}'}
+        %label.control-label{'for':'skill_industry'} Industry skill level
+        .controls
+          = form.skill_industry
+          - if form.skill_industry.errors
+            %span.help-inline
+              - for error in form.skill_industry.errors
+                = error|escape
+  
+      %div{'class':'control-group{{ form.skill_production_efficiency|css_error }}'}
+        %label.control-label{'for':'skill_production_efficiency'} Production efficiency skill level
+        .controls
+          = form.skill_production_efficiency
+          - if form.skill_production_efficiency.errors
+            %span.help-inline
+              - for error in form.skill_production_efficiency.errors
+                = error|escape
+      
+      %div{'class':'control-group{{ form.hardwiring|css_error }}'}
+        %label.control-label{'for':'hardwiring'} Hardwiring
+        .controls
+          = form.hardwiring
+          - if form.hardwiring.errors
+            %span.help-inline
+              - for error in wizard.hardwiring.errors
+                = error|escape
+    
+    -#
+    -# Fieldset for all information about the players manufacturing installation:
+    -#
+    -# - Production slot time modifier
+    -#
+    
+    %fieldset
+      %legend
+        Manufacturing installation information
+      
+      %div{'class':'control-group{{ form.slot_production_time_modifier|css_error }}'}
+        %label.control-label{'for':'slot_production_time_modifier'} Production slot time modifier
+        .controls
+          = form.slot_production_time_modifier
+          - if form.slot_production_time_modifier.errors
+            %span.help-inline
+              - for error in form.slot_production_time_modifier.errors
+                = error|escape
+      
+      %div{'class':'control-group{{ form.slot_material_modifier|css_error }}'}
+        %label.control-label{'for':'slot_material_modifier'} Production slot material modifier
+        .controls
+          = form.slot_material_modifier
+          - if form.slot_material_modifier.errors
+            %span.help-inline
+              - for error in form.slot_material_modifier.errors
+                = error|escape
+    
+    -#
+    -# Fieldset for additional information that influence the profitability calculation
+    -#
+    -# - Target sell price
+    -#
+    
+    %fieldset
+      %legend
+        Selling information
+      
+      %div{'class':'control-group{{ form.target_sell_price|css_error }}'}
+        %label.control-label{'for':'target_sell_price'} Target sell price
+        .controls
+          = form.target_sell_price
+          - if form.target_sell_price.errors
+            %span.help-inline
+              - for error in form.target_sell_price.errors
+                = error|escape
+    
+    %hr
+    .control-group
+      .controls
+        %button.btn.btn-success{'type':'submit'}
+          Calculate
