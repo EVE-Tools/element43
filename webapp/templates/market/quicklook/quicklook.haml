@@ -1,0 +1,245 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  element43 - Market - {{type.name}}
+- block content
+  - include 'market/_group_breadcrumbs.haml'
+  %h1
+    = type.name
+  .row-fluid
+    .span1
+      %img{'src':'{{IMAGE_SERVER}}/Type/{{type.id}}_64.png', 'alt':'type image'}
+    .span11
+      %p
+        Volume: {{type.volume|intcomma}}m&#179;
+      %p
+        = type.description|striptags
+  #history
+  
+  %h2 
+    %i#filter-icon.icon-white.icon-chevron-right{'style':'margin-top:6px;'}
+    Filters
+  #filters{'style':'margin-bottom: 1em; display: none;'}
+    .row-fluid
+      .span4
+        %h3
+          Minimal System Security 
+        #system-security.sec4
+          0.4
+        #security-slider
+      .span4
+        %h3
+          Maximum Data Age
+        %span#data-age
+        %span
+          Hours
+        #age-slider
+      .span4{'style':'margin-top: 4em;'}
+        #filter-button.btn.btn-primary
+          Filter Orders
+          
+  %ul#tabs.nav.nav-tabs
+    %li.active
+      %a{'href':'#regions', 'data_toggle':'tab'} Regions
+    %li
+      %a{'href':'#ask', 'data_toggle':'tab'} Ask
+    %li
+      %a{'href':'#bid', 'data_toggle':'tab'} Bid
+    - if materials
+      %li
+        %a{'href':'#mats', 'data_toggle':'tab'} Materials
+  .tab-content
+    #regions.tab-pane.fade.active.in
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Region
+            %th
+            %th.text-right
+              Low
+            %th.text-right
+              High
+            %th.text-right
+              Avg
+            %th.text-right
+              Median
+            %th.text-right
+              Standard Deviation
+            %th.text-right
+              Lots
+            %th.text-right
+              Volume
+        %tbody
+        - for region in regions
+            %tr
+              %td
+                %a{'href':'/market/region/{{region.8}}/{{type.id}}/'}
+                    = region.0
+              %td
+                Ask
+              %td.text-right
+                = region.9|floatformat:2|intcomma
+              %td.text-right
+                = region.10|floatformat:2|intcomma
+              %td.text-right
+                = region.11|floatformat:2|intcomma
+              %td.text-right
+                = region.12|floatformat:2|intcomma
+              %td.text-right
+                = region.13|floatformat:2|intcomma
+              %td.text-right
+                = region.14|intcomma
+              %td.text-right
+                = region.15|intcomma
+            %tr
+              %td
+              %td
+                Bid
+              %td.text-right
+                = region.1|floatformat:2|intcomma
+              %td.text-right
+                = region.2|floatformat:2|intcomma
+              %td.text-right
+                = region.3|floatformat:2|intcomma
+              %td.text-right
+                = region.4|floatformat:2|intcomma
+              %td.text-right
+                = region.5|floatformat:2|intcomma
+              %td.text-right
+                = region.6|intcomma
+              %td.text-right
+                = region.7|intcomma
+    #bid.tab-pane.fade
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th.text-right
+              Remaining
+            %th.text-right
+              Price
+            %th.text-right
+              Last Seen
+            %th.text-center
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
+                %i.icon-white.icon-question-sign
+        %tbody
+          - for order in buy_orders
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+                  {{order.mapregion.name}}
+                \- 
+                = order.stastation.name
+              %td.text-right
+                = order.volume_remaining|intcomma
+              %td.text-right
+                = order.price|floatformat:"2"|intcomma
+              %td.text-right
+                = order.generated_at|naturaltime
+              %td.text-center
+                - if order.is_suspicious
+                  %span.sec0
+                    •
+                - else
+                  %span.sec8
+                    •
+              // ID: {{order.id}}
+    #ask.tab-pane.fade
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th.text-right
+              Remaining
+            %th.text-right
+              Price
+            %th.text-right
+              Last Seen
+            %th.text-center
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
+                %i.icon-white.icon-question-sign
+            %th.text-center
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
+                %i.icon-white.icon-question-sign
+        %tbody
+          - for order in sell_orders
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+                  {{order.mapregion.name}}
+                \- 
+                = order.stastation.name
+              %td.text-right
+                = order.volume_remaining|intcomma
+              %td.text-right
+                = order.price|floatformat:"2"|intcomma
+              %td.text-right
+                = order.generated_at|naturaltime
+              %td.text-center
+                - if order.is_suspicious
+                  %span.sec0
+                    •
+                - else
+                  %span.sec8
+                    •
+              %td.text-center
+                - if order.price < totalprice
+                  %i.icon-white.icon-shopping-cart
+              // ID: {{order.id}}
+    #mats.tab-pane.fade
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Material
+            %th.text-right
+              Quantity
+            %th.text-right
+              Jita Median Price Per Unit
+            %th.text-right
+              Total Materials Cost
+        %tbody
+        - for material in materials
+          %tr
+            %td
+              // If you are using CCP's image server make sure to reference the _32 image size since they don't provide a _16
+              %img{'src':'{{IMAGE_SERVER}}/Type/{{material.material_type__id}}_16.png', 'width':'16', 'height':'16', 'alt':'type image'}
+                %a{'href':'/market/{{material.material_type__id}}'}
+                  {{material.material_type__name}}
+            %td.text-right
+              = material.quantity|intcomma
+            %td.text-right
+              = material.price|floatformat:"2"|intcomma
+            %td.text-right
+              = material.total|floatformat:"2"|intcomma
+        %tr
+        %tr
+          %td
+          %td
+          %td.text-right
+            %b
+              TOTAL PRICE:
+          %td.text-right
+            %b
+              = totalprice|floatformat:"2"|intcomma
+      
+      * Assumes perfect refining
+      
+      ** If pricing shows "0" it means we do not have enough data from Jita to estimate
+                
+- block scripts
+  %script{'type':'text/javascript'}
+    var invTypeID = {{type.id}};
+    var invTypeName = "{{type.name}}";
+    var mapRegionID = 10000002;
+    var mapRegionName = "The Forge";
+  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}

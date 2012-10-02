@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.conf import settings
 
 # Aggregation
 from django.db.models import Sum
@@ -19,6 +20,9 @@ from django.utils import simplejson
 import ast
 import time
 import datetime
+
+# Util
+from datetime import datetime, timedelta
 
 # eve_db models
 from eve_db.models import InvType
@@ -156,9 +160,9 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
-    return render_to_response('market/quicklook_region.haml', rcontext)
+    return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
 
 def quicklook(request, type_id = 34):
 		
@@ -248,6 +252,42 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
-    return render_to_response('market/quicklook.haml', rcontext)
+    return render_to_response('market/quicklook/quicklook.haml', rcontext)
+	
+def quicklook_ask_filter(request, type_id = 34, min_sec = 0, max_age = 8):
+	"""
+	Returns quicklook partial for filtering
+	"""
+	
+	min_sec = float(min_sec) / 10
+	if min_sec == 0:
+		min_sec = -10
+	
+	filter_time = datetime.now() - timedelta(hours = int(max_age))
+	
+    # Fetch all sell orders from DB
+	sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('price')[:50]
+	
+	rcontext = RequestContext(request, {'sell_orders':sell_orders})
+	
+	return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
+	
+def quicklook_bid_filter(request, type_id = 34, min_sec = 0, max_age = 8):
+	"""
+	Returns quicklook partial for filtering
+	"""
+	
+	min_sec = float(min_sec) / 10
+	if min_sec == 0:
+		min_sec = -10
+	
+	filter_time = datetime.now() - timedelta(hours = int(max_age))
+	
+    # Fetch all buy orders from DB
+	buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('-price')[:50]
+	
+	rcontext = RequestContext(request, {'buy_orders':buy_orders})
+	
+	return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)

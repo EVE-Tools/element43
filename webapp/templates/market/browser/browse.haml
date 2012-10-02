@@ -1,0 +1,20 @@
+- extends "base.haml"
+- block title
+   element43 - Browse Market
+- block content
+  %h1
+    = parent.name
+  .row-fluid
+    #tree.span3
+    #group.span9
+      %h1
+        Browse Market
+      %i Select a group on the left side to display market details.
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.dynatree.min.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.cookie.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/browser.js'}
+  - if path
+    %script{'type':'text/javascript'}
+      var load_path = '{{path}}';
+  

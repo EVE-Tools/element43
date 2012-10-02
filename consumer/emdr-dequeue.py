@@ -215,7 +215,7 @@ def thread(message):
                         insertSeen.append(row)
                         mc.set(mckey + str(row[0]), True, time=2)
                         if order.type_id in fastupdate:
-                            print "??? update stat queue ??? (", order.type_id, ")"
+                            print "??? update stat queue ??? (", order.type_id, ") - ", order.type_id, "/", order.region_id
                             combo['region'] = order.region_id
                             combo['item'] = order.type_id
                             fastupdatepush.append(combo)

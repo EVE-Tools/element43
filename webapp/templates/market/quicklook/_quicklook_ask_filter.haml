@@ -1,0 +1,46 @@
+- load humanize
+- load custom_filters
+%table.table.table-striped.table-condensed
+  %thead
+    %tr
+      %th
+        Location
+      %th.text-right
+        Remaining
+      %th.text-right
+        Price
+      %th.text-right
+        Last Seen
+      %th.text-center
+        %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
+          %i.icon-white.icon-question-sign
+      %th.text-center
+        %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
+          %i.icon-white.icon-question-sign
+  %tbody
+    - for order in sell_orders
+      %tr
+        %td
+          %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+            • {{order.mapsolarsystem.security_level|sec0to1}}
+          %a{'href':'/market/region/{{order.mapregion.id}}/{{type.id}}/'}
+            {{order.mapregion.name}}
+          \- 
+          = order.stastation.name
+        %td.text-right
+          = order.volume_remaining|intcomma
+        %td.text-right
+          = order.price|floatformat:"2"|intcomma
+        %td.text-right
+          = order.generated_at|naturaltime
+        %td.text-center
+          - if order.is_suspicious
+            %span.sec0
+              •
+          - else
+            %span.sec8
+              •
+        %td.text-center
+          - if order.price < totalprice
+            %i.icon-white.icon-shopping-cart
+        // ID: {{order.id}}

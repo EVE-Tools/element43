@@ -3,6 +3,10 @@ from django.contrib import admin
 
 admin.autodiscover()
 
+handler403 = 'apps.market_data.views.errors.handler_403'
+handler404 = 'apps.market_data.views.errors.handler_404'
+handler500 = 'apps.market_data.views.errors.handler_500'
+
 urlpatterns = patterns('',
     
 	#
@@ -56,13 +60,19 @@ urlpatterns = patterns('',
 
     # Quicklook
     url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook'),
+	url(r'^market/tab/ask/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_ask_filter'),
+	url(r'^market/tab/bid/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_bid_filter'),
 	url(r'^market/region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_region'),
 		
 	# History JSON
 	url(r'^market/history/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.history_json'),
 
 	# Market browser
+	url(r'^market/browse/tree/(?P<group>[0-9]+)/$', 'apps.market_data.views.market.browser.tree'),
+	url(r'^market/browse/tree/$', 'apps.market_data.views.market.browser.tree'),
+	
 	url(r'^market/browse/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.browser'),
+	url(r'^market/browse/panel/(?P<group>[0-9]+)/', 'apps.market_data.views.market.browser.panel'),
 	url(r'^market/browse/', 'apps.market_data.views.market.browser.browser'),
 		
 	# Scanners
@@ -72,6 +82,9 @@ urlpatterns = patterns('',
 	#
 	# Trading URLs
 	#
+	
+	# Station
+	url(r'^trading/station/(?P<station_id>[0-9]+)/', 'apps.market_data.views.trading.station.margins'),
 		
 	# Station ranking
 	url(r'^trading/station/ranking/', 'apps.market_data.views.trading.station.ranking'),

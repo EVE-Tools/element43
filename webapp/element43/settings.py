@@ -31,6 +31,10 @@ LOGIN_REDIRECT_URL = '/'
 
 MANAGERS = ADMINS
 
+RAVEN_CONFIG = {
+    'dsn': 'http://public:secret@example.com/1',
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -95,6 +99,11 @@ MEDIA_URL = '/media/'
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
 
+# Compression
+COMPRESS_ENABLED = False
+COMPRESS_ROOT = os.path.join(ROOT_DIR, 'assets')
+COMPRESS_OUTPUT_DIR = 'cache'
+
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
@@ -150,6 +159,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+	# Catch 404s with sentry
+	'raven.contrib.django.middleware.Sentry404CatchMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -178,7 +189,9 @@ INSTALLED_APPS = (
 	'django.contrib.humanize',
 	'django.contrib.formtools',
 
-	"compressor",
+	'compressor',
+	
+	'raven.contrib.django',
 
     'south',
     'devserver',
