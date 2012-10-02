@@ -60,6 +60,8 @@ urlpatterns = patterns('',
 
     # Quicklook
     url(r'^market/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook'),
+	url(r'^market/tab/ask/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_ask_filter'),
+	url(r'^market/tab/bid/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_bid_filter'),
 	url(r'^market/region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'apps.market_data.views.market.market.quicklook_region'),
 		
 	# History JSON

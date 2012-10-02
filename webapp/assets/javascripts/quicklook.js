@@ -3,8 +3,60 @@ $(document).ready(function () {
     // Market Quicklook for element43
     //
 
-		// Activate tooltips
-		$("[rel=tooltip]").tooltip();
+	// Activate tooltips
+	$("[rel=tooltip]").tooltip();
+
+	// Show / Hide filters section
+	
+	$('#filter-icon').click(
+		function(){
+			if ($('#filters').is(':visible')) {
+				$('#filter-icon').removeClass('icon-chevron-down');
+				$('#filter-icon').addClass('icon-chevron-right');
+				$('#filters').slideUp();
+			} else {
+				$('#filter-icon').removeClass('icon-chevron-right');
+				$('#filter-icon').addClass('icon-chevron-down');
+				$('#filters').slideDown();
+			}
+		}
+	);
+
+	// Sliders
+
+	$("#security-slider").slider({
+				value: 0.4,
+				min: 0.0,
+				max: 1.0,
+				step: 0.1,
+				slide: function(event, ui) {
+					$("#system-security").html(ui.value);
+					$("#system-security").switchClass($("#system-security").attr('class'),"sec" + (ui.value*10),200);
+				}
+			});
+			
+	$("#system-security").val($("#security-slider").slider("value"));
+	
+	$("#age-slider").slider({
+				value: 8,
+				min: 1,
+				max: 8,
+				step: 1,
+				slide: function(event, ui) {
+					$("#data-age").html(ui.value);
+				}
+			});
+	
+	$("#data-age").html($("#age-slider").slider("value"));
+	
+	// Handle filtering
+	
+	$('#filter-button').click(
+		function(){
+			$('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
+			$('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
+		}
+	);
 
     /**
      * Gray theme for Highcharts JS
@@ -261,7 +313,6 @@ $(document).ready(function () {
 
     // Apply the theme
     var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
-
 
     $.getJSON('/market/history/' + mapRegionID + '/' + invTypeID + '/', function (data) {
         // Parse data
