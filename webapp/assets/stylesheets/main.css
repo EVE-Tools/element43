@@ -1,35 +1,20 @@
+@import url("http://fonts.googleapis.com/css?family=Orbitron:500");
 /*
  * Main CSS file for element43
  */
-<<<<<<< HEAD
-=======
-@import url('http://fonts.googleapis.com/css?family=Orbitron:500');
-/* line 38, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 h1, h2, h3 {
   color: #6ea8e5;
   font-weight: bold;
   text-transform: uppercase;
   margin-bottom: 1em; }
 
-<<<<<<< HEAD
 body {
   color: white;
-  background: url("../images/background.jpg") no-repeat scroll center top black; }
+  background: url("/static/images/background.jpg") no-repeat scroll center top black; }
 
-=======
-/* line 42, main.scss */
-body {
-  color: white;
-  background: url("/static/images/background.jpg") no-repeat scroll center top black;
-}
-
-/* line 47, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 a {
   color: #6ea8e5; }
 
-<<<<<<< HEAD
 td a {
   color: #e68a17;
   text-decoration: none; }
@@ -42,75 +27,30 @@ td a {
     color: #e68a17;
     text-decoration: none; }
 
-=======
-/* line 52, main.scss */
-td a {
-  color: #e68a17;
-  text-decoration: none;
-}
-/* line 56, main.scss */
-td a:hover {
-  background-color: #e68a17;
-  color: white !important;
-  text-shadow: 1px 1px #333333;
-  text-decoration: none;
-}
-/* line 62, main.scss */
-td a:visited {
-  color: #e68a17;
-  text-decoration: none;
-}
-
-/* line 69, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 footer {
   text-align: center; }
 
-<<<<<<< HEAD
-=======
-/* line 76, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .table tbody tr:hover td,
 .table tbody tr:hover th {
   background-color: transparent; }
 
-<<<<<<< HEAD
-=======
-/* line 80, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .table-striped tbody tr:nth-child(odd):hover td {
   background-color: #444444; }
 
-<<<<<<< HEAD
-=======
-/* line 86, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .text-right {
   text-align: right !important; }
 
-<<<<<<< HEAD
-=======
-/* line 90, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .text-center {
   text-align: center !important; }
 
-<<<<<<< HEAD
-=======
-/* line 96, main.scss */
 .typeinfo {
-  margin-top: 1em;
-}
+  margin-top: 1em; }
 
-/* line 100, main.scss */
 .price {
   font-family: 'Orbitron', sans-serif;
   text-shadow: 0 0 3px #6ea8e5;
-  font-size: 18px;
-}
+  font-size: 18px; }
 
-/* line 108, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .autocomplete-w1 {
   background-color: #2f2f2f;
   position: absolute;
@@ -118,10 +58,6 @@ footer {
   left: 0px;
   margin: 6px 0 0 6px; }
 
-<<<<<<< HEAD
-=======
-/* line 109, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .autocomplete {
   border: 1px solid #333333;
   background: #2f2f2f;
@@ -129,85 +65,43 @@ footer {
   text-align: left;
   overflow: auto; }
 
-<<<<<<< HEAD
-=======
-/* line 110, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .autocomplete .selected {
   background: #444444; }
 
-<<<<<<< HEAD
-=======
-/* line 111, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden; }
 
-<<<<<<< HEAD
-=======
-/* line 112, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .autocomplete strong {
   font-weight: normal;
   color: #6ea8e5; }
 
-<<<<<<< HEAD
-=======
-/* line 116, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .navbar-top .container {
   width: 940px; }
 
 @media (min-width: 1200px) {
-<<<<<<< HEAD
   .navbar-top .container {
     width: 1170px; } }
-=======
-  /* line 121, main.scss */
-  .navbar-top .container {
-    width: 1170px;
-  }
-}
-/* line 126, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px; }
 
-<<<<<<< HEAD
-=======
-/* line 130, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .content {
   padding: 10px;
   background: #2f2f2f; }
 
-<<<<<<< HEAD
-=======
-/* line 135, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .navbar {
   padding: 15px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid #313F41; }
 
-<<<<<<< HEAD
-=======
-/* line 141, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .navbar-inner {
   background: transparent; }
 
-<<<<<<< HEAD
-=======
-/* line 147, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .scan_done {
   background: #50c878; }
 
-<<<<<<< HEAD
 .clock {
   color: #fff;
   margin: 0 auto;
@@ -222,37 +116,10 @@ footer {
     text-shadow: 0 0 3px #6ea8e5;
     padding: 0; }
 
-=======
-/* line 153, main.scss */
-.clock {
-  color: #fff;
-  margin: 0 auto;
-  padding: 0;
-}
-/* line 158, main.scss */
-.clock ul {
-  display: inline-block;
-  list-style: none;
-  margin: 0 auto;
-  padding: 0;
-}
-/* line 165, main.scss */
-.clock ul li {
-  display: inline;
-  text-shadow: 0 0 3px #6ea8e5;
-  padding: 0;
-}
-
-/* line 172, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 #date {
   display: inline-block;
   text-shadow: 0 0 2px #6ea8e5; }
 
-<<<<<<< HEAD
-=======
-/* line 177, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -261,149 +128,69 @@ footer {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-<<<<<<< HEAD
-=======
-  /* line 188, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5; }
 
-<<<<<<< HEAD
-=======
-  /* line 189, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   50% {
     opacity: 0;
     text-shadow: none; }
 
-<<<<<<< HEAD
-=======
-  /* line 190, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5; } }
 
 @-moz-keyframes clktrans {
-<<<<<<< HEAD
-=======
-  /* line 195, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5; }
 
-<<<<<<< HEAD
-=======
-  /* line 196, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   50% {
     opacity: 0;
     text-shadow: none; }
 
-<<<<<<< HEAD
-=======
-  /* line 197, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #6ea8e5; } }
 
-<<<<<<< HEAD
-=======
-/* line 203, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .hero-unit h1 {
   color: white; }
 
-<<<<<<< HEAD
-=======
-/* line 210, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .red {
   color: red; }
 
-<<<<<<< HEAD
-=======
-/* line 214, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .green {
   color: #50c878; }
 
-<<<<<<< HEAD
-=======
-/* line 220, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec10 {
   color: #2FEFEF; }
 
-<<<<<<< HEAD
-=======
-/* line 224, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec9 {
   color: #48F0C0; }
 
-<<<<<<< HEAD
-=======
-/* line 228, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec8 {
   color: #00EF47; }
 
-<<<<<<< HEAD
-=======
-/* line 232, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec7 {
   color: #00F000; }
 
-<<<<<<< HEAD
-=======
-/* line 236, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec6 {
   color: #8FEF2F; }
 
-<<<<<<< HEAD
-=======
-/* line 240, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec5 {
   color: #EFEF00; }
 
-<<<<<<< HEAD
-=======
-/* line 244, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec4 {
   color: #D77700; }
 
-<<<<<<< HEAD
-=======
-/* line 248, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec3 {
   color: #F06000; }
 
-<<<<<<< HEAD
-=======
-/* line 252, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec2 {
   color: #F04800; }
 
-<<<<<<< HEAD
-=======
-/* line 256, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec1 {
   color: #D73000; }
 
-<<<<<<< HEAD
-=======
-/* line 260, main.scss */
->>>>>>> 545afafa84e34f77c20265f8408fe683a95b1025
 .sec0 {
   color: #F00000; }

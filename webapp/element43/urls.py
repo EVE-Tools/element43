@@ -84,7 +84,7 @@ urlpatterns = patterns('',
 	#
 	
 	# Station
-	url(r'^trading/station/(?P<station_id>[0-9]+)/', 'apps.market_data.views.trading.station.margins'),
+	#url(r'^trading/station/(?P<station_id>[0-9]+)/', 'apps.market_data.views.trading.station.margins'),
 		
 	# Station ranking
 	url(r'^trading/station/ranking/', 'apps.market_data.views.trading.station.ranking'),
