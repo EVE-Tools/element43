@@ -10,29 +10,35 @@ def calculate_manufacturing_job(form_data):
     Calculates the manufacturing costs and profits.
     """
     
-    # (bp * me waste) + (bp * pe waste) + (bp + slot waste) + bp
+    #
+    # This method is basically divided in two sections:
+    #
+    # 1. Calculate bill of materials
+    # 2. Calculate production time
+    #
     
-    data = form_data
+    # initialize the result dictionary which will be returned
     result = {}
-    runs = data['bpc_runs']
-    blueprint_id = data['blueprint_type_id']
-    blueprint = InvBlueprintType.objects.get(blueprint_type__id=blueprint_id)
     
+    # --------------------------------------------------------------------------
+    # Calculate bill of materials
+    # --------------------------------------------------------------------------
+    blueprint_type_id = int(form_data['blueprint_type_id'])
+    blueprint_runs = int(form_data['blueprint_runs'])
+    blueprint_me = int(form_data['blueprint_material_efficiency'])
+    blueprint = InvBlueprintType.objects.get(blueprint_type__id=blueprint_type_id)
     materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__volume', 'material_type__id').filter(type=blueprint.product_type)
-    material_cost_total = 0
-    material_volume_total = 0
+    materials_cost_total = 0
+    materials_volume_total = 0
+    base_waste_multiplier = float(blueprint.waste_factor) / 100
     
-    bpc_me = int(data['bpc_material_efficiency'])
-    pe = int(data['skill_production_efficiency'])
-    
-    waste_multiplier = (blueprint.waste_factor / 100.00)
-    
-    if bpc_me >= 0:
-        waste_multiplier *= float((1 / (bpc_me + 1)))
+    if blueprint_me >= 0:
+        base_waste_multiplier *= float((1 / (blueprint_me + 1)))
     else:
-        waste_multiplier *= float(1 - bpc_me)
+        base_waste_multiplier *= float(1 - blueprint_me)
     
     for material in materials:
+        # get the region stat object for the material in the Forge region
         stat_object = ItemRegionStat()
         
         try:
@@ -40,62 +46,70 @@ def calculate_manufacturing_job(form_data):
         except Exception as e:
             stat_object.sellmedian = 0
             connection._rollback()
-        
+            
         base_quantity = material['quantity']
-        skill_waste = float(((25 - (5 * pe)) * material['quantity'])) / 100
-        quantity = int((base_quantity * waste_multiplier) + skill_waste + (base_quantity * data['slot_material_modifier']))
         
-        waste = material['quantity'] * waste_multiplier
-        material['quantity'] = quantity * runs
-        material['price']=stat_object.sellmedian
-        material['total']=stat_object.sellmedian*material['quantity']
-        material['volume_total']=material['material_type__volume']*material['quantity']
-        material_cost_total += material['total']
-        material_volume_total += material['volume_total']
+        # first: calculate base waste
+        base_waste = base_quantity * base_waste_multiplier
+        
+        # second: calculate skill waste
+        skill_production_efficiency = int(form_data['skill_production_efficiency'])
+        skill_waste = float(((25 - (5 * skill_production_efficiency)) * base_quantity)) / 100
+        
+        # third: calculate the amount of materials needed depending on th installation slot material modifier and add the waste
+        quantity_unit = (base_quantity * form_data['slot_material_modifier']) + base_waste + skill_waste
+        quantity_total = round(quantity_unit * blueprint_runs)
+        
+        material['quantity'] = int(quantity_total)
+        material['price'] = stat_object.sellmedian
+        material['total'] = stat_object.sellmedian * quantity_total
+        material['volume_total'] = material['material_type__volume'] * quantity_total
+        materials_cost_total += material['total']
+        materials_volume_total += material['volume_total']
     
-    result['blueprint'] = blueprint
-    result['blueprint_cost_unit'] = data['bpc_price'] / runs
-    result['blueprint_cost_total'] = data['bpc_price'] 
     result['materials'] = materials
-    result['material_cost_unit'] = material_cost_total / runs
-    result['material_cost_total'] = material_cost_total
-    result['material_volume_total'] = material_volume_total
-    result['revenue_unit'] = data['target_sell_price']
-    result['revenue_total'] = data['target_sell_price'] * runs
-    result['profit_unit'] = data['target_sell_price'] - Decimal((material_cost_total / runs))
-    result['profit_total'] = result['profit_unit'] * runs
-    result['blueprint_id'] = blueprint_id
+    result['materials_cost_unit'] = materials_cost_total / blueprint_runs
+    result['materials_cost_total'] = materials_cost_total
+    result['materials_volume_total'] = materials_volume_total
     
-    # production time calculation
+    # --------------------------------------------------------------------------
+    # Calculate production time
+    # --------------------------------------------------------------------------
+    
+    # implant modifiers. (type_id, modifier)
     IMPLANT_MODIFIER = {
-        0: 0.00,
-        27170: 0.01,
-        27167: 0.02,
-        27171: 0.04
+        0: 0.00, # no hardwiring
+        27170: 0.01, # Zainou 'Beancounter' Industry BX-801
+        27167: 0.02, # Zainou 'Beancounter' Industry BX-802
+        27171: 0.04  # Zainou 'Beancounter' Industry BX-804
     }
     
-    industry_skill_level = data['skill_industry']
-    production_slot_modifier = data['slot_production_time_modifier']
-    implant_modifier = IMPLANT_MODIFIER[int(data['hardwiring'])]
+    # calculate production time modifuer
+    implant_modifier = IMPLANT_MODIFIER[int(form_data['hardwiring'])]
+    slot_productivity_modifier = form_data['slot_production_time_modifier']
+    production_time_modifier = (1 - (0.04 * float(form_data['skill_industry']))) * (1 - implant_modifier) * slot_productivity_modifier
     
-    bpc_pe = data['bpc_production_efficiency']
-    
-    # 1. production time modifier = ptm
-    ptm = (1-(0.04 * float(industry_skill_level))) * (1 - implant_modifier) * production_slot_modifier
-    
-    # 2. production time (pt)
     base_production_time = blueprint.production_time
-    productivity_modifier = data['slot_production_time_modifier']
+    production_time = base_production_time * production_time_modifier
     
-    pt = 0
+    blueprint_pe = form_data['blueprint_production_efficiency']
     
-    if bpc_pe >= 0:
-        pt = base_production_time * (1 - (productivity_modifier/base_production_time) * (bpc_pe / (1 + bpc_pe))) * ptm
+    if blueprint_pe >= 0:
+        production_time *= (1 - (slot_productivity_modifier / base_production_time) * (blueprint_pe / (1 + blueprint_pe)))
     else:
-        pt = base_production_time * (1 - (productivity_modifier/base_production_time) * (bpc_pe - 1)) * ptm
+        production_time *= (1 - (slot_productivity_modifier / base_production_time) * (blueprint_pe - 1))
     
-    result['production_time_unit'] = pt
-    result['production_time_total'] = pt * runs
+    result['production_time_unit'] = production_time
+    result['production_time_total'] = production_time * blueprint_runs
+    
+    # add all the other values to the result dictionary
+    result['blueprint_cost_unit'] = form_data['blueprint_price'] / blueprint_runs
+    result['blueprint_cost_total'] = form_data['blueprint_price']
+    result['revenue_unit'] = form_data['target_sell_price']
+    result['revenue_total'] = form_data['target_sell_price'] * blueprint_runs
+    result['profit_unit'] = form_data['target_sell_price'] - Decimal((materials_cost_total / blueprint_runs))
+    result['profit_total'] = result['profit_unit'] * blueprint_runs
+    result['blueprint_type_id'] = blueprint_type_id
     
     return result
 

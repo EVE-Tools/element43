@@ -11,7 +11,7 @@
         Select Blueprint
     %li
       %span.divider >
-      %a{'href':'{% url manufacturing_calculator data.blueprint_id %}'}
+      %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}
         Change Data
     %li
       %span.divider >
@@ -38,11 +38,11 @@
             Total
         %td.text-right
           %strong
-            = data.material_cost_total|floatformat:2|intcomma
+            = data.materials_cost_total|floatformat:2|intcomma
             ISK
         %td.text-right
           %strong
-            = data.material_volume_total|floatformat:2|intcomma
+            = data.materials_volume_total|floatformat:2|intcomma
             m³
     %tbody
     - for material in data.materials
@@ -82,19 +82,20 @@
         %td
           Material cost:
         %td.text-right
-          = data.material_cost_unit|floatformat:2|intcomma
+          = data.materials_cost_unit|floatformat:2|intcomma
           ISK
         %td.text-right
-          = data.material_cost_total|floatformat:2|intcomma
+          = data.materials_cost_total|floatformat:2|intcomma
           ISK
       %tr
         %td
           Blueprint cost:
         %td.text-right
-          = data.blueprint_cost_unit|floatformat:2|intcomma 
+          = data.blueprint_cost_unit|floatformat:2|intcomma
           ISK
         %td.text-right
-          0 ISK
+          = data.blueprint_cost_total|floatformat:2|intcomma
+          ISK
       %tr
         %td
           Revenue:
@@ -102,7 +103,7 @@
           = data.revenue_unit|floatformat:2|intcomma 
           ISK
         %td.text-right
-          = data.renenue_total|floatformat:2|intcomma 
+          = data.revenue_total|floatformat:2|intcomma 
           ISK
       %tr
         %td

@@ -7,10 +7,8 @@ from functions import is_valid_blueprint_type_id
 
 from eve_db.models import InvBlueprintType
 
-from apps.manufacturing.help_texts import *
-
 class SelectBlueprintForm(forms.Form):
-    blueprint = forms.CharField(max_length=100, help_text=FORM_SELECTBLUEPRINTFORM_BLUEPRINT, widget=forms.TextInput(attrs={ 'class' : 'input-large required' }))
+    blueprint = forms.CharField(max_length=100, widget=forms.TextInput(attrs={ 'class' : 'input-large required' }))
     
     def clean_blueprint(self):
         blueprint_name = self.cleaned_data['blueprint']
@@ -49,10 +47,10 @@ class ManufacturingCalculatorForm(forms.Form):
     )
     
     # blueprint related fields
-    bpc_material_efficiency = forms.IntegerField(min_value=-4, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
-    bpc_production_efficiency = forms.IntegerField(min_value=-4, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
-    bpc_runs = forms.IntegerField(min_value=0, max_value=10000, initial=1, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
-    bpc_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial=0, required=False)
+    blueprint_material_efficiency = forms.IntegerField(min_value=-4, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
+    blueprint_production_efficiency = forms.IntegerField(min_value=-4, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
+    blueprint_runs = forms.IntegerField(min_value=0, max_value=10000, initial=1, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
+    blueprint_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial=0, required=False)
     
     # player skill and item related fields
     skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES, widget=forms.Select(attrs={'class': 'input-mini required'}))

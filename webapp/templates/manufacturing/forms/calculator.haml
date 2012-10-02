@@ -29,41 +29,41 @@
       %legend
         Blueprint information
       
-      %div{'class':'control-group{{ form.bpc_material_efficiency|css_error }}'}
-        %label.control-label{'for':'bpc_material_efficiency'} Material level (ME)
+      %div{'class':'control-group{{ form.blueprint_material_efficiency|css_error }}'}
+        %label.control-label{'for':'blueprint_material_efficiency'} Material level (ME)
         .controls
-          = form.bpc_material_efficiency
-          - if form.bpc_material_efficiency.errors
+          = form.blueprint_material_efficiency
+          - if form.blueprint_material_efficiency.errors
             %span.help-inline
-              - for error in form.bpc_material_efficiency.errors
+              - for error in form.blueprint_material_efficiency.errors
                 = error|escape
   
-      %div{'class':'control-group{{ form.bpc_production_efficiency|css_error }}'}
-        %label.control-label{'for':'bpc_production_efficiency'} Productivity Level (PE)
+      %div{'class':'control-group{{ form.blueprint_production_efficiency|css_error }}'}
+        %label.control-label{'for':'blueprint_production_efficiency'} Productivity Level (PE)
         .controls
-          = form.bpc_production_efficiency
-          - if form.bpc_production_efficiency.errors
+          = form.blueprint_production_efficiency
+          - if form.blueprint_production_efficiency.errors
             %span.help-inline
-              - for error in form.bpc_production_efficiency.errors
+              - for error in form.blueprint_production_efficiency.errors
                 = error|escape
         
-      %div{'class':'control-group{{ form.bpc_runs|css_error }}'}
-        %label.control-label{'for':'bpc_runs'} Number of runs
+      %div{'class':'control-group{{ form.blueprint_runs|css_error }}'}
+        %label.control-label{'for':'blueprint_runs'} Number of runs
         .controls
-          = form.bpc_runs
-          - if form.bpc_runs.errors
+          = form.blueprint_runs
+          - if form.blueprint_runs.errors
             %span.help-inline
-              - for error in form.bpc_runs.errors
+              - for error in form.blueprint_runs.errors
                 = error|escape
       
-      %div{'class':'control-group{{ form.bpc_price|css_error }}'}
-        %label.control-label{'for':'bpc_price'} Blueprint copy price
+      %div{'class':'control-group{{ form.blueprint_price|css_error }}'}
+        %label.control-label{'for':'blueprint_price'} Blueprint copy price
         .controls
           %div.input-append
-            = form.bpc_price
-            - if form.bpc_price.errors
+            = form.blueprint_price
+            - if form.blueprint_price.errors
               %span.help-inline
-                - for error in form.bpc_price.errors
+                - for error in form.blueprint_price.errors
                   = error|escape
 
     -#
@@ -156,4 +156,4 @@
     .control-group
       .controls
         %button.btn.btn-success{'type':'submit'}
-          Calculate
+          Calculate  
