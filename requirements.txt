@@ -30,6 +30,3 @@ pylibmc
 # Cython is a dependency of pyzmq's development branch
 cython
 git+http://github.com/zeromq/pyzmq.git
-
-# Test related stuff
-django-dynamic-fixture
