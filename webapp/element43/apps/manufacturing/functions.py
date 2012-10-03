@@ -96,7 +96,7 @@ def calculate_manufacturing_job(form_data):
     if blueprint_pe >= 0:
         production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
     else:
-        production_time *= (1 - (blueprint.productivity_modifier / base_production_time) * (blueprint_pe - 1))
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
     
     result['production_time_unit'] = production_time
     result['production_time_total'] = production_time * blueprint_runs
