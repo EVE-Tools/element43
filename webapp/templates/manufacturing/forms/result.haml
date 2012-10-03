@@ -18,7 +18,7 @@
       Result
   
   %h3
-    Bill of Materials ({{ data.blueprint_runs}} Runs)
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Units) 
   
   %table#billofmaterials.table.table-striped
     %thead
@@ -96,6 +96,15 @@
           ISK
         %td.text-right
           = data.blueprint_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Total cost:
+        %td.text-right
+          = data.total_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = data.total_cost_total|floatformat:2|intcomma
           ISK
       %tr
         %td

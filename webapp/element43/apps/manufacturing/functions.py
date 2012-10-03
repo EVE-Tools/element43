@@ -102,11 +102,15 @@ def calculate_manufacturing_job(form_data):
     result['production_time_total'] = production_time * blueprint_runs
     
     # add all the other values to the result dictionary
-    result['blueprint_cost_unit'] = form_data['blueprint_price'] / blueprint_runs
+    product = InvType.objects.get(pk=blueprint.product_type.id)
+    result['produced_units'] = product.portion_size * blueprint_runs
+    result['blueprint_cost_unit'] = form_data['blueprint_price'] / result['produced_units']
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
     result['revenue_total'] = form_data['target_sell_price'] * blueprint_runs
-    result['profit_unit'] = form_data['target_sell_price'] - Decimal((materials_cost_total / blueprint_runs))
+    result['total_cost_unit'] = result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
+    result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
+    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
     result['profit_total'] = result['profit_unit'] * blueprint_runs
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_runs'] = blueprint_runs
