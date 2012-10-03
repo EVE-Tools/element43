@@ -119,9 +119,9 @@
       %tr
         %td
           Profit:
-        %td.text-right
+        %td.text-right{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
           = data.profit_unit|floatformat:2|intcomma 
           ISK
-        %td.text-right
+        %td.text-right{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
           = data.profit_total|floatformat:2|intcomma 
           ISK
