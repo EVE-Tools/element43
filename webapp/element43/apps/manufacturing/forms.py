@@ -59,8 +59,8 @@ class ManufacturingCalculatorForm(forms.Form):
     blueprint_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial=0, required=False)
     
     # player skill and item related fields
-    skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES, widget=forms.Select(attrs={'class': 'input-mini required'}))
-    skill_production_efficiency = forms.ChoiceField(choices=SKILL_PRODUCTION_EFFICIENCY_CHOICES, widget=forms.Select(attrs={'class': 'input-mini required'}))
+    skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES, initial=5, widget=forms.Select(attrs={'class': 'input-mini required'}))
+    skill_production_efficiency = forms.ChoiceField(choices=SKILL_PRODUCTION_EFFICIENCY_CHOICES, initial=5, widget=forms.Select(attrs={'class': 'input-mini required'}))
     hardwiring = forms.ChoiceField(choices=HARDWIRING_CHOICES, widget=forms.Select(attrs={'class': 'input-xlarge required'}))
     
     # production slot fields
