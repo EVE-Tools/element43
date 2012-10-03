@@ -16,6 +16,8 @@ def select_blueprint(request):
     """
     View to select the blueprint.
     """
+    # When the user selects a new blueprint we better delete the settings he used for
+    # his last calculation.
     if request.session.get('form_data'):
         del request.session['form_data']
     
@@ -44,7 +46,7 @@ def calculator(request, blueprint_type_id):
     try:
         blueprint = InvBlueprintType.objects.get(pk=blueprint_type_id)
     except InvBlueprintType.DoesNotExist:
-        # There is no blueprint with the give id. Go back to start!
+        # There is no blueprint with the given id. Go back to start!
         return HttpResponseRedirect(reverse('manufacturing_select_blueprint'))
 
     if request.method == 'POST':
