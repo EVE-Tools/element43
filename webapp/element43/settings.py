@@ -244,6 +244,9 @@ LOGGING = {
     }
 }
 
+IMAGE_SERVER = 'http://images.element-43.com'
+MEMCACHE_SERVER = '127.0.0.1'
+
 # This allows you to override these settings without modifying the defaults.
 # Create a local_settings.py file and copy/paste/modify things from here.
 try:
