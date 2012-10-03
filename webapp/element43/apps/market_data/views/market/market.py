@@ -52,7 +52,7 @@ def history_json(request, region_id = 10000002, type_id = 34):
 		
 			# Convert to Highstocks compatible timestamp first
 			for key, value in data.iteritems():
-				ohlc_data.append([int(time.mktime(datetime.datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
+				ohlc_data.append([int(time.mktime(datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
 			
 			# Sort by date
 			ohlc_data.sort(key=lambda k: k[0])
