@@ -50,7 +50,7 @@
     - for material in data.materials
       %tr
         %td
-          %img{'src': 'http://images.element-43.com/Type/{{ material.material_type__id }}_16.png' }
+          %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
           = material.material_type__name
         %td.text-right
           = material.price|floatformat:2|intcomma
