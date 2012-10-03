@@ -9,7 +9,7 @@
     {{region.name}} - {{type.name}}
   .row-fluid
     .span1
-      %img{'src':'http://image.eveonline.com/type/{{type.id}}_64.png', 'alt':'type image'}
+      %img{'src':'{{IMAGE_SERVER}}/Type/{{type.id}}_64.png', 'alt':'type image'}
     .span11
       %p
         Volume: {{type.volume|intcomma}}m&#179;
@@ -182,7 +182,8 @@
         - for material in materials
           %tr
             %td
-              %img{'src':'http://image.eveonline.com/type/{{material.material_type__id}}_32.png', 'width':'16', 'height':'16', 'alt':'type image'}
+              // If you are using CCP's image server make sure to reference the _32 image size since they don't provide a _16
+              %img{'src':'{{IMAGE_SERVER}}/Type/{{material.material_type__id}}_16.png', 'width':'16', 'height':'16', 'alt':'type image'}
                 %a{'href':'/market/{{material.material_type__id}}'}
                   {{material.material_type__name}}
             %td.text-right

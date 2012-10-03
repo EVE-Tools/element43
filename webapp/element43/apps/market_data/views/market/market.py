@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.conf import settings
 
 # Aggregation
 from django.db.models import Sum
@@ -159,7 +160,7 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
 
@@ -251,7 +252,7 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook.haml', rcontext)
 	
