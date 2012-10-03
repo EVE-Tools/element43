@@ -6,6 +6,9 @@ from django.shortcuts import render_to_response
 from eve_db.models import InvType, InvBlueprintType
 
 class SelectBlueprintForm(forms.Form):
+    """
+    Form to select the blueprint the user wants to manufacture.
+    """
     blueprint = forms.CharField(max_length=100, widget=forms.TextInput(attrs={ 'class' : 'input-large required' }))
     
     def clean_blueprint(self):
@@ -26,6 +29,11 @@ class SelectBlueprintForm(forms.Form):
         return blueprint_name
         
 class ManufacturingCalculatorForm(forms.Form):
+    """
+    This is the form where the user types in the information for the manufacturing job. Based
+    on those information the calculations will be made.
+    """
+    
     SKILL_INDUSTRY_CHOICES = (
         (0, 0), 
         (1, 1), 

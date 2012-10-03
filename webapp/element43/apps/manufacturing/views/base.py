@@ -9,8 +9,7 @@ from eve_db.models import InvBlueprintType
 
 def blueprint_search(request):
     """
-    This adds a basic live search view to element43.
-    The names in the invTypes table are searched with a case insensitive LIKE query and the result is returned as a JSON array of matching names.
+    Adds the blueprint search to the first form of the manufacturing calculator.
     """
 
     if request.GET.get('query'):
