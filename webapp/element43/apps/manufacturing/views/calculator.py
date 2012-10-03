@@ -3,14 +3,14 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from apps.manufacturing.functions import calculate_manufacturing_job, is_valid_blueprint_type_id
+from apps.manufacturing.functions import calculate_manufacturing_job
 
 # Forms
 from django import forms
 from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculatorForm
 
 # Models
-from eve_db.models import InvType
+from eve_db.models import InvType, InvBlueprintType
 
 def select_blueprint(request):
     """
@@ -41,9 +41,12 @@ def calculator(request, blueprint_type_id):
     This view contains the form where the user types in all the relevant data
     that is needed to calculate the manufacturing job.
     """
-    if not is_valid_blueprint_type_id(blueprint_type_id):
+    try:
+        blueprint = InvBlueprintType.objects.get(pk=blueprint_type_id)
+    except InvBlueprintType.DoesNotExist:
+        # There is no blueprint with the give id. Go back to start!
         return HttpResponseRedirect(reverse('manufacturing_select_blueprint'))
-    
+
     if request.method == 'POST':
         form = ManufacturingCalculatorForm(request.POST)
         
@@ -63,6 +66,6 @@ def calculator(request, blueprint_type_id):
         else:
             form = ManufacturingCalculatorForm()
     
-    rcontext = RequestContext(request, { 'form' : form, 'blueprint_type_id' : blueprint_type_id })
+    rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
     
     return render_to_response('manufacturing/forms/calculator.haml', rcontext)

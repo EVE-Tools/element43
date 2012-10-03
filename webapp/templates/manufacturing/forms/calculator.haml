@@ -8,12 +8,12 @@
     %li
       %span.divider >
       %a{'href':'{% url manufacturing_select_blueprint %}'}
-        Select Blueprint
+        Select Blueprint ({{ blueprint.blueprint_type.name }})
     %li
       %span.divider >
         Change Data
         
-  %form.form-horizontal.well{'action':'{% url manufacturing_calculator blueprint_type_id %}', 'method':'post'}
+  %form.form-horizontal.well{'action':'{% url manufacturing_calculator blueprint.blueprint_type.id %}', 'method':'post'}
     - csrf_token
     
     -#

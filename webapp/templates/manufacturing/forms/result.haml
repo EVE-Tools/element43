@@ -8,7 +8,7 @@
     %li
       %span.divider >
       %a{'href':'{% url manufacturing_select_blueprint %}'}
-        Select Blueprint
+        Select Blueprint ({{ data.blueprint_name }})
     %li
       %span.divider >
       %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}

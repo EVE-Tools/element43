@@ -113,24 +113,7 @@ def calculate_manufacturing_job(form_data):
     result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
     result['profit_total'] = result['profit_unit'] * blueprint_runs
     result['blueprint_type_id'] = blueprint_type_id
+    result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
     
     return result
-
-def is_valid_blueprint_type_id(blueprint_type_id):
-    """
-    Validates that the given blueprint_type_id is a valid type id.
-    
-    Valid means:
-    * must be a number (so it can be casted to an integer)
-    * the type id must be in the database 
-    """
-    
-    # try to cast the argument to int. if this fails blueprint_type_id is not a number.
-    try:
-        blueprint_type_id = int(blueprint_type_id)
-    except ValueError:
-        return False
-    
-    # lookup the blueprint type id in the database and return True or False
-    return InvBlueprintType.objects.filter(pk=blueprint_type_id).exists()

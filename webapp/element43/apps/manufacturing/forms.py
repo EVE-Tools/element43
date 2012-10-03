@@ -3,8 +3,6 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from functions import is_valid_blueprint_type_id
-
 from eve_db.models import InvType, InvBlueprintType
 
 class SelectBlueprintForm(forms.Form):
