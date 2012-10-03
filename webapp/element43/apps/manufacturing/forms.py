@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 
 from functions import is_valid_blueprint_type_id
 
-from eve_db.models import InvBlueprintType
+from eve_db.models import InvType, InvBlueprintType
 
 class SelectBlueprintForm(forms.Form):
     blueprint = forms.CharField(max_length=100, widget=forms.TextInput(attrs={ 'class' : 'input-large required' }))
@@ -15,7 +15,15 @@ class SelectBlueprintForm(forms.Form):
         exists = InvBlueprintType.objects.filter(blueprint_type__name=blueprint_name).exists()
         
         if not exists:
-            raise forms.ValidationError("Could not find blueprint '%s'" % blueprint_name)
+            # Try to find the blueprint before raising an error
+            # Most users will just enter 'merlin' and hit enter.
+            # In thise case we are looking for "merlin blueprint" in the InvType model.
+            blueprint_type = InvType.objects.filter(name__iexact=blueprint_name + " blueprint")
+            
+            if blueprint_type.exists():
+                blueprint_name = blueprint_type[0].name
+            else:
+                raise forms.ValidationError("Could not find blueprint '%s'" % blueprint_name)
         
         return blueprint_name
         

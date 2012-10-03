@@ -18,7 +18,7 @@
       Result
   
   %h3
-    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Units) 
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Unit{{ data.produced_units|pluralize }}) 
   
   %table#billofmaterials.table.table-striped
     %thead
