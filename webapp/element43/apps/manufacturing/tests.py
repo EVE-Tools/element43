@@ -34,7 +34,7 @@ class BlueprintTypeIdValidationTests(TestCase):
         self.assertFalse(is_valid_blueprint_type_id("I am not a number"))
 
 class ManufacturingCalculationAmarrFuelBlockTest(TestCase):
-    fixtures = ['amarrfuelblock.json']
+    fixtures = ['amarrfuelblock.json', 'materials.json']
     
     def setUp(self):
         self.form_data = {
@@ -51,7 +51,7 @@ class ManufacturingCalculationAmarrFuelBlockTest(TestCase):
             'target_sell_price': 12700
         }
     
-    def test_amarr_fuel_block_production_time(self):
+    def test_production_time(self):
         """
         Check production time
         
@@ -60,11 +60,15 @@ class ManufacturingCalculationAmarrFuelBlockTest(TestCase):
         production_time_modifier = (1 - (0.04 * industry_skill)) * (1 - implant_modifier) * production_slot_modifier
         production_time = base_production_time * (1 - (productivity_level / base_production_time) * (PE / (1 + PE))) * production_time_modifier
         
-        Based on those equations and the values from the form_data dictionary those equations are:
+        Based on those equations and the values from the form_data dictionary:
         
         production_time_modifier = (1 - (0.04 * 5)) * (1 - 0) * 1.0 = 0.8
         production_time = 300 * (1 - (120 / 300) * (1000 / (1 + 1000))) * 0.8 = 144.0959040959041 (seconds)
         """
         result = calculate_manufacturing_job(self.form_data)
-        self.assertEquals(result['production_time_unit'], 144.0959040959041)
+        self.assertEquals(result['production_time_run'], 144.0959040959041)
         self.assertEquals(result['production_time_total'], round(144.0959040959041*300)) # 300 runs
+    
+    def test_materials(self):
+        result = calculate_manufacturing_job(self.form_data)
+        print result['materials']

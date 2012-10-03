@@ -97,9 +97,8 @@ def calculate_manufacturing_job(form_data):
         production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
     else:
         production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
-        
-    # Do not round the production_time value because those fractions can add up quite a bit when they are multiplied with blueprint_runs
-    result['production_time_unit'] = production_time
+
+    result['production_time_run'] = round(production_time)
     result['production_time_total'] = round(production_time * blueprint_runs)
     
     # add all the other values to the result dictionary
