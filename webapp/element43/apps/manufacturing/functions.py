@@ -91,13 +91,12 @@ def calculate_manufacturing_job(form_data):
     
     base_production_time = blueprint.production_time
     production_time = base_production_time * production_time_modifier
-    
     blueprint_pe = form_data['blueprint_production_efficiency']
     
     if blueprint_pe >= 0:
-        production_time *= (1 - (slot_productivity_modifier / base_production_time) * (blueprint_pe / (1 + blueprint_pe)))
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
     else:
-        production_time *= (1 - (slot_productivity_modifier / base_production_time) * (blueprint_pe - 1))
+        production_time *= (1 - (blueprint.productivity_modifier / base_production_time) * (blueprint_pe - 1))
     
     result['production_time_unit'] = production_time
     result['production_time_total'] = production_time * blueprint_runs
@@ -110,6 +109,7 @@ def calculate_manufacturing_job(form_data):
     result['profit_unit'] = form_data['target_sell_price'] - Decimal((materials_cost_total / blueprint_runs))
     result['profit_total'] = result['profit_unit'] * blueprint_runs
     result['blueprint_type_id'] = blueprint_type_id
+    result['blueprint_runs'] = blueprint_runs
     
     return result
 

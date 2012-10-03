@@ -18,18 +18,19 @@
       Result
   
   %h3
-    Bill of Materials
+    Bill of Materials ({{ data.blueprint_runs}} Runs)
   
-  %table.table.table-striped
+  %table#billofmaterials.table.table-striped
     %thead
-      %th
-        Material
-      %th.text-right
-        Quantity
-      %th.text-right
-        Price
-      %th.text-right
-        Volume
+      %tr
+        %th
+          Material
+        %th.text-right
+          Quantity
+        %th.text-right
+          Price
+        %th.text-right
+          Volume
     %tfoot
       %tr
         %td
