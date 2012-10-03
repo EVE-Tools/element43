@@ -4,7 +4,7 @@ from django_dynamic_fixture import G
 
 from eve_db.models import InvBlueprintType
 
-from apps.manufacturing.functions import is_valid_blueprint_type_id
+from apps.manufacturing.functions import is_valid_blueprint_type_id, calculate_manufacturing_job
 
 class BlueprintTypeIdValidationTests(TestCase):
     def test_is_valid_blueprint_type_id_positive1(self):
@@ -32,3 +32,39 @@ class BlueprintTypeIdValidationTests(TestCase):
         The method is supposed to return False (Boolean).
         """
         self.assertFalse(is_valid_blueprint_type_id("I am not a number"))
+
+class ManufacturingCalculationAmarrFuelBlockTest(TestCase):
+    fixtures = ['amarrfuelblock.json']
+    
+    def setUp(self):
+        self.form_data = {
+            'blueprint_type_id': 4315,
+            'blueprint_runs': 300,
+            'blueprint_material_efficiency': 1000,
+            'blueprint_production_efficiency': 1000,
+            'skill_production_efficiency': 5,
+            'slot_material_modifier': 1.00,
+            'hardwiring': 0,
+            'slot_production_time_modifier': 1.00,
+            'skill_industry': 5,
+            'blueprint_price': 2000000,
+            'target_sell_price': 12700
+        }
+    
+    def test_amarr_fuel_block_production_time(self):
+        """
+        Check production time
+        
+        Equations:
+         
+        production_time_modifier = (1 - (0.04 * industry_skill)) * (1 - implant_modifier) * production_slot_modifier
+        production_time = base_production_time * (1 - (productivity_level / base_production_time) * (PE / (1 + PE))) * production_time_modifier
+        
+        Based on those equations and the values from the form_data dictionary those equations are:
+        
+        production_time_modifier = (1 - (0.04 * 5)) * (1 - 0) * 1.0 = 0.8
+        production_time = 300 * (1 - (120 / 300) * (1000 / (1 + 1000))) * 0.8 = 144.0959040959041 (seconds)
+        """
+        result = calculate_manufacturing_job(self.form_data)
+        self.assertEquals(result['production_time_unit'], 144.0959040959041)
+        self.assertEquals(result['production_time_total'], round(144.0959040959041*300)) # 300 runs
