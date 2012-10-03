@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 #
-# The humanize_time filter is based on the follow script:
+# The humanize_time filter is based on the following script:
 #
 # https://github.com/liudmil-mitev/experiments/blob/master/time/humanize_time.py
 #
