@@ -179,26 +179,26 @@ def api_character(request, api_id, api_verification_code):
                     i_memory_name = ""
                     i_memory_bonus = 0
                 try:
-                    implant_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName
-                    implant_perception_bonus = int(sheet.attributeEnhancers.perceptionBonus.augmentatorValue)
+                    i_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName
+                    i_perception_bonus = int(sheet.attributeEnhancers.perceptionBonus.augmentatorValue)
                 except:
                     i_perception_name = ""
                     i_perception_bonus = 0
                 try:
-                    implant_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName
-                    implant_intelligence_bonus = int(sheet.attributeEnhancers.intelligenceBonus.augmentatorValue)
+                    i_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName
+                    i_intelligence_bonus = int(sheet.attributeEnhancers.intelligenceBonus.augmentatorValue)
                 except:
                     i_intelligence_name = ""
                     i_intelligence_bonus = 0
                 try:
-                    implant_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName
-                    implant_willpower_bonus = int(sheet.attributeEnhancers.willpowerBonus.augmentatorValue)
+                    i_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName
+                    i_willpower_bonus = int(sheet.attributeEnhancers.willpowerBonus.augmentatorValue)
                 except:
                     i_willpower_name = ""
                     i_willpower_bonus = 0
                 try:
-                    implant_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName
-                    implant_charisma_bonus = int(sheet.attributeEnhancers.charismaBonus.augmentatorValue)
+                    i_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName
+                    i_charisma_bonus = int(sheet.attributeEnhancers.charismaBonus.augmentatorValue)
                 except:
                     i_charisma_name = ""
                     i_charisma_bonus = 0
