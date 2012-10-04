@@ -205,6 +205,7 @@ INSTALLED_APPS = (
     'south',
     'devserver',
 
+    'apps.common',
     'apps.market_data',
     'apps.api',
     'apps.manufacturing',

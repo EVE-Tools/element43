@@ -4,67 +4,27 @@ from django.contrib import admin
 admin.autodiscover()
 
 # Custom error handlers
-handler403 = 'apps.market_data.views.errors.handler_403'
-handler404 = 'apps.market_data.views.errors.handler_404'
-handler500 = 'apps.market_data.views.errors.handler_500'
+handler403 = 'apps.common.views.handler_403'
+handler404 = 'apps.common.views.handler_404'
+handler500 = 'apps.common.views.handler_500'
 
 #
-# market_data
+# URLs for Element43
 #
 
-urlpatterns = patterns('apps.market_data.views',
+urlpatterns = patterns('',
     
-    #
-    # Base URLs
-    #
-
-    # Home
-    url(r'^$', 'base.home', name = 'home'),
-    url(r'^stats/$', 'base.stats', name = 'home_stats_panel'),
-
-    # Search
-    url(r'^search/', 'base.search', name = 'search'),
-
-    # Live search
-    url(r'^live_search/', 'base.live_search', name = 'live_search'),
-    
-    #
-    # Market URLs
-    #
-
-    # Quicklook
-    url(r'^market/(?P<type_id>[0-9]+)/', 'market.market.quicklook', name = 'quicklook'),
-    url(r'^market/tab/ask/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_ask_filter', name = 'quicklook_filter_tab_ask'),
-    url(r'^market/tab/bid/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_bid_filter', name = 'quicklook_filter_tab_bid'),
-    url(r'^market/region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.quicklook_region', name = 'quicklook_region'),
-        
-    # History JSON
-    url(r'^market/history/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.history_json', name = 'quicklook_history_json'),
-
-    # Market browser
-    url(r'^market/browse/tree/(?P<group>[0-9]+)/$', 'market.browser.tree', name = 'browser_tree_group_json'),
-    url(r'^market/browse/tree/$', 'market.browser.tree', name = 'browser_tree'),
-    
-    url(r'^market/browse/(?P<group>[0-9]+)/', 'market.browser.browser', name = 'browser_preload'),
-    url(r'^market/browse/panel/(?P<group>[0-9]+)/', 'market.browser.panel', name = 'browser_panel'),
-    url(r'^market/browse/', 'market.browser.browser', name = 'browser'),
-        
-    # Scanners
-    url(r'^market/scanner/random/', 'market.scanners.random', name = 'scanner_random'),
-    url(r'^market/scanner/region/', 'market.scanners.region', name = 'scanner_region'),
-        
-    #
-    # Trading URLs
-    #
-        
-    # Station ranking
-    url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
-    
-    # Account management
-    url(r'^settings/', include('apps.user_settings.urls')),
+    # Common URLs
+    url(r'', include('apps.common.urls')),
     
     # Authentication and registration
     url(r'', include('apps.auth.urls')),
+    
+    # Market data
+    url(r'^market/', include('apps.market_data.urls')),
+    
+    # Account management
+    url(r'^settings/', include('apps.user_settings.urls')),
     
     # Manufacturing
     url(r'^manufacturing/', include('apps.manufacturing.urls')),
