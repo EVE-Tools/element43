@@ -27,35 +27,6 @@ urlpatterns = patterns('apps.market_data.views',
 
     # Live search
     url(r'^live_search/', 'base.live_search', name = 'live_search'),
-        
-    #
-    # Authentication and Registration URLs
-    #
-        
-    # Registration
-    url(r'^register/activate/(?P<key>[a-zA-Z0-9]+)/$', 'auth.auth.activate', name = 'activate_account'),
-    url(r'^register/$', 'auth.auth.register', name = 'registration'),
-    
-    # Password reset
-    url(r'^register/reset_password/$', 'auth.auth.reset_password', name = 'reset_password'),
-        
-    # Login
-    url(r'^login/$', 'auth.auth.login', name = 'login'),
-    # Logout
-    url(r'^logout/$', 'auth.auth.logout', name = 'logout'),
-    
-    #
-    # Account management
-    #
-    
-    # Settings
-    url(r'^settings/$', 'settings.profile', name = 'settings'),
-    url(r'^settings/profile/$', 'settings.profile', name = 'settings'),
-    url(r'^settings/characters/$', 'settings.characters', name = 'manage_characters'),
-    url(r'^settings/characters/remove/(?P<char_id>[0-9]+)/$', 'settings.remove_character', name = 'remove_character'),
-    url(r'^settings/api/key/$', 'settings.api_key', name = 'manage_api_keys'),
-    url(r'^settings/api/key/remove/(?P<apikey_id>[0-9]+)/$', 'settings.remove_api_key', name = 'remove_api_key'),
-    url(r'^settings/api/character/(?P<api_id>[0-9]+)/(?P<api_verification_code>[a-zA-Z0-9]+)/$', 'settings.api_character', name = 'add_characters'),
     
     #
     # Market URLs
@@ -88,6 +59,12 @@ urlpatterns = patterns('apps.market_data.views',
         
     # Station ranking
     url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
+    
+    # Account management
+    url(r'^settings/', include('apps.user_settings.urls')),
+    
+    # Authentication and registration
+    url(r'', include('apps.auth.urls')),
     
     # Manufacturing
     url(r'^manufacturing/', include('apps.manufacturing.urls')),

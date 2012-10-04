@@ -208,6 +208,9 @@ INSTALLED_APPS = (
     'apps.market_data',
     'apps.api',
     'apps.manufacturing',
+    'apps.auth',
+    'apps.user_settings',
+    
     'eve_db',
 )
 

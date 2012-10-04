@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from apps.api.models import APIKey, Character
 
 # Forms
-from apps.market_data.forms.settings import ProfileForm, APIKeyForm
+from apps.user_settings.forms import ProfileForm, APIKeyForm
 
 # Utility imports
 import datetime

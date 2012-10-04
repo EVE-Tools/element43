@@ -12,9 +12,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 
 # Registration-related imports
-from apps.market_data.forms.auth import RegistrationForm
-from apps.market_data.forms.auth import ResetPasswordForm
-from apps.market_data.forms.auth import LoginForm
+from apps.auth.forms import RegistrationForm, ResetPasswordForm, LoginForm
 from django.contrib.auth.models import User
 
 # Settings and e-mail
