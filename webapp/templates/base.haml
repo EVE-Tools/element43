@@ -43,8 +43,13 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url station_ranking %}'} Top Stations
-              %li
-                %a{'href':'{% url manufacturing_select_blueprint %}'} Manufacturing
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                  Manufacturing
+                  %b.caret
+                %ul.dropdown-menu
+                  %li
+                    %a{'href':'{% url manufacturing_select_blueprint %}'} Calculator
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
