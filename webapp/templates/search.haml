@@ -15,7 +15,7 @@
           %tr
             %td{'width':'32px'}
               %a{'href':'{% url quicklook type_id=type.id %}'}
-                %img{'src':format('{{ IMAGE_SERVER }}/type/{{ type.id }}_32.png'), 'alt':'type image'}
+                %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ type.id }}_32.png'), 'alt':'type image'}
             %td
               %a{'href':'{% url quicklook type_id=type.id %}'}
                 = type.name
