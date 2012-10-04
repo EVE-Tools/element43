@@ -11,7 +11,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT_DIR, 'element43'))
 
 # Our User profile class
-AUTH_PROFILE_MODULE = 'auth.Profile'
+AUTH_PROFILE_MODULE = 'common.Profile'
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
