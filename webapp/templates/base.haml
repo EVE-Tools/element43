@@ -19,7 +19,7 @@
         .navbar-inner
           .container
             %a.brand{'href':'{% url home %}'}
-              %img{'src':'/static/images/logo.png','alt':'element43'}
+              %img{'src':'/static/images/logo.png','alt':'element43','width':'100px','height':'20px'}
             %ul.nav
               %li.dropdown
                 %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
@@ -88,8 +88,8 @@
                 %li#min
                 %li#point :
                 %li#sec
-    %script{'type':'text/javascript', 'src':'http://code.jquery.com/jquery-1.7.2.min.js'}
-    %script{'type':'text/javascript', 'src':'http://code.jquery.com/ui/1.8.22/jquery-ui.min.js'}
+    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
+    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
     - compress js
       %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
       %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
