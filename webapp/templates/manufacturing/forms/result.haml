@@ -1,0 +1,127 @@
+- extends "base.haml"
+- load custom_filters humanize element43_humanize
+- block content
+  
+  %ul.breadcrumb
+    %li
+      Manufacturing
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_select_blueprint %}'}
+        Select Blueprint ({{ data.blueprint_name }})
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}
+        Change Data
+    %li
+      %span.divider >
+      Result
+  
+  %h3
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Unit{{ data.produced_units|pluralize }}) 
+  
+  %table#billofmaterials.table.table-striped
+    %thead
+      %tr
+        %th
+          Material
+        %th.text-right
+          Price (ISK)
+        %th.text-right
+          Quantity
+        %th.text-right
+          Price Total (ISK)
+        %th.text-right
+          Volume (m³)
+    %tfoot
+      %tr
+        %td
+        %td
+        %td.text-right
+          %strong
+            Total
+        %td.text-right
+          %strong
+            = data.materials_cost_total|floatformat:2|intcomma
+        %td.text-right
+          %strong
+            = data.materials_volume_total|floatformat:2|intcomma
+    %tbody
+    - for material in data.materials
+      %tr
+        %td
+          %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
+          = material.material_type__name
+        %td.text-right
+          = material.price|floatformat:2|intcomma
+        %td.text-right
+          = material.quantity|intcomma
+        %td.text-right
+          = material.total|floatformat:2|intcomma
+        %td.text-right
+          = material.volume_total|floatformat:2|intcomma
+    
+  %h3
+    Cost and Profit Overview
+    
+  %table.table.table-striped
+    %thead
+      %tr
+        %th
+        %th.text-right
+          Per Unit
+        %th.text-right
+          Total
+    %tbody
+      %tr
+        %td
+          Build time:
+        %td.text-right
+          = data.production_time_run|floatformat:0|humanize_time:"seconds"
+        %td.text-right
+          = data.production_time_total|humanize_time:"seconds"
+      %tr
+        %td
+          Material cost:
+        %td.text-right
+          = data.materials_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = data.materials_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Blueprint cost:
+        %td.text-right
+          = data.blueprint_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = data.blueprint_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Total cost:
+        %td.text-right
+          = data.total_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          = data.total_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Revenue:
+        %td.text-right
+          = data.revenue_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          = data.revenue_total|floatformat:2|intcomma 
+          ISK
+      %tr
+        %td
+          Profit:
+        %td.text-right{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+          = data.profit_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+          = data.profit_total|floatformat:2|intcomma 
+          ISK

@@ -152,6 +152,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 		"django.core.context_processors.static",
 		"django.core.context_processors.tz",
 		"django.contrib.messages.context_processors.messages",
+		"element43.context_processors.element43_settings",
 )
 
 
@@ -189,6 +190,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 	'django.contrib.humanize',
+	'django.contrib.formtools',
 
 	'compressor',
 	
@@ -199,6 +201,7 @@ INSTALLED_APPS = (
 
     'apps.market_data',
     'apps.api',
+    'apps.manufacturing',
     'eve_db',
 )
 
@@ -242,6 +245,9 @@ LOGGING = {
         },
     }
 }
+
+IMAGE_SERVER = 'http://images.element-43.com'
+MEMCACHE_SERVER = '127.0.0.1'
 
 # This allows you to override these settings without modifying the defaults.
 # Create a local_settings.py file and copy/paste/modify things from here.

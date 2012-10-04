@@ -40,7 +40,9 @@
                   %b.caret
                 %ul.dropdown-menu
                   %li
-                    %a{'href':'{% url station_ranking %}'} Top Stations
+                    %a{'href':'/trading/station/ranking/'} Top Stations
+              %li
+                %a{'href':'/manufacturing/calculator/'} Manufacturing
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li

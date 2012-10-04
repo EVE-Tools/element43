@@ -50,7 +50,11 @@ urlpatterns = patterns('apps.market_data.views',
     
     # Settings
     url(r'^settings/$', 'settings.profile', name = 'settings'),
+<<<<<<< HEAD
     url(r'^settings/profile/$', 'settings.profile', name = 'profile'),
+=======
+    url(r'^settings/profile/$', 'settings.profile', name = 'settings'),
+>>>>>>> dfea9cec020fb39fddcf60b9e3e2ae11a66a8644
     url(r'^settings/characters/$', 'settings.characters', name = 'manage_characters'),
     url(r'^settings/characters/remove/(?P<char_id>[0-9]+)/$', 'settings.remove_character', name = 'remove_character'),
     url(r'^settings/api/key/$', 'settings.api_key', name = 'manage_api_keys'),
@@ -88,8 +92,11 @@ urlpatterns = patterns('apps.market_data.views',
         
     # Station ranking
     url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
+    
+    # Manufacturing
+    url(r'^manufacturing/', include('apps.manufacturing.urls')),
 )
-        
+
 #
 # Administration views
 #
