@@ -56,10 +56,11 @@ def main():
         sql = "SELECT buyavg, sellavg FROM market_data_itemregionstat WHERE mapregion_id = 10000002 AND invtype_id = %s" % item
         curs.execute(sql)
         result = curs.fetchone()
-        item_stats['buyavg']=result[0]
-        item_stats['sellavg'] = result[1]
-        print "Added to cache, item: ", item, " cache info: ", item_stats
-        mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
+	if result:
+        	item_stats['buyavg']=result[0]
+        	item_stats['sellavg'] = result[1]
+        	print "Added to cache, item: ", item, " cache info: ", item_stats
+        	mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
     
     for message in queue.consume():
         #print ">>> spawning"
