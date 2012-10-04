@@ -28,7 +28,7 @@
          - for item in typestats
            %tr
              %td
-               %a{'href':'{% url quicklook typeid=item.type.id %}/'} 
+               %a{'href':'{% url quicklook type_id=item.type.id %}'} 
                  {{item.type.name}}
              %td
                {{item.stats.buy|floatformat:2|intcomma}}
