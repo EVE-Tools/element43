@@ -29,8 +29,6 @@ DEFAULT_FROM_EMAIL = 'no_reply@element-43.com'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-IMAGE_SERVER = 'http://image.eveonline.com'
-
 MANAGERS = ADMINS
 
 RAVEN_CONFIG = {
