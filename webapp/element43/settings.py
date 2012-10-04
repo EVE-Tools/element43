@@ -127,8 +127,8 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-	#'django.contrib.staticfiles.finders.DefaultStorageFinder',
-	'compressor.finders.CompressorFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -139,35 +139,36 @@ TEMPLATE_LOADERS = (
 
     'element43.template_loaders.DjamlFilesystemLoader',
     'element43.template_loaders.DjamlAppDirectoriesLoader',
-		
+        
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-	#'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 # Template Context processors
 TEMPLATE_CONTEXT_PROCESSORS = (
-		"django.core.context_processors.request",
-		"django.core.context_processors.csrf",
-		"django.contrib.auth.context_processors.auth",
-		"django.core.context_processors.debug",
-		"django.core.context_processors.i18n",
-		"django.core.context_processors.media",
-		"django.core.context_processors.static",
-		"django.core.context_processors.tz",
-		"django.contrib.messages.context_processors.messages",
-		"element43.context_processors.element43_settings",
+        "django.core.context_processors.request",
+        "django.core.context_processors.csrf",
+        "django.contrib.auth.context_processors.auth",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.media",
+        "django.core.context_processors.static",
+        "django.core.context_processors.tz",
+        "django.contrib.messages.context_processors.messages",
+        "element43.context_processors.element43_settings",
 )
 
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-	# Catch 404s with sentry
-	'raven.contrib.django.middleware.Sentry404CatchMiddleware',
+    # Catch 404s with sentry
+    'raven.contrib.django.middleware.Sentry404CatchMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -193,12 +194,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-	'django.contrib.humanize',
-	'django.contrib.formtools',
+    'django.contrib.humanize',
+    'django.contrib.formtools',
 
-	'compressor',
-	
-	'raven.contrib.django',
+    'compressor',
+    
+    'raven.contrib.django',
 
     'south',
     'devserver',
