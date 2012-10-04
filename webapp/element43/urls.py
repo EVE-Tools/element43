@@ -13,13 +13,13 @@ handler500 = 'apps.market_data.views.errors.handler_500'
 #
 
 urlpatterns = patterns('apps.market_data.views',
-    
+	
 	#
 	# Base URLs
 	#
 
 	# Home
-    url(r'^$', 'base.home', name = 'home'),
+	url(r'^$', 'base.home', name = 'home'),
 	url(r'^stats/$', 'base.stats', name = 'home_stats_panel'),
 
 	# Search
@@ -35,9 +35,9 @@ urlpatterns = patterns('apps.market_data.views',
 	# Registration
 	url(r'^register/activate/(?P<key>[a-zA-Z0-9]+)/$', 'auth.auth.activate', name = 'activate_account'),
 	url(r'^register/$', 'auth.auth.register', name = 'registration'),
-    
-    # Password reset
-    url(r'^register/reset_password/$', 'auth.auth.reset_password', name = 'reset_password'),
+	
+	# Password reset
+	url(r'^register/reset_password/$', 'auth.auth.reset_password', name = 'reset_password'),
 		
 	# Login
 	url(r'^login/$', 'auth.auth.login', name = 'login'),
@@ -61,8 +61,8 @@ urlpatterns = patterns('apps.market_data.views',
 	# Market URLs
 	#
 
-    # Quicklook
-    url(r'^market/(?P<type_id>[0-9]+)/', 'market.market.quicklook', name = 'quicklook'),
+	# Quicklook
+	url(r'^market/(?P<type_id>[0-9]+)/', 'market.market.quicklook', name = 'quicklook'),
 	url(r'^market/tab/ask/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_ask_filter', name = 'quicklook_filter_tab_ask'),
 	url(r'^market/tab/bid/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_bid_filter', name = 'quicklook_filter_tab_bid'),
 	url(r'^market/region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.quicklook_region', name = 'quicklook_region'),
@@ -79,7 +79,7 @@ urlpatterns = patterns('apps.market_data.views',
 	url(r'^market/browse/', 'market.browser.browser', name = 'browser'),
 		
 	# Scanners
-    url(r'^market/scanner/random/', 'market.scanners.random', name = 'scanner_random'),
+	url(r'^market/scanner/random/', 'market.scanners.random', name = 'scanner_random'),
 	url(r'^market/scanner/region/', 'market.scanners.region', name = 'scanner_region'),
 		
 	#
@@ -95,7 +95,7 @@ urlpatterns = patterns('apps.market_data.views',
 #
 
 urlpatterns += patterns('',		
-    # Admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+	# Admin documentation:
+	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	url(r'^admin/', include(admin.site.urls)),
 )
