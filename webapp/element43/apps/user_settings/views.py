@@ -134,7 +134,7 @@ def api_character(request, api_id, api_verification_code):
         return HttpResponseRedirect(reverse('manage_api_keys'))
             
     # Now check the access mask
-    min_access_mask = 6361219
+    min_access_mask = 8
     
     # Do a simple bitwise operation to determine if we have sufficient rights with this key.
     if not ((min_access_mask & key_info.key.accessMask) == min_access_mask):
