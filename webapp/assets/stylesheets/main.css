@@ -1,196 +1,299 @@
-@import url("http://fonts.googleapis.com/css?family=Orbitron:500");
 /*
  * Main CSS file for element43
  */
+@import url('http://fonts.googleapis.com/css?family=Orbitron:500');
+/* line 38, main.scss */
 h1, h2, h3 {
   color: #6ea8e5;
   font-weight: bold;
   text-transform: uppercase;
-  margin-bottom: 1em; }
+  margin-bottom: 1em;
+}
 
+/* line 42, main.scss */
 body {
   color: white;
-  background: url("/static/images/background.jpg") no-repeat scroll center top black; }
+  background: url("/static/images/background.jpg") no-repeat scroll center top black;
+}
 
+/* line 47, main.scss */
 a {
-  color: #6ea8e5; }
+  color: #6ea8e5;
+}
 
+/* line 52, main.scss */
 td a {
   color: #e68a17;
-  text-decoration: none; }
-  td a:hover {
-    background-color: #e68a17;
-    color: white !important;
-    text-shadow: 1px 1px #333333;
-    text-decoration: none; }
-  td a:visited {
-    color: #e68a17;
-    text-decoration: none; }
+  text-decoration: none;
+}
+/* line 56, main.scss */
+td a:hover {
+  background-color: #e68a17;
+  color: white !important;
+  text-shadow: 1px 1px #333333;
+  text-decoration: none;
+}
+/* line 62, main.scss */
+td a:visited {
+  color: #e68a17;
+  text-decoration: none;
+}
 
+/* line 69, main.scss */
 footer {
-  text-align: center; }
+  text-align: center;
+}
 
+/* line 76, main.scss */
 .table tbody tr:hover td,
 .table tbody tr:hover th {
-  background-color: transparent; }
+  background-color: transparent;
+}
 
+/* line 80, main.scss */
 .table-striped tbody tr:nth-child(odd):hover td {
-  background-color: #444444; }
+  background-color: #444444;
+}
 
+/* line 86, main.scss */
 .text-right {
-  text-align: right !important; }
+  text-align: right !important;
+}
 
+/* line 90, main.scss */
 .text-center {
-  text-align: center !important; }
+  text-align: center !important;
+}
 
+/* line 96, main.scss */
 .typeinfo {
-  margin-top: 1em; }
+  margin-top: 1em;
+}
 
+/* line 100, main.scss */
 .price {
   font-family: 'Orbitron', sans-serif;
   text-shadow: 0 0 3px #6ea8e5;
-  font-size: 18px; }
+  font-size: 18px;
+}
 
+/* line 108, main.scss */
 .autocomplete-w1 {
   background-color: #2f2f2f;
   position: absolute;
   top: 0px;
   left: 0px;
-  margin: 6px 0 0 6px; }
+  margin: 6px 0 0 6px;
+}
 
+/* line 109, main.scss */
 .autocomplete {
   border: 1px solid #333333;
   background: #2f2f2f;
   cursor: default;
   text-align: left;
-  overflow: auto; }
+  overflow: auto;
+}
 
+/* line 110, main.scss */
 .autocomplete .selected {
-  background: #444444; }
+  background: #444444;
+}
 
+/* line 111, main.scss */
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
+/* line 112, main.scss */
 .autocomplete strong {
   font-weight: normal;
-  color: #6ea8e5; }
+  color: #6ea8e5;
+}
 
+/* line 116, main.scss */
 .navbar-top .container {
-  width: 940px; }
+  width: 940px;
+}
 
 @media (min-width: 1200px) {
+  /* line 121, main.scss */
   .navbar-top .container {
-    width: 1170px; } }
+    width: 1170px;
+  }
+}
+/* line 126, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
-  padding: 10px; }
+  padding: 10px;
+}
 
+/* line 130, main.scss */
 .content {
   padding: 10px;
-  background: #2f2f2f; }
+  background: #2f2f2f;
+}
 
+/* line 135, main.scss */
 .navbar {
   padding: 15px;
   background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid #313F41; }
+  border-bottom: 1px solid #313F41;
+}
 
+/* line 141, main.scss */
 .navbar-inner {
-  background: transparent; }
+  background: transparent;
+}
 
+/* line 147, main.scss */
 .scan_done {
-  background: #50c878; }
+  background: #50c878;
+}
 
+/* line 153, main.scss */
 .clock {
   color: #fff;
   margin: 0 auto;
-  padding: 0; }
-  .clock ul {
-    display: inline-block;
-    list-style: none;
-    margin: 0 auto;
-    padding: 0; }
-  .clock ul li {
-    display: inline;
-    text-shadow: 0 0 3px #6ea8e5;
-    padding: 0; }
+  padding: 0;
+}
+/* line 158, main.scss */
+.clock ul {
+  display: inline-block;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+/* line 165, main.scss */
+.clock ul li {
+  display: inline;
+  text-shadow: 0 0 3px #6ea8e5;
+  padding: 0;
+}
 
+/* line 172, main.scss */
 #date {
   display: inline-block;
-  text-shadow: 0 0 2px #6ea8e5; }
+  text-shadow: 0 0 2px #6ea8e5;
+}
 
+/* line 177, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
   -webkit-animation: clktrans 1s ease infinite;
-  padding: 0; }
+  padding: 0;
+}
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
+  /* line 188, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #6ea8e5; }
+    text-shadow: 0 0 20px #6ea8e5;
+  }
 
+  /* line 189, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none; }
+    text-shadow: none;
+  }
 
+  /* line 190, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #6ea8e5; } }
+    text-shadow: 0 0 20px #6ea8e5;
+  }
+}
 
 @-moz-keyframes clktrans {
+  /* line 195, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #6ea8e5; }
+    text-shadow: 0 0 20px #6ea8e5;
+  }
 
+  /* line 196, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none; }
+    text-shadow: none;
+  }
 
+  /* line 197, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #6ea8e5; } }
+    text-shadow: 0 0 20px #6ea8e5;
+  }
+}
 
+/* line 203, main.scss */
 .hero-unit h1 {
-  color: white; }
+  color: white;
+}
 
+/* line 210, main.scss */
 .red {
-  color: red; }
+  color: red;
+}
 
+/* line 214, main.scss */
 .green {
-  color: #50c878; }
+  color: #50c878;
+}
 
+/* line 220, main.scss */
 .sec10 {
-  color: #2FEFEF; }
+  color: #2FEFEF;
+}
 
+/* line 224, main.scss */
 .sec9 {
-  color: #48F0C0; }
+  color: #48F0C0;
+}
 
+/* line 228, main.scss */
 .sec8 {
-  color: #00EF47; }
+  color: #00EF47;
+}
 
+/* line 232, main.scss */
 .sec7 {
-  color: #00F000; }
+  color: #00F000;
+}
 
+/* line 236, main.scss */
 .sec6 {
-  color: #8FEF2F; }
+  color: #8FEF2F;
+}
 
+/* line 240, main.scss */
 .sec5 {
-  color: #EFEF00; }
+  color: #EFEF00;
+}
 
+/* line 244, main.scss */
 .sec4 {
-  color: #D77700; }
+  color: #D77700;
+}
 
+/* line 248, main.scss */
 .sec3 {
-  color: #F06000; }
+  color: #F06000;
+}
 
+/* line 252, main.scss */
 .sec2 {
-  color: #F04800; }
+  color: #F04800;
+}
 
+/* line 256, main.scss */
 .sec1 {
-  color: #D73000; }
+  color: #D73000;
+}
 
+/* line 260, main.scss */
 .sec0 {
-  color: #F00000; }
+  color: #F00000;
+}
