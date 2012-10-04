@@ -15,7 +15,7 @@
     .row-fluid
       .span2
         %a{'href':'{% url quicklook type_id=type.id %}'}
-          %img.typeimage{'src':format('http://image.eveonline.com/type/{{type.id}}_64.png'), 'alt':'type image', 'width':'64px', 'height':'64px'}
+          %img.typeimage{'src':format('{{ IMAGE_SERVER }}/type/{{ type.id }}_64.png'), 'alt':'type image', 'width':'64px', 'height':'64px'}
       .span10
         %p
           = type.description|striptags
