@@ -41,24 +41,6 @@ body {
     background: url("/static/images/background.jpg") no-repeat scroll center top $background;
 }
 
-td {
-    a {
-        color: $orange;
-        text-decoration: none;
-
-        &:hover {
-            background-color: $orange;
-            color: $white !important;
-            text-shadow: 1px 1px $grey;
-            text-decoration: none;
-        }
-        &:visited {
-            color: $orange;
-            text-decoration: none;
-        }
-    }
-}
-
 footer {
     text-align: center;
 }

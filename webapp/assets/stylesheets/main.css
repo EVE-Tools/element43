@@ -13,45 +13,27 @@ body {
   background: url("/static/images/background.jpg") no-repeat scroll center top black;
 }
 
-/* line 45, main.scss */
-td a {
-  color: #e68a17;
-  text-decoration: none;
-}
-/* line 49, main.scss */
-td a:hover {
-  background-color: #e68a17;
-  color: white !important;
-  text-shadow: 1px 1px #333333;
-  text-decoration: none;
-}
-/* line 55, main.scss */
-td a:visited {
-  color: #e68a17;
-  text-decoration: none;
-}
-
-/* line 62, main.scss */
+/* line 44, main.scss */
 footer {
   text-align: center;
 }
 
-/* line 68, main.scss */
+/* line 50, main.scss */
 .text-right {
   text-align: right !important;
 }
 
-/* line 72, main.scss */
+/* line 54, main.scss */
 .text-center {
   text-align: center !important;
 }
 
-/* line 78, main.scss */
+/* line 60, main.scss */
 .typeinfo {
   margin-top: 1em;
 }
 
-/* line 82, main.scss */
+/* line 64, main.scss */
 .price {
   font-family: 'Orbitron', sans-serif;
   color: white;
@@ -59,7 +41,7 @@ footer {
   font-size: 18px;
 }
 
-/* line 91, main.scss */
+/* line 73, main.scss */
 .autocomplete-w1 {
   background-color: #121417;
   position: absolute;
@@ -68,7 +50,7 @@ footer {
   margin: 6px 0 0 6px;
 }
 
-/* line 92, main.scss */
+/* line 74, main.scss */
 .autocomplete {
   border: 1px solid #333333;
   background: #121417;
@@ -77,79 +59,79 @@ footer {
   overflow: auto;
 }
 
-/* line 93, main.scss */
+/* line 75, main.scss */
 .autocomplete .selected {
   background: #444444;
 }
 
-/* line 94, main.scss */
+/* line 76, main.scss */
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden;
 }
 
-/* line 95, main.scss */
+/* line 77, main.scss */
 .autocomplete strong {
   font-weight: normal;
   color: #33b5e5;
 }
 
-/* line 98, main.scss */
+/* line 80, main.scss */
 .navbar-top .container {
   width: 940px;
 }
 
 @media (min-width: 1200px) {
-  /* line 103, main.scss */
+  /* line 85, main.scss */
   .navbar-top .container {
     width: 1170px;
   }
 }
-/* line 108, main.scss */
+/* line 90, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 112, main.scss */
+/* line 94, main.scss */
 .content {
   background-color: #121417;
   padding: 10px;
 }
 
-/* line 119, main.scss */
+/* line 101, main.scss */
 .scan_done {
   background: #50c878;
 }
 
-/* line 125, main.scss */
+/* line 107, main.scss */
 .clock {
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 130, main.scss */
+/* line 112, main.scss */
 .clock ul {
   display: inline-block;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 137, main.scss */
+/* line 119, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 3px #33b5e5;
   padding: 0;
 }
 
-/* line 144, main.scss */
+/* line 126, main.scss */
 #date {
   display: inline-block;
   text-shadow: 0 0 2px #33b5e5;
 }
 
-/* line 149, main.scss */
+/* line 131, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -159,19 +141,19 @@ footer {
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 160, main.scss */
+  /* line 142, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 
-  /* line 161, main.scss */
+  /* line 143, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 162, main.scss */
+  /* line 144, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
@@ -179,86 +161,86 @@ footer {
 }
 
 @-moz-keyframes clktrans {
-  /* line 167, main.scss */
+  /* line 149, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 
-  /* line 168, main.scss */
+  /* line 150, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 169, main.scss */
+  /* line 151, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 }
 
-/* line 174, main.scss */
+/* line 156, main.scss */
 .red {
   color: red;
 }
 
-/* line 178, main.scss */
+/* line 160, main.scss */
 .green {
   color: #50c878;
 }
 
-/* line 184, main.scss */
+/* line 166, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 188, main.scss */
+/* line 170, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 192, main.scss */
+/* line 174, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 196, main.scss */
+/* line 178, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 200, main.scss */
+/* line 182, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 204, main.scss */
+/* line 186, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 208, main.scss */
+/* line 190, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 212, main.scss */
+/* line 194, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 216, main.scss */
+/* line 198, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 220, main.scss */
+/* line 202, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 224, main.scss */
+/* line 206, main.scss */
 .sec0 {
   color: #F00000;
 }
