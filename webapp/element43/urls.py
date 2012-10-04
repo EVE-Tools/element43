@@ -88,15 +88,12 @@ urlpatterns = patterns('apps.market_data.views',
 		
 	# Station ranking
 	url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
-	
-	#
-	# Manufacturing URLs
-	#
-	url(r'^manufacturing/calculator/$', 'apps.manufacturing.views.calculator.select_blueprint', name='manufacturing_select_blueprint'),
-	url(r'^manufacturing/calculator/(?P<blueprint_type_id>[0-9]+)/$', 'apps.manufacturing.views.calculator.calculator', name='manufacturing_calculator'),
-	url(r'^manufacturing/blueprint_search/$', 'apps.manufacturing.views.base.blueprint_search', name="manufacturing_blueprint_search"),
 )
-		
+
+urlpatterns += patterns('',
+	url(r'^manufacturing/', include('apps.manufacturing.urls')),
+)
+
 #
 # Administration views
 #
