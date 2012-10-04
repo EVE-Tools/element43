@@ -1,4 +1,5 @@
 # Template and context-related imports
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -136,7 +137,7 @@ def search(request):
     if len(types) == 1:
         type_id = str(types[0].id)
         print type_id
-        return HttpResponseRedirect('/market/' + type_id)
+        return HttpResponseRedirect(reverse('quicklook', kwargs = {'type_id':type_id}))
             
     # Create Context
     rcontext = RequestContext(request, {'types':types})     

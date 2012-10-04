@@ -19,7 +19,6 @@ from django.utils import simplejson
 # Parsing
 import ast
 import time
-import datetime
 
 # Util
 from datetime import datetime, timedelta
@@ -37,40 +36,40 @@ import numpy as np
 from apps.market_data.util import group_breadcrumbs
 
 def history_json(request, region_id = 10000002, type_id = 34):
-	
-		"""
-		Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
-		"""
-		
-		# Prepare lists
-		ohlc_data = []
-		ohlc_list = []
-		
-		# If we do not have any data for this region, return an empty array
-		try:
-			# Load history and parse data (unsorted)
-			data = ast.literal_eval(History.objects.get(mapregion = region_id, invtype = type_id).history_data)
-		
-			# Convert to Highstocks compatible timestamp first
-			for key, value in data.iteritems():
-				ohlc_data.append([int(time.mktime(datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
-			
-			# Sort by date
-			ohlc_data.sort(key=lambda k: k[0])
-		
-			last_avg = ohlc_data[0][1][3]
-		
-			for data_point in ohlc_data:
-				# Format the list: [timestamp, open(last_average), high, low, close(this day's avg), volume]
-				ohlc_list.append([data_point[0], last_avg, data_point[1][2], data_point[1][1], data_point[1][3], data_point[1][4]])
-				last_avg = data_point[1][3]
-		except:
-			ohlc_list = []
-		
-		json = simplejson.dumps(ohlc_list)
-		
-		# Return JSON without using any template
-		return HttpResponse(json, mimetype = 'application/json')
+    
+        """
+        Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
+        """
+        
+        # Prepare lists
+        ohlc_data = []
+        ohlc_list = []
+        
+        # If we do not have any data for this region, return an empty array
+        try:
+            # Load history and parse data (unsorted)
+            data = ast.literal_eval(History.objects.get(mapregion = region_id, invtype = type_id).history_data)
+        
+            # Convert to Highstocks compatible timestamp first
+            for key, value in data.iteritems():
+                ohlc_data.append([int(time.mktime(datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
+            
+            # Sort by date
+            ohlc_data.sort(key=lambda k: k[0])
+        
+            last_avg = ohlc_data[0][1][3]
+        
+            for data_point in ohlc_data:
+                # Format the list: [timestamp, open(last_average), high, low, close(this day's avg), volume]
+                ohlc_list.append([data_point[0], last_avg, data_point[1][2], data_point[1][1], data_point[1][3], data_point[1][4]])
+                last_avg = data_point[1][3]
+        except:
+            ohlc_list = []
+        
+        json = simplejson.dumps(ohlc_list)
+        
+        # Return JSON without using any template
+        return HttpResponse(json, mimetype = 'application/json')
 
 def quicklook_region(request, region_id = 10000002, type_id = 34):
     """
@@ -165,7 +164,7 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
 
 def quicklook(request, type_id = 34):
-		
+        
     """
     Generates a market overview for a certain type. Defaults to tritanium.
     """
@@ -255,39 +254,39 @@ def quicklook(request, type_id = 34):
     rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook.haml', rcontext)
-	
+    
 def quicklook_ask_filter(request, type_id = 34, min_sec = 0, max_age = 8):
-	"""
-	Returns quicklook partial for filtering
-	"""
-	
-	min_sec = float(min_sec) / 10
-	if min_sec == 0:
-		min_sec = -10
-	
-	filter_time = datetime.now() - timedelta(hours = int(max_age))
-	
+    """
+    Returns quicklook partial for filtering
+    """
+    
+    min_sec = float(min_sec) / 10
+    if min_sec == 0:
+        min_sec = -10
+    
+    filter_time = datetime.now() - timedelta(hours = int(max_age))
+    
     # Fetch all sell orders from DB
-	sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('price')[:50]
-	
-	rcontext = RequestContext(request, {'sell_orders':sell_orders})
-	
-	return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
-	
+    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('price')[:50]
+    
+    rcontext = RequestContext(request, {'sell_orders':sell_orders})
+    
+    return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
+    
 def quicklook_bid_filter(request, type_id = 34, min_sec = 0, max_age = 8):
-	"""
-	Returns quicklook partial for filtering
-	"""
-	
-	min_sec = float(min_sec) / 10
-	if min_sec == 0:
-		min_sec = -10
-	
-	filter_time = datetime.now() - timedelta(hours = int(max_age))
-	
+    """
+    Returns quicklook partial for filtering
+    """
+    
+    min_sec = float(min_sec) / 10
+    if min_sec == 0:
+        min_sec = -10
+    
+    filter_time = datetime.now() - timedelta(hours = int(max_age))
+    
     # Fetch all buy orders from DB
-	buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('-price')[:50]
-	
-	rcontext = RequestContext(request, {'buy_orders':buy_orders})
-	
-	return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)
+    buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('-price')[:50]
+    
+    rcontext = RequestContext(request, {'buy_orders':buy_orders})
+    
+    return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)
