@@ -136,6 +136,11 @@ def api_character(request, api_id, api_verification_code):
     # Now check the access mask
     min_access_mask = 8
     
+    # attributes & implants
+    implant = {}
+    i_stats = {}
+    attributes = ['memory', 'intelligence', 'perception', 'willpower', 'charisma']
+    
     # Do a simple bitwise operation to determine if we have sufficient rights with this key.
     if not ((min_access_mask & key_info.key.accessMask) == min_access_mask):
         # Message and redirect
@@ -171,37 +176,32 @@ def api_character(request, api_id, api_verification_code):
                 # Add character
                 me = auth.character(char.characterID)
                 sheet = me.CharacterSheet()
+                i_stats['name'] = ""
+                i_stats['value'] = 0
+                for attr in attributes:
+                    implant[attr] = i_stats
+                    
                 # have to check because if you don't have an implant in you get nothing back
                 try:
-                    i_memory_name = sheet.attributeEnhancers.memoryBonus.augmentatorName, 
-                    i_memory_bonus = int(sheet.attributeEnhancers.memoryBonus.augmentatorValue)
+                    implant['memory'] = {'name':sheet.attributeEnhancers.memoryBonus.augmentatorName, 'value':sheet.attributeEnhancers.memoryBonus.augmentatorValue}
                 except:
-                    i_memory_name = ""
-                    i_memory_bonus = 0
+                    pass
                 try:
-                    i_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName
-                    i_perception_bonus = int(sheet.attributeEnhancers.perceptionBonus.augmentatorValue)
+                    implant['perception'] = {'name':sheet.attributeEnhancers.perceptionBonus.augmentatorName, 'value':sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
                 except:
-                    i_perception_name = ""
-                    i_perception_bonus = 0
+                    pass
                 try:
-                    i_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName
-                    i_intelligence_bonus = int(sheet.attributeEnhancers.intelligenceBonus.augmentatorValue)
+                    implant['intelligence'] = {'name':sheet.attributeEnhancers.intelligenceBonus.augmentatorName, 'value':sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
                 except:
-                    i_intelligence_name = ""
-                    i_intelligence_bonus = 0
+                    pass
                 try:
-                    i_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName
-                    i_willpower_bonus = int(sheet.attributeEnhancers.willpowerBonus.augmentatorValue)
+                    implant['willpower'] = {'name':sheet.attributeEnhancers.willpowerBonus.augmentatorName, 'value':sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
                 except:
-                    i_willpower_name = ""
-                    i_willpower_bonus = 0
+                    pass
                 try:
-                    i_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName
-                    i_charisma_bonus = int(sheet.attributeEnhancers.charismaBonus.augmentatorValue)
+                    implant['charisma'] = {'name':sheet.attributeEnhancers.charismaBonus.augmentatorName, 'value':sheet.attributeEnhancers.charismaBonus.augmentatorValue}
                 except:
-                    i_charisma_name = ""
-                    i_charisma_bonus = 0
+                    pass
                 try:
                     a_name = sheet.allianceName
                     a_id = sheet_allianceID
@@ -225,16 +225,16 @@ def api_character(request, api_id, api_verification_code):
                                     clone_name = sheet.cloneName,
                                     clone_skill_points = sheet.cloneSkillPoints, 
                                     balance = sheet.balance,
-                                    implant_memory_name = i_memory_name, 
-                                    implant_memory_bonus = i_memory_bonus,
-                                    implant_perception_name = i_perception_name,
-                                    implant_perception_bonus = i_perception_bonus,
-                                    implant_intelligence_name = i_intelligence_name,
-                                    implant_intelligence_bonus = i_intelligence_bonus,
-                                    implant_willpower_name = i_willpower_name,
-                                    implant_willpower_bonus = i_willpower_bonus,
-                                    implant_charisma_name = i_charisma_name,
-                                    implant_charisma_bonus = i_charisma_bonus)
+                                    implant_memory_name = implant['memory']['name'], 
+                                    implant_memory_bonus = implant['memory']['value'],
+                                    implant_perception_name = implant['perception']['name'],
+                                    implant_perception_bonus = implant['perception']['value'],
+                                    implant_intelligence_name = implant['intelligence']['name'],
+                                    implant_intelligence_bonus = implant['intelligence']['value'],
+                                    implant_willpower_name = implant['willpower']['name'],
+                                    implant_willpower_bonus = implant['willpower']['value'],
+                                    implant_charisma_name = implant['charisma']['name'],
+                                    implant_charisma_bonus = implant['charisma']['value'])
                 new_char.save()
                 
                 for skill in sheet.skills:
