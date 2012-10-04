@@ -3,18 +3,18 @@
  */
 
 // General Variables
-$background:		#000000;
-$background-grey:	#2F2F2F;
-$blue:			 	#019CFF;
-$contrast-blue:	 	#6EA8E5;
-$white:			 	#FFFFFF;
-$red:				#FF0000;
-$green:				#50C878;
-$orange:		 	#E68A17;
-$grey:				#333333;
-$light-grey:		#444444;
+$background:        #000000;
+$background-grey:   #121417;
+$blue:              #019CFF;
+$contrast-blue:     #33b5e5;
+$white:             #FFFFFF;
+$red:               #FF0000;
+$green:             #50C878;
+$orange:            #E68A17;
+$grey:              #333333;
+$light-grey:        #444444;
 
-$padding:			10px;
+$padding:           10px;
 
 // Orbitron Font
 @import url('http://fonts.googleapis.com/css?family=Orbitron:500');
@@ -22,85 +22,68 @@ $padding:			10px;
 // Mixins
 
 @mixin panel {
-	background-color: rgba(255, 255, 255, 0.2); 
-	padding: $padding;
+    background-color: rgba(255, 255, 255, 0.2); 
+    padding: $padding;
 }
 
 @mixin heading {
-	color: $contrast-blue;
-	font-weight: bold;
-	text-transform: uppercase;
-	margin-bottom: 1em;
+    text-transform: uppercase;
+    margin-bottom: 1em;
 }
 
 // HTML Elements
 
 h1, h2, h3 {
-	@include heading;
+    @include heading;
 }
 
 body {
-	color: $white;
-	background: url("/static/images/background.jpg") no-repeat scroll center top $background;
-}
-
-a {
-	color: $contrast-blue;
+    background: url("/static/images/background.jpg") no-repeat scroll center top $background;
 }
 
 td {
-	a {
-		color: $orange;
-		text-decoration: none;
+    a {
+        color: $orange;
+        text-decoration: none;
 
-		&:hover {
-			background-color: $orange;
-			color: $white !important;
-			text-shadow: 1px 1px $grey;
-			text-decoration: none;
-		}
-		&:visited {
-			color: $orange;
-			text-decoration: none;
-		}
-	}
+        &:hover {
+            background-color: $orange;
+            color: $white !important;
+            text-shadow: 1px 1px $grey;
+            text-decoration: none;
+        }
+        &:visited {
+            color: $orange;
+            text-decoration: none;
+        }
+    }
 }
 
 footer {
-	text-align: center;
-}
-
-// Table highlight fix
-
-.table tbody tr:hover td,
-.table tbody tr:hover th {
-  background-color: transparent;
-}
-
-.table-striped tbody tr:nth-child(odd):hover td {
-   background-color: rgb(68, 68, 68);
+    text-align: center;
 }
 
 // Classes
 
 .text-right {
-	text-align: right !important;
+    text-align: right !important;
 }
 
 .text-center {
-	text-align: center !important;
+    text-align: center !important;
 }
 
 // Market Browser
 
 .typeinfo {
-	margin-top: 1em;
+    margin-top: 1em;
 }
 
 .price {
-	font-family: 'Orbitron', sans-serif;
-	text-shadow: 0 0 3px $contrast-blue;
-	font-size: 18px;
+    font-family: 'Orbitron', sans-serif;
+    color: $white;
+    text-shadow: 0 0 3px $contrast-blue;
+    font-size: 18px;
 }
 
 // Search field
@@ -112,73 +95,62 @@ footer {
 .autocomplete strong { font-weight:normal; color: $contrast-blue; }
 
 // Navbar container fix
-
 .navbar-top .container {
-	width: 940px;
+    width: 940px;
 }
 
 @media (min-width: 1200px) {
-	.navbar-top .container {
-	width: 1170px;
-	}
+    .navbar-top .container {
+    width: 1170px;
+    }
 }
 
 .panel-wrapper {
-	@include panel;
+    @include panel;
 }
 
 .content {
-	padding: $padding;
-	background: $background-grey;
-}
-
-.navbar {
-	padding: $padding * 1.5;
-	background: rgba(0, 0, 0, 0.4);
-	border-bottom: 1px solid #313F41;
-}
-
-.navbar-inner {
-	background: transparent;
+    background-color: $background-grey;
+    padding: $padding;
 }
 
 // Rarely Used Clases
 
 .scan_done {
-	background: $green;
+    background: $green;
 }
 
 // Fancy clock
 
 .clock {
-	color: #fff;
-	margin: 0 auto;
-	padding: 0;
-	
-	ul {
-		display: inline-block;
-		list-style:none;
-		margin:0 auto;
-		padding:0;
-	}
+    color: #fff;
+    margin: 0 auto;
+    padding: 0;
+    
+    ul {
+        display: inline-block;
+        list-style:none;
+        margin:0 auto;
+        padding:0;
+    }
 
-	ul li {
-		display: inline;
-		text-shadow: 0 0 3px $contrast-blue;
-		padding: 0;
-	}
+    ul li {
+        display: inline;
+        text-shadow: 0 0 3px $contrast-blue;
+        padding: 0;
+    }
 }
 
 #date {
-	display: inline-block;
-	text-shadow: 0 0 2px $contrast-blue;
+    display: inline-block;
+    text-shadow: 0 0 2px $contrast-blue;
 }
 
 #point {
-	position:relative;
-	-moz-animation:clktrans 1s ease infinite;
-	-webkit-animation:clktrans 1s ease infinite;
-	padding: 0;
+    position:relative;
+    -moz-animation:clktrans 1s ease infinite;
+    -webkit-animation:clktrans 1s ease infinite;
+    padding: 0;
 }
 
 
@@ -187,76 +159,68 @@ footer {
 {
 0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
 }
 
 @-moz-keyframes clktrans 
 {
 0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }	
-}
-
-// Hero font color fix
-
-.hero-unit {
-	h1 {
-		color: white;
-	}
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
 }
 
 // Color classes
 
 .red {
-	color: $red;
+    color: $red;
 }
 
 .green {
-	color: $green;
+    color: $green;
 }
 
 // System Security Colors
 
 .sec10 {
-	color: #2FEFEF;
+    color: #2FEFEF;
 }
 
 .sec9 {
-	color: #48F0C0;
+    color: #48F0C0;
 }
 
 .sec8 {
-	color: #00EF47;
+    color: #00EF47;
 }
 
 .sec7 {
-	color: #00F000;
+    color: #00F000;
 }
 
 .sec6 {
-	color: #8FEF2F;
+    color: #8FEF2F;
 }
 
 .sec5 {
-	color: #EFEF00;
+    color: #EFEF00;
 }
 
 .sec4 {
-	color: #D77700;
+    color: #D77700;
 }
 
 .sec3 {
-	color: #F06000;
+    color: #F06000;
 }
 
 .sec2 {
-	color: #F04800;
+    color: #F04800;
 }
 
 .sec1 {
-	color: #D73000;
+    color: #D73000;
 }
 
 .sec0 {
-	color: #F00000;
+    color: #F00000;
 }

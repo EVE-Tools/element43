@@ -64,9 +64,9 @@ $(document).ready(function () {
      */
 
     Highcharts.theme = {
-        colors: ["#019CFF", "#6EA8E5", "#FFFFFF", "#50C878", "#FF0000", "#E68A17", "#333333"],
+        colors: ["#33b5e5", "#50C878", "#FF0000", "#E68A17", "#333333"],
         chart: {
-            backgroundColor: "#2F2F2F",
+            backgroundColor: "#121417",
             borderWidth: 0,
             borderRadius: 15,
             plotBackgroundColor: null,

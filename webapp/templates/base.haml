@@ -7,9 +7,9 @@
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/jquery-ui-1.8.22.custom.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/ui.dynatree.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/darkstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap-responsive.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
-    %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
+      %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
       element43
@@ -19,7 +19,9 @@
         .navbar-inner
           .container
             %a.brand{'href':'{% url home %}'}
-              %img{'src':'/static/images/logo.png','alt':'element43','width':'100px','height':'20px'}
+              %img{'src':'/static/images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
+              %span.label.label-important{'style':'float:left;'}
+                BETA
             %ul.nav
               %li.dropdown
                 %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
@@ -59,26 +61,25 @@
                   %ul.dropdown-menu
                     %li
                       %a{'href':'{% url home %}'}
-                        %i.icon-home
+                        %i.icon-white.icon-home
                         Dashboard
                     %li
                       %a{'href':'{% url settings %}'}
-                        %i.icon-wrench
+                        %i.icon-white.icon-wrench
                         Settings
                     %li
                       %a{'href':'{% url logout %}'}
-                        %i.icon-off
+                        %i.icon-white.icon-off
                         Logout
               %form.navbar-search{'id':'search','method':'post','action':'{% url search %}'}
                 - csrf_token
                 %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'name':'query'}
     .container
-      .panel-wrapper
-        .content.clearfix
+      .panel-wrapper.clearfix
+        .content
           - include '_base_messages.haml'
           - block content
-    %hr
-    .container
+    .container{'style':'padding-top: 2em;'}
       .row-fluid
         .span12
           %footer
