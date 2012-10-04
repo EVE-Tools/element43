@@ -202,6 +202,12 @@ def api_character(request, api_id, api_verification_code):
                 except:
                     i_charisma_name = ""
                     i_charisma_bonus = 0
+                try:
+                    a_name = sheet.allianceName
+                    a_id = sheet_allianceID
+                except:
+                    a_name = ""
+                    a_id = 0
                     
                 new_char = Character(id = char.characterID, 
                                     name = char.name, 
@@ -209,8 +215,8 @@ def api_character(request, api_id, api_verification_code):
                                     apikey = key,
                                     corp_name = sheet.corporationName, 
                                     corp_id = sheet.corporationID, 
-                                    alliance_name = str(sheet.allianceName), 
-                                    alliance_id = sheet.allianceID,
+                                    alliance_name = a_name, 
+                                    alliance_id = a_id,
                                     dob = "2012-10-04 00:00:00", 
                                     race = sheet.race, 
                                     bloodline = sheet.bloodLine, 
