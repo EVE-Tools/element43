@@ -171,15 +171,32 @@ def api_character(request, api_id, api_verification_code):
                 # Add character
                 me = auth.character(char.characterID)
                 sheet = me.CharacterSheet()
-                new_char = Character(id = char.characterID, name = char.name, user = request.user, apikey = key,
-                                     corp_name = sheet.corporationName, corp_id = sheet.corporationID, alliance_name = str(sheet.allianceName), alliance_id = sheet.allianceID,
-                                     dob = "2012-10-04 00:00:00", race = sheet.race, bloodline = sheet.bloodLine, ancestry = sheet.ancestry, gender = sheet.gender, clone_name = sheet.cloneName,
-                                     clone_skill_points = sheet.cloneSkillPoints, balance = sheet.balance,
-                                     implant_memory_name = sheet.attributeEnhancers.memoryBonus.augmentatorName, implant_memory_bonus = sheet.attributeEnhancers.memoryBonus.augmentatorValue,
-                                     implant_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName, implant_perception_bonus = sheet.attributeEnhancers.perceptionBonus.augmentatorValue,
-                                     implant_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName, implant_intelligence_bonus = sheet.attributeEnhancers.intelligenceBonus.augmentatorValue,
-                                     implant_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName, implant_willpower_bonus = sheet.attributeEnhancers.willpowerBonus.augmentatorValue,
-                                     implant_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName, implant_charisma_bonus = sheet.attributeEnhancers.charismaBonus.augmentatorValue)
+                new_char = Character(id = char.characterID, 
+                                    name = char.name, 
+                                    user = request.user, 
+                                    apikey = key,
+                                    corp_name = sheet.corporationName, 
+                                    corp_id = sheet.corporationID, 
+                                    alliance_name = str(sheet.allianceName), 
+                                    alliance_id = sheet.allianceID,
+                                    dob = "2012-10-04 00:00:00", 
+                                    race = sheet.race, 
+                                    bloodline = sheet.bloodLine, 
+                                    ancestry = sheet.ancestry, 
+                                    gender = sheet.gender, 
+                                    clone_name = sheet.cloneName,
+                                    clone_skill_points = sheet.cloneSkillPoints, 
+                                    balance = sheet.balance,
+                                    implant_memory_name = sheet.attributeEnhancers.memoryBonus.augmentatorName, 
+                                    implant_memory_bonus = sheet.attributeEnhancers.memoryBonus.augmentatorValue,
+                                    implant_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName, 
+                                    implant_perception_bonus = sheet.attributeEnhancers.perceptionBonus.augmentatorValue,
+                                    implant_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName, 
+                                    implant_intelligence_bonus = sheet.attributeEnhancers.intelligenceBonus.augmentatorValue,
+                                    implant_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName, 
+                                    implant_willpower_bonus = sheet.attributeEnhancers.willpowerBonus.augmentatorValue,
+                                    implant_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName, 
+                                    implant_charisma_bonus = sheet.attributeEnhancers.charismaBonus.augmentatorValue)
                 new_char.save()
 
                 added_chars = True
