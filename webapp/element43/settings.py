@@ -105,6 +105,12 @@ STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
 COMPRESS_ENABLED = False
 COMPRESS_ROOT = os.path.join(ROOT_DIR, 'assets')
 COMPRESS_OUTPUT_DIR = 'cache'
+COMPRESS_CSS_FILTERS = [
+     'compressor.filters.cssmin.CSSMinFilter'
+]
+COMPRESS_JS_FILTERS = [
+     'compressor.filters.jsmin.JSMinFilter'
+]
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
