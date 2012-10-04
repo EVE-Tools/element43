@@ -93,7 +93,7 @@ def api_key(request):
             # Add success message
             messages.success(request, 'Your key is valid. Please select the characters you want to add.')
             # Redirect home
-            return HttpResponseRedirect(reverse('add_characters', kwargs = {'api_id':form.cleaned_data.get('api_id'),'api_verification_code':form.cleaned_data.get('api_verification_code')})
+            return HttpResponseRedirect(reverse('add_characters', kwargs = {'api_id':form.cleaned_data.get('api_id'), 'api_verification_code':form.cleaned_data.get('api_verification_code')}))
     else:
         form = APIKeyForm()
 
