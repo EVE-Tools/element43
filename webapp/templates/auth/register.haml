@@ -9,7 +9,7 @@
     .alert.alert-error
       %i.icon-white.icon-warning-sign
       = form.non_field_errors
-  %form.form-horizontal.well{'action':'/register/', 'method':'post'}
+  %form.form-horizontal.well{'action':'{% url register %}', 'method':'post'}
     %fieldset
       - csrf_token
       %legend

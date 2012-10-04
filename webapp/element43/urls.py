@@ -50,7 +50,7 @@ urlpatterns = patterns('apps.market_data.views',
     
     # Settings
     url(r'^settings/$', 'settings.profile', name = 'settings'),
-    url(r'^settings/profile/$', 'settings.profile', name = 'settings'),
+    url(r'^settings/profile/$', 'settings.profile', name = 'profile'),
     url(r'^settings/characters/$', 'settings.characters', name = 'manage_characters'),
     url(r'^settings/characters/remove/(?P<char_id>[0-9]+)/$', 'settings.remove_character', name = 'remove_character'),
     url(r'^settings/api/key/$', 'settings.api_key', name = 'manage_api_keys'),

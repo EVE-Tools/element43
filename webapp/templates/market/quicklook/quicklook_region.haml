@@ -184,7 +184,7 @@
             %td
               // If you are using CCP's image server make sure to reference the _32 image size since they don't provide a _16
               %img{'src':'{{IMAGE_SERVER}}/Type/{{material.material_type__id}}_16.png', 'width':'16', 'height':'16', 'alt':'type image'}
-                %a{'href':'/market/{{material.material_type__id}}'}
+                %a{'href':'{% url quicklook type_id=material.material_type__id %}'}
                   {{material.material_type__name}}
             %td.text-right
               = material.quantity|intcomma

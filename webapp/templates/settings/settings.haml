@@ -9,20 +9,20 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li.active
-          %a{'href':'/settings/profile/'}
+          %a{'href':'{% url settings %}'}
             Modify Profile
         %li
-          %a{'href':'/settings/characters/'}
+          %a{'href':'{% url manage_characters %}'}
             Manage Characters  
         %li
-          %a{'href':'/settings/api/key/'}
+          %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
     .span9.well
       - if form.non_field_errors
         .alert.alert-error
           %i.icon-white.icon-warning-sign
           = form.non_field_errors
-      %form.form-horizontal{'action':'/settings/', 'method':'post'}
+      %form.form-horizontal{'action':'{% url settings %}', 'method':'post'}
         %fieldset
           - csrf_token
           %legend

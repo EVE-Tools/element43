@@ -18,7 +18,7 @@
       .navbar.navbar-top
         .navbar-inner
           .container
-            %a.brand{'href':'/'}
+            %a.brand{'href':'{% url home %}'}
               %img{'src':'/static/images/logo.png','alt':'element43'}
             %ul.nav
               %li.dropdown
@@ -27,27 +27,27 @@
                   %b.caret
                 %ul.dropdown-menu
                   %li
-                    %a{'href':'/market/browse/'} Browse Market
+                    %a{'href':'{% url browser %}'} Browse Market
                   - if request|is_igb
                     %li
-                      %a{'href':'/market/scanner/random/'} Market Scanner - Random
+                      %a{'href':'{% url scanner_random %}'} Market Scanner - Random
                     - if request|igb_is_trusted
                       %li
-                        %a{'href':'/market/scanner/region/'} Market Scanner - Region
+                        %a{'href':'{% url scanner_region %}'} Market Scanner - Region
               %li.dropdown
                 %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
                   Trading
                   %b.caret
                 %ul.dropdown-menu
                   %li
-                    %a{'href':'/trading/station/ranking/'} Top Stations
+                    %a{'href':'{% url station_ranking %}'} Top Stations
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
-                  %a{'href':'/login/?next={{request.path}}'}
+                  %a{'href':'{% url login %}?next={{request.path}}'}
                     Login
                 %li
-                  %a{'href':'/register/'}
+                  %a{'href':'{% url registration %}'}
                     Register
               - else
                 %li.dropdown
@@ -56,18 +56,18 @@
                     %b.caret
                   %ul.dropdown-menu
                     %li
-                      %a{'href':'/'}
+                      %a{'href':'{% url home %}'}
                         %i.icon-home
                         Dashboard
                     %li
-                      %a{'href':'/settings/'}
+                      %a{'href':'{% url settings %}'}
                         %i.icon-wrench
                         Settings
                     %li
-                      %a{'href':'/logout/'}
+                      %a{'href':'{% url logout %}'}
                         %i.icon-off
                         Logout
-              %form.navbar-search{'id':'search','method':'post','action':'/search/'}
+              %form.navbar-search{'id':'search','method':'post','action':'{% url search %}'}
                 - csrf_token
                 %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'name':'query'}
     .container

@@ -9,13 +9,13 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li
-          %a{'href':'/settings/profile/'}
+          %a{'href':'{% url settings %}'}
             Modify Profile
         %li.active
-          %a{'href':'/settings/characters/'}
+          %a{'href':'{% url manage_characters %}'}
             Manage Characters  
         %li
-          %a{'href':'/settings/api/key/'}
+          %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
     .span9
       %table.table.table-striped
@@ -27,7 +27,7 @@
               %td
                 = char.name
               %td.text-right
-                %a{'href':'/settings/characters/remove/{{char.id}}/'}
+                %a{'href':'{% url remove_character char_id=char.id %}/'}
                   .btn.btn-danger
                     Remove
 

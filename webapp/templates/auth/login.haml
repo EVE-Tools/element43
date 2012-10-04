@@ -5,7 +5,7 @@
 - block content
   %h1
     Login
-  %form.form-horizontal.well{'action':'/login/?next={{request.GET.next}}', 'method':'post'}
+  %form.form-horizontal.well{'action':'{% url login %}?next={{request.GET.next}}', 'method':'post'}
     %fieldset
       - csrf_token
       %legend
@@ -31,4 +31,4 @@
           %button.btn.btn-primary{'type':'submit'}
             Login
       %hr
-    %a{'href':'/register/reset_password/'} Forgot your password?
+    %a{'href':'{% url reset_password %}'} Forgot your password?

@@ -1,10 +1,10 @@
 %ul.breadcrumb
   %li
-    %a{'href':'/market/browse/'}
+    %a{'href':'{% url browser %}'}
       Market
   - for group in breadcrumbs
     %li
       %span.divider >
-      %a{'href':'/market/browse/{{group.id}}/'}
+      %a{'href':'{% url browser_preload group=group.id %}'}
         = group.name
   

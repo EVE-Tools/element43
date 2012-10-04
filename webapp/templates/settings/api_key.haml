@@ -10,13 +10,13 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li
-          %a{'href':'/settings/profile/'}
+          %a{'href':'{% url settings %}'}
             Modify Profile
         %li
-          %a{'href':'/settings/characters/'}
+          %a{'href':'{% url manage_characters %}'}
             Manage Characters  
         %li.active
-          %a{'href':'/settings/api/key/'}
+          %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
     .span9
       %h3
@@ -44,17 +44,17 @@
               %td
                 = key.vcode
               %td.text-right
-                %a{'href':'/settings/api/character/{{key.keyid}}/{{key.vcode}}/'}
+                %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
                   .btn.btn-primary
                     Add Chars
               %td.text-right
-                %a{'href':'/settings/api/key/remove/{{key.keyid}}/'}
+                %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
                   .btn.btn-danger
                     Remove
       %hr
       %h3
         Add API Key
-      %form.form-horizontal.well{'action':'/settings/api/key/', 'method':'post'}
+      %form.form-horizontal.well{'action':'{% url manage_api_keys %}', 'method':'post'}
         %fieldset
           - csrf_token
           %legend

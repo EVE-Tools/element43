@@ -8,14 +8,13 @@
   .row-fluid
     .span3
       %ul.nav.nav-tabs.nav-stacked
-        %li
-          %a{'href':'/settings/profile/'}
+          %a{'href':'{% url settings %}'}
             Modify Profile
         %li
-          %a{'href':'/settings/characters/'}
+          %a{'href':'{% url manage_characters %}'}
             Manage Characters  
         %li.active
-          %a{'href':'/settings/api/key/'}
+          %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
     .span9
       %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}
