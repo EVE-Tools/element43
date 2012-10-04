@@ -12,3 +12,4 @@ eve_db
 *.db3
 
 cache
+.pydevproject
