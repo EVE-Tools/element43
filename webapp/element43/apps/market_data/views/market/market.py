@@ -269,7 +269,7 @@ def quicklook_ask_filter(request, type_id = 34, min_sec = 0, max_age = 8):
     # Fetch all sell orders from DB
     sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('price')[:50]
     
-    rcontext = RequestContext(request, {'sell_orders':sell_orders})
+    rcontext = RequestContext(request, {'sell_orders':sell_orders, 'type_id':type_id})
     
     return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
     
@@ -287,6 +287,6 @@ def quicklook_bid_filter(request, type_id = 34, min_sec = 0, max_age = 8):
     # Fetch all buy orders from DB
     buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('-price')[:50]
     
-    rcontext = RequestContext(request, {'buy_orders':buy_orders})
+    rcontext = RequestContext(request, {'buy_orders':buy_orders, 'type_id':type_id})
     
     return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)
