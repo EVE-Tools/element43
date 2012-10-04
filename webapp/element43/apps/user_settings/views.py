@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 # API Models
-from apps.api.models import APIKey, Character
+from apps.api.models import APIKey, Character, CharSkill
 
 # Forms
 from apps.user_settings.forms import ProfileForm, APIKeyForm
@@ -230,6 +230,13 @@ def api_character(request, api_id, api_verification_code):
                                     implant_charisma_name = i_charisma_name,
                                     implant_charisma_bonus = i_charisma_bonus)
                 new_char.save()
+                
+                for skill in sheet.skills:
+                    new_skill = CharSkill(character = new_char,
+                                          skill_id = skill.typeID,
+                                          skillpoints = skill.skillpoints,
+                                          level = skill.level)
+                    new_skill.save()
 
                 added_chars = True
                 
