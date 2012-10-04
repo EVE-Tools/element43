@@ -8,20 +8,30 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Deleting field 'Character.birthday'
+        db.delete_column('api_character', 'birthday')
+
+        # Adding field 'Character.dob'
+        db.add_column('api_character', 'dob',
+                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2012, 10, 4, 0, 0)),
+                      keep_default=False)
+
 
         # Changing field 'Character.cached_until'
         db.alter_column('api_character', 'cached_until', self.gf('django.db.models.fields.DateTimeField')())
 
-        # Changing field 'Character.birthday'
-        db.alter_column('api_character', 'birthday', self.gf('django.db.models.fields.DateTimeField')())
-
     def backwards(self, orm):
+        # Adding field 'Character.birthday'
+        db.add_column('api_character', 'birthday',
+                      self.gf('django.db.models.fields.DateTimeField')(null=True),
+                      keep_default=False)
+
+        # Deleting field 'Character.dob'
+        db.delete_column('api_character', 'dob')
+
 
         # Changing field 'Character.cached_until'
         db.alter_column('api_character', 'cached_until', self.gf('django.db.models.fields.DateTimeField')(null=True))
-
-        # Changing field 'Character.birthday'
-        db.alter_column('api_character', 'birthday', self.gf('django.db.models.fields.DateTimeField')(null=True))
 
     models = {
         'api.apikey': {
@@ -48,13 +58,13 @@ class Migration(SchemaMigration):
             'ancestry': ('django.db.models.fields.TextField', [], {'default': "''"}),
             'apikey': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['api.APIKey']"}),
             'balance': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
-            'birthday': ('django.db.models.fields.DateTimeField', [], {'default': 'time.struct_time(tm_year=2012, tm_mon=10, tm_mday=4, tm_hour=18, tm_min=4, tm_sec=18, tm_wday=3, tm_yday=278, tm_isdst=0)'}),
             'bloodline': ('django.db.models.fields.TextField', [], {'default': "''"}),
-            'cached_until': ('django.db.models.fields.DateTimeField', [], {'default': 'time.struct_time(tm_year=2012, tm_mon=10, tm_mday=4, tm_hour=18, tm_min=4, tm_sec=18, tm_wday=3, tm_yday=278, tm_isdst=0)'}),
+            'cached_until': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 10, 4, 0, 0)'}),
             'clone_name': ('django.db.models.fields.TextField', [], {'default': "''"}),
             'clone_skill_points': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'corp_id': ('django.db.models.fields.BigIntegerField', [], {'default': '0'}),
             'corp_name': ('django.db.models.fields.TextField', [], {'default': "''"}),
+            'dob': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 10, 4, 0, 0)'}),
             'gender': ('django.db.models.fields.TextField', [], {'default': "'Male'"}),
             'id': ('django.db.models.fields.BigIntegerField', [], {'primary_key': 'True'}),
             'implant_charisma_bonus': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),

@@ -1,5 +1,5 @@
 from django.db import models
-import time
+from datetime import datetime
 
 #
 # Character information
@@ -35,7 +35,7 @@ class Character(models.Model):
     user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
     apikey = models.ForeignKey('api.APIKey', help_text='FKey relationship to api key table')
     name = models.TextField(help_text="Name of character")
-    birthday = models.DateTimeField(help_text = "date/time of DoB of character", default = time.gmtime())
+    dob = models.DateTimeField(help_text = "DoB of character", default = datetime.now())
     race = models.TextField(help_text = "Race of character", default = "")
     bloodline = models.TextField(help_text="Bloodline of character", default = "")
     ancestry = models.TextField(help_text="Ancestry of character", default = "")
@@ -57,7 +57,7 @@ class Character(models.Model):
     implant_willpower_bonus = models.PositiveIntegerField(help_text = "willpower bonus", default = 0)
     implant_perception_name = models.TextField(help_text = "name of perception implant", default = "")
     implant_perception_bonus = models.PositiveIntegerField(help_text = "perception bonus", default = 0)
-    cached_until = models.DateTimeField(help_text = "data cached until", default = time.gmtime())
+    cached_until = models.DateTimeField(help_text = "data cached until", default = datetime.now())
     
     class Meta(object):
         verbose_name = "Character"
