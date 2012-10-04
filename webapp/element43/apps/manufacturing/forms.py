@@ -13,19 +13,17 @@ class SelectBlueprintForm(forms.Form):
     
     def clean_blueprint(self):
         blueprint_name = self.cleaned_data['blueprint']
-        exists = InvBlueprintType.objects.filter(blueprint_type__name=blueprint_name).exists()
         
-        if not exists:
-            # Try to find the blueprint before raising an error
-            # Most users will just enter 'merlin' and hit enter.
-            # In thise case we are looking for "merlin blueprint" in the InvType model.
-            blueprint_type = InvType.objects.filter(name__iexact=blueprint_name + " blueprint")
+        if len(blueprint_name) < 3:
+            raise forms.ValidationError("Blueprint name '%s' is too short!" % blueprint_name)
+        
+        # Look if there is at least one blueprint that goes by the name given by the user
+        blueprints = InvBlueprintType.objects.filter(blueprint_type__name__icontains=blueprint_name)
             
-            if blueprint_type.exists():
-                blueprint_name = blueprint_type[0].name
-            else:
-                raise forms.ValidationError("Could not find blueprint '%s'" % blueprint_name)
-        
+        # If there are no items at all in the result then raise an ValidationError
+        if len(blueprints) == 0:
+            raise forms.ValidationError("Could not find blueprint '%s'" % blueprint_name)
+    
         return blueprint_name
         
 class ManufacturingCalculatorForm(forms.Form):

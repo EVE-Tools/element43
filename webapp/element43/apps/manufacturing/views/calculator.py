@@ -14,8 +14,11 @@ from eve_db.models import InvType, InvBlueprintType
 
 def select_blueprint(request):
     """
-    View to select the blueprint.
+    View to search for a blueprint. If only one blueprint is found the user will be 
+    redirected immediately to the calculator. Otherwise he will be shown a list of
+    all found blueprints and has to select the one he wants to produce.
     """
+    
     # When the user selects a new blueprint we better delete the settings he used for
     # his last calculation.
     if request.session.get('form_data'):
@@ -25,13 +28,15 @@ def select_blueprint(request):
         form = SelectBlueprintForm(request.POST)
         
         if form.is_valid():
-            try:
-                blueprint_name = form.cleaned_data['blueprint']
-                blueprint = InvType.objects.get(name=blueprint_name)
-            except InvType.DoesNotExist:
-                raise forms.ValidationError("Could not find blueprint '%s'" % blueprint_name)
-
-            return HttpResponseRedirect(reverse('manufacturing_calculator', kwargs={ 'blueprint_type_id': blueprint.id }))
+            blueprint_name = form.cleaned_data['blueprint']
+            blueprints = InvBlueprintType.objects.filter(blueprint_type__name__icontains=blueprint_name)
+            
+            if len(blueprints) == 1:
+                return HttpResponseRedirect(reverse('manufacturing_calculator', kwargs={ 'blueprint_type_id': blueprints[0].blueprint_type.id }))
+            else:
+                # Multiple possible blueprints. Let the user select the one he would like to use.
+                rcontext = RequestContext(request, { 'blueprints' : blueprints })
+                return render_to_response('manufacturing/forms/blueprint_search.haml', rcontext)
     else:
         form = SelectBlueprintForm()
     
