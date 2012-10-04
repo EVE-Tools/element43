@@ -1,4 +1,5 @@
 from django.db import models
+import time
 
 #
 # Character information
@@ -33,11 +34,44 @@ class Character(models.Model):
     name = models.TextField(help_text="Character name")
     user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
     apikey = models.ForeignKey('api.APIKey', help_text='FKey relationship to api key table')
+    name = models.TextField(help_text="Name of character")
+    birthday = models.DateTimeField(help_text = "date/time of DoB of character", default = time.gmtime())
+    race = models.TextField(help_text = "Race of character", default = "")
+    bloodline = models.TextField(help_text="Bloodline of character", default = "")
+    ancestry = models.TextField(help_text="Ancestry of character", default = "")
+    gender = models.TextField(help_text = "Gender", default = "Male")
+    corp_name = models.TextField(help_text = "Name of corporation character is member of", default = "")
+    corp_id = models.BigIntegerField(help_text = "id of corporation", default = 0)
+    alliance_name = models.TextField(help_text = "Name of alliance", default = "")
+    alliance_id = models.BigIntegerField(help_text = "id of alliance", default = 0)
+    clone_name = models.TextField(help_text = "clone level name", default = "")
+    clone_skill_points = models.PositiveIntegerField(help_text = "max SP of clone", default = 0)
+    balance = models.BigIntegerField(help_text = "isk on hand", default = 0)
+    implant_memory_name = models.TextField(help_text = "name of memory implant", default = "")
+    implant_memory_bonus = models.PositiveIntegerField(help_text = "memory bonus", default = 0)
+    implant_intelligence_name = models.TextField(help_text = "name of intelligence implant", default = "")
+    implant_intelligence_bonus = models.PositiveIntegerField(help_text = "intelligence bonus", default = 0)
+    implant_charisma_name = models.TextField(help_text = "name of charisma implant", default = "")
+    implant_charisma_bonus = models.PositiveIntegerField(help_text = "charisma bonus", default = 0)
+    implant_willpower_name = models.TextField(help_text = "name of willpower implant", default = "")
+    implant_willpower_bonus = models.PositiveIntegerField(help_text = "willpower bonus", default = 0)
+    implant_perception_name = models.TextField(help_text = "name of perception implant", default = "")
+    implant_perception_bonus = models.PositiveIntegerField(help_text = "perception bonus", default = 0)
+    cached_until = models.DateTimeField(help_text = "data cached until", default = time.gmtime())
     
     class Meta(object):
         verbose_name = "Character"
         verbose_name_plural = "Characters"
-    
+
+class CharSkill(models.Model):
+    """
+    Trackign skills
+    """
+    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table")
+    skill_id = models.PositiveIntegerField(help_text = "id of skill")
+    skillpoints = models.PositiveIntegerField(help_text = "SP trained")
+    level = models.PositiveIntegerField(help_text = "level trained")
+
 #
 # API table
 #

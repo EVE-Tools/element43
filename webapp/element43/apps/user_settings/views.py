@@ -169,9 +169,13 @@ def api_character(request, api_id, api_verification_code):
                     key = APIKey.objects.get(user = request.user, keyid = api_id, vcode = api_verification_code)
                 
                 # Add character
-                new_char = Character(id = char.characterID, name = char.name, user = request.user, apikey = key)
+                me = auth.character(char.characterID)
+                sheet = me.CharacterSheet()
+                new_char = Character(id = char.characterID, name = char.name, user = request.user, apikey = key,
+                                     corp_name = sheet.corporationName, corp_id = sheet.corporationID, alliance_name = str(sheet.allianceName), alliance_id = sheet.allianceID,
+                                     birthday = "0000-00-00 00:00:00", race = sheet.race, bloodline = sheet.bloodLine, ancestry = sheet.ancestry)
                 new_char.save()
-                
+
                 added_chars = True
                 
         # Change message depending on what we did
