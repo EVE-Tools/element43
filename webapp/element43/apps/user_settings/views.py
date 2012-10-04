@@ -171,6 +171,38 @@ def api_character(request, api_id, api_verification_code):
                 # Add character
                 me = auth.character(char.characterID)
                 sheet = me.CharacterSheet()
+                # have to check because if you don't have an implant in you get nothing back
+                try:
+                    i_memory_name = sheet.attributeEnhancers.memoryBonus.augmentatorName, 
+                    i_memory_bonus = int(sheet.attributeEnhancers.memoryBonus.augmentatorValue)
+                except:
+                    i_memory_name = ""
+                    i_memory_bonus = 0
+                try:
+                    implant_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName
+                    implant_perception_bonus = int(sheet.attributeEnhancers.perceptionBonus.augmentatorValue)
+                except:
+                    i_perception_name = ""
+                    i_perception_bonus = 0
+                try:
+                    implant_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName
+                    implant_intelligence_bonus = int(sheet.attributeEnhancers.intelligenceBonus.augmentatorValue)
+                except:
+                    i_intelligence_name = ""
+                    i_intelligence_bonus = 0
+                try:
+                    implant_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName
+                    implant_willpower_bonus = int(sheet.attributeEnhancers.willpowerBonus.augmentatorValue)
+                except:
+                    i_willpower_name = ""
+                    i_willpower_bonus = 0
+                try:
+                    implant_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName
+                    implant_charisma_bonus = int(sheet.attributeEnhancers.charismaBonus.augmentatorValue)
+                except:
+                    i_charisma_name = ""
+                    i_charisma_bonus = 0
+                    
                 new_char = Character(id = char.characterID, 
                                     name = char.name, 
                                     user = request.user, 
@@ -187,16 +219,16 @@ def api_character(request, api_id, api_verification_code):
                                     clone_name = sheet.cloneName,
                                     clone_skill_points = sheet.cloneSkillPoints, 
                                     balance = sheet.balance,
-                                    implant_memory_name = sheet.attributeEnhancers.memoryBonus.augmentatorName, 
-                                    implant_memory_bonus = sheet.attributeEnhancers.memoryBonus.augmentatorValue,
-                                    implant_perception_name = sheet.attributeEnhancers.perceptionBonus.augmentatorName, 
-                                    implant_perception_bonus = sheet.attributeEnhancers.perceptionBonus.augmentatorValue,
-                                    implant_intelligence_name = sheet.attributeEnhancers.intelligenceBonus.augmentatorName, 
-                                    implant_intelligence_bonus = sheet.attributeEnhancers.intelligenceBonus.augmentatorValue,
-                                    implant_willpower_name = sheet.attributeEnhancers.willpowerBonus.augmentatorName, 
-                                    implant_willpower_bonus = sheet.attributeEnhancers.willpowerBonus.augmentatorValue,
-                                    implant_charisma_name = sheet.attributeEnhancers.charismaBonus.augmentatorName, 
-                                    implant_charisma_bonus = sheet.attributeEnhancers.charismaBonus.augmentatorValue)
+                                    implant_memory_name = i_memory_name, 
+                                    implant_memory_bonus = i_memory_bonus,
+                                    implant_perception_name = i_perception_name,
+                                    implant_perception_bonus = i_perception_bonus,
+                                    implant_intelligence_name = i_intelligence_name,
+                                    implant_intelligence_bonus = i_intelligence_bonus,
+                                    implant_willpower_name = i_willpower_name,
+                                    implant_willpower_bonus = i_willpower_bonus,
+                                    implant_charisma_name = i_charisma_name,
+                                    implant_charisma_bonus = i_charisma_bonus)
                 new_char.save()
 
                 added_chars = True
