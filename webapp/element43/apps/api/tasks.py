@@ -15,7 +15,7 @@ class ProcessAPISkillTree(PeriodicTask):
     """
     
     # for testing, run every 5 mins
-    run_every = datetime.timedelta(minutes=5)
+    run_every = datetime.timedelta(hours=24)
 
     def run(self, **kwargs):
         
