@@ -10,6 +10,7 @@ from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculato
 
 # Models
 from eve_db.models import InvBlueprintType
+from apps.market_data.models import ItemRegionStat
 
 def select_blueprint(request):
     """
@@ -69,7 +70,14 @@ def calculator(request, blueprint_type_id):
         if request.session.get('form_data'):
             form = ManufacturingCalculatorForm(request.session.get('form_data'))
         else:
-            form = ManufacturingCalculatorForm()
+            # find the sale price for the product
+            try:
+                stat_object = ItemRegionStat.objects.get(invtype_id__exact=blueprint.product_type.id, mapregion_id__exact=10000002)
+                target_sell_price = stat_object.sellmedian
+            except ItemRegionStat.DoesNotExist:
+                target_sell_price = 0
+                
+            form = ManufacturingCalculatorForm(initial={'target_sell_price':target_sell_price})
     
     rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
     
