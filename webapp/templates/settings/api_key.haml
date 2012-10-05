@@ -30,20 +30,18 @@
             %td
               ID
             %td
-              Verification Code
-            %td
             %td
         %tbody
           - for key in keys
             %tr
               %td
                 - for char in key.character_set.all
-                  {{char.name}}
-                  %br
+                  - if forloop.last
+                    {{char.name}}
+                  - else
+                    {{char.name}},
               %td
                 = key.keyid
-              %td
-                = key.vcode
               %td.text-right
                 %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
                   .btn.btn-primary
