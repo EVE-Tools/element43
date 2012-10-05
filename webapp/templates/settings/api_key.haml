@@ -2,7 +2,8 @@
 - load custom_filters
 - load humanize
 - block title
-  element43 - {{user.username}} - Settings
+  = block.super
+  {{user.username}} - Settings
 - block content
   %h1
     {{user.username}}

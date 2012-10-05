@@ -2,7 +2,8 @@
 - load humanize
 - load custom_filters
 - block title
-  element43 - Market - {{type.name}}
+  = block.super
+  Market - {{type.name}}
 - block content
   - include 'market/_group_breadcrumbs.haml'
   %h1

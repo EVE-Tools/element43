@@ -1,7 +1,8 @@
 - extends "base.haml"
 - load humanize
 - block title
-  element43 - Home
+  = block.super
+  Home
 - block content
   - if not request.user.is_authenticated
     .hero-unit

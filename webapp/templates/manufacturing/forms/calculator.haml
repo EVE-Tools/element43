@@ -1,5 +1,8 @@
 - extends "base.haml"
 - load custom_filters
+- block title
+  = block.super
+  Calculator
 - block content
   
   %ul.breadcrumb

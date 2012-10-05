@@ -1,5 +1,8 @@
 - extends "base.haml"
 - load custom_filters
+- block title
+  = block.super
+  Search Blueprint
 - block content  
     %form#select_blueprint_form.form-horizontal.well{'action': '{% url manufacturing_select_blueprint %}', 'method':'post'}
       - csrf_token
