@@ -13,3 +13,4 @@ eve_db
 .pydevproject
 .sass-cache
 cache
+celerybeat-schedule
