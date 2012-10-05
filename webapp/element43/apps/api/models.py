@@ -68,7 +68,7 @@ class CharSkill(models.Model):
     Trackign skills
     """
     character = models.ForeignKey('api.Character', help_text="FKey relationship to character table")
-    skill_id = models.PositiveIntegerField(help_text = "id of skill")
+    skill = models.ForeignKey('api.Skill', help_text="FK relationship to skill table")
     skillpoints = models.PositiveIntegerField(help_text = "SP trained")
     level = models.PositiveIntegerField(help_text = "level trained")
 
