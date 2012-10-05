@@ -6,11 +6,10 @@ from django.core.urlresolvers import reverse
 from apps.manufacturing.functions import calculate_manufacturing_job
 
 # Forms
-from django import forms
 from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculatorForm
 
 # Models
-from eve_db.models import InvType, InvBlueprintType
+from eve_db.models import InvBlueprintType
 
 def select_blueprint(request):
     """
@@ -61,7 +60,6 @@ def calculator(request, blueprint_type_id):
             # Put the form data in the session. If the user goes back to change the "job" information
             # the form will have those information as initial data!
             request.session['form_data'] = request.POST
-            
             form.cleaned_data['blueprint_type_id'] = blueprint_type_id
             data = calculate_manufacturing_job(form.cleaned_data)
             rcontext = RequestContext(request, { 'data' : data })
