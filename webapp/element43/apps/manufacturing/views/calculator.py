@@ -77,7 +77,7 @@ def calculator(request, blueprint_type_id):
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
                 
-            form = ManufacturingCalculatorForm(initial={'target_sell_price':target_sell_price})
+            form = ManufacturingCalculatorForm(initial={'target_sell_price': '%.2f' % target_sell_price})
     
     rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
     
