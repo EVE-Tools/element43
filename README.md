@@ -1,7 +1,7 @@
 element43
 =========
 
-Market, Trade and Industry Manager for Eve Online.
+Market, Trade and Industry Manager for EVE Online.
 
 Initial Setup Instructions
 ------------------
