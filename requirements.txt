@@ -30,3 +30,6 @@ pylibmc
 # Cython is a dependency of pyzmq's development branch
 cython
 git+http://github.com/zeromq/pyzmq.git
+
+# celery stuff
+django-celery-with-redis

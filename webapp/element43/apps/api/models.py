@@ -87,3 +87,34 @@ class APITimer(models.Model):
     class Meta(object):
         verbose_name="API Timer"
         verbose_name_plural = "API Timers"
+
+#
+# Skill tree
+#
+
+class SkillGroup(models.Model):
+    """
+    This is the global eve skill groups
+    """
+    
+    id = models.PositiveIntegerField(help_text="Group ID from API", primary_key=True)
+    name = models.TextField(help_text="Name of skill group")
+    
+    class Meta(object):
+        verbose_name="Skill Group"
+        verbose_name_plural = "Skill Groups"
+        
+class Skill(models.Model):
+    """
+    This is the global Eve skill tree
+    """
+    
+    id = models.PositiveIntegerField(help_text="Skill ID from API", primary_key=True)
+    name = models.TextField(help_text="Name of skill")
+    group = models.ForeignKey('api.SkillGroup', help_text="FK to skill group")
+    published = models.BooleanField(help_text="Published flag")
+    description = models.TextField(help_text="description of skill")
+    rank = models.PositiveIntegerField(help_text="skill difficulty rank")
+    primary_attribute = models.TextField(help_text="Primary attribute for skill")
+    secondary_attribute = models.TextField(help_text="secondary attribute for skill")
+    

@@ -1,6 +1,7 @@
 # Django settings for element43 project.
 import os
 import sys
+import djcelery
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,6 +10,10 @@ TEMPLATE_DEBUG = DEBUG
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Add the 'element43' module to the path.
 sys.path.insert(0, os.path.join(ROOT_DIR, 'element43'))
+
+# fire up celery
+BROKER_URL = 'redis://localhost'
+djcelery.setup_loader()
 
 # Our User profile class
 AUTH_PROFILE_MODULE = 'common.Profile'
@@ -203,6 +208,7 @@ INSTALLED_APPS = (
 
     'south',
     'devserver',
+    'djcelery',
 
     'apps.common',
     'apps.market_data',
