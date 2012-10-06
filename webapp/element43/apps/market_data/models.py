@@ -124,6 +124,22 @@ class History(models.Model):
         verbose_name = "History Data"
         verbose_name_plural = "History Data"
         
+class OrderHistory(models.Model):
+    """
+    Post-processed history
+    """
+    
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
+        help_text="Region ID the order originated from.")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
+        help_text="The Type ID of the item in the order.")
+    date = models.DateTimeField(help_text = "Date of the data")
+    numorders = models.PositiveIntegerField(help_text="number of transactions for this item/region")
+    low = models.FloatField(help_text="low price of orders for this item/region")
+    high = models.FloatField(help_text="high price of orders for this item/region")
+    mean = models.FloatField(help_text="mean price of orders for this item/region")
+    quantity = models.BigIntegerField(help_text="quantity of item sold for this item/region")
+        
 class OrdersWarehouse(models.Model):
     """
     A parsed order message with the details broken out into the various fields.
