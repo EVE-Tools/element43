@@ -61,7 +61,10 @@
           %td
             - if not request|is_igb
               %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
-            = material.material_type__name
+              = material.material_type__name
+            - else
+              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.material_type__id }})'}
+                = material.material_type__name
           %td
             %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.material_type__id }}' }
           %td.text-right
