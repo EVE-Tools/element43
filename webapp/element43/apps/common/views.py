@@ -105,8 +105,6 @@ def stats_json(request, region_id):
         
         except pylibmc.Error as e:
             print e
-        except:
-            print "Unexpected error:", sys.exc_info()[0]
     
     # Create JSON
     json = simplejson.dumps({'active_orders': active_orders, 
