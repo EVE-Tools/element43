@@ -16,7 +16,9 @@ class ProcessHistory(PeriodicTask):
     Post-process history table
     """
     
-    run_every = datetime.timedelta(hours=24)
+    # execute at midnight +1 minute UTC
+    run_every = crontab(hour=0, minute=1)
+    #run_every = datetime.timedelta(hours=24)
     
     def run(self, **kwargs):
         print "BEGIN HISTORY PROCESSING"
