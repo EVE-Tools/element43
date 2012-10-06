@@ -3,9 +3,6 @@ $(document).ready(function () {
     // Market Quicklook for element43
     //
 
-	// Activate tooltips
-	$("[rel=tooltip]").tooltip();
-
 	// Show / Hide filters section
 	
 	$('#filter-icon').click(

@@ -98,9 +98,7 @@ def stats_json(request, region_id):
                      'bid_avg': buyavg,
                      'bid_avg_move': region_stats_history.buyavg - buyavg,
                      'ask_avg': sellavg,
-                     'ask_avg_move': region_stats_history.sellavg - sellavg,
-                     'mean': (buyavg + sellavg) / 2,
-                     'mean_move': ((region_stats_history.buyavg + region_stats_history.sellavg) / 2) - ((buyavg + sellavg) / 2)}
+                     'ask_avg_move': region_stats_history.sellavg - sellavg}
         
             typestats[item] = stats
         

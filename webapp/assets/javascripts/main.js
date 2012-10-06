@@ -1,6 +1,10 @@
 $(document).ready(function () {
+    
+	// Activate tooltips
+	$("[rel=tooltip]").tooltip();
 
-	var options, a;
+	// AJAX autocomplete setup
+    var options, a;
 	options = {
 		'minChars':3,
 		'maxHeight':800,

@@ -29,38 +29,49 @@
     .row-fluid
       .span12
        %h3 Mineral Index and PLEX - The Forge
-       %table.table.table-striped.table-condensed
+       %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
          %thead
            %tr
-             %th
-             %th{'colspan':'2', 'text-align':'center'}
+             %th.span2
+             %th.span5{'colspan':'3', 'text-align':'center'}
                Bid
-             %th{'colspan':'2', 'text-align':'center'}
+             %th.span5{'colspan':'3', 'text-align':'center'}
                Ask
-             %th
-         %tbody
            %tr
              %th
              %th
-               Highest Price
+               %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in The Forge.'}
+                 Highest Price
              %th
-               Weighted Avg
+               %a{'href':'#', 'rel':'tooltip', 'title':'Weighted average of all bids in The Forge.'}
+                 Weighted Avg
              %th
-               Lowest Price
+               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s weighted average of bids in The Forge.'}
+                 Move
              %th
-               Weighted Avg
+               %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in The Forge.'}
+                 Lowest Price
              %th
-               Mean
+               %a{'href':'#', 'rel':'tooltip', 'title':'Weighted average of all asks in The Forge.'}
+                 Weighted Avg
+             %th
+               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s weighted average of asks in The Forge.'}
+                 Move
+         %tbody
            - for item in types
              %tr
                %td
-                 %a{'href':'{% url quicklook type_id=item.id %}'} 
-                   {{item.name}}
+                 %a{'href':'{% url quicklook type_id=item.id %}'}
+                   - if item.name == "30 Day Pilot's License Extension (PLEX)"
+                     PLEX
+                   - else
+                     {{item.name}}
                %td{'id':'bid_max_{{item.id}}'}
                  0.00
                %td
                  %span{'id':'bid_avg_{{item.id}}'}
                    0.00
+               %td
                  %span{'id':'bid_avg_move_{{item.id}}'}
                    +0.00
                %td{'id':'ask_min_{{item.id}}'}
@@ -68,12 +79,8 @@
                %td
                  %span{'id':'ask_avg_{{item.id}}'}
                    0.00
-                 %span{'id':'ask_avg_move_{{item.id}}'}
-                   +0.00
                %td
-                 %span{'id':'mean_{{item.id}}'}
-                   0.00
-                 %span{'id':'mean_move_{{item.id}}'}
+                 %span{'id':'ask_avg_move_{{item.id}}'}
                    +0.00
     .row-fluid
       .span6
@@ -81,43 +88,43 @@
         %table.table.table-striped.table-condensed
           %tbody
             %tr
-              %td
+              %td.span3
                 New Orders
-              %td#new_orders
+              %td#new_orders.span3
                 0
             %tr  
-              %td
+              %td.span3
                 Updated Orders
-              %td#updated_orders
+              %td#updated_orders.span3
                 0
             %tr
-              %td
+              %td.span3
                 Old Orders
-              %td#old_orders
+              %td#old_orders.span3
                 0
             %tr
-              %td
+              %td.span3
                 History messages
-              %td#history_messages
+              %td#history_messages.span3
                 0
       .span6
         %h3 Platform Stats
         %table.table.table-striped.table-condensed
           %tbody
             %tr
-              %td
+              %td.span3
                 Active Orders
-              %td#active_orders
+              %td#active_orders.span3
                 0
             %tr
-              %td
+              %td.span3
                 Archived Orders
-              %td#archived_orders
+              %td#archived_orders.span3
                 0
             %tr
-              %td
+              %td.span3
                 History Records
-              %td#history_records
+              %td#history_records.span3
                 0
 - block scripts
   %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
