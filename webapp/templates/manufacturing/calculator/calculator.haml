@@ -14,7 +14,7 @@
         Blueprint Search ({{ blueprint.blueprint_type.name }})
     %li
       %span.divider >
-        Change Data
+        Change Job Parameters
         
   %form.form-horizontal{'action':'{% url manufacturing_calculator blueprint.blueprint_type.id %}', 'method':'post'}
     - csrf_token
