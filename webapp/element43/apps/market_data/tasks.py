@@ -17,7 +17,7 @@ class ProcessHistory(PeriodicTask):
     """
     
     # execute at midnight +1 minute UTC
-    run_every = crontab(hour=0, minute=1)
+    run_every = crontab(hour=21, minute=51)
     #run_every = datetime.timedelta(hours=24)
     
     def run(self, **kwargs):
@@ -29,9 +29,11 @@ class ProcessHistory(PeriodicTask):
 class ProcessRegionHistory(Task):
     
     def run(self, region):
-        print "History processing for region: ", region
+        print "STARTING: %s" % region
         utc = pytz.UTC
-        history = History.objects.filter(mapregion_id = region)
+        added = 0
+        duplicated = 0
+        history = History.objects.filter(mapregion = region)
         for message in history.iterator():
             data = ast.literal_eval(message.history_data)
             for k,v in data.iteritems():
@@ -47,8 +49,9 @@ class ProcessRegionHistory(Task):
                                                quantity=v[4])
                     try:
                         new_history.save()
+                        added += 1
                     except:
                         print "ERROR: ", connection.queries
                 else:
-                    pass
-        print "Completed: ", region
+                    duplicated += 1
+        print "Completed: %s (a: %s / d: %s)" % (region, added, duplicated)
