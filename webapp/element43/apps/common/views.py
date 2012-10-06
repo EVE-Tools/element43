@@ -16,7 +16,6 @@ from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegion
 # Utils
 import datetime
 import pylibmc
-import ujson as json
 import logging
 import sys
 
