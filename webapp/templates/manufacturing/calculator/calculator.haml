@@ -151,6 +151,9 @@
         %label.control-label{'for':'id_target_sell_price'} Target sell price
           %a{'href':'#', 'rel':'tooltip', 'title':'Price = The Forge Sell Median'}
             %i.icon-white.icon-question-sign
+          - if request|is_igb
+            %a{'href':'#', 'rel':'tooltip', 'onclick':'CCPEVE.showMarketDetails({{ blueprint.product_type.id }})', 'title':'Press to open Market for this item.'}
+              %i.icon-white.icon-shopping-cart
         .controls
           = form.target_sell_price
           - if form.target_sell_price.errors
