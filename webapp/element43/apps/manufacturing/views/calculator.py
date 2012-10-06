@@ -19,6 +19,8 @@ def select_blueprint(request):
     all found blueprints and has to select the one he wants to produce.
     """
     
+    template_vars = {}
+    
     # When the user selects a new blueprint we better delete the settings he used for
     # his last calculation.
     if request.session.get('form_data'):
@@ -33,14 +35,15 @@ def select_blueprint(request):
             
             if len(blueprints) == 1:
                 return HttpResponseRedirect(reverse('manufacturing_calculator', kwargs={ 'blueprint_type_id': blueprints[0].blueprint_type.id }))
-            else:
-                # Multiple possible blueprints. Let the user select the one he would like to use.
-                rcontext = RequestContext(request, { 'blueprints' : blueprints })
-                return render_to_response('manufacturing/calculator/blueprint_search.haml', rcontext)
-    else:
-        form = SelectBlueprintForm()
+            
+            # If more than one result was found all blueprints are added to the
+            # request context. The select_blueprint.haml will be rendered again
+            # but now with a list of found blueprints.
+            template_vars['blueprints'] = blueprints
+
+    template_vars['form'] = SelectBlueprintForm()
     
-    rcontext = RequestContext(request, { 'form' : form })
+    rcontext = RequestContext(request, template_vars)
     return render_to_response('manufacturing/calculator/select_blueprint.haml', rcontext)
 
 def calculator(request, blueprint_type_id):    
