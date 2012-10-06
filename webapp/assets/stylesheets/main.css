@@ -178,6 +178,9 @@ input[type="color"],
 .sec0 {
   color: #F00000; }
 
+.breadcrumb {
+  padding: 8px 0px; }
+
 .breadcrumb li {
   text-shadow: none;
   color: white; }

@@ -14,7 +14,7 @@
     %li
       %span.divider >
       %a{'href':'{% url manufacturing_select_blueprint %}'}
-        Select Blueprint ({{ data.blueprint_name }})
+        Blueprint Search ({{ data.blueprint_name }})
     %li
       %span.divider >
       %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}
@@ -34,6 +34,8 @@
             Material
           %th
             Price (ISK)
+            %a{'href':'#', 'rel':'tooltip', 'title':'All prices are The Forge Sell Median'}
+              %i.icon-white.icon-question-sign
           %th.text-right
             Quantity
           %th.text-right
@@ -57,7 +59,8 @@
       - for material in data.materials
         %tr
           %td
-            %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
+            - if not request|is_igb
+              %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
             = material.material_type__name
           %td
             %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.material_type__id }}' }
@@ -147,5 +150,4 @@
 
 - block scripts
   %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/sprintf.min.js'}
   %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/numberformat.js'}
