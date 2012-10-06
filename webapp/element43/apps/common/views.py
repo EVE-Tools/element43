@@ -61,8 +61,7 @@ def stats_json(request, region_id):
     history_messages_per_minute = EmdrStats.objects.filter(status_type = 1).order_by("message_timestamp")[:1][0].status_count / 5
 
     # 2. Minerals and PLEX
-    #types = request.GET.getlist('type')
-    types = [34,35,36,37,38,39,40,29668]
+    types = request.GET.getlist('type')
     new_types = []
     
     for item in types:
