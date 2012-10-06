@@ -4,20 +4,31 @@ $(document).ready(function () {
     //
 
 	// Show / Hide filters section
-	
-	$('#filter-icon').click(
-		function(){
-			if ($('#filters').is(':visible')) {
-				$('#filter-icon').removeClass('icon-chevron-down');
-				$('#filter-icon').addClass('icon-chevron-right');
-				$('#filters').slideUp();
-			} else {
-				$('#filter-icon').removeClass('icon-chevron-right');
-				$('#filter-icon').addClass('icon-chevron-down');
-				$('#filters').slideDown();
-			}
+    
+    
+    $('#ask_link').click(function(e){
+		if (!($('#filters').is(':visible'))) {
+			$('#filters').slideDown();
 		}
-	);
+    });
+    
+    $('#bid_link').click(function(e){
+		if (!($('#filters').is(':visible'))) {
+			$('#filters').slideDown();
+		}
+    })
+    
+    $('#region_link').click(function(e){
+		if ($('#filters').is(':visible')) {
+			$('#filters').slideUp();
+		}
+    })
+    
+    $('#mats_link').click(function(e){
+		if ($('#filters').is(':visible')) {
+			$('#filters').slideUp();
+		}
+    })
 
 	// Sliders
 
