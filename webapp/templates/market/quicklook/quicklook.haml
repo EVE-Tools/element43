@@ -18,38 +18,40 @@
         = type.description|striptags
   #history
   
-  %h2 
-    %i#filter-icon.icon-white.icon-chevron-right{'style':'margin-top:6px;'}
-    Filters
-  #filters{'style':'margin-bottom: 1em; display: none;'}
+  #filters{'style':'margin-bottom: 1em; display:none;'}
     .row-fluid
+      .span2
       .span4
-        %h3
+        %h5
           Minimal System Security 
         #system-security.sec4
           0.4
         #security-slider
       .span4
-        %h3
+        %h5
           Maximum Data Age
         %span#data-age
         %span
           Hours
         #age-slider
-      .span4{'style':'margin-top: 4em;'}
+      .span2
+    .row-fluid
+      .span5
+      .span2{'style':'margin-top: 2em; text-align:center;'}
         #filter-button.btn.btn-primary
           Filter Orders
+      .span5
           
   %ul#tabs.nav.nav-tabs
     %li.active
-      %a{'href':'#regions', 'data_toggle':'tab'} Regions
+      %a#region_link{'href':'#regions', 'data_toggle':'tab'} Regions
     %li
-      %a{'href':'#ask', 'data_toggle':'tab'} Ask
+      %a#ask_link{'href':'#ask', 'data_toggle':'tab'} Ask
     %li
-      %a{'href':'#bid', 'data_toggle':'tab'} Bid
+      %a#bid_link{'href':'#bid', 'data_toggle':'tab'} Bid
     - if materials
       %li
-        %a{'href':'#mats', 'data_toggle':'tab'} Materials
+        %a#mats_link{'href':'#mats', 'data_toggle':'tab'} Materials
   .tab-content
     #regions.tab-pane.fade.active.in
       %table.table.table-striped.table-condensed
