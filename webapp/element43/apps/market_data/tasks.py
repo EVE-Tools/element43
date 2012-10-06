@@ -17,12 +17,12 @@ class ProcessHistory(PeriodicTask):
     """
     
     # execute at midnight +1 minute UTC
-    run_every = crontab(hour=22, minute=25)
+    run_every = crontab(hour=0, minute=1)
     #run_every = datetime.timedelta(hours=24)
     
     def run(self, **kwargs):
         print "BEGIN HISTORY PROCESSING"
-        regions = History.objects.order_by('mapregion').distinct('mapregion')
+        regions = History.objects.order_by('mapregion__id').distinct('mapregion')
         for region in regions.iterator():
             ProcessRegionHistory.delay(region.mapregion)
     
@@ -32,14 +32,15 @@ class ProcessRegionHistory(Task):
         utc = pytz.UTC
         added = 0
         duplicated = 0
-        history = History.objects.filter(mapregion = region).order_by('invtype')
-        print "STARTING: %s (s: %s)" % (region, len(history))
+        history = History.objects.filter(mapregion = region).order_by('invtype__id')
+        print "STARTING: %s (r: %s)" % (region, len(history))
         for message in history.iterator():
             data = ast.literal_eval(message.history_data)
-            print "REGION: %s (i: %s / m: %s)" % (region, message.invtype, len(data))
+            #print "REGION: %s (i: %s / m: %s)" % (region, message.invtype_id, len(data))
             for k,v in data.iteritems():
                 date = utc.localize(datetime.datetime.strptime(k, "%Y-%m-%d %H:%M:%S"))
-                if OrderHistory.objects.filter(date = date, invtype = message.invtype).count() == 0:
+                #print "key: %s - date: %s" % (k, date)
+                if not OrderHistory.objects.filter(date = date, mapregion = region, invtype = message.invtype).exists():
                     new_history = OrderHistory(mapregion=message.mapregion,
                                                invtype=message.invtype,
                                                date = date,
@@ -48,11 +49,8 @@ class ProcessRegionHistory(Task):
                                                high=v[2],
                                                mean=v[3],
                                                quantity=v[4])
-                    try:
-                        new_history.save()
-                        added += 1
-                    except:
-                        print "ERROR: ", connection.queries
+                    new_history.save()
+                    added += 1
                 else:
                     duplicated += 1
         print "Completed: %s (a: %s / d: %s)" % (region, added, duplicated)
