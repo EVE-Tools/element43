@@ -17,7 +17,7 @@ class ProcessHistory(PeriodicTask):
     """
     
     # execute at midnight +1 minute UTC
-    run_every = crontab(hour=22, minute=19)
+    run_every = crontab(hour=22, minute=25)
     #run_every = datetime.timedelta(hours=24)
     
     def run(self, **kwargs):
@@ -32,7 +32,7 @@ class ProcessRegionHistory(Task):
         utc = pytz.UTC
         added = 0
         duplicated = 0
-        history = History.objects.filter(mapregion = region)
+        history = History.objects.filter(mapregion = region).order_by('invtype')
         print "STARTING: %s (s: %s)" % (region, len(history))
         for message in history.iterator():
             data = ast.literal_eval(message.history_data)
