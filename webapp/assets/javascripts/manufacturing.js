@@ -26,7 +26,7 @@ $(document).ready(function () {
       
       // update bill of materials
       // step 1: update the material price in the corresponding row
-      var price = $("#material_" + material_id + "").val();
+      var price = $("#material_" + material_id + "").val().replace(/,/g, "");
       var quantity = $("#material_quantity_" + material_id + "").text().replace(/,/g, "");
       var total = parseInt(quantity) * parseFloat(price);
       //$("#material_price_" + material_id + "").text(addCommas(sprintf("%.2f", total)));
