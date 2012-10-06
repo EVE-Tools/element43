@@ -14,6 +14,7 @@ from eve_db.models import InvType
 from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegionStat, ItemRegionStatHistory, EmdrStats
 
 # Utils
+import ujson as ujson
 import datetime
 import pylibmc
 import logging
@@ -78,7 +79,7 @@ def stats_json(request, region_id):
         try:
             # check to see if it's in the cache, if so use those values
             if (mc.get("e43-stats"+str(item))!=None):
-                cache_item = json.loads(mc.get("e43-stats"+str(item)))
+                cache_item = ujson.loads(mc.get("e43-stats"+str(item)))
                 #print "Item: ", item, " cache: ", cache_item
                 buyavg = cache_item['buyavg']
                 sellavg = cache_item['sellavg']
@@ -107,7 +108,7 @@ def stats_json(request, region_id):
             print e
     
     # Create JSON
-    json = simplejson.dumps({'active_orders': active_orders, 
+    stat_json = simplejson.dumps({'active_orders': active_orders, 
                             'archived_orders': archived_orders, 
                             'history_records': history, 
                             'new_orders':new_orders_per_minute,
@@ -116,7 +117,7 @@ def stats_json(request, region_id):
                             'history_messages': history_messages_per_minute,
                             'typestats': typestats})
     # Return JSON without using any template
-    return HttpResponse(json, mimetype = 'application/json')
+    return HttpResponse(stat_json, mimetype = 'application/json')
     
 def search(request):
 
