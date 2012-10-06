@@ -3,7 +3,7 @@ from django.conf.urls.defaults import patterns, url
 urlpatterns = patterns('apps.common.views',
     # Home
     url(r'^$', 'home', name = 'home'),
-    url(r'^stats/$', 'stats', name = 'home_stats_panel'),
+    url(r'^stats/(?P<region_id>[0-9]+)/', 'stats_json', name = 'home_stats_json'),
 
     # Search
     url(r'^search/', 'search', name = 'search'),

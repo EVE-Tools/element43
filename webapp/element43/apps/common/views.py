@@ -28,18 +28,20 @@ since we have a form (search) in every single of our views, as they extend 'base
 def home(request):
     
     """
-    Returns our static home template with a CSRF protection for our search as well as the stats.
+    Returns our static home template with a CSRF protection for our search as well as the stats layout.
     """
     
+    type_ids = [34,35,36,37,38,39,40,29668]
+    region = 10000002
+    
+    types = InvType.objects.filter(id__in = type_ids)
+    
     # Create context for CSRF protection
-    rcontext = RequestContext(request, {})
+    rcontext = RequestContext(request, {'type_ids': type_ids, 'types': types, 'region': region})
     
     return render_to_response('home.haml', rcontext)
     
-def stats(request):
-    """
-    Returns stats page
-    """
+def stats_json(request, region_id):
     
     #connect to memcache
     mc = pylibmc.Client(['127.0.0.1'], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
@@ -59,9 +61,14 @@ def stats(request):
     history_messages_per_minute = EmdrStats.objects.filter(status_type = 1).order_by("message_timestamp")[:1][0].status_count / 5
 
     # 2. Minerals and PLEX
-    types = [34,35,36,37,38,39,40,29668]
-    region = 10000002
-    typestats = []
+    types = request.GET.getlist('type')
+    new_types = []
+    
+    for item in types:
+        new_types.append(int(item))
+    
+    types = new_types
+    typestats = {}
     cache_item = {}
     buyavg = 0
     sellavg = 0
@@ -78,42 +85,41 @@ def stats(request):
                 sellavg = cache_item['sellavg']
             # otherwise go to the DB for it
             else:
-                region_stats = ItemRegionStat.objects.filter(mapregion_id = region, invtype_id = item)[:1][0]
+                region_stats = ItemRegionStat.objects.filter(mapregion_id = region_id, invtype_id = item)[:1][0]
                 buyavg = region_stats.buyavg
                 sellavg = region_stats.sellavg
-            region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region, invtype_id = item).order_by("-date")[:1][0]
-            buy = Orders.objects.filter(mapregion = region, invtype = item, is_bid = True).order_by("-price")[:1][0].price
-            sell = Orders.objects.filter(mapregion = region, invtype = item, is_bid = False).order_by("price")[:1][0].price
+                
+            region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region_id, invtype_id = item).order_by("-date")[:1][0]
+            buy = Orders.objects.filter(mapregion = region_id, invtype = item, is_bid = True).order_by("-price")[:1][0].price
+            sell = Orders.objects.filter(mapregion = region_id, invtype = item, is_bid = False).order_by("price")[:1][0].price
             
-            stats = {'buy': buy,
-                     'sell': sell,
-                     'avg_buy': buyavg,
-                     'avg_buy_move': region_stats_history.buyavg - buyavg,
-                     'avg_sell': sellavg,
-                     'avg_sell_move': region_stats_history.sellavg - sellavg,
+            stats = {'bid_max': buy,
+                     'ask_min': sell,
+                     'bid_avg': buyavg,
+                     'bid_avg_move': region_stats_history.buyavg - buyavg,
+                     'ask_avg': sellavg,
+                     'ask_avg_move': region_stats_history.sellavg - sellavg,
                      'mean': (buyavg + sellavg) / 2,
                      'mean_move': ((region_stats_history.buyavg + region_stats_history.sellavg) / 2) - ((buyavg + sellavg) / 2)}
         
-            typestats.append({'type':InvType.objects.get(id = item), 'stats':stats})
+            typestats[item] = stats
         
         except pylibmc.Error as e:
             print e
         except:
             print "Unexpected error:", sys.exc_info()[0]
     
-    
-    # Create context for CSRF protection
-    rcontext = RequestContext(request, {'active_orders': active_orders, 
-                                        'archived_orders': archived_orders, 
-                                        'history': history, 
-                                        'new_orders_per_minute':new_orders_per_minute,
-                                        'updated_orders_per_minute':updated_orders_per_minute, 
-                                        'old_orders_per_minute':old_orders_per_minute, 
-                                        'history_messages_per_minute': history_messages_per_minute,
-                                        'typestats': typestats,
-                                        'update': datetime.datetime.now()})
-                                        
-    return render_to_response('stats.haml', rcontext)
+    # Create JSON
+    json = simplejson.dumps({'active_orders': active_orders, 
+                            'archived_orders': archived_orders, 
+                            'history_records': history, 
+                            'new_orders':new_orders_per_minute,
+                            'updated_orders':updated_orders_per_minute, 
+                            'old_orders':old_orders_per_minute, 
+                            'history_messages': history_messages_per_minute,
+                            'typestats': typestats})
+    # Return JSON without using any template
+    return HttpResponse(json, mimetype = 'application/json')
     
 def search(request):
 

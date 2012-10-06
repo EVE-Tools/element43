@@ -51,22 +51,30 @@
                Weighted Avg
              %th
                Mean
-           - for item in typestats
+           - for item in types
              %tr
                %td
-               %td
+                 %a{'href':'{% url quicklook type_id=item.id %}'} 
+                   {{item.name}}
+               %td{'id':'bid_max_{{item.id}}'}
                  0.00
                %td
-                 %span.green
-                   0.00 (+0.00)
-               %td
+                 %span{'id':'bid_avg_{{item.id}}'}
+                   0.00
+                 %span{'id':'bid_avg_move_{{item.id}}'}
+                   +0.00
+               %td{'id':'ask_min_{{item.id}}'}
                  0.00
                %td
-                 %span.green
-                   0.00 (+0.00)
+                 %span{'id':'ask_avg_{{item.id}}'}
+                   0.00
+                 %span{'id':'ask_avg_move_{{item.id}}'}
+                   +0.00
                %td
-                 %span.green
-                   0.00 (+0.00)
+                 %span{'id':'mean_{{item.id}}'}
+                   0.00
+                 %span{'id':'mean_move_{{item.id}}'}
+                   +0.00
     .row-fluid
       .span6
         %h3 EMDR Stats (per minute)
@@ -75,22 +83,22 @@
             %tr
               %td
                 New Orders
-              %td
+              %td#new_orders
                 0
             %tr  
               %td
                 Updated Orders
-              %td
+              %td#updated_orders
                 0
             %tr
               %td
                 Old Orders
-              %td  
+              %td#old_orders
                 0
             %tr
               %td
                 History messages
-              %td
+              %td#history_messages
                 0
       .span6
         %h3 Platform Stats
@@ -99,17 +107,21 @@
             %tr
               %td
                 Active Orders
-              %td
+              %td#active_orders
                 0
             %tr
               %td
                 Archived Orders
-              %td
+              %td#archived_orders
                 0
             %tr
               %td
                 History Records
-              %td
+              %td#history_records
                 0
 - block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+  %script{'type':'text/javascript'}
+    var region = {{region}};
+    var types = {{type_ids}};
   %script{'type':'text/javascript', 'src':'/static/javascripts/home.js'}
