@@ -5,6 +5,15 @@
 - block content
   %h1
     Search
+    
+  %ul.breadcrumb
+    %li
+      Manufacturing
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_select_blueprint %}'}
+        Blueprint Search
+  
   %table.table.table-striped.table-condensed
     %tbody
       - for blueprint in blueprints
