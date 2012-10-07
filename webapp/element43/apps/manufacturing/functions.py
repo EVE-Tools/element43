@@ -1,9 +1,195 @@
+import math
+
 from decimal import Decimal
 
 from django.db import connection
 
-from eve_db.models import InvType, InvBlueprintType, InvTypeMaterial
+# Models
+from eve_db.models import InvType, InvBlueprintType, InvTypeMaterial, RamTypeRequirement, InvMetaType
 from apps.market_data.models import ItemRegionStat
+
+def is_tech1(type_id):
+    """
+    Returns 'True' if the given type_id belongs to a Tech I item and 'False' otherwise.
+    """
+    return InvBlueprintType.objects.filter(product_type__id=type_id, tech_level=1).exists()
+
+def is_advanced_manufacturing(blueprint):
+    """
+    Returns 'True' if the given blueprints requires more advanced production calculations.
+    Normally those are all blueprints of items > Tech I
+    """
+    return RamTypeRequirement.objects.filter(type=blueprint).exists()
+
+def calculate_quantities(form_data, blueprint, materials):
+    """
+    Returns the the given materials dictionary with the calculated quantities for all items.
+    The quantity of a material depends on:
+    
+    - Blueprint base waste
+    - Blueprint material level (ME)
+    - Skill waste (Production efficiency)
+    - Manufacturing installation material multiplier)
+    """
+    for material in materials:
+        material = calculate_quantity(form_data, blueprint, material)
+    
+    return materials
+    
+def calculate_quantity(form_data, blueprint, material):
+    """
+    Returns the the given material with the calculated quantities for this material.
+    The quantity of a material depends on:
+    
+    - Blueprint base waste
+    - Blueprint material level (ME)
+    - Skill waste (Production efficiency)
+    - Manufacturing installation material multiplier)
+    """
+    blueprint_me = int(form_data['blueprint_material_efficiency'])
+    blueprint_runs = int(form_data['blueprint_runs'])
+    skill_production_efficiency = int(form_data['skill_production_efficiency'])
+    
+    base_waste_multiplier = float(blueprint.waste_factor) / 100
+    
+    if blueprint_me >= 0:
+        base_waste_multiplier *= (float(1) / float((blueprint_me + 1)))
+    else:
+        base_waste_multiplier *= float(1 - blueprint_me)
+        
+    base_quantity = material['quantity']
+    base_waste = base_quantity * base_waste_multiplier
+    skill_waste = float(((25 - (5 * skill_production_efficiency)) * base_quantity)) / 100
+    quantity_unit = (base_quantity * form_data['slot_material_modifier']) + base_waste + skill_waste
+    quantity_total = round(quantity_unit * blueprint_runs)
+    
+    material['quantity'] = int(quantity_total)
+    material['volume'] = material['quantity'] * material['volume']
+
+    return material
+
+def calculate_material_prices(materials):
+    """
+    Returns the given materials dictionary with calculated prices.
+    
+    Beware: The prices are 'sell median' from 'The Forge' reqion. 
+    """
+    try:
+        # Build the list of material ids for which the price has to be fetched
+        material_ids = [material['id'] for material in materials]
+        materials_prices = ItemRegionStat.objects.values('invtype__id','sellmedian').filter(invtype_id__in=material_ids, mapregion_id__exact=10000002)
+        
+        for material_price in materials_prices:
+            for material in materials:
+                if material['id'] == material_price['invtype__id']:
+                    material['price'] = material_price['sellmedian']
+                    material['price_total'] = material_price['sellmedian'] * material['quantity']
+    except Exception as e:
+        connection._rollback()
+        
+    return materials
+    
+def get_tech1_materials(form_data, blueprint):
+    """
+    Returns the bill of materials for a Tech I blueprint.
+    The bill of materials already contains prices but they are not calculated yet.
+    If you want to get prices for the materials in the bill of materials you have
+    to pass the result of this function to 'calculate_material_prices'!
+    """
+    materials = []
+    base_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=blueprint.product_type)
+    
+    for base_material in base_materials:
+        materials.append(dict({
+            'id': base_material['material_type__id'],
+            'name': base_material['material_type__name'],
+            'quantity': base_material['quantity'],
+            'volume': base_material['material_type__volume'],
+            'price': 0,
+            'price_total': 0
+        }))
+        
+    materials = calculate_quantities(form_data, blueprint, materials)
+    
+    return materials
+    
+def get_tech2_materials(form_data, blueprint):
+    """
+    Returns the bill of materials for a Tech II blueprint.
+    The bill of materials already contains prices but they are not calculated yet.
+    If you want to get prices for the materials in the bill of materials you have
+    to pass the result of this function to 'calculate_material_prices'!
+    """
+    
+    materials = [] # bill of materials
+    
+    """
+    Calculating the bill of materials for a Tech II blueprint is a bit tricky. Most
+    Tech II blueprints require a Tech I item and additional materials to manufacture
+    the Tech II item.
+    
+    Target Painter II for example requires Target Painter I. One of the exceptions 
+    to that rule are Tech II rigs. They don't require their Tech I variant.
+    
+    To calculate the bill of materials three things have to be considered:
+    
+    1. Materials needed for the Tech I item (tech1_item_materials)
+    2. Materials needed for the Tech II item (tech2_item_materials)
+    3. Build requirements for the Tech II item (build_requirements)
+    
+    materials = (tech2_item_materials - tech1_item_materials) + build_requirements
+    
+    The bill of materials for the Tech II includes the materials required to manufacture
+    the Tech I item. Therefor the bill of materials for Tech I item have to be 
+    subtracted to get a list of materials that are exclusively needed for the 
+    Tech II item.
+    """
+
+    tech1_item_materials = []
+    
+    # Find build requirements for the Tech II item (does contain the Tech I item if required)
+    build_requirements = RamTypeRequirement.objects.values('required_type__id', 'required_type__name', 'required_type__volume', 'quantity', 'recycle').filter(type__id=blueprint.blueprint_type.id, activity_type__id=1).exclude(required_type__group__category__id=16);
+    
+    for build_requirement in build_requirements:
+        materials.append(dict({
+            'id': build_requirement['required_type__id'],
+            'name': build_requirement['required_type__name'],
+            'quantity': build_requirement['quantity'],
+            'volume': build_requirement['required_type__volume'] * build_requirement['quantity'],
+            'price': 0,
+            'price_total': 0
+        }))
+        
+        # If recycle is True the build_requirement is the required Tech I item.
+        if build_requirement['recycle'] == True and is_tech1(build_requirement['required_type__id']):
+            tech1_item_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=build_requirement['required_type__id'])
+    
+    # Get the bill of materials for the Tech II item
+    extra_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=blueprint.product_type)
+    
+    for extra_material in extra_materials:
+        # If on of the materials from the bill of materials of the Tech II item is 
+        # found in the bill of materials for the Tech I item substract them.
+        for tech1_item_material in tech1_item_materials:
+            if tech1_item_material['material_type__id'] == extra_material['material_type__id']:
+                extra_material['quantity'] -= tech1_item_material['quantity']
+        
+        # Only if the quantity of the material is greater 0 after the substraction add the
+        # material to the bill of materials.
+        if extra_material['quantity'] > 0:
+            mat = {
+                'id': extra_material['material_type__id'],
+                'name': extra_material['material_type__name'],
+                'quantity': extra_material['quantity'],
+                'volume': extra_material['material_type__volume'],
+                'price': 0,
+                'price_total': 0
+            }
+            
+            mat = calculate_quantity(form_data, blueprint, mat)
+            materials.append(mat)
+    
+    return materials
 
 def calculate_manufacturing_job(form_data):
     """
@@ -17,55 +203,27 @@ def calculate_manufacturing_job(form_data):
     # 2. Calculate production time
     #
     
-    # initialize the result dictionary which will be returned
-    result = {}
+    result = {} # result dictionary which will be returned
+    blueprint_type_id = int(form_data['blueprint_type_id'])
+    blueprint_runs = int(form_data['blueprint_runs'])
+    blueprint = InvBlueprintType.objects.get(blueprint_type__id=blueprint_type_id)
     
     # --------------------------------------------------------------------------
     # Calculate bill of materials
     # --------------------------------------------------------------------------
-    blueprint_type_id = int(form_data['blueprint_type_id'])
-    blueprint_runs = int(form_data['blueprint_runs'])
-    blueprint_me = int(form_data['blueprint_material_efficiency'])
-    blueprint = InvBlueprintType.objects.get(blueprint_type__id=blueprint_type_id)
-    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__volume', 'material_type__id').filter(type=blueprint.product_type)
-    materials_cost_total = 0
-    materials_volume_total = 0
-    base_waste_multiplier = float(blueprint.waste_factor) / 100
+    materials = []
     
-    if blueprint_me >= 0:
-        base_waste_multiplier *= float((1 / (blueprint_me + 1)))
+    if is_advanced_manufacturing(blueprint):
+        materials = get_tech2_materials(form_data, blueprint)
     else:
-        base_waste_multiplier *= float(1 - blueprint_me)
+        materials = get_tech1_materials(form_data, blueprint)
+
+    materials = calculate_material_prices(materials)
+    materials_cost_total = math.fsum([material['price_total'] for material in materials])
+    materials_volume_total = math.fsum([material['volume'] for material in materials])
     
-    for material in materials:
-        # get the region stat object for the material in the Forge region
-        stat_object = ItemRegionStat()
-        
-        try:
-            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
-        except Exception as e:
-            stat_object.sellmedian = 0
-            connection._rollback()
-            
-        base_quantity = material['quantity']
-        
-        # first: calculate base waste
-        base_waste = base_quantity * base_waste_multiplier
-        
-        # second: calculate skill waste
-        skill_production_efficiency = int(form_data['skill_production_efficiency'])
-        skill_waste = float(((25 - (5 * skill_production_efficiency)) * base_quantity)) / 100
-        
-        # third: calculate the amount of materials needed depending on th installation slot material modifier and add the waste
-        quantity_unit = (base_quantity * form_data['slot_material_modifier']) + base_waste + skill_waste
-        quantity_total = round(quantity_unit * blueprint_runs)
-        
-        material['quantity'] = int(quantity_total)
-        material['price'] = stat_object.sellmedian
-        material['total'] = stat_object.sellmedian * quantity_total
-        material['volume_total'] = material['material_type__volume'] * quantity_total
-        materials_cost_total += material['total']
-        materials_volume_total += material['volume_total']
+    # sort materials by name:
+    materials.sort(key=lambda material: material['name']) 
     
     result['materials'] = materials
     result['materials_cost_unit'] = materials_cost_total / blueprint_runs
@@ -102,6 +260,7 @@ def calculate_manufacturing_job(form_data):
     result['production_time_total'] = round(production_time * blueprint_runs)
     
     # add all the other values to the result dictionary
+    # TODO: Optimize the following query. Only fetch the portion size for instance!
     product = InvType.objects.get(pk=blueprint.product_type.id)
     result['produced_units'] = product.portion_size * blueprint_runs
     result['blueprint_cost_unit'] = form_data['blueprint_price'] / result['produced_units']
