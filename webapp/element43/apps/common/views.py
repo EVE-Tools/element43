@@ -95,8 +95,8 @@ def stats_json(request, region_id):
             if (mc.get("e43-stats"+str(item))!=None):
                 cache_item = ujson.loads(mc.get("e43-stats"+str(item)))
                 #print "Item: ", item, " cache: ", cache_item
-                buyavg = cache_item['buymedian']
-                sellavg = cache_item['sellmedian']
+                buymedian = cache_item['buymedian']
+                sellmedian = cache_item['sellmedian']
             # otherwise go to the DB for it
             else:
                 region_stats = ItemRegionStat.objects.filter(mapregion_id = region_id, invtype_id = item)[:1][0]
