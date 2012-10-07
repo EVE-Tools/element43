@@ -28,7 +28,7 @@
   #stats
     .row-fluid
       .span12
-       %h3 Mineral Index and PLEX - The Forge
+       %h3 Mineral Index and PLEX - Jita / The Forge
        %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
          %thead
            %tr
@@ -40,22 +40,22 @@
            %tr
              %th
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in The Forge.'}
+               %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in Jita.'}
                  Highest Price
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Weighted average of all bids in The Forge.'}
-                 Weighted Avg
+               %a{'href':'#', 'rel':'tooltip', 'title':'Median of all bids in The Forge.'}
+                 Median
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s weighted average of bids in The Forge.'}
+               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of bids in The Forge.'}
                  Move
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in The Forge.'}
+               %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in Jita.'}
                  Lowest Price
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Weighted average of all asks in The Forge.'}
-                 Weighted Avg
+               %a{'href':'#', 'rel':'tooltip', 'title':'Median of all asks in The Forge.'}
+                 Median
              %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s weighted average of asks in The Forge.'}
+               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of asks in The Forge.'}
                  Move
          %tbody
            - for item in types
@@ -69,18 +69,18 @@
                %td{'id':'bid_max_{{item.id}}'}
                  0.00
                %td
-                 %span{'id':'bid_avg_{{item.id}}'}
+                 %span{'id':'bid_median_{{item.id}}'}
                    0.00
                %td
-                 %span{'id':'bid_avg_move_{{item.id}}'}
+                 %span{'id':'bid_median_move_{{item.id}}'}
                    +0.00
                %td{'id':'ask_min_{{item.id}}'}
                  0.00
                %td
-                 %span{'id':'ask_avg_{{item.id}}'}
+                 %span{'id':'ask_median_{{item.id}}'}
                    0.00
                %td
-                 %span{'id':'ask_avg_move_{{item.id}}'}
+                 %span{'id':'ask_median_move_{{item.id}}'}
                    +0.00
     .row-fluid
       .span6

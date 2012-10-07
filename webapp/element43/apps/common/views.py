@@ -84,8 +84,8 @@ def stats_json(request, region_id):
     types = new_types
     typestats = {}
     cache_item = {}
-    buyavg = 0
-    sellavg = 0
+    buymedian = 0
+    sellmedian = 0
 
     for item in types:
 
@@ -95,24 +95,26 @@ def stats_json(request, region_id):
             if (mc.get("e43-stats"+str(item))!=None):
                 cache_item = ujson.loads(mc.get("e43-stats"+str(item)))
                 #print "Item: ", item, " cache: ", cache_item
-                buyavg = cache_item['buyavg']
-                sellavg = cache_item['sellavg']
+                buyavg = cache_item['buymedian']
+                sellavg = cache_item['sellmedian']
             # otherwise go to the DB for it
             else:
                 region_stats = ItemRegionStat.objects.filter(mapregion_id = region_id, invtype_id = item)[:1][0]
-                buyavg = region_stats.buyavg
-                sellavg = region_stats.sellavg
+                buymedian = region_stats.buymedian
+                sellmedian = region_stats.sellmedian
                 
             region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id = region_id, invtype_id = item).order_by("-date")[:1][0]
-            buy = Orders.objects.filter(mapregion = region_id, invtype = item, is_bid = True).order_by("-price")[:1][0].price
-            sell = Orders.objects.filter(mapregion = region_id, invtype = item, is_bid = False).order_by("price")[:1][0].price
+            
+            # Get Jita prices
+            buy = Orders.objects.filter(mapsolarsystem = 30000142, invtype = item, is_bid = True).order_by("-price")[:1][0].price
+            sell = Orders.objects.filter(mapsolarsystem = 30000142, invtype = item, is_bid = False).order_by("price")[:1][0].price
             
             stats = {'bid_max': buy,
                      'ask_min': sell,
-                     'bid_avg': buyavg,
-                     'bid_avg_move': region_stats_history.buyavg - buyavg,
-                     'ask_avg': sellavg,
-                     'ask_avg_move': region_stats_history.sellavg - sellavg}
+                     'bid_median': buymedian,
+                     'bid_median_move': region_stats_history.buymedian - buymedian,
+                     'ask_median': sellmedian,
+                     'ask_median_move': region_stats_history.sellmedian - sellmedian}
         
             typestats[item] = stats
         
@@ -121,13 +123,13 @@ def stats_json(request, region_id):
     
     # Create JSON
     stat_json = simplejson.dumps({'active_orders': active_orders, 
-                            'archived_orders': archived_orders, 
-                            'history_records': history, 
-                            'new_orders':new_orders_per_minute,
-                            'updated_orders':updated_orders_per_minute, 
-                            'old_orders':old_orders_per_minute, 
-                            'history_messages': history_messages_per_minute,
-                            'typestats': typestats})
+                                'archived_orders': archived_orders, 
+                                'history_records': history, 
+                                'new_orders':new_orders_per_minute,
+                                'updated_orders':updated_orders_per_minute, 
+                                'old_orders':old_orders_per_minute, 
+                                'history_messages': history_messages_per_minute,
+                                'typestats': typestats})
     # Return JSON without using any template
     return HttpResponse(stat_json, mimetype = 'application/json')
     
