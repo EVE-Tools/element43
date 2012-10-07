@@ -12,7 +12,8 @@ urlpatterns = patterns('apps.market_data.views',
     url(r'^region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.quicklook_region', name = 'quicklook_region'),
         
     # History JSON
-    url(r'^history/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.history_json', name = 'quicklook_history_json'),
+    url(r'^history/(?P<type_id>[0-9]+)/$', 'market.market.history_compare_json', name = 'quicklook_history_compare_json'),
+    url(r'^history/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/$', 'market.market.history_json', name = 'quicklook_history_json'),
 
     # Market browser
     url(r'^browse/tree/(?P<group>[0-9]+)/$', 'market.browser.tree', name = 'browser_tree_group_json'),

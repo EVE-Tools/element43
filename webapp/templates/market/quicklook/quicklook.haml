@@ -243,6 +243,7 @@
   %script{'type':'text/javascript'}
     var invTypeID = {{type.id}};
     var invTypeName = "{{type.name}}";
-    var mapRegionID = 10000002;
-    var mapRegionName = "The Forge";
+    var mapRegionIDs = {{region_ids}};
+    var mapRegionNames = {{region_names|safe}};
   %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook_graph.js'}

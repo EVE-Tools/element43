@@ -38,28 +38,58 @@ from apps.market_data.util import group_breadcrumbs
 
 def history_json(request, region_id = 10000002, type_id = 34):
     
-        """
-        Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
-        """
+    """
+    Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
+    """
         
-        # Prepare lists
-        ohlc_data = []
-        ohlc_list = []
+    # Prepare lists
+    ohlc_data = []
+    ohlc_list = []
         
-        # If we do not have any data for this region, return an empty array
-        # Load history and parse data (unsorted)
-        data = OrderHistory.objects.filter(mapregion = region_id, invtype = type_id).order_by('date')
+    # If we do not have any data for this region, return an empty array
+    # Load history and parse data (unsorted)
+    data = OrderHistory.objects.filter(mapregion = region_id, invtype = type_id).order_by('date')
+    
+    last_mean = 0
+    
+    if len(data):
         last_mean = data[0].mean
         
-        # Convert to Highstocks compatible timestamp first
+    # Convert to Highstocks compatible timestamp first
+    for point in data:
+        ohlc_data.append([int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
+        last_mean = point.mean
+        
+    json = simplejson.dumps(ohlc_data)
+        
+    # Return JSON without using any template
+    return HttpResponse(json, mimetype = 'application/json')
+        
+def history_compare_json(request, type_id = 34):
+    
+    """
+    Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
+    """
+    
+    region_ids = [10000002, 10000043, 10000032, 10000030]
+        
+    # Prepare lists
+    data_dict = {}
+        
+    # If we do not have any data for this region, return an empty array
+    for region in region_ids:
+        data = OrderHistory.objects.filter(mapregion = region, invtype = type_id).order_by('date')
+        graph = []
+        
         for point in data:
-            ohlc_data.append([int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
-            last_mean = point.mean
+            graph.append([int(time.mktime(point.date.timetuple())) * 1000, point.mean])
         
-        json = simplejson.dumps(ohlc_data)
+        data_dict[region] = graph
         
-        # Return JSON without using any template
-        return HttpResponse(json, mimetype = 'application/json')
+    json = simplejson.dumps(data_dict)
+        
+    # Return JSON without using any template
+    return HttpResponse(json, mimetype = 'application/json')
 
 def quicklook_region(request, region_id = 10000002, type_id = 34):
     """
@@ -159,6 +189,16 @@ def quicklook(request, type_id = 34):
     Generates a market overview for a certain type. Defaults to tritanium.
     """
     
+    # Get the item type
+    type_object = InvType.objects.get(id = type_id)
+    
+    # Add regions
+    region_ids = [10000002, 10000043, 10000032, 10000030]
+    region_names = []
+        
+    for region in region_ids:
+        region_names.append(MapRegion.objects.get(id = region).name)
+    
     # Get requested type
     type_object = InvType.objects.get(id = type_id)
     
@@ -241,7 +281,7 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'region_ids':region_ids, 'region_names':simplejson.dumps(region_names), 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook.haml', rcontext)
     

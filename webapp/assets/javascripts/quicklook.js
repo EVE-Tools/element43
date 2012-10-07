@@ -3,68 +3,68 @@ $(document).ready(function () {
     // Market Quicklook for element43
     //
 
-	// Show / Hide filters section
-    
-    
-    $('#ask_link').click(function(e){
-		if (!($('#filters').is(':visible'))) {
-			$('#filters').slideDown();
-		}
+    // Show / Hide filters section
+
+
+    $('#ask_link').click(function (e) {
+        if (!($('#filters').is(':visible'))) {
+            $('#filters').slideDown();
+        }
     });
-    
-    $('#bid_link').click(function(e){
-		if (!($('#filters').is(':visible'))) {
-			$('#filters').slideDown();
-		}
-    })
-    
-    $('#region_link').click(function(e){
-		if ($('#filters').is(':visible')) {
-			$('#filters').slideUp();
-		}
-    })
-    
-    $('#mats_link').click(function(e){
-		if ($('#filters').is(':visible')) {
-			$('#filters').slideUp();
-		}
+
+    $('#bid_link').click(function (e) {
+        if (!($('#filters').is(':visible'))) {
+            $('#filters').slideDown();
+        }
     })
 
-	// Sliders
+    $('#region_link').click(function (e) {
+        if ($('#filters').is(':visible')) {
+            $('#filters').slideUp();
+        }
+    })
 
-	$("#security-slider").slider({
-				value: 0.4,
-				min: 0.0,
-				max: 1.0,
-				step: 0.1,
-				slide: function(event, ui) {
-					$("#system-security").html(ui.value);
-					$("#system-security").switchClass($("#system-security").attr('class'),"sec" + (ui.value*10),200);
-				}
-			});
-			
-	$("#system-security").val($("#security-slider").slider("value"));
-	
-	$("#age-slider").slider({
-				value: 8,
-				min: 1,
-				max: 8,
-				step: 1,
-				slide: function(event, ui) {
-					$("#data-age").html(ui.value);
-				}
-			});
-	
-	$("#data-age").html($("#age-slider").slider("value"));
-	
-	// Handle filtering
-	
-	$('#filter-button').click(
-		function(){
-			$('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
-			$('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
-		}
-	);
+    $('#mats_link').click(function (e) {
+        if ($('#filters').is(':visible')) {
+            $('#filters').slideUp();
+        }
+    })
+
+    // Sliders
+
+    $("#security-slider").slider({
+        value: 0.4,
+        min: 0.0,
+        max: 1.0,
+        step: 0.1,
+        slide: function (event, ui) {
+            $("#system-security").html(ui.value);
+            $("#system-security").switchClass($("#system-security").attr('class'), "sec" + (ui.value * 10), 200);
+        }
+    });
+
+    $("#system-security").val($("#security-slider").slider("value"));
+
+    $("#age-slider").slider({
+        value: 8,
+        min: 1,
+        max: 8,
+        step: 1,
+        slide: function (event, ui) {
+            $("#data-age").html(ui.value);
+        }
+    });
+
+    $("#data-age").html($("#age-slider").slider("value"));
+
+    // Handle filtering
+
+    $('#filter-button').click(
+
+    function () {
+        $('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
+        $('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
+    });
 
     /**
      * Gray theme for Highcharts JS
@@ -321,109 +321,4 @@ $(document).ready(function () {
 
     // Apply the theme
     var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
-
-    $.getJSON('/market/history/' + mapRegionID + '/' + invTypeID + '/', function (data) {
-        // Parse data
-        var data_ohlc = [],
-            data_high = [],
-						data_low = [],
-            data_volume = [],
-            length = data.length;
-
-        // Only proceed if there is any data
-
-        if (length != 0) {
-            for (i = 0; i < length; i++) {
-                data_ohlc.push([
-                data[i][0], // Timestamp
-                data[i][1], // Open
-                data[i][2], // High
-                data[i][3], // Low
-                data[i][4]  // Close
-                ]);
-
-                data_high.push([
-                data[i][0], // Timestamp
-                data[i][2], // High
-                ]);
-
-								data_low.push([
-                data[i][0], // Timestamp
-                data[i][3], // Low
-                ]);
-
-                data_volume.push([
-                data[i][0], // Timestamp
-                data[i][5], // Volume
-                ]);
-            }
-
-            var groupingUnits = [
-                ['week', [1]],
-                ['month', [1, 2, 3, 4, 6]]
-            ];
-
-            // Create the chart
-            window.chart = new Highcharts.StockChart({
-                chart: {
-                    renderTo: 'history',
-										height: 400,
-										style: {
-											fontFamily: 'Helvetica, sans-serif',
-											fontSize: '12px'
-										}
-                },
-
-                rangeSelector: {
-                    selected: 1
-                },
-
-								title : {
-		                text : mapRegionName,
-										floating: true
-		            },
-
-		            yAxis: [{
-		                title: {
-		                    text: 'Price'
-		                },
-										min: 0,
-		                height: 200,
-		                lineWidth: 2
-		            }, {
-		                title: {
-		                    text: 'Volume'
-		                },
-		                top: 200,
-		                height: 100,
-										gridLineWidth: 0,
-		                offset: 0,
-		                lineWidth: 2,
-										labels: {
-											enabled: false
-										}
-		            }],
-
-                series: [{
-                    type: 'candlestick',
-                    name: invTypeName,
-                    data: data_ohlc,
-                    dataGrouping: {
-                        units: groupingUnits
-                    },
-                    tooltip: {
-                        valueDecimals: 2
-                    }
-                }, {
-                    type: 'column',
-										name: 'Volume',
-                    data: data_volume,
-                    dataGrouping: {
-                        units: groupingUnits
-                    },
-                    yAxis: 1
-                }]
-            });
-        }
-    });
 });
