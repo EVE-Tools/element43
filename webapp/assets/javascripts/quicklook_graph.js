@@ -49,7 +49,7 @@ $(document).ready(function () {
                 },
 
                 title: {
-                    text: "Prices in " + mapRegionNames,
+                    text: "Average Prices in " + mapRegionNames,
                     floating: true
                 },
 
