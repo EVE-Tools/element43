@@ -175,6 +175,8 @@ def thread(data):
     if data['item'] in fastupdateitems:
         item_stats['buyavg']=buyavg
         item_stats['sellavg'] = sellavg
+        item_stats['buymedian'] = buymedian
+        item_stats['sellmedian'] = sellmedian
         mc.set(mckey + str(data['item']), json.dumps(item_stats), time=86400)
         print "CACHE INSERT: ", data['item'], "[", item_stats['buyavg'], " / ", item_stats['sellavg'], "]"
         
