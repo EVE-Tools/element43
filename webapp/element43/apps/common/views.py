@@ -116,7 +116,8 @@ def stats_json(request, region_id):
                      'ask_median': sellmedian,
                      'ask_median_move': region_stats_history.sellmedian - sellmedian}
         
-            typestats[item] = stats
+            if stats:
+                typestats[item] = stats
         
         except pylibmc.Error as e:
             print e

@@ -2,7 +2,7 @@ $(document).ready(function () {
     $.getJSON('/market/history/' + invTypeID + '/', function (data) {
         // Parse data
         var length = data.length;
-        var prices = []
+        var prices = [];
 
         // Only proceed if there is any data
 
