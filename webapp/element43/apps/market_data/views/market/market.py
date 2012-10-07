@@ -10,6 +10,7 @@ from django.db.models import Avg
 
 # market_data models
 from apps.market_data.models import Orders
+from apps.market_data.models import OrderHistory
 from apps.market_data.models import ItemRegionStat
 from apps.market_data.models import History
 
@@ -46,27 +47,16 @@ def history_json(request, region_id = 10000002, type_id = 34):
         ohlc_list = []
         
         # If we do not have any data for this region, return an empty array
-        try:
-            # Load history and parse data (unsorted)
-            data = ast.literal_eval(History.objects.get(mapregion = region_id, invtype = type_id).history_data)
+        # Load history and parse data (unsorted)
+        data = OrderHistory.objects.filter(mapregion = region_id, invtype = type_id).order_by('date')
+        last_mean = data[0].mean
         
-            # Convert to Highstocks compatible timestamp first
-            for key, value in data.iteritems():
-                ohlc_data.append([int(time.mktime(datetime.strptime(key, '%Y-%m-%d %H:%M:%S').timetuple())) * 1000, value])
-            
-            # Sort by date
-            ohlc_data.sort(key=lambda k: k[0])
+        # Convert to Highstocks compatible timestamp first
+        for point in data:
+            ohlc_data.append([int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
+            last_mean = point.mean
         
-            last_avg = ohlc_data[0][1][3]
-        
-            for data_point in ohlc_data:
-                # Format the list: [timestamp, open(last_average), high, low, close(this day's avg), volume]
-                ohlc_list.append([data_point[0], last_avg, data_point[1][2], data_point[1][1], data_point[1][3], data_point[1][4]])
-                last_avg = data_point[1][3]
-        except:
-            ohlc_list = []
-        
-        json = simplejson.dumps(ohlc_list)
+        json = simplejson.dumps(ohlc_data)
         
         # Return JSON without using any template
         return HttpResponse(json, mimetype = 'application/json')
