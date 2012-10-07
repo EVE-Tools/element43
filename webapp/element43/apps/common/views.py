@@ -11,7 +11,7 @@ from django.utils import simplejson
 
 # Models
 from eve_db.models import InvType
-from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegionStat, ItemRegionStatHistory, EmdrStats
+from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
 
 # Utils
 import ujson as ujson
@@ -50,9 +50,23 @@ def stats_json(request, region_id):
     # Collect stats
     
     # 1. Platform stats
-    active_orders = Orders.objects.count()
-    archived_orders = OrdersWarehouse.objects.count()
-    history = History.objects.count()
+    # these is a disconnect between history and history messages/min -- history is orderhistory table which is all rows
+    # message per min is based on emdr which is multiple rows in one message.
+    if (mc.get("e43-stats-activeorders")!=None):
+        active_orders = mc.get("e43-stats-activeorders")
+    else:
+        active_orders = Orders.objects.count()
+        mc.set("e43-stats-activeorders", active_orders, time = 3600)
+    if (mc.get("e43-stats-archivedorders")!=None):
+        archived_orders = mc.get("e43-stats-archivedorders")
+    else:
+        archived_orders = OrdersWarehouse.objects.count()
+        mc.set("e43-stats-archivedorders", archived_orders, time = 3600)
+    if (mc.get("e43-stats-history")!=None):
+        history = mc.get("e43-stats-history")
+    else:
+        history = OrderHistory.objects.count()
+        mc.set("e43-stats-history", history, time = 3600)
     
     new_orders_per_minute = EmdrStats.objects.filter(status_type = 1).order_by("message_timestamp")[:1][0].status_count / 5
     updated_orders_per_minute = EmdrStats.objects.filter(status_type = 2).order_by("message_timestamp")[:1][0].status_count / 5
