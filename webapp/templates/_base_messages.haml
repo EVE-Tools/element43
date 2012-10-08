@@ -1,0 +1,35 @@
+- load custom_filters
+- if request|is_igb and not request|igb_is_trusted
+  .alert.alert-info
+    %strong
+      Hey!
+    %p
+      It appears that you are accessing this page from the IGB, but have not granted trust to element43, yet. Some functions will not work properly if element43 is untrusted. Please reload the page manually after granting trust.
+    %a#btn-trust.btn.btn-success{'href':'#', 'onclick':'CCPEVE.requestTrust($(location).attr("href"))'}
+       %i.icon-check
+       Grant Trust
+- if messages
+  - for message in messages
+    - if message.tags == "success"
+        .alert{'class':'alert-success'}
+          .button.close{'type':'button', 'data-dismiss':'alert'} &times;
+          %i.icon-white.icon-ok-sign
+          %strong Success!
+          {{message}}
+    - if message.tags == "warning"
+      .alert{'class':'alert-warning'}
+        .button.close{'type':'button', 'data-dismiss':'alert'} &times;
+        %i.icon-white.icon-warning-sign
+        %strong Hey there!
+        {{message}}
+    - if message.tags == "error"
+      .alert{'class':'alert-error'}
+        .button.close{'type':'button', 'data-dismiss':'alert'} &times;
+        %i.icon-white.icon-exclamation-sign
+        %strong Oops!
+        {{message}}
+    - if message.tags == "info"
+      .alert{'class':'alert-info'}
+        .button.close{'type':'button', 'data-dismiss':'alert'} &times;
+        %i.icon-white.icon-info-sign
+        {{message}}

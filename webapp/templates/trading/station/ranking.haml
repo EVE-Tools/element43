@@ -1,0 +1,31 @@
+- extends "base.haml"
+- load custom_filters
+- load humanize
+- block title
+  = block.super
+  Market - Stations by Number of Active Orders
+- block content
+  %h1
+    Top Stations by Active Orders
+	%table.table.table-striped.table-condensed
+	  %thead
+	    %tr
+        %th
+	      %th
+	        Station
+	      %th.text-right
+	        Active Orders
+	  %tbody
+	    - for station in rank_list
+	      %tr
+          %td
+            = forloop.counter
+	        %td
+            %span{'class':'sec{{station.system.security_level|sec0to10}}'}
+              • {{station.system.security_level|sec0to1}} 
+            {{station.region.name}} - {{station.name}}
+	        %td.text-right
+	          = station.ordercount|intcomma
+	%p
+	  %i
+	    Generated at {{generated_at}} UTC

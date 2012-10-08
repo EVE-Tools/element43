@@ -1,0 +1,34 @@
+- extends "base.haml"
+- ifnotequal region None
+  - block title
+    = block.super
+    Scanner - {{region.name}}
+  - block content
+    %h1
+      Market Scanner for {{region.name}}
+    .row-fluid
+      .span6
+        %h2{'style':'margin-bottom:0.4em;'}
+          Speed
+        %span#slider-label
+          3 seconds per Item
+        #slider
+      .span6
+        %h2
+          Progress
+        .progress
+          #scan_progress.bar{'style':'width:0%;'}
+    #speed-notice.alert.alert-info
+      If your market window does not update anymore, reopen the IGB and pick a slower speed (3 seconds should be a good value).
+    #scan_table_container
+      %table#scan_table.table.table-condensed
+        %tbody
+          - for type in types
+            %tr{'id':'{{type.id}}'}
+              %td
+                %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ type.id }}_32.png'), 'alt':'type image'}
+              %td
+                = type.name
+  - block scripts
+    %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'/static/javascripts/scanner.js'}

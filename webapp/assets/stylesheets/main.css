@@ -1,179 +1,186 @@
+@import url("http://fonts.googleapis.com/css?family=Orbitron:500");
 /*
  * Main CSS file for element43
  */
-/* line 20, main.scss */
+h1, h2, h3 {
+  text-transform: uppercase;
+  margin-bottom: 1em; }
+
 body {
-  background: url("../images/background.jpg") no-repeat scroll center top black;
-}
+  background: url("/static/images/background.jpg") no-repeat scroll center top black; }
 
-/* line 27, main.scss */
-.table tbody tr:hover td,
-.table tbody tr:hover th {
-  background-color: transparent;
-}
+footer {
+  text-align: center; }
 
-/* line 31, main.scss */
-.table-striped tbody tr:nth-child(odd):hover td {
-  background-color: #444444;
-}
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  color: #333333; }
 
-/* line 37, main.scss */
+.text-right {
+  text-align: right !important; }
+
+.text-center {
+  text-align: center !important; }
+
+.typeinfo {
+  margin-top: 1em; }
+
+.price {
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 3px #33b5e5;
+  font-size: 18px; }
+
+.autocomplete-w1 {
+  background-color: #121417;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin: 6px 0 0 6px; }
+
+.autocomplete {
+  border: 1px solid #333333;
+  background: #121417;
+  cursor: default;
+  text-align: left;
+  overflow: auto; }
+
+.autocomplete .selected {
+  background: #444444; }
+
+.autocomplete div {
+  padding: 2px 5px;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.autocomplete strong {
+  font-weight: normal;
+  color: #33b5e5; }
+
+.navbar-top .container {
+  width: 940px; }
+
+@media (min-width: 1200px) {
+  .navbar-top .container {
+    width: 1170px; } }
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
-  padding: 10px;
-}
+  padding: 10px; }
 
-/* line 41, main.scss */
 .content {
-  padding: 10px;
-  background: #2f2f2f;
-}
+  background-color: #121417;
+  padding: 10px; }
 
-/* line 46, main.scss */
-.navbar {
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid #313F41;
-}
+.scan_done {
+  background: #50c878; }
 
-/* line 52, main.scss */
-.navbar-inner {
-  background: transparent;
-}
-
-/* line 60, main.scss */
 .clock {
-  float: right;
   color: #fff;
   margin: 0 auto;
-  padding: 0;
-}
-/* line 66, main.scss */
-.clock ul {
-  float: left;
-  list-style: none;
-  margin: 0 auto;
-  padding: 0;
-}
-/* line 73, main.scss */
-.clock ul li {
-  display: inline;
-  text-shadow: 0 0 2px #00c6ff;
-  padding: 0;
-}
+  padding: 0; }
+  .clock ul {
+    display: inline-block;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0; }
+  .clock ul li {
+    display: inline;
+    text-shadow: 0 0 3px #33b5e5;
+    padding: 0; }
 
-/* line 80, main.scss */
 #date {
-  float: left;
-  padding-right: 5px;
-  text-shadow: 0 0 2px #00c6ff;
-}
+  display: inline-block;
+  text-shadow: 0 0 2px #33b5e5; }
 
-/* line 86, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
   -webkit-animation: clktrans 1s ease infinite;
-  padding: 0;
-}
+  padding: 0; }
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 97, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
-  }
+    text-shadow: 0 0 20px #33b5e5; }
 
-  /* line 98, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none;
-  }
+    text-shadow: none; }
 
-  /* line 99, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
-  }
-}
+    text-shadow: 0 0 20px #33b5e5; } }
 
 @-moz-keyframes clktrans {
-  /* line 104, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
-  }
+    text-shadow: 0 0 20px #33b5e5; }
 
-  /* line 105, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none;
-  }
+    text-shadow: none; }
 
-  /* line 106, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #00c6ff;
-  }
-}
+    text-shadow: 0 0 20px #33b5e5; } }
 
-/* line 112, main.scss */
-.hero-unit h1 {
-  color: white;
-}
+.red {
+  color: red; }
 
-/* line 119, main.scss */
+.green {
+  color: #50c878; }
+
 .sec10 {
-  color: #2FEFEF;
-}
+  color: #2FEFEF; }
 
-/* line 123, main.scss */
 .sec9 {
-  color: #48F0C0;
-}
+  color: #48F0C0; }
 
-/* line 127, main.scss */
 .sec8 {
-  color: #00EF47;
-}
+  color: #00EF47; }
 
-/* line 131, main.scss */
 .sec7 {
-  color: #00F000;
-}
+  color: #00F000; }
 
-/* line 135, main.scss */
 .sec6 {
-  color: #8FEF2F;
-}
+  color: #8FEF2F; }
 
-/* line 139, main.scss */
 .sec5 {
-  color: #EFEF00;
-}
+  color: #EFEF00; }
 
-/* line 143, main.scss */
 .sec4 {
-  color: #D77700;
-}
+  color: #D77700; }
 
-/* line 147, main.scss */
 .sec3 {
-  color: #F06000;
-}
+  color: #F06000; }
 
-/* line 151, main.scss */
 .sec2 {
-  color: #F04800;
-}
+  color: #F04800; }
 
-/* line 155, main.scss */
 .sec1 {
-  color: #D73000;
-}
+  color: #D73000; }
 
-/* line 159, main.scss */
 .sec0 {
-  color: #F00000;
-}
+  color: #F00000; }
+
+.breadcrumb {
+  padding: 8px 0px; }
+
+.breadcrumb li {
+  text-shadow: none;
+  color: white; }

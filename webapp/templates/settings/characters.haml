@@ -1,0 +1,37 @@
+- extends "base.haml"
+- load custom_filters
+- block title
+  = block.super
+  {{user.username}} - Settings
+- block content
+  %h1
+    {{user.username}}
+  .row-fluid
+    .span3
+      %ul.nav.nav-tabs.nav-stacked
+        %li
+          %a{'href':'{% url settings %}'}
+            Modify Profile
+        %li.active
+          %a{'href':'{% url manage_characters %}'}
+            Manage Characters  
+        %li
+          %a{'href':'{% url manage_api_keys %}'}
+            Manage API Keys
+    .span9
+      %table.table.table-striped
+        %tbody
+          - for char in characters
+            %tr
+              %td
+                %img{'src':'http://image.eveonline.com/Character/{{char.id}}_32.jpg'}
+              %td
+                = char.name
+              %td.text-right
+                %a{'href':'{% url remove_character char_id=char.id %}'}
+                  .btn.btn-danger
+                    Remove
+
+            
+            
+      

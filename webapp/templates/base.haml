@@ -1,67 +1,106 @@
+- load custom_filters
+- load compress
 <!DOCTYPE html>
 %html
   %head
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/darkstrap.css'}
-    %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
-    %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
+    - compress css
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/jquery-ui-1.8.22.custom.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/ui.dynatree.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap-responsive.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
+      %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
-      element43
+      element43 - 
   %body
     %header
-      .navbar
+      .navbar.navbar-top
         .navbar-inner
           .container
-            %a.brand{'href':'/'} element43
+            %a.brand{'href':'{% url home %}'}
+              %img{'src':'/static/images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
+              %span.label.label-important{'style':'float:left;'}
+                BETA
             %ul.nav
-              %li
-                %a{'href':'/'} Home
-              %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
                   Market
-                  %b{'class':'caret'}
-                %ul{'class':'dropdown-menu'}
+                  %b.caret
+                %ul.dropdown-menu
                   %li
-                    %a{'href':'#'} Item Details
+                    %a{'href':'{% url browser %}'} Browse Market
+                  - if request|is_igb
+                    %li
+                      %a{'href':'{% url scanner_random %}'} Market Scanner - Random
+                    - if request|igb_is_trusted
+                      %li
+                        %a{'href':'{% url scanner_region %}'} Market Scanner - Region
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                  Trading
+                  %b.caret
+                %ul.dropdown-menu
                   %li
-                    %a{'href':'#'} Item Quick Look
+                    %a{'href':'{% url station_ranking %}'} Top Stations
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                  Manufacturing
+                  %b.caret
+                %ul.dropdown-menu
                   %li
-                    %a{'href':'/market/scanner'} Market Scanner
-              %li
-                %a{'href':'#'} Trading
-              %li
-                %a{'href':'#'} Industry
-              %li
-                %a{'href':'#'} Production
-              %li{'class':'dropdown'}
-                %a{'href':'#', 'class':'dropdown-toggle', 'data-toggle':'dropdown'} 
-                  Reports
-                  %b{'class':'caret'}
-                %ul{'class':'dropdown-menu'}
-                  %li
-                    %a{'href':'#'} User Reports
-            %form.navbar-search.pull-right{'id':'search','method':'post','action':'/search'}
-              - csrf_token
-              %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'data-provide':'typeahead', 'data-source':'', 'name':'query'}
+                    %a{'href':'{% url manufacturing_select_blueprint %}'} Calculator
+            %ul.nav.pull-right
+              - if not user.is_authenticated
+                %li
+                  %a{'href':'{% url login %}?next={{request.path}}'}
+                    Login
+                %li
+                  %a{'href':'{% url registration %}'}
+                    Register
+              - else
+                %li.dropdown
+                  %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                    %b {{user.username}}
+                    %b.caret
+                  %ul.dropdown-menu
+                    %li
+                      %a{'href':'{% url home %}'}
+                        %i.icon-white.icon-home
+                        Dashboard
+                    %li
+                      %a{'href':'{% url settings %}'}
+                        %i.icon-white.icon-wrench
+                        Settings
+                    %li
+                      %a{'href':'{% url logout %}'}
+                        %i.icon-white.icon-off
+                        Logout
+              %form.navbar-search{'id':'search','method':'post','action':'{% url search %}'}
+                - csrf_token
+                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'name':'query'}
     .container
-      .panel-wrapper
-        .content.clearfix
+      .panel-wrapper.clearfix
+        .content
+          - include '_base_messages.haml'
           - block content
-          %hr
+    .container{'style':'padding-top: 2em;'}
+      .row-fluid
+        .span12
           %footer
-            .row
-              .span2
-                %p
-                  element43 - 2012
-              .clock
-                #date
-                %ul
-                  %li#hours
-                  %li#point :
-                  %li#min
-                  %li#point :
-                  %li#sec
-    %script{'type':'text/javascript', 'src':'http://code.jquery.com/jquery-1.7.2.min.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
-    %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+            .clock
+              #date
+              %ul
+                %li#hours
+                %li#point :
+                %li#min
+                %li#point :
+                %li#sec
+    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
+    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
+    - compress js
+      %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.js'}
+      %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+    - block scripts

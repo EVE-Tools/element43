@@ -3,159 +3,235 @@
  */
 
 // General Variables
-$background: 			 #000000;
-$background_grey:  #2F2F2F;
+$background:        #000000;
+$background-grey:   #121417;
+$blue:              #019CFF;
+$contrast-blue:     #33b5e5;
+$white:             #FFFFFF;
+$red:               #FF0000;
+$green:             #50C878;
+$orange:            #E68A17;
+$grey:              #333333;
+$light-grey:        #444444;
 
-$padding: 				 10px;
+$padding:           10px;
+
+// Orbitron Font
+@import url('http://fonts.googleapis.com/css?family=Orbitron:500');
 
 // Mixins
 
 @mixin panel {
-	background-color: rgba(255, 255, 255, 0.2); 
-	padding: $padding;
+    background-color: rgba(255, 255, 255, 0.2); 
+    padding: $padding;
+}
+
+@mixin heading {
+    text-transform: uppercase;
+    margin-bottom: 1em;
 }
 
 // HTML Elements
 
+h1, h2, h3 {
+    @include heading;
+}
+
 body {
-	background: url("../images/background.jpg") no-repeat scroll center top $background;
+    background: url("/static/images/background.jpg") no-repeat scroll center top $background;
 }
 
-// Table highlight fix
-
-.table tbody tr:hover td,
-.table tbody tr:hover th {
-  background-color: transparent;
+footer {
+    text-align: center;
 }
 
-.table-striped tbody tr:nth-child(odd):hover td {
-   background-color: rgb(68, 68, 68);
+// Input color override
+textarea, 
+input[type="text"], 
+input[type="password"], 
+input[type="datetime"], 
+input[type="datetime-local"], 
+input[type="date"], 
+input[type="month"], 
+input[type="time"], 
+input[type="week"], 
+input[type="number"], 
+input[type="email"], 
+input[type="url"], 
+input[type="search"], 
+input[type="tel"], 
+input[type="color"], 
+.uneditable-input {
+    color: $grey;
 }
 
 // Classes
 
+.text-right {
+    text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+// Market Browser
+
+.typeinfo {
+    margin-top: 1em;
+}
+
+.price {
+    font-family: 'Orbitron', sans-serif;
+    color: $white;
+    text-shadow: 0 0 3px $contrast-blue;
+    font-size: 18px;
+}
+
+// Search field
+
+.autocomplete-w1 { background-color: $background-grey; position:absolute; top:0px; left:0px; margin:6px 0 0 6px;}
+.autocomplete { border:1px solid $grey; background: $background-grey; cursor:default; text-align:left; overflow:auto;}
+.autocomplete .selected { background: $light-grey; }
+.autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
+.autocomplete strong { font-weight:normal; color: $contrast-blue; }
+
+// Navbar container fix
+.navbar-top .container {
+    width: 940px;
+}
+
+@media (min-width: 1200px) {
+    .navbar-top .container {
+    width: 1170px;
+    }
+}
+
 .panel-wrapper {
-	@include panel;
+    @include panel;
 }
 
 .content {
-	padding: $padding;
-	background: $background_grey;
-}
-
-.navbar {
-	padding: $padding;
-	background: rgba(0, 0, 0, 0.4);
-	border-bottom: 1px solid #313F41;
-}
-
-.navbar-inner {
-	background: transparent;
+    background-color: $background-grey;
+    padding: $padding;
 }
 
 // Rarely Used Clases
 
+.scan_done {
+    background: $green;
+}
+
 // Fancy clock
 
 .clock {
-	float: right;
-	color:#fff;
-	margin:0 auto;
-	padding: 0;
-	
-	ul {
-		float:left;
-		list-style:none;
-		margin:0 auto;
-		padding:0;
-	}
+    color: #fff;
+    margin: 0 auto;
+    padding: 0;
+    
+    ul {
+        display: inline-block;
+        list-style:none;
+        margin:0 auto;
+        padding:0;
+    }
 
-	ul li {
-		display:inline;
-		text-shadow:0 0 2px #00c6ff;
-		padding: 0;
-	}
+    ul li {
+        display: inline;
+        text-shadow: 0 0 3px $contrast-blue;
+        padding: 0;
+    }
 }
 
 #date {
-	float: left;
-	padding-right: 5px;
-	text-shadow:0 0 2px #00c6ff;
+    display: inline-block;
+    text-shadow: 0 0 2px $contrast-blue;
 }
 
 #point {
-	position:relative;
-	-moz-animation:clktrans 1s ease infinite;
-	-webkit-animation:clktrans 1s ease infinite;
-	padding: 0;
+    position:relative;
+    -moz-animation:clktrans 1s ease infinite;
+    -webkit-animation:clktrans 1s ease infinite;
+    padding: 0;
 }
 
 
 /* Simple Animation */
 @-webkit-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
 }
 
 @-moz-keyframes clktrans 
 {
-0% {opacity:1.0; text-shadow:0 0 20px #00c6ff;}
+0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px #00c6ff; }	
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
 }
 
-// Hero font color fix
+// Color classes
 
-.hero-unit {
-	h1 {
-		color: white;
-	}
+.red {
+    color: $red;
+}
+
+.green {
+    color: $green;
 }
 
 // System Security Colors
 
 .sec10 {
-	color: #2FEFEF;
+    color: #2FEFEF;
 }
 
 .sec9 {
-	color: #48F0C0;
+    color: #48F0C0;
 }
 
 .sec8 {
-	color: #00EF47;
+    color: #00EF47;
 }
 
 .sec7 {
-	color: #00F000;
+    color: #00F000;
 }
 
 .sec6 {
-	color: #8FEF2F;
+    color: #8FEF2F;
 }
 
 .sec5 {
-	color: #EFEF00;
+    color: #EFEF00;
 }
 
 .sec4 {
-	color: #D77700;
+    color: #D77700;
 }
 
 .sec3 {
-	color: #F06000;
+    color: #F06000;
 }
 
 .sec2 {
-	color: #F04800;
+    color: #F04800;
 }
 
 .sec1 {
-	color: #D73000;
+    color: #D73000;
 }
 
 .sec0 {
-	color: #F00000;
+    color: #F00000;
+}
+
+.breadcrumb {
+    padding: 8px 0px;
+}
+
+.breadcrumb li {
+    text-shadow: none;
+    color: white;
 }

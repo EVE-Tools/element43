@@ -10,3 +10,7 @@ docs_src/_build/*
 local_consumer.conf
 eve_db
 *.db3
+.pydevproject
+.sass-cache
+cache
+celerybeat-schedule

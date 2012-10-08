@@ -3,22 +3,39 @@ from django.contrib import admin
 
 admin.autodiscover()
 
+# Custom error handlers
+handler403 = 'apps.common.views.handler_403'
+handler404 = 'apps.common.views.handler_404'
+handler500 = 'apps.common.views.handler_500'
+
+#
+# URLs for Element43
+#
+
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^$', 'apps.market_data.views.home'),
-    # url(r'^element43/', include('element43.foo.urls')),
-    url(r'^market/scanner/', 'apps.market_data.scanners.random'),
+    
+    # Common URLs
+    url(r'', include('apps.common.urls')),
+    
+    # Authentication and registration
+    url(r'', include('apps.auth.urls')),
+    
+    # Market data
+    url(r'^market/', include('apps.market_data.urls')),
+    
+    # Account management
+    url(r'^settings/', include('apps.user_settings.urls')),
+    
+    # Manufacturing
+    url(r'^manufacturing/', include('apps.manufacturing.urls')),
+)
 
-		# Search
-		url(r'^search', 'apps.market_data.views.search'),
+#
+# Administration views
+#
 
-		# Live search
-		url(r'^live_search/(?P<query>[a-zA-Z]+)', 'apps.market_data.views.live_search'),
-		
-		# Quicklook
-		url(r'^market/(?P<type_id>[0-9]+)', 'apps.market_data.views.quicklook'),
-
-    # admin documentation:
+urlpatterns += patterns('',     
+    # Admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

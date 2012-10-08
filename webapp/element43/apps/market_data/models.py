@@ -4,12 +4,15 @@ Model definitions for storing market data messages.
 
 from django.db import models
 
+#
+# Market Data Models
+#
+
 class UUDIFMessage(models.Model):
     """
     A raw JSON UUDIF market message. This is typically only used on local
     development workstations.
     """
-
     key = models.CharField(max_length=255, unique=True,
         help_text="I'm assuming this is a unique hash for the message.")
     received_dtime = models.DateTimeField(auto_now_add=True,
@@ -27,7 +30,6 @@ class SeenOrders(models.Model):
     """
     Track which orders we've seen in this last cycle.
     """
-    
     id = models.BigIntegerField(primary_key=True,
         help_text="Order ID")
     region_id = models.PositiveIntegerField(
@@ -64,6 +66,45 @@ class EmdrStatsWorking(models.Model):
     class Meta(object):
         verbose_name = "Message Statistics Live Data"
         verbose_name_plural = "Message Statistics Live Data"
+        
+class ItemRegionStat(models.Model):
+    """
+    Stats for items on a per region basis
+    processed when new orders come in during warehousing
+    """
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text = "FK to type table")
+    buymean = models.FloatField(help_text = "Mean of buy price")
+    buyavg = models.FloatField(help_text = "Average of buy price")
+    sellmean = models.FloatField(help_text = "Mean of sell price")
+    sellavg = models.FloatField(help_text = "Avg of sell price")
+    buymedian = models.FloatField(help_text = "Median of buy price")
+    sellmedian = models.FloatField(help_text = "Median of sell price")
+    lastupdate = models.DateTimeField(blank=True, null=True, help_text = "Date the stats were updated")
+    
+    class Meta(object):
+        verbose_name = "Stat Data"
+        verbose_name_plural = "Stats Data"
+        
+class ItemRegionStatHistory(models.Model):
+    """
+    Stats for items on a per region basis
+    processed when new orders come in during warehousing
+    """
+    
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text = "FK to type table")
+    buymean = models.FloatField(help_text = "Mean of buy price")
+    buyavg = models.FloatField(help_text = "Average of buy price")
+    sellmean = models.FloatField(help_text = "Mean of sell price")
+    sellavg = models.FloatField(help_text = "Avg of sell price")
+    buymedian = models.FloatField(help_text = "Median of buy price")
+    sellmedian = models.FloatField(help_text = "Median of sell price")
+    date = models.DateTimeField(blank=True, null=True, help_text = "Date the stats were inserted")
+    
+    class Meta(object):
+        verbose_name = "Stat History Data"
+        verbose_name_plural = "Stat History Data"
 
 class History(models.Model):
     """
@@ -82,6 +123,22 @@ class History(models.Model):
     class Meta(object):
         verbose_name = "History Data"
         verbose_name_plural = "History Data"
+        
+class OrderHistory(models.Model):
+    """
+    Post-processed history
+    """
+    
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
+        help_text="Region ID the order originated from.")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
+        help_text="The Type ID of the item in the order.")
+    date = models.DateTimeField(help_text = "Date of the data")
+    numorders = models.PositiveIntegerField(help_text="number of transactions for this item/region")
+    low = models.FloatField(help_text="low price of orders for this item/region")
+    high = models.FloatField(help_text="high price of orders for this item/region")
+    mean = models.FloatField(help_text="mean price of orders for this item/region")
+    quantity = models.BigIntegerField(help_text="quantity of item sold for this item/region")
         
 class OrdersWarehouse(models.Model):
     """

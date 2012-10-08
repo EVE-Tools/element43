@@ -1,0 +1,156 @@
+- extends "base.haml"
+- load custom_filters humanize element43_humanize
+- block title
+  = block.super
+  Manufacturing Job Result
+- block content
+  
+  %span#blueprint_runs{'style':'display:none;'}
+    = data.blueprint_runs
+  
+  %ul.breadcrumb
+    %li
+      Manufacturing
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_select_blueprint %}'}
+        Blueprint Search ({{ data.blueprint_name }})
+    %li
+      %span.divider >
+      %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}
+        Change Job Parameters
+    %li
+      %span.divider >
+      Result
+  
+  %h3
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Unit{{ data.produced_units|pluralize }}) 
+  
+  %form.form-inline
+    %table#billofmaterials.table.table-striped
+      %thead
+        %tr
+          %th
+            Material
+          %th
+            Price (ISK)
+            %a{'href':'#', 'rel':'tooltip', 'title':'All prices are The Forge Sell Median'}
+              %i.icon-white.icon-question-sign
+          %th.text-right
+            Quantity
+          %th.text-right
+            Price Total (ISK)
+          %th.text-right
+            Volume (m³)
+      %tfoot
+        %tr
+          %td
+          %td
+          %td.text-right
+            %strong
+              Total
+          %td.text-right
+            %strong#materials_cost_total_unit
+              = data.materials_cost_total|floatformat:2|intcomma
+          %td.text-right
+            %strong
+              = data.materials_volume_total|floatformat:2|intcomma
+      %tbody
+      - for material in data.materials
+        %tr
+          %td
+            - if not request|is_igb
+              %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
+              = material.material_type__name
+            - else
+              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.material_type__id }})'}
+                = material.material_type__name
+          %td
+            %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.material_type__id }}' }
+          %td.text-right
+            %span{'id': 'material_quantity_{{ material.material_type__id }}'}
+              = material.quantity|intcomma
+          %td.text-right
+            %span{'id': 'material_price_{{ material.material_type__id }}'}
+              = material.total|floatformat:2|intcomma
+          %td.text-right
+            = material.volume_total|floatformat:2|intcomma
+    
+  %h3
+    Cost and Profit Overview
+    
+  %table.table.table-striped
+    %thead
+      %tr
+        %th
+        %th.text-right
+          Per Unit
+        %th.text-right
+          Total
+    %tbody
+      %tr
+        %td
+          Build time:
+        %td.text-right
+          = data.production_time_run|floatformat:0|humanize_time:"seconds"
+        %td.text-right
+          = data.production_time_total|humanize_time:"seconds"
+      %tr
+        %td
+          Material cost:
+        %td.text-right
+          %span#materials_cost_unit
+            = data.materials_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#materials_cost_total
+            = data.materials_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Blueprint cost:
+        %td.text-right
+          %span#blueprint_cost_unit
+            = data.blueprint_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#blueprint_cost_total
+          = data.blueprint_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Total cost:
+        %td.text-right
+          %span#total_cost_unit
+            = data.total_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#total_cost_total
+            = data.total_cost_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Revenue:
+        %td.text-right
+          %span#revenue_unit
+            = data.revenue_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          %span#revenue_total
+            = data.revenue_total|floatformat:2|intcomma 
+          ISK
+      %tr
+        %td
+          Profit:
+        %td.text-right
+          %span#profit_unit{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_unit|floatformat:2|intcomma 
+          ISK
+        %td.text-right
+          %span#profit_total{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_total|floatformat:2|intcomma 
+          ISK
+
+- block scripts
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/numberformat.js'}

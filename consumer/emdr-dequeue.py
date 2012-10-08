@@ -5,10 +5,10 @@ Greg Oberfield gregoberfield@gmail.com
 
 TODO:
 1. Documentation
-2. History message processing (sort of done: 7/20/12)
-3. wrap try/catch blocks around SQL statements
-4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now
-5. move settings to external file so I don't have to keep changing them
+2. History message processing (sort of done: 7/20/12) - DONE
+3. wrap try/catch blocks around SQL statements - mostly done
+4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now - DONE
+5. move settings to external file so I don't have to keep changing them - DONE
 
 """
 
@@ -52,10 +52,14 @@ mckey = config.get('Memcache', 'key')
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
 
+# item list of stuff we want immediately updated in stats
+fastupdate = [34, 35, 36, 37, 38, 39, 40, 29668]
+
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
+statqueue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
 dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 dbcon.autocommit = True
 
@@ -93,12 +97,14 @@ def thread(message):
         duplicateData = 0
         hashList = []
         statsData = []
+        combo = {}
+        fastupdatepush = []
         row=(5,)
         statsData.append(row)
         sql = ""
         #print "* Recieved Orders from: %s" % market_list.order_generator
         statTypeID = 0
-        statStationID = 0
+        statRegionID = 0
         oldCounter = 0
         ipHash = None
         for uploadKey in market_list.upload_keys:
@@ -138,16 +144,6 @@ def thread(message):
                         if TERM_OUT==True:
                             print "000 Order has gen_at in the future 000"
                         continue
-                    sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
-                    curs.execute(sql)
-                    result = curs.fetchone()
-                    if result is not None:
-                        if TERM_OUT==True:
-                            print "/// Ignoring order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                        continue
-                    #if TERM_OUT==True:
-                    #    print "/// Processing order: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                    # set up the dates so MySQL won't barf
                     issue_date = str(order.order_issue_date).split("+", 1)[0]
                     generated_at = str(order.generated_at).split("+", 1)[0]
                     if (order.generated_at > (now_dtime_in_utc() - datetime.timedelta(hours=max_order_age))):                   
@@ -156,17 +152,26 @@ def thread(message):
                             bid = True
                         else:
                             bid = False
+                            
+                        sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                        curs.execute(sql)
+                        result = curs.fetchone()
+                        if result is not None:
+                            if TERM_OUT==True:
+                                print "/// Bad order in warehouse, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
+                                sql = "DELETE FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                                curs.execute(sql)
                         
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
-                        # of the mean AND where there are more than 5 orders of like type in the station will be flagged.  Flagging could
+                        # of the mean AND where there are more than 5 orders of like type in the region will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
                         # Flags: 'Y' = Yes (suspicious), 'N' = No (not suspicious), '?' or NULL = not enough information to determine
                         suspicious = False
-                        if (order.type_id!=statTypeID) or (order.station_id!=statStationID):
+                        if (order.type_id!=statTypeID) or (order.region_id!=statRegionID):
                             gevent.sleep()
-                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND stastation_id=%s" % (order.type_id, order.station_id)
+                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s" % (order.type_id, order.region_id)
                             statTypeID = order.type_id
-                            statStationID = order.station_id
+                            statRegionID = order.region_id
                             recordCount = None
                             curs.execute(sql)
                             result = curs.fetchone()
@@ -209,6 +214,11 @@ def thread(message):
                             continue
                         insertSeen.append(row)
                         mc.set(mckey + str(row[0]), True, time=2)
+                        if order.type_id in fastupdate:
+                            print "??? update stat queue ??? (", order.type_id, ") - ", order.type_id, "/", order.region_id
+                            combo['region'] = order.region_id
+                            combo['item'] = order.type_id
+                            fastupdatepush.append(combo)
                     else:
                         oldCounter += 1
                         row = (3,)
@@ -237,12 +247,16 @@ def thread(message):
                 
                 curs.executemany(sql, insertData)
                 insertData = []
+            
+            if len(fastupdatepush)>0:
+                # push to the stats queue immediately
+                for item in fastupdatepush:
+                    statqueue.put(item)
     
             if duplicateData:
                 if TERM_OUT==True:
                     print "*** DUPLICATES: "+str(duplicateData)+" ORDERS ***"
     
-            
             if len(insertSeen)>0:
                 try:
                     sql = "INSERT INTO market_data_seenorders (id, type_id, region_id) values (%s, %s, %s)"
