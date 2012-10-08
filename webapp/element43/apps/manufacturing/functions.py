@@ -152,7 +152,6 @@ def get_tech2_materials(form_data, blueprint):
     build_requirements = RamTypeRequirement.objects.values('required_type__id', 'required_type__name', 'required_type__volume', 'quantity', 'recycle').filter(type__id=blueprint.blueprint_type.id, activity_type__id=1).exclude(required_type__group__category__id=16);
     
     for build_requirement in build_requirements:
-        print build_requirement
         materials.append(dict({
             'id': build_requirement['required_type__id'],
             'name': build_requirement['required_type__name'],
