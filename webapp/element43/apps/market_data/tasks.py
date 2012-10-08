@@ -53,4 +53,5 @@ class ProcessRegionHistory(Task):
                     added += 1
                 else:
                     duplicated += 1
+            message.delete()
         print "Completed: %s (a: %s / d: %s)" % (region, added, duplicated)
