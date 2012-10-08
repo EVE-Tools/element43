@@ -206,7 +206,7 @@ def calculate_manufacturing_job(form_data):
     result = {} # result dictionary which will be returned
     blueprint_type_id = int(form_data['blueprint_type_id'])
     blueprint_runs = int(form_data['blueprint_runs'])
-    blueprint = InvBlueprintType.objects.get(blueprint_type__id=blueprint_type_id)
+    blueprint = InvBlueprintType.objects.select_related().get(blueprint_type__id=blueprint_type_id)
     
     # --------------------------------------------------------------------------
     # Calculate bill of materials
@@ -261,8 +261,7 @@ def calculate_manufacturing_job(form_data):
     
     # add all the other values to the result dictionary
     # TODO: Optimize the following query. Only fetch the portion size for instance!
-    product = InvType.objects.get(pk=blueprint.product_type.id)
-    result['produced_units'] = product.portion_size * blueprint_runs
+    result['produced_units'] = blueprint.product_type.portion_size * blueprint_runs
     result['blueprint_cost_unit'] = form_data['blueprint_price'] / result['produced_units']
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
