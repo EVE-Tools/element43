@@ -18,7 +18,7 @@ class ProcessHistory(PeriodicTask):
     
     # execute at midnight +1 minute UTC
     run_every = crontab(hour=0, minute=1)
-    #run_every = datetime.timedelta(hours=24)
+    #run_every = datetime.timedelta(minutes=2)
     
     def run(self, **kwargs):
         print "BEGIN HISTORY PROCESSING"
@@ -40,7 +40,7 @@ class ProcessRegionHistory(Task):
             for k,v in data.iteritems():
                 date = utc.localize(datetime.datetime.strptime(k, "%Y-%m-%d %H:%M:%S"))
                 #print "key: %s - date: %s" % (k, date)
-                if not OrderHistory.objects.filter(date = date, mapregion = region, invtype = message.invtype).exists():
+                if not OrderHistory.objects.filter(mapregion = region, invtype = message.invtype, date = date).exists():
                     new_history = OrderHistory(mapregion=message.mapregion,
                                                invtype=message.invtype,
                                                date = date,
