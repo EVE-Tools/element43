@@ -61,7 +61,7 @@ def calculate_quantity(form_data, blueprint, material):
     base_waste = base_quantity * base_waste_multiplier
     skill_waste = float(((25 - (5 * skill_production_efficiency)) * base_quantity)) / 100
     quantity_unit = (base_quantity * form_data['slot_material_modifier']) + base_waste + skill_waste
-    quantity_total = round(quantity_unit * blueprint_runs)
+    quantity_total = round(quantity_unit) * blueprint_runs
     
     material['quantity'] = int(quantity_total)
     material['volume'] = material['quantity'] * material['volume']
@@ -145,17 +145,19 @@ def get_tech2_materials(form_data, blueprint):
     Tech II item.
     """
 
+    blueprint_runs = int(form_data['blueprint_runs'])
     tech1_item_materials = []
     
     # Find build requirements for the Tech II item (does contain the Tech I item if required)
     build_requirements = RamTypeRequirement.objects.values('required_type__id', 'required_type__name', 'required_type__volume', 'quantity', 'recycle').filter(type__id=blueprint.blueprint_type.id, activity_type__id=1).exclude(required_type__group__category__id=16);
     
     for build_requirement in build_requirements:
+        print build_requirement
         materials.append(dict({
             'id': build_requirement['required_type__id'],
             'name': build_requirement['required_type__name'],
-            'quantity': build_requirement['quantity'],
-            'volume': build_requirement['required_type__volume'] * build_requirement['quantity'],
+            'quantity': build_requirement['quantity'] * blueprint_runs,
+            'volume': build_requirement['required_type__volume'] * build_requirement['quantity'] * blueprint_runs,
             'price': 0,
             'price_total': 0
         }))
@@ -163,6 +165,7 @@ def get_tech2_materials(form_data, blueprint):
         # If recycle is True the build_requirement is the required Tech I item.
         if build_requirement['recycle'] == True and is_tech1(build_requirement['required_type__id']):
             tech1_item_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=build_requirement['required_type__id'])
+            print "tech1_item_materials: ", tech1_item_materials
     
     # Get the bill of materials for the Tech II item
     extra_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=blueprint.product_type)
