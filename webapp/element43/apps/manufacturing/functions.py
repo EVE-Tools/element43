@@ -164,7 +164,6 @@ def get_tech2_materials(form_data, blueprint):
         # If recycle is True the build_requirement is the required Tech I item.
         if build_requirement['recycle'] == True and is_tech1(build_requirement['required_type__id']):
             tech1_item_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=build_requirement['required_type__id'])
-            print "tech1_item_materials: ", tech1_item_materials
     
     # Get the bill of materials for the Tech II item
     extra_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=blueprint.product_type)
