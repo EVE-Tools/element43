@@ -23,18 +23,29 @@
         %button.btn.btn-success{'type':'submit'}
           Search
   
+  - if manufacturing_blueprint_history and not blueprints
+    %h3
+      Your {{ MANUFACTURING_MAX_BLUEPRINT_HISTORY }} most recent blueprints
+    %table.table.table-striped.table-condensed
+      %tbody
+        - for blueprint in manufacturing_blueprint_history
+          %tr
+            %td
+              - if not request|is_igb
+                %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.id }}_32.png'), 'alt':'type image'}
+              %a{'href': '{% url manufacturing_calculator blueprint.id %}'}
+                = blueprint.name
+  
   - if blueprints
-    %hr
-    %h3 Select your Blueprint
+    %h3 
+      Select your Blueprint
     %table.table.table-striped.table-condensed
       %tbody
         - for blueprint in blueprints
           %tr
-            - if not request|is_igb
-              %td{'width':'32px'}
-                %a{'href':'{% url manufacturing_calculator blueprint.blueprint_type.id %}'}
-                  %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.blueprint_type.id }}_32.png'), 'alt':'type image'}
             %td
+              - if not request|is_igb
+                %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.blueprint_type.id }}_32.png'), 'alt':'type image'}
               %a{'href': '{% url manufacturing_calculator blueprint.blueprint_type.id %}'}
                 = blueprint.blueprint_type.name
         

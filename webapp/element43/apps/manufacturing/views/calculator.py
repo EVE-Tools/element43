@@ -5,7 +5,10 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from apps.manufacturing.functions import calculate_manufacturing_job
+from apps.manufacturing.functions import calculate_manufacturing_job, update_blueprint_history
+
+# App settings
+from apps.manufacturing.settings import MANUFACTURING_MAX_BLUEPRINT_HISTORY, MANUFACTURING_BLUEPRINT_HISTORY_SESSION
 
 # Forms
 from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculatorForm
@@ -44,6 +47,8 @@ def select_blueprint(request):
             template_vars['blueprints'] = blueprints
 
     template_vars['form'] = SelectBlueprintForm()
+    template_vars['MANUFACTURING_MAX_BLUEPRINT_HISTORY'] = MANUFACTURING_MAX_BLUEPRINT_HISTORY
+    template_vars[MANUFACTURING_BLUEPRINT_HISTORY_SESSION] = request.session.get(MANUFACTURING_BLUEPRINT_HISTORY_SESSION, None)
     
     rcontext = RequestContext(request, template_vars)
     return render_to_response('manufacturing/calculator/select_blueprint.haml', rcontext)
@@ -55,6 +60,7 @@ def calculator(request, blueprint_type_id):
     """
     try:
         blueprint = InvBlueprintType.objects.get(pk=blueprint_type_id)
+        update_blueprint_history(request, blueprint)
     except InvBlueprintType.DoesNotExist:
         # There is no blueprint with the given id. Go back to start!
         return HttpResponseRedirect(reverse('manufacturing_select_blueprint'))
@@ -68,8 +74,8 @@ def calculator(request, blueprint_type_id):
             request.session['form_data'] = request.POST
             form.cleaned_data['blueprint_type_id'] = blueprint_type_id
             data = calculate_manufacturing_job(form.cleaned_data)
-            rcontext = RequestContext(request, { 'data' : data })
             
+            rcontext = RequestContext(request, { 'data' : data })
             return render_to_response('manufacturing/calculator/result.haml', rcontext)
     else:
         if request.session.get('form_data'):
@@ -85,5 +91,4 @@ def calculator(request, blueprint_type_id):
             form = ManufacturingCalculatorForm(initial={'target_sell_price': target_sell_price})
     
     rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
-    
     return render_to_response('manufacturing/calculator/calculator.haml', rcontext)

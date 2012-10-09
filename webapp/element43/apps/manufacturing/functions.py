@@ -4,6 +4,9 @@ from decimal import Decimal
 
 from django.db import connection
 
+# App settings
+from apps.manufacturing.settings import MANUFACTURING_MAX_BLUEPRINT_HISTORY, MANUFACTURING_BLUEPRINT_HISTORY_SESSION
+
 # Models
 from eve_db.models import InvType, InvBlueprintType, InvTypeMaterial, RamTypeRequirement, InvMetaType
 from apps.market_data.models import ItemRegionStat
@@ -72,7 +75,7 @@ def calculate_material_prices(materials):
     """
     Returns the given materials dictionary with calculated prices.
     
-    Beware: The prices are 'sell median' from 'The Forge' reqion. 
+    Beware: The prices are 'sell median' from 'The Forge' region. 
     """
     try:
         # Build the list of material ids for which the price has to be fetched
@@ -276,3 +279,26 @@ def calculate_manufacturing_job(form_data):
     result['blueprint_runs'] = blueprint_runs
     
     return result
+
+def update_blueprint_history(request, blueprint):
+    """
+    Adds the given blueprint to the blueprint history (which is part of the session in the request).
+    """
+    history = request.session.get(MANUFACTURING_BLUEPRINT_HISTORY_SESSION, [])
+    add_entry = True
+    
+    # Don't add the blueprint if it is already in there.
+    for entry in history:
+        if entry['id'] == blueprint.blueprint_type.id:
+            add_entry = False
+            break
+    
+    if add_entry:
+        if len(history) == MANUFACTURING_MAX_BLUEPRINT_HISTORY:
+            # delete the last element of the history which is the oldest
+            del history[-1]
+            
+        # insert the latest blueprint at the beginning of the list
+        history.insert(0, { 'id': blueprint.blueprint_type.id, 'name': blueprint.blueprint_type.name })
+    
+    request.session[MANUFACTURING_BLUEPRINT_HISTORY_SESSION] = history
