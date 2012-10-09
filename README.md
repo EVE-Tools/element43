@@ -10,8 +10,8 @@ Before you begin a word of warning: element43 was not designed to run in Windows
 
 * Make sure you have git installed.
 * Make sure you have ``libevent`` and ``libmemcached`` installed.
-  * OSX: ``brew install libevent`` and ``brew install libmemcached``
-  * Debian: ``aptitude install libevent-dev libmemcached-dev``
+  * OSX: ``brew install libevent``, ``brew install libmemcached`` and ``brew install gfortran`` for SciPy
+  * Debian: ``aptitude install libevent-dev libmemcached-dev`` additionally install a Fortran compiler of your choice
 * Create a virtualenv.
 * ``pip install -r requirements.txt``
 * Create a ``element43`` user and DB on Postgres.

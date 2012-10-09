@@ -26,6 +26,7 @@ raven
 emds
 hotqueue
 pylibmc
+scipy
 
 # Cython is a dependency of pyzmq's development branch
 cython
