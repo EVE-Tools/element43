@@ -87,8 +87,8 @@ def calculator(request, blueprint_type_id):
                 target_sell_price = stat_object.sellmedian
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
-
-            form = ManufacturingCalculatorForm(initial={'target_sell_price': target_sell_price})
+            
+            form = ManufacturingCalculatorForm(initial={'target_sell_price': "%.2f" % target_sell_price})
     
     rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
     return render_to_response('manufacturing/calculator/calculator.haml', rcontext)

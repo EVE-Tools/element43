@@ -62,16 +62,28 @@ class ManufacturingCalculatorForm(forms.Form):
     blueprint_material_efficiency = forms.IntegerField(min_value=-10, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
     blueprint_production_efficiency = forms.IntegerField(min_value=-10, max_value=1000, initial=0, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
     blueprint_runs = forms.IntegerField(min_value=0, max_value=10000, initial=1, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
-    blueprint_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial=0, required=False)
+    blueprint_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial=0, required=True)
     
     # player skill and item related fields
-    skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES, initial=5, widget=forms.Select(attrs={'class': 'input-mini required'}))
-    skill_production_efficiency = forms.ChoiceField(choices=SKILL_PRODUCTION_EFFICIENCY_CHOICES, initial=5, widget=forms.Select(attrs={'class': 'input-mini required'}))
-    hardwiring = forms.ChoiceField(choices=HARDWIRING_CHOICES, widget=forms.Select(attrs={'class': 'input-xlarge required'}))
+    skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES, initial=5, required=True, widget=forms.Select(attrs={'class': 'input-mini required'}))
+    skill_production_efficiency = forms.ChoiceField(choices=SKILL_PRODUCTION_EFFICIENCY_CHOICES, initial=5, required=True, widget=forms.Select(attrs={'class': 'input-mini required'}))
+    hardwiring = forms.ChoiceField(choices=HARDWIRING_CHOICES, required=True, widget=forms.Select(attrs={'class': 'input-xlarge required'}))
     
     # production slot fields
-    slot_production_time_modifier = forms.FloatField(min_value=0, max_value=10, initial="1.00", widget=forms.TextInput(attrs={'class': 'input-mini required'}))
-    slot_material_modifier = forms.FloatField(min_value=0, max_value=10, initial="1.00", widget=forms.TextInput(attrs={'class': 'input-mini required'}))
+    slot_production_time_modifier = forms.FloatField(min_value=0, max_value=10, initial="1.00", required=True, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
+    slot_material_modifier = forms.FloatField(min_value=0, max_value=10, initial="1.00", required=True, widget=forms.TextInput(attrs={'class': 'input-mini required'}))
     
     # fields for calculating profit
-    target_sell_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial="0", required=False)
+    target_sell_price = forms.DecimalField(min_value=0, max_digits=32, decimal_places=2, initial="0", required=True)
+    
+    def clean_blueprint_runs(self):
+        """
+        Returns the cleaned value for the form field 'blueprint_runs'. 
+        If the given value is 0 it will be set to 1 automatically.
+        """
+        blueprint_runs = self.cleaned_data['blueprint_runs']
+
+        if blueprint_runs == 0:
+            self.cleaned_data['blueprint_runs'] = 1
+        
+        return blueprint_runs
