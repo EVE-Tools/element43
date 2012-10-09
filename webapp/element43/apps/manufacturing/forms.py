@@ -1,7 +1,3 @@
-# import and configure locale
-import locale
-locale.setlocale(locale.LC_NUMERIC, 'en_US')
-
 from django import forms
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.template import RequestContext
