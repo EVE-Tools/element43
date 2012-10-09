@@ -29,11 +29,21 @@ redisdb = config.get('Redis', 'redishost')
 TERM_OUT = config.get('Consumer', 'term_out')
 
 # Connect to PostgreSQL, auto commit.
-dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+# Handle DBs without password
+if not dbpass:
+    # Connect without password
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+else:
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 dbcon.autocommit = True
 
 # Connect to PostgreSQL, no auto commit
-transdbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+# Handle DBs without password
+if not dbpass:
+    # Connect without password
+    transdbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+else:
+    transdbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 
 # Activate all cursors
 curs = dbcon.cursor()

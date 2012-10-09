@@ -42,8 +42,14 @@ fastupdateitems = [34, 35, 36, 37, 38, 39, 40, 29668]
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
-queue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+queue = HotQueue("e43-stats", host=redisdb, port=6379, db=0)
+
+# Handle DBs without password
+if not dbpass:
+    # Connect without password
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+else:
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 
 #connect to memcache
 mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})

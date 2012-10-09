@@ -60,7 +60,14 @@ greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
 queue = HotQueue("emdr-messages", host=redisdb, port=6379, db=0)
 statqueue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+
+# Handle DBs without password
+if not dbpass:
+    # Connect without password
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+else:
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+    
 dbcon.autocommit = True
 
 def main():
