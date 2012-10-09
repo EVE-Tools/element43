@@ -36,6 +36,12 @@ import numpy as np
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 
+# Caching
+from django.views.decorators.cache import cache_page
+
+# Calculate cache time for history JSON. The task for refreshing history messages is fired at 00:01UTC so it should be finished by 03:00UTC. 
+# That's when the cache should expire.
+@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3, minute=0, second=0, microsecond=0) - datetime.utcnow()).seconds)
 def history_json(request, region_id = 10000002, type_id = 34):
     
     """
@@ -64,7 +70,8 @@ def history_json(request, region_id = 10000002, type_id = 34):
         
     # Return JSON without using any template
     return HttpResponse(json, mimetype = 'application/json')
-        
+
+@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3, minute=0, second=0, microsecond=0) - datetime.utcnow()).seconds)       
 def history_compare_json(request, type_id = 34):
     
     """
@@ -84,8 +91,13 @@ def history_compare_json(request, type_id = 34):
         for point in data:
             graph.append([int(time.mktime(point.date.timetuple())) * 1000, point.mean])
         
-        data_dict[region] = graph
-        
+        if graph:
+            data_dict[region] = graph
+            
+    # If data is empty, return empty list instead of empty dict so the graph does not get rendered
+    if not data_dict:
+        data_dict = []
+    
     json = simplejson.dumps(data_dict)
         
     # Return JSON without using any template
