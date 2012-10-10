@@ -207,7 +207,9 @@
             %th.text-right
               Quantity
             %th.text-right
-              Jita Median Price Per Unit
+              Forge Median PPU
+            %th.text-right
+              Jita Min PPU
             %th.text-right
               Total Materials Cost
         %tbody
@@ -222,6 +224,8 @@
               = material.quantity|intcomma
             %td.text-right
               = material.price|floatformat:"2"|intcomma
+            %td.text-right
+              = material.min_price|floatformat:"2"|intcomma
             %td.text-right
               = material.total|floatformat:"2"|intcomma
         %tr

@@ -126,8 +126,10 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
         try:
             min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760).aggregate(min_price=Min('price'))
             material['total']=min_price['min_price']*material['quantity']
+            material['min_price'] = min_price['min_price']
         except:
-            material['total'] = 0
+            material['total']=0
+            material['min_price'] = 0
         material['price']=stat_object.sellmedian
         #material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
@@ -242,8 +244,10 @@ def quicklook(request, type_id = 34):
         try:
             min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760).aggregate(min_price=Min('price'))
             material['total']=min_price['min_price']*material['quantity']
+            material['min_price'] = min_price['min_price']
         except:
             material['total']=0
+            material['min_price'] = 0
         material['price']=stat_object.sellmedian
         #material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
