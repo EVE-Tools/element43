@@ -180,7 +180,7 @@
             %th.text-right
               Jita Min PPU
             %th.text-right
-              Total Materials Cost
+              Total Median Materials Cost
         %tbody
         - for material in materials
           %tr
@@ -199,6 +199,7 @@
               = material.total|floatformat:"2"|intcomma
         %tr
         %tr
+          %td
           %td
           %td
           %td.text-right
