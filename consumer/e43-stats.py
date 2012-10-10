@@ -118,7 +118,7 @@ def thread(data):
             
     # process the buy side
     if len(buyprice) > 1:
-        top = stats.scoreatpercentile(buyprice, 99)
+        top = stats.scoreatpercentile(buyprice, 95)
         bottom = stats.scoreatpercentile(buyprice, 5)
         # mask out the top 1% and bottom 5% of orders so we can try to eliminate the BS
         buy_masked = ma.masked_outside(buyprice, bottom, top)
@@ -138,7 +138,7 @@ def thread(data):
     # same processing for sell side as buy side
     if len(sellprice) > 1:
         top = stats.scoreatpercentile(sellprice, 95)
-        bottom = stats.scoreatpercentile(sellprice, 1)
+        bottom = stats.scoreatpercentile(sellprice, 5)
         sell_masked = ma.masked_outside(sellprice, bottom, top)
         tempmask = sell_masked.mask
         sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)
