@@ -22,16 +22,16 @@ def import_markup(local_station_id=60008494, buy_region_id=10000002):
                 			 FROM market_data_itemregionstat 
                 			 WHERE mapregion_id = %s) s ON (t.id = s.invtype_id AND foreign_sell > 0)
 
-                INNER JOIN ( SELECT invtype_id, Avg(price) AS local_buy
+                INNER JOIN ( SELECT invtype_id, Max(price) AS local_buy
                 			 FROM market_data_orders
-                			 WHERE stastation_id = %s
+                			 WHERE stastation_id = %s 
                 			 GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND local_buy > 0)
 
                 WHERE t.id IN ( SELECT DISTINCT market_data_orders.invtype_id 
                 				FROM market_data_orders
                 				WHERE market_data_orders.stastation_id = %s )
             ) q 
-            WHERE q.markup > 25
+            WHERE q.markup > 0
             ORDER BY q.markup DESC
             LIMIT 100;"""
 
