@@ -47,9 +47,9 @@ $(document).ready(function () {
       $('#materials_cost_total, #materials_cost_total_bom').text(addCommas((materials_cost_total).toFixed(2)));
       $('#materials_cost_total').text(addCommas((materials_cost_total).toFixed(2)));
       $('#total_cost_unit').text(addCommas(total_cost_unit.toFixed(2)));
-      $('#total_cost_total').text(addCommas((total_cost_unit * blueprint_runs).toFixed(2)));
+      $('#total_cost_total').text(addCommas((total_cost_unit * produced_units).toFixed(2)));
       $('#profit_unit').text(addCommas(profit_unit.toFixed(2)));
-      $('#profit_total').text(addCommas((profit_unit * blueprint_runs).toFixed(2)));
+      $('#profit_total').text(addCommas((profit_unit * produced_units).toFixed(2)));
       
       // Last thing to do is to update css classes
       if (profit_unit > 0) {
