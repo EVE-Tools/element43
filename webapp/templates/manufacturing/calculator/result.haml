@@ -24,7 +24,10 @@
       Result
   
   %h3
-    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Unit{{ data.produced_units|pluralize }}) 
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs -
+    %span#produced_units
+      {{ data.produced_units|intcomma }} 
+    Unit{{ data.produced_units|pluralize }}) 
   
   %form.form-inline
     %table#billofmaterials.table.table-striped
