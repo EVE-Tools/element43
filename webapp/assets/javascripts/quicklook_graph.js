@@ -28,7 +28,6 @@ $(document).ready(function () {
                                     }
                                 }
                 counter++;
-                console.log(val);
             });
             
             
@@ -57,21 +56,7 @@ $(document).ready(function () {
                     title: {
                         text: 'Price'
                     },
-                    min: 0,
-                    height: 200,
                     lineWidth: 2
-                }, {
-                    title: {
-                        text: 'Volume'
-                    },
-                    top: 200,
-                    height: 100,
-                    gridLineWidth: 0,
-                    offset: 0,
-                    lineWidth: 2,
-                    labels: {
-                        enabled: false
-                    }
                 }],
 
                 series: prices

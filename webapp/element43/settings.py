@@ -203,21 +203,20 @@ INSTALLED_APPS = (
     'django.contrib.formtools',
 
     'compressor',
-    
+
     'raven.contrib.django',
 
     'south',
     'devserver',
     'djcelery',
 
+    'eve_db',
     'apps.common',
     'apps.market_data',
     'apps.api',
-    'apps.manufacturing',
     'apps.auth',
     'apps.user_settings',
-    
-    'eve_db',
+    'apps.manufacturing',
 )
 
 DEVSERVER_MODULES = (

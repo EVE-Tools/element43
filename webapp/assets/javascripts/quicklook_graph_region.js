@@ -64,7 +64,6 @@ $(document).ready(function () {
                     title: {
                         text: 'Price'
                     },
-                    min: 0,
                     height: 200,
                     lineWidth: 2
                 }, {
