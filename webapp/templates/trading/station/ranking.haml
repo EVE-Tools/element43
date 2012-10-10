@@ -23,7 +23,8 @@
 	        %td
             %span{'class':'sec{{station.system.security_level|sec0to10}}'}
               • {{station.system.security_level|sec0to1}} 
-            {{station.region.name}} - {{station.name}}
+            %a{'href':'{% url import station_id=station.id %}'}
+              {{station.region.name}} - {{station.name}}
 	        %td.text-right
 	          = station.ordercount|intcomma
 	%p

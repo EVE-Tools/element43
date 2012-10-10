@@ -3,6 +3,7 @@ $(document).ready(function () {
         // Parse data
         var length = data.length;
         var prices = [];
+        var namesParsed = $.parseJSON(mapRegions);
 
         // Only proceed if there is any data
 
@@ -18,7 +19,7 @@ $(document).ready(function () {
             $.each(data, function(key, val){
                 prices[counter] = {
                                     type: 'line',
-                                    name: mapRegionNames[counter],
+                                    name: mapRegions[key],
                                     data: val,
                                     dataGrouping: {
                                         units: groupingUnits
@@ -29,38 +30,30 @@ $(document).ready(function () {
                                 }
                 counter++;
             });
-            
-            
 
             // Create the chart
-            window.chart = new Highcharts.StockChart({
-                chart: {
-                    renderTo: 'history',
-                    height: 400,
-                    style: {
-                        fontFamily: 'Helvetica, sans-serif',
-                        fontSize: '12px'
-                    }
-                },
-
-                rangeSelector: {
-                    selected: 1
-                },
-
+    		window.chart = new Highcharts.StockChart({
+    		    chart: {
+    		        renderTo: 'history'
+    		    },
+    		    rangeSelector: {
+    		        selected: 4
+    		    },
                 title: {
-                    text: "Average Prices in " + mapRegionNames,
+                    text: "Average Prices in Main Trading Hubs",
                     floating: true
                 },
-
-                yAxis: [{
+    		    yAxis: {
                     title: {
                         text: 'Price'
                     },
                     lineWidth: 2
-                }],
-
-                series: prices
-            });
-        }
+    		    },
+    		    tooltip: {
+    		    	valueDecimals: 2
+    		    },
+    		    series: prices
+    		});
+    	}
     });
 });
