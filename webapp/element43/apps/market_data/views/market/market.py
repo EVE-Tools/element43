@@ -222,10 +222,10 @@ def quicklook(request, type_id = 34):
     
     # Add regions
     region_ids = [10000002, 10000043, 10000032, 10000030]
-    region_names = []
+    region_names = {}
         
     for region in region_ids:
-        region_names.append(MapRegion.objects.get(id = region).name)
+        region_names[region] = MapRegion.objects.get(id = region).name
     
     # Get requested type
     type_object = InvType.objects.get(id = type_id)
