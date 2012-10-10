@@ -1,0 +1,42 @@
+- extends "base.haml"
+- load cache
+- load humanize
+- block title
+  = block.super
+  Importing
+- block content
+  %h1
+    {{station.name}}
+  .row-fluid
+    .span12
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+            %th
+              Jita Sell
+            %th
+              Local Buy
+            %th
+              Markup
+            %th
+              Weekly Volume
+            %th
+              Potential Profit
+        %tbody
+          - for item in markup
+             %tr
+               %td
+                 %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.0}}_16.png'}
+                 %a{'href':'{% url quicklook type_id=item.0 %}'}
+                   {{item.1}}
+               %td
+                 {{item.2|floatformat:2|intcomma}} ISK
+               %td
+                 {{item.3|floatformat:2|intcomma}} ISK
+               %td
+                 {{item.4|floatformat:2|intcomma}} %
+               %td
+                 {{item.5|intcomma}}
+               %td
+                 {{item.6|intcomma}} ISK
