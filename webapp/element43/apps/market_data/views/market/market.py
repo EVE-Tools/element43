@@ -7,12 +7,12 @@ from django.conf import settings
 # Aggregation
 from django.db.models import Sum
 from django.db.models import Avg
+from django.db.models import Min
 
 # market_data models
 from apps.market_data.models import Orders
 from apps.market_data.models import OrderHistory
 from apps.market_data.models import ItemRegionStat
-from apps.market_data.models import History
 
 # JSON for the history API
 from django.utils import simplejson
@@ -118,12 +118,18 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
+        min_price = {}
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
         except:
             stat_object.sellmedian = 0
+        try:
+            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760).aggregate(min_price=Min('price'))
+            material['total']=min_price['min_price']*material['quantity']
+        except:
+            material['total'] = 0
         material['price']=stat_object.sellmedian
-        material['total']=stat_object.sellmedian*material['quantity']
+        #material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
 
     # Get the region type
@@ -191,7 +197,15 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'region':region_object, 'type':type_object, 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders, 'sell_orders':sell_orders, 'systems':system_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER,
+                                        'region':region_object,
+                                        'type':type_object,
+                                        'materials':materials,
+                                        'totalprice':totalprice,
+                                        'buy_orders':buy_orders,
+                                        'sell_orders':sell_orders,
+                                        'systems':system_data,
+                                        'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
 
@@ -220,12 +234,18 @@ def quicklook(request, type_id = 34):
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
+        min_price={}
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
         except:
             stat_object.sellmedian = 0
+        try:
+            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760).aggregate(min_price=Min('price'))
+            material['total']=min_price['min_price']*material['quantity']
+        except:
+            material['total']=0
         material['price']=stat_object.sellmedian
-        material['total']=stat_object.sellmedian*material['quantity']
+        #material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
     
     # Fetch all buy/sell orders from DB
@@ -293,7 +313,16 @@ def quicklook(request, type_id = 34):
     
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER, 'type':type_object, 'region_ids':region_ids, 'region_names':simplejson.dumps(region_names), 'materials':materials, 'totalprice':totalprice, 'buy_orders':buy_orders[:50], 'sell_orders':sell_orders[:50], 'regions':region_data, 'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER,
+                                        'type':type_object,
+                                        'region_ids':region_ids,
+                                        'region_names':simplejson.dumps(region_names),
+                                        'materials':materials,
+                                        'totalprice':totalprice,
+                                        'buy_orders':buy_orders[:50],
+                                        'sell_orders':sell_orders[:50],
+                                        'regions':region_data,
+                                        'breadcrumbs':breadcrumbs})
     
     return render_to_response('market/quicklook/quicklook.haml', rcontext)
     
