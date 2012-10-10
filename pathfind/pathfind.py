@@ -83,9 +83,6 @@ def pathfind():
     
     path = nx.shortest_path(working_graph, source=source_system, target=target_system, weight='weight')
     
-    #output = ""
-    #for system in path:
-    #    output += " %s (%s) / " % (working_graph.node[system]['name'], working_graph.node[system]['seclevel'])
     return Response(json.dumps(path), mimetype='application/json')
 
 if __name__ == '__main__':
