@@ -1,0 +1,16 @@
+- extends "base.haml"
+- load humanize
+- block title
+  = block.super
+  About Element43
+- block content
+  %h2 About Element43
+  %p
+    Element43 is an all-in-one site to track the markets, your industry jobs, trading, you name it.  Our goal with Element43 is to provide you, the capsuleer,
+    with everything you need to successfully manage your Eve-wide enterprises.
+  %h2 Contact Us
+  %p
+    Contact the Element43 team at
+    %a{'mailto':'info@element-43.com'} info@element-43.com
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}

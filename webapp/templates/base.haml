@@ -50,6 +50,12 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url manufacturing_select_blueprint %}'} Calculator
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                  Help
+                  %b.caret
+                %ul.dropdown-menu
+                  %a{'href':'{% url about_page %}'} About Element43
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li

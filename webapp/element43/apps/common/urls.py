@@ -10,4 +10,7 @@ urlpatterns = patterns('apps.common.views',
 
     # Live search
     url(r'^live_search/', 'live_search', name = 'live_search'),
+    
+    # About page
+    url(r'^about/', 'about_page', name='about_page'),
 )

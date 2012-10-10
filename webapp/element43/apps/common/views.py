@@ -40,6 +40,15 @@ def home(request):
     rcontext = RequestContext(request, {'type_ids': type_ids, 'types': types, 'region': region})
     
     return render_to_response('home.haml', rcontext)
+
+def about_page(request):
+    """
+    Returns the about page with information about the site and contact information
+    """
+    
+    rcontext = RequestContext(request, {})
+    
+    return render_to_response('common/about_page.haml', rcontext)
     
 def stats_json(request, region_id):
     
