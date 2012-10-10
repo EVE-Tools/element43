@@ -13,15 +13,15 @@
         %thead
           %tr
             %th
-            %th
+            %th.text-right
               Jita Sell
-            %th
+            %th.text-right
               Local Buy
-            %th
+            %th.text-right
               Markup
-            %th
+            %th.text-right
               Weekly Volume
-            %th
+            %th.text-right
               Potential Profit
         %tbody
           - for item in markup
@@ -30,13 +30,13 @@
                  %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.0}}_16.png'}
                  %a{'href':'{% url quicklook type_id=item.0 %}'}
                    {{item.1}}
-               %td
-                 {{item.2|floatformat:2|intcomma}} ISK
-               %td
-                 {{item.3|floatformat:2|intcomma}} ISK
-               %td
+               %td.text-right
+                 {{item.2|floatformat:2|intcomma}}
+               %td.text-right
+                 {{item.3|floatformat:2|intcomma}}
+               %td.text-right
                  {{item.4|floatformat:2|intcomma}} %
-               %td
+               %td.text-right
                  {{item.5|intcomma}}
-               %td
-                 {{item.6|intcomma}} ISK
+               %td.text-right
+                 {{item.6|floatformat:2|intcomma}} 
