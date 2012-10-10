@@ -33,7 +33,7 @@ def ranking(request, group = 0):
     
     for rank in rank_list:
         station = StaStation.objects.get(id = rank['stastation__id'])
-        rank.update({'system': station.solar_system, 'name': station.name, 'region': station.region})
+        rank.update({'system': station.solar_system, 'name': station.name, 'region': station.region, 'id': station.id})
     
     generated_at = datetime.datetime.now()
     rcontext = RequestContext(request, {'rank_list': rank_list, 'generated_at': generated_at})
