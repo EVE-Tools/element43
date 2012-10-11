@@ -192,7 +192,7 @@ def thread(message):
                                     mean = result[2]
                                 if (stddev!=None) and (recordCount > 3):
                                     # if price is outside 1 standard deviation of the mean flag as suspicious 
-                                    if float(abs(order.price - mean)) > stddev:
+                                    if ((float(order.price - mean)) > stddev) or ((float(order.price - mean)) < stddev):
                                         if bid and (order.price < mean):
                                             suspicious = True
                                         elif not bid and (order.price > mean):
