@@ -13,6 +13,7 @@ from element43 import eveapi
 class ProcessCharacterSheet(PeriodicTask):
     """
     Scan the db an refresh all character sheets
+    Currently done once an hour
     """
     
     run_every = datetime.timedelta(minutes=1)
