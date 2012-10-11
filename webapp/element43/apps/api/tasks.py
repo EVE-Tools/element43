@@ -1,20 +1,93 @@
 # Utility imports
 import datetime
+import pytz
 from celery.task.schedules import crontab
 from celery.task import PeriodicTask, Task
 
 # API Models
-from apps.api.models import SkillGroup, Skill
+from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey
 
 # API
 from element43 import eveapi
+
+class ProcessCharacterSheet(PeriodicTask):
+    """
+    Scan the db an refresh all character sheets
+    """
+    
+    run_every = datetime.timedelta(minutes=1)
+    
+    def run(self, **kwargs):
+        print "BEGIN CHARACTER IMPORT"
+        api = eveapi.EVEAPIConnection()
+        update_timers = APITimer.objects.filter(apisheet="CharacterSheet", nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+        for update in update_timers:
+            character = Character.objects.get(id = update.character)
+            apikey = APIKey.objects.get(apikey=character.apikey)
+            auth = api.auth(keyID = apikey.keyid, vCode = apikey.vcode)
+            me = auth.character(character.id)
+            sheet = me.CharacterSheet()
+            i_stats['name'] = ""
+            i_stats['value'] = 0
+            for attr in attributes:
+                implant[attr] = i_stats
+                
+            # have to check because if you don't have an implant in you get nothing back
+            try:
+                implant['memory'] = {'name':sheet.attributeEnhancers.memoryBonus.augmentatorName, 'value':sheet.attributeEnhancers.memoryBonus.augmentatorValue}
+            except:
+                pass
+            try:
+                implant['perception'] = {'name':sheet.attributeEnhancers.perceptionBonus.augmentatorName, 'value':sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
+            except:
+                pass
+            try:
+                implant['intelligence'] = {'name':sheet.attributeEnhancers.intelligenceBonus.augmentatorName, 'value':sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
+            except:
+                pass
+            try:
+                implant['willpower'] = {'name':sheet.attributeEnhancers.willpowerBonus.augmentatorName, 'value':sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
+            except:
+                pass
+            try:
+                implant['charisma'] = {'name':sheet.attributeEnhancers.charismaBonus.augmentatorName, 'value':sheet.attributeEnhancers.charismaBonus.augmentatorValue}
+            except:
+                pass
+            try:
+                character.alliance_name = sheet.allianceName
+                character.alliance_id = sheet_allianceID
+            except:
+                character.alliance_name = ""
+                character.alliance_id = 0
+            
+            character.corp_name = sheet.corporationName, 
+            character.corp_id = sheet.corporationID, 
+            character.clone_name = sheet.cloneName,
+            character.clone_skill_points = sheet.cloneSkillPoints, 
+            character.balance = sheet.balance,
+            character.implant_memory_name = implant['memory']['name'], 
+            character.implant_memory_bonus = implant['memory']['value'],
+            character.implant_perception_name = implant['perception']['name'],
+            character.implant_perception_bonus = implant['perception']['value'],
+            character.implant_intelligence_name = implant['intelligence']['name'],
+            character.implant_intelligence_bonus = implant['intelligence']['value'],
+            character.implant_willpower_name = implant['willpower']['name'],
+            character.implant_willpower_bonus = implant['willpower']['value'],
+            character.implant_charisma_name = implant['charisma']['name'],
+            character.implant_charisma_bonus = implant['charisma']['value']
+            
+            character.save()
+            update.nextupdate = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+            update.save()
+        
+        
+    
 
 class ProcessAPISkillTree(PeriodicTask):
     """
     Grab the skill list, iterate it and store to DB
     """
     
-    # for testing, run every 5 mins
     run_every = datetime.timedelta(hours=24)
 
     def run(self, **kwargs):

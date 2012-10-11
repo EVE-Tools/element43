@@ -11,13 +11,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 # API Models
-from apps.api.models import APIKey, Character, CharSkill
+from apps.api.models import APIKey, Character, CharSkill, APITimer
 
 # Forms
 from apps.user_settings.forms import ProfileForm, APIKeyForm
 
 # Utility imports
 import datetime
+import pytz
 
 # API
 from element43 import eveapi
@@ -217,6 +218,7 @@ def api_character(request, api_id, api_verification_code):
                                     corp_id = sheet.corporationID, 
                                     alliance_name = a_name, 
                                     alliance_id = a_id,
+                                    # still have to fix the DOB problem!
                                     dob = "2012-10-04 00:00:00", 
                                     race = sheet.race, 
                                     bloodline = sheet.bloodLine, 
@@ -236,6 +238,11 @@ def api_character(request, api_id, api_verification_code):
                                     implant_charisma_name = implant['charisma']['name'],
                                     implant_charisma_bonus = implant['charisma']['value'])
                 new_char.save()
+                
+                new_apitimer = APITimer(character = new_char,
+                                        apisheet = "CharacterSheet",
+                                        nextupdate = datetime.datetime.utcnow() + datetime.timedelta(hours=1))
+                new_apitimer.save()
                 
                 for skill in sheet.skills:
                     new_skill = CharSkill(character = new_char,
