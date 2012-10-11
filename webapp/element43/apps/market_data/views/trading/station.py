@@ -16,7 +16,7 @@ import ast
 
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
-from apps.market_data.views.trading.custom_sql import import_markup
+from apps.market_data.sql import import_markup
 from django.db.models import Min, Max, Sum
 
 # Caching
