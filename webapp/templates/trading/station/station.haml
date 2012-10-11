@@ -14,15 +14,20 @@
           %tr
             %th
             %th.text-right
-              Jita Sell
+              %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in Jita'}
+                Jita Ask
             %th.text-right
-              Local Buy
+              %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in target station.'}
+                Local Bid
             %th.text-right
-              Markup
+              %a{'href':'#', 'rel':'tooltip', 'title':'Markup % between Jita and target station'}
+                Markup
             %th.text-right
-              Weekly Volume
+              %a{'href':'#', 'rel':'tooltip', 'title':'Volume traded based on history in target station.'}
+                Weekly Volume
             %th.text-right
-              Potential Profit
+              %a{'href':'#', 'rel':'tooltip', 'title':'Potential weekly profit based on market up and volume.'}
+                Potential Profit
         %tbody
           - for item in markup
              %tr
