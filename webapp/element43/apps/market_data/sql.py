@@ -18,9 +18,10 @@ def import_markup(local_station_id=60008494, buy_region_id=10000002):
                 SELECT t.id, t.name, s.foreign_sell, b.local_buy,
                 	   ((b.local_buy / s.foreign_sell) - 1) * 100 AS markup
                 FROM eve_db_invtype t
-                INNER JOIN ( SELECT invtype_id, sellmedian AS foreign_sell 
-                			 FROM market_data_itemregionstat 
-                			 WHERE mapregion_id = %s) s ON (t.id = s.invtype_id AND foreign_sell > 0)
+                INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
+                                        FROM market_data_orders
+                                        WHERE mapregion_id = %s AND is_bid = 'f'
+                                        GROUP BY invtype_id ) s ON (t.id = s.invtype_id AND foreign_sell > 0)
 
                 INNER JOIN ( SELECT invtype_id, Max(price) AS local_buy
                 			 FROM market_data_orders

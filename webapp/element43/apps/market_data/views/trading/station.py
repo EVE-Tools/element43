@@ -13,6 +13,7 @@ from eve_db.models import InvType
 # Util
 import datetime
 import ast
+from operator import itemgetter
 
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
@@ -69,6 +70,7 @@ def import_tool(request, station_id = 60003760):
         if new_data[5] != None:
             new_data.append((new_data[3] - new_data[2]) * new_data[5])
             data.append(new_data)
+    data.sort(key=itemgetter(6), reverse=True)
     
     rcontext = RequestContext(request, {'station':station, 'markup':data})
 
