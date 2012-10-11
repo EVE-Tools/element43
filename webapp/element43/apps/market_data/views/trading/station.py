@@ -46,16 +46,18 @@ def import_tool(request, station_id = 60003760):
     Generates a list like http://goonmetrics.com/importing/
     """
     
+    jita = 60003760
+    
     # Get station object - default to CNAP if something goes wrong
     try:
         station = StaStation.objects.get(id = station_id)
     except:
-        station_id = 60003760
+        station_id = jita
         station = StaStation.objects.get(id = station_id)
     
     # Compare to The Forge
     # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
-    markup = import_markup(station_id, 10000002)
+    markup = import_markup(station_id, 0, jita)
     
     # Get history data
     last_week = datetime.date.today() - datetime.timedelta(days=7)

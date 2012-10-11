@@ -1,6 +1,6 @@
 from django.db import connection, transaction
 
-def import_markup(local_station_id=60008494, buy_region_id=10000002):
+def import_markup(import_station_id=60008494, export_region_id=0, export_station_id=60003760):
     """
     Returns top 100 markup values above 25% for a given station in comparison to a certain region.
     Defaults
@@ -11,18 +11,32 @@ def import_markup(local_station_id=60008494, buy_region_id=10000002):
     
     cursor = connection.cursor()
     
-    params = [buy_region_id, local_station_id, local_station_id]
+    if export_region_id:
+        params = [export_region_id, import_station_id, import_station_id]
+    else:
+        params = [export_station_id, import_station_id, import_station_id]
     
     query = """SELECT *
             FROM (
                 SELECT t.id, t.name, s.foreign_sell, b.local_buy,
                 	   ((b.local_buy / s.foreign_sell) - 1) * 100 AS markup
                 FROM eve_db_invtype t
+            """
+    if export_region_id:
+        query+= """
                 INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
                                         FROM market_data_orders
                                         WHERE mapregion_id = %s AND is_bid = 'f'
                                         GROUP BY invtype_id ) s ON (t.id = s.invtype_id AND foreign_sell > 0)
-
+                """
+    else:
+        query+= """
+                INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
+                                        FROM market_data_orders
+                                        WHERE stastation_id = %s AND is_bid = 'f'
+                                        GROUP BY invtype_id ) s ON (t.id = s.invtype_id AND foreign_sell > 0)
+                """
+    query += """
                 INNER JOIN ( SELECT invtype_id, Max(price) AS local_buy
                 			 FROM market_data_orders
                 			 WHERE stastation_id = %s AND is_bid = 't' AND minimum_volume = 1
