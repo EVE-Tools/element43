@@ -53,9 +53,9 @@ def station(request, station_id = 60003760):
         # Calculate potential daily profit ((max_bid - min_ask) * weekly_volume) / 7
         # We're using a week's worth of data to eliminate fluctuations
         if new_data[6] != None:
-            new_data.append((new_data[2] - new_data[3]) * new_data[6] / 7)
+            new_data.append(((new_data[3] - new_data[2]) * new_data[6] / 7))
             data.append(new_data)
-            
+          
     data.sort(key=itemgetter(7), reverse=True)
     
     
