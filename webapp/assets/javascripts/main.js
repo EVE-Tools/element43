@@ -10,7 +10,15 @@ $(document).ready(function () {
 		'maxHeight':800,
 		'width':300,
 		'serviceUrl': '/live_search/',
-		'onSelect': function(value, data){ window.location.href = "/market/" + data + "/"; },
+		'onSelect': function(value, data){
+            // Forward depending on wherther it's a station or a type
+            var id = data;
+            if (id.indexOf('type_') != -1) {
+                window.location.href = "/market/" + id.replace('type_', '') + "/"; 
+            } else if (id.indexOf('station_') != -1) {
+                window.location.href = "/market/trading/station/" + id.replace('station_', '') + "/import/"; 
+            }
+        },
 	};
 	a = $('#main-search').autocomplete(options);
 
