@@ -17,7 +17,7 @@ from operator import itemgetter
 
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
-from apps.market_data.sql import import_markup
+from apps.market_data.sql import bid_ask_spread, import_markup
 from django.db.models import Min, Max, Sum
 
 # Caching
@@ -36,8 +36,30 @@ def station(request, station_id = 60003760):
     except:
         station_id = jita
         station = StaStation.objects.get(id = station_id)
+        
+    # Get Bid/Ask Spread
+    # Mapping: (invTyeID, invTypeName, max_bid, min_ask, spread, spread_percent)
+    spread = bid_ask_spread(station_id)
     
-    rcontext = RequestContext(request, {'station':station})
+    # Get history data
+    last_week = datetime.date.today() - datetime.timedelta(days=7)
+    data = []
+    
+    for point in spread:
+        # Make list from tuple ans add weekly volume
+        # Mapping: [invTyeID, invTypeName, max_bid, min_ask, spread, spread_percent (+potential daily profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], point[5], OrderHistory.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        
+        # Calculate potential daily profit ((max_bid - min_ask) * weekly_volume) / 7
+        # We're using a week's worth of data to eliminate fluctuations
+        if new_data[6] != None:
+            new_data.append((new_data[2] - new_data[3]) * new_data[6] / 7)
+            data.append(new_data)
+            
+    data.sort(key=itemgetter(7), reverse=True)
+    
+    
+    rcontext = RequestContext(request, {'station':station, 'spread':data})
     
     return render_to_response('trading/station/station.haml', rcontext)
     

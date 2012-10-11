@@ -1,5 +1,39 @@
 from django.db import connection, transaction
 
+def bid_ask_spread(station_id=60008694):
+    """
+    Returns top 100 spread items on a given station. 
+    This can especially be useful for identifying items worth for station trading if you take the volume into account (high turnover rate).
+    Defaults to Jita IV - Moon 4 - Caldari Navy Assembly Plant.
+    """
+    
+    cursor = connection.cursor()
+    params = [station_id, station_id]
+    
+    query = """SELECT *
+               FROM (
+                    SELECT t.id, t.name, b.max_bid, a.min_ask, 
+                           (a.min_ask - b.max_bid) AS spread, 
+                           ((a.min_ask / b.max_bid) - 1) * 100 AS spread_percent
+                    FROM eve_db_invtype t
+                    INNER JOIN ( SELECT invtype_id, Max(price) AS max_bid
+                    			 FROM market_data_orders
+                    			 WHERE stastation_id = %s AND is_bid = 't' AND minimum_volume = 1
+    							 GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND max_bid > 0)
+                    INNER JOIN ( SELECT invtype_id, Min(price) AS min_ask
+                    			 FROM market_data_orders
+                    			 WHERE stastation_id = %s AND is_bid = 'f' AND minimum_volume = 1
+    							 GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
+                ) q 
+    			WHERE q.spread > 0
+                ORDER BY q.spread DESC
+                LIMIT 100;"""
+    
+    # Data retrieval operation - no commit required
+    cursor.execute(query, params)
+
+    return cursor.fetchall()
+
 def import_markup(import_station_id=60008494, export_region_id=0, export_station_id=60003760):
     """
     Returns top 100 markup values above 0% for a given station in comparison to a certain region or station.
