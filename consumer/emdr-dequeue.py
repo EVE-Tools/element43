@@ -33,6 +33,9 @@ import base64
 import ConfigParser
 import os
 import pylibmc
+import numpy.ma as ma
+import numpy as np
+import scipy.stats as stats
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -172,7 +175,7 @@ def thread(message):
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
                         # of the mean AND where there are more than 5 orders of like type in the region will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
-                        # Flags: 'Y' = Yes (suspicious), 'N' = No (not suspicious), '?' or NULL = not enough information to determine
+                        # Flags: True = Yes (suspicious), False = No (not suspicious), NULL = not enough information to determine
                         suspicious = False
                         if (order.type_id!=statTypeID) or (order.region_id!=statRegionID):
                             gevent.sleep()
@@ -187,11 +190,13 @@ def thread(message):
                                 if recordCount!=None:
                                     stddev = result[1]
                                     mean = result[2]
-                                suspicious = False
-                                if (stddev!=None) and (recordCount > 5):
-                                    # if price is outside 2 standard deviations of the mean flag as suspicious
-                                    if float(abs(order.price - mean)) > (2*stddev):
-                                        suspicious = True
+                                if (stddev!=None) and (recordCount > 3):
+                                    # if price is outside 1 standard deviation of the mean flag as suspicious 
+                                    if float(abs(order.price - mean)) > stddev:
+                                        if bid and (order.price < mean):
+                                            suspicious = True
+                                        elif not bid and (order.price > mean):
+                                            suspicious = True
                     
                         # See if the order already exists, if so, update if needed otherwise insert                
                         sql = "SELECT * FROM market_data_orders WHERE id = %s" % order.order_id
