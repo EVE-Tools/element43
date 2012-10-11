@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.utils import simplejson
 
 # Models
-from eve_db.models import InvType
+from eve_db.models import InvType, StaStation
 from apps.market_data.models import Orders, OrdersWarehouse, History, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
 
 # Utils
@@ -161,15 +161,23 @@ def search(request):
         
         # Load published type objects matching the name
         types = InvType.objects.filter(name__icontains = query, is_published = True, market_group__isnull = False)
+        
+        # Load stations
+        stations = StaStation.objects.filter(name__icontains = query)
             
     # If there is only one hit, directly redirect to quicklook
-    if len(types) == 1:
+    if len(types) == 1 and len(stations) == 0:
         type_id = str(types[0].id)
-        print type_id
         return HttpResponseRedirect(reverse('quicklook', kwargs = {'type_id':type_id}))
+        
+    # If there is only one hit, directly redirect to import
+    if len(stations) == 1 and len(types) == 0:
+        station_id = str(stations[0].id)
+        return HttpResponseRedirect(reverse('import', kwargs = {'station_id':station_id}))
+    
             
     # Create Context
-    rcontext = RequestContext(request, {'types':types})     
+    rcontext = RequestContext(request, {'types':types, 'stations':stations})     
     
     # Render template
     return render_to_response('search.haml', rcontext)
@@ -187,12 +195,11 @@ def live_search(request):
         query = ""
     
     # Prepare lists
-    types = []
-    type_names = []
-    type_ids = []
+    names = []
+    ids = []
     
     # Default to empty array
-    types_json = "{query:'" + query + "', suggestions:[], data:[]}"
+    json = "{query:'" + query + "', suggestions:[], data:[]}"
     
     # Only if the string is longer than 2 characters start looking in the DB
     if len(query) > 2:
@@ -201,17 +208,24 @@ def live_search(request):
         types = InvType.objects.filter(name__icontains = query, is_published = True, market_group__isnull = False)
         
         for single_type in types:
-            type_names.append(single_type.name)
-            type_ids.append(single_type.id)
+            names.append(single_type.name)
+            ids.append('type_' + str(single_type.id))
+            
+        # Load station
+        stations = StaStation.objects.filter(name__icontains = query)
+        
+        for station in stations:
+            names.append(station.name)
+            ids.append('station_' + str(station.id))
         
         # Add additional data for Ajax AutoComplete
-        types_json = {'query': query, 'suggestions': type_names, 'data': type_ids}
+        json = {'query': query, 'suggestions': names, 'data': ids}
         
         # Turn names into JSON
-        types_json = simplejson.dumps(types_json)
+        json = simplejson.dumps(json)
     
     # Return JSON without using any template
-    return HttpResponse(types_json, mimetype = 'application/json')
+    return HttpResponse(json, mimetype = 'application/json')
     
 def handler_403(request):
     

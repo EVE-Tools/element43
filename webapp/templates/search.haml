@@ -6,10 +6,12 @@
   %h1
     Search
   - ifequal types|length 0
-    .alert.alert-info
-      %i.icon-white.icon-warning-sign
-      We could not find anything with that name or your request was too generic.
-  - else
+   - ifequal stations|length 0
+      .alert.alert-info
+        %i.icon-white.icon-warning-sign
+        We could not find anything with that name or your request was too generic.
+  - if types
+    %h2 Types
     %table.table.table-striped.table-condensed
       %tbody
         - for type in types
@@ -22,6 +24,16 @@
                 = type.name
             %td
                 = type.description|truncatechars:128
-            
+  - if stations
+    %h2 Stations
+    %table.table.table-striped.table-condensed
+      %tbody
+        - for station in stations
+          %tr
+            %td
+              %a{'href':'{% url import station_id=station.id %}'}
+                = station.name
+            %td
+                = station.description|truncatechars:128
             
       
