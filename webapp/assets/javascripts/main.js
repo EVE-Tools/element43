@@ -16,7 +16,7 @@ $(document).ready(function () {
             if (id.indexOf('type_') != -1) {
                 window.location.href = "/market/" + id.replace('type_', '') + "/"; 
             } else if (id.indexOf('station_') != -1) {
-                window.location.href = "/market/trading/station/" + id.replace('station_', '') + "/import/"; 
+                window.location.href = "/market/trading/station/" + id.replace('station_', '') + "/"; 
             }
         },
 	};

@@ -173,7 +173,7 @@ def search(request):
     # If there is only one hit, directly redirect to import
     if len(stations) == 1 and len(types) == 0:
         station_id = str(stations[0].id)
-        return HttpResponseRedirect(reverse('import', kwargs = {'station_id':station_id}))
+        return HttpResponseRedirect(reverse('station', kwargs = {'station_id':station_id}))
     
             
     # Create Context

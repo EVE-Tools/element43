@@ -31,6 +31,9 @@ urlpatterns = patterns('apps.market_data.views',
     # Trading URLs
     #
     
+    # Station Info
+    url(r'^trading/station/(?P<station_id>[0-9]+)/$', 'trading.station.station', name = 'station'),
+    
     # Import tool
     url(r'^trading/station/(?P<station_id>[0-9]+)/import/$', 'trading.station.import_tool', name = 'import'),
         

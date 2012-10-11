@@ -23,6 +23,25 @@ from django.db.models import Min, Max, Sum
 # Caching
 from django.views.decorators.cache import cache_page
 
+def station(request, station_id = 60003760):
+    """
+    Shows station info.
+    Defaults to Jita CNAP.
+    """
+    jita = 60003760
+    
+    # Get station object - default to CNAP if something goes wrong
+    try:
+        station = StaStation.objects.get(id = station_id)
+    except:
+        station_id = jita
+        station = StaStation.objects.get(id = station_id)
+    
+    rcontext = RequestContext(request, {'station':station})
+    
+    return render_to_response('trading/station/station.haml', rcontext)
+    
+
 # Caches this view 1 hour long
 @cache_page(60 * 60)
 def ranking(request, group = 0):
@@ -76,4 +95,4 @@ def import_tool(request, station_id = 60003760):
     
     rcontext = RequestContext(request, {'station':station, 'markup':data})
 
-    return render_to_response('trading/station/station.haml', rcontext)
+    return render_to_response('trading/station/import.haml', rcontext)
