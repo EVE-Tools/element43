@@ -241,7 +241,7 @@ def api_character(request, api_id, api_verification_code):
                 
                 new_apitimer = APITimer(character = new_char,
                                         apisheet = "CharacterSheet",
-                                        nextupdate = datetime.datetime.utcnow() + datetime.timedelta(hours=1))
+                                        nextupdate = pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1)))
                 new_apitimer.save()
                 
                 for skill in sheet.skills:
