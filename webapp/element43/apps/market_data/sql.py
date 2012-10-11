@@ -25,7 +25,7 @@ def import_markup(local_station_id=60008494, buy_region_id=10000002):
 
                 INNER JOIN ( SELECT invtype_id, Max(price) AS local_buy
                 			 FROM market_data_orders
-                			 WHERE stastation_id = %s AND is_bid = 't'
+                			 WHERE stastation_id = %s AND is_bid = 't' AND minimum_volume = 1
                 			 GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND local_buy > 0)
 
                 WHERE t.id IN ( SELECT DISTINCT market_data_orders.invtype_id 
