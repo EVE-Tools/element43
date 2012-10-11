@@ -2,10 +2,12 @@ from django.db import connection, transaction
 
 def import_markup(import_station_id=60008494, export_region_id=0, export_station_id=60003760):
     """
-    Returns top 100 markup values above 25% for a given station in comparison to a certain region.
+    Returns top 100 markup values above 0% for a given station in comparison to a certain region or station.
+    Passing in an export_region will do a region->station comparison.  If 0 is passed in it will do a station->station.
     Defaults
-        Buy region: The Forge
-        Local station: Amarr VIII (Oris) - Emperor Family Academy
+        Export region: None
+        Import station: Amarr VIII (Oris) - Emperor Family Academy
+        Export station: Jita IV - Moon 4 - Caldari Navy Assembly Plant
     Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
     """
     
