@@ -19,6 +19,7 @@ import datetime
 import pytz
 import ast
 from operator import itemgetter
+import urllib
 
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
@@ -218,6 +219,11 @@ def import_system(request, station_id = 60003760, system_id = 30000142):
     system = MapSolarSystem.objects.get(id = system_id)
     station = StaStation.objects.get(id = station_id)
     
+    post_params = urllib.urlencode({'source': system_id, 'target': station.solar_system.id, 'seclevel':5, 'invert':0})
+    path_response = urllib.urlopen('http://localhost:3455/path', post_params)
+    path = ast.literal_eval(path_response.read())
+    numjumps = len(path)
+    
     # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
     markup = import_markup(station_id, 0, system_id, 0)
     
@@ -242,7 +248,7 @@ def import_system(request, station_id = 60003760, system_id = 30000142):
             new_data.append((point[3] - point[2]) * new_data[5])
             data.append(new_data)
     data.sort(key=itemgetter(8), reverse=True)    
-    rcontext = RequestContext(request, {'system':system, 'markup':data})
+    rcontext = RequestContext(request, {'system':system, 'markup':data, 'path':path, 'jumps':numjumps})
 
     return render_to_response('trading/station/_import_system.haml', rcontext)
 
