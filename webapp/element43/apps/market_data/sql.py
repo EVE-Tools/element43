@@ -34,12 +34,13 @@ def bid_ask_spread(station_id=60008694):
 
     return cursor.fetchall()
 
-def import_markup(import_station_id=60008494, export_region_id=0, export_station_id=60003760):
+def import_markup(import_station_id=60008494, export_region_id=0, export_system_id=0, export_station_id=60003760):
     """
-    Returns top 100 markup values above 0% for a given station in comparison to a certain region or station.
-    Passing in an export_region will do a region->station comparison.  If 0 is passed in it will do a station->station.
+    Returns top 100 markup values above 0% for a given station in comparison to a certain region, system or station.
+    Passing in an export_region will do a region->station comparison.  If 0 is passed in it will do a station->system/station.
     Defaults
         Export region: None
+        Export system: None
         Import station: Amarr VIII (Oris) - Emperor Family Academy
         Export station: Jita IV - Moon 4 - Caldari Navy Assembly Plant
     Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
@@ -49,6 +50,8 @@ def import_markup(import_station_id=60008494, export_region_id=0, export_station
     
     if export_region_id:
         params = [export_region_id, import_station_id, import_station_id]
+    elif export_system_id:
+        params = [export_system_id, import_station_id, import_station_id]
     else:
         params = [export_station_id, import_station_id, import_station_id]
     
@@ -59,14 +62,21 @@ def import_markup(import_station_id=60008494, export_region_id=0, export_station
                 FROM eve_db_invtype t
             """
     if export_region_id:
-        query+= """
+        query += """
                 INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
                                         FROM market_data_orders
                                         WHERE mapregion_id = %s AND is_bid = 'f' AND is_suspicious = 'f'
                                         GROUP BY invtype_id ) s ON (t.id = s.invtype_id AND foreign_sell > 0)
                 """
+    elif export_system_id:
+        query += """
+                INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
+                                        FROM market_data_orders
+                                        WHERE mapsolarsystem_id = %s AND is_bid = 'f' AND is_suspicious = 'f'
+                                        GROUP BY invtype_id ) s ON (t.id = s.invtype_id AND foreign_sell > 0)
+                 """
     else:
-        query+= """
+        query += """
                 INNER JOIN ( SELECT invtype_id, Min(price) AS foreign_sell
                                         FROM market_data_orders
                                         WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f'

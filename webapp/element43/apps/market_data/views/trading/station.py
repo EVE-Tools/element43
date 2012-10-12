@@ -2,6 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.db.models import Count
+from django.http import HttpResponse
 
 # eve_db models
 from apps.market_data.models import Orders, OrderHistory
@@ -9,6 +10,9 @@ from eve_db.models import StaStation
 from eve_db.models import MapRegion
 from eve_db.models import MapSolarSystem
 from eve_db.models import InvType
+
+# JSON for the live search
+from django.utils import simplejson
 
 # Util
 import datetime
@@ -22,6 +26,51 @@ from django.db.models import Min, Max, Sum
 
 # Caching
 from django.views.decorators.cache import cache_page
+
+def live_search(request):
+
+    """
+    This adds a basic live search view to element43.
+    The names in the invTypes table are searched with a case insensitive LIKE query and the result is returned as a JSON array of matching names.
+    """
+    
+    if request.GET.get('query'):
+        query = request.GET.get('query')
+    else:
+        query = ""
+    
+    # Prepare lists
+    names = []
+    ids = []
+    
+    # Default to empty array
+    json = "{query:'" + query + "', suggestions:[], data:[]}"
+    
+    # Only if the string is longer than 2 characters start looking in the DB
+    if len(query) > 2:
+        
+        # Load system objects matching the name
+        systems = MapSolarSystem.objects.filter(name__icontains = query)
+        
+        for system in systems:
+            names.append(system.name)
+            ids.append('system_' + str(system.id))
+            
+        # Load regions
+        regions = MapRegion.objects.filter(name__icontains = query)
+        
+        for region in regions:
+            names.append(region.name)
+            ids.append('region_' + str(region.id))
+        
+        # Add additional data for Ajax AutoComplete
+        json = {'query': query, 'suggestions': names, 'data': ids}
+        
+        # Turn names into JSON
+        json = simplejson.dumps(json)
+    
+    # Return JSON without using any template
+    return HttpResponse(json, mimetype = 'application/json')
 
 def station(request, station_id = 60003760):
     """
@@ -81,7 +130,7 @@ def ranking(request, group = 0):
     rcontext = RequestContext(request, {'rank_list': rank_list, 'generated_at': generated_at})
 
     return render_to_response('trading/station/ranking.haml', rcontext)
-    
+
 def import_tool(request, station_id = 60003760):
     """
     Generates a list like http://goonmetrics.com/importing/
@@ -98,7 +147,7 @@ def import_tool(request, station_id = 60003760):
     
     # Compare to The Forge
     # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
-    markup = import_markup(station_id, 0, jita)
+    markup = import_markup(station_id, 0, 0, jita)
     
     # Get history data
     last_week = datetime.date.today() - datetime.timedelta(days=7)
@@ -118,3 +167,62 @@ def import_tool(request, station_id = 60003760):
     rcontext = RequestContext(request, {'station':station, 'markup':data})
 
     return render_to_response('trading/station/import.haml', rcontext)
+    
+def import_system(request, station_id = 60003760, system_id = 30000142):
+    """
+    Generates a list like http://goonmetrics.com/importing/
+    """
+
+    system = MapSolarSystem.objects.get(id = system_id)
+    
+    # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
+    markup = import_markup(station_id, 0, system_id, 0)
+    
+    # Get history data
+    last_week = datetime.date.today() - datetime.timedelta(days=7)
+    data = []
+    
+    for point in markup:
+        # Make list from tuple ans add weekly volume
+        # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = system.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        
+        # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
+        if new_data[5] != None:
+            new_data.append((new_data[3] - new_data[2]) * new_data[5])
+            data.append(new_data)
+    data.sort(key=itemgetter(6), reverse=True)
+    
+    rcontext = RequestContext(request, {'system':system, 'markup':data})
+
+    return render_to_response('trading/station/_import_system.haml', rcontext)
+
+    
+def import_region(request, station_id = 60003760, region_id = 10000002):
+    """
+    Generates a list like http://goonmetrics.com/importing/
+    """
+
+    region = MapRegion.objects.get(id = region_id)
+    
+    # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
+    markup = import_markup(station_id, region_id, 0, 0)
+    
+    # Get history data
+    last_week = datetime.date.today() - datetime.timedelta(days=7)
+    data = []
+    
+    for point in markup:
+        # Make list from tuple ans add weekly volume
+        # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        
+        # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
+        if new_data[5] != None:
+            new_data.append((new_data[3] - new_data[2]) * new_data[5])
+            data.append(new_data)
+    data.sort(key=itemgetter(6), reverse=True)
+    
+    rcontext = RequestContext(request, {'region':region, 'markup':data})
+
+    return render_to_response('trading/station/_import_region.haml', rcontext)
