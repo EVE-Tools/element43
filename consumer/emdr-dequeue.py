@@ -36,7 +36,7 @@ import os
 import pylibmc
 import numpy.ma as ma
 import numpy as np
-import scipy.stats as stats
+from scipy.stats import scoreatpercentile
 
 # Load connection params from the configuration file
 config = ConfigParser.ConfigParser()
@@ -71,6 +71,9 @@ if not dbpass:
     dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
 else:
     dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+    
+#connect to memcache
+mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
     
 dbcon.autocommit = True
 
@@ -123,8 +126,8 @@ def stats(item, region):
             
     # process the buy side
     if len(buyprice) > 1:
-        top = stats.scoreatpercentile(buyprice, 95)
-        bottom = stats.scoreatpercentile(buyprice, 5)
+        top = scoreatpercentile(buyprice, 95)
+        bottom = scoreatpercentile(buyprice, 5)
         # mask out the top 1% and bottom 5% of orders so we can try to eliminate the BS
         buy_masked = ma.masked_outside(buyprice, bottom, top)
         tempmask = buy_masked.mask
@@ -142,8 +145,8 @@ def stats(item, region):
         
     # same processing for sell side as buy side
     if len(sellprice) > 1:
-        top = stats.scoreatpercentile(sellprice, 95)
-        bottom = stats.scoreatpercentile(sellprice, 5)
+        top = scoreatpercentile(sellprice, 95)
+        bottom = scoreatpercentile(sellprice, 5)
         sell_masked = ma.masked_outside(sellprice, bottom, top)
         tempmask = sell_masked.mask
         sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)
