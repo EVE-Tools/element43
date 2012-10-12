@@ -68,7 +68,7 @@ $(document).ready(function () {
                 });
                 
             } else {
-                $('#' + key).text(val);
+                $('#' + key).text(String(val).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
             }
             
           });
