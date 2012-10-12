@@ -36,4 +36,18 @@ $(document).ready(function () {
         },
 	};
 	a = $('#import-search').autocomplete(options);
+    
+    $('#import-search').keypress(function(e) {
+        if(e.which == 13) {
+            $('#import').load('/market/trading/search/?query=' + encodeURIComponent($('#import-search').val()));
+        }
+    });
 });
+
+function loadSystem(id){
+    $('#import').load('/market/trading/station/' + staStationID + '/import/system/' + id + '/', function(){$("[rel=tooltip]").tooltip();});
+}
+    
+function loadRegion(id){
+    $('#import').load('/market/trading/station/' + staStationID + '/import/region/' + id + '/', function(){$("[rel=tooltip]").tooltip();});
+}

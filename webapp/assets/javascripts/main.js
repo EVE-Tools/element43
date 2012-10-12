@@ -56,7 +56,7 @@ $(document).ready(function () {
 		$("#hours").html((hours < 10 ? "0" : "") + hours);
 	}, 1000);
 
-	// Tabs for quicklook
+	// Tabs
 
 	$('#tabs a').click(function (e) {
 		e.preventDefault();
