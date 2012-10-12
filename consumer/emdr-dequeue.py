@@ -52,6 +52,7 @@ DEBUG = config.getboolean('Consumer', 'debug')
 TERM_OUT = config.getboolean('Consumer', 'term_out')
 mcserver = config.get('Memcache', 'server')
 mckey = config.get('Memcache', 'key')
+statkey = config.get('Memcache', 'statkey')
 
 # Max number of greenlet workers
 MAX_NUM_POOL_WORKERS = 75
@@ -193,8 +194,8 @@ def stats(item, region):
         item_stats['sellavg'] = sellavg
         item_stats['buymedian'] = buymedian
         item_stats['sellmedian'] = sellmedian
-        mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
-        print "CACHE INSERT: ", item, "[", item_stats['buyavg'], " / ", item_stats['sellavg'], "]"
+        mc.set(statkey + str(item), json.dumps(item_stats), time=86400)
+        #print "CACHE INSERT: ", item, "[", item_stats['buyavg'], " / ", item_stats['sellavg'], "]"
         
     # insert it into the DB or update if already exists
     if history == None:
