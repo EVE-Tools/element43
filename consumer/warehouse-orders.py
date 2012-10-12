@@ -52,9 +52,6 @@ curs = dbcon.cursor()
 # Fire up the regex cannon
 recannon = re.compile("\((\d+),(\d+)\)")
 
-# get a handle to the redis queue
-queue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
-
 workers = []
 combo = {}
     
@@ -106,10 +103,6 @@ def thread(region):
             print "No Results"
     else:
         for row in result:
-            combo['region']=region
-            combo['item']=row[0]
-            queue.put(combo)
-            #print "Region: ", region, " Type: ", row[0]
             if TERM_OUT==True:
                 print "Region: ", region, "Type: ", row[0]
             #rowdata = recannon.match(row[0])

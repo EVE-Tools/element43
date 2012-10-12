@@ -17,6 +17,7 @@ from emds.common_utils import now_dtime_in_utc
 import zlib
 import datetime
 import dateutil.parser
+from datetime import date
 import pytz
 import sys
 import uuid
@@ -77,6 +78,136 @@ def main():
     for message in queue.consume():
         #print ">>> spawning"
         greenlet_pool.spawn(thread, message)
+        
+def stats(item, region):
+    """
+    grab the dictionary and process for that region/item combo
+    """
+    buyprice = []
+    sellprice = []
+    buycount = []
+    sellcount = []
+    item_stats = {}
+    buyavg = 0
+    buymean = 0
+    sellavg = 0
+    sellmean = 0
+    buymedian = 0
+    sellmedian = 0
+    timestamp = date.today()
+        
+    curs = dbcon.cursor()
+
+    # get the current record so we can compare dates and see if we need to move current records to the history table (this is for history use)
+    sql = "SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (region, item)
+    try:
+        curs.execute(sql)
+    except psycopg2.DatabaseError, e:
+        print "Error: ", e
+        print "SQL: ", sql
+    history = curs.fetchone()
+    # Delete the old region/item stats from the DB if it exists
+    #sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
+    #curs.execute(sql)
+    # Grab all the live orders for this item/region combo
+    sql = "SELECT price, is_bid, volume_remaining FROM market_data_orders WHERE mapregion_id = %s AND invtype_id = %s" % (region, item)
+    curs.execute(sql)
+    for record in curs:
+        # Depending on buy/sell status, append to the proper list pricing and volume
+        if record[1] == False:
+            sellprice.append(record[0])
+            sellcount.append(record[2])
+        else:
+            buyprice.append(record[0])
+            buycount.append(record[2])
+            
+    # process the buy side
+    if len(buyprice) > 1:
+        top = stats.scoreatpercentile(buyprice, 95)
+        bottom = stats.scoreatpercentile(buyprice, 5)
+        # mask out the top 1% and bottom 5% of orders so we can try to eliminate the BS
+        buy_masked = ma.masked_outside(buyprice, bottom, top)
+        tempmask = buy_masked.mask
+        buycount_masked = ma.array(buycount, mask=tempmask, fill_value = 0)
+        ma.fix_invalid(buy_masked, mask=0)
+        ma.fix_invalid(buycount_masked, mask=0)
+        buyavg = np.nan_to_num(ma.average(buy_masked, 0, buycount_masked))
+        buymean = np.nan_to_num(ma.mean(buy_masked))
+        buymedian = np.nan_to_num(ma.median(buy_masked))
+        if len(buyprice) < 4:
+            buyAvg = np.nan_to_num(ma.average(buyprice))
+            buyMean = np.nan_to_num(ma.mean(buyprice))
+        buyprice.sort()
+        buy = buyprice.pop()
+        
+    # same processing for sell side as buy side
+    if len(sellprice) > 1:
+        top = stats.scoreatpercentile(sellprice, 95)
+        bottom = stats.scoreatpercentile(sellprice, 5)
+        sell_masked = ma.masked_outside(sellprice, bottom, top)
+        tempmask = sell_masked.mask
+        sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)
+        ma.fix_invalid(sell_masked, mask=0)
+        ma.fix_invalid(sellcount_masked, mask=0)
+        sellavg = np.nan_to_num(ma.average(sell_masked, 0, sellcount_masked))
+        sellmean = np.nan_to_num(ma.mean(sell_masked))
+        sellmedian = np.nan_to_num(ma.median(sell_masked))
+        if len(sellprice) < 4:
+            sellAvg = np.nan_to_num(ma.average(sellprice))
+            sellMean = np.nan_to_num(ma.mean(sellprice))
+        sellprice.sort()
+        sell = sellprice.pop()
+    
+    # process for history
+    if (history is not None) and (history[6] is not None):
+        if history[6].date() <> timestamp:
+            if (TERM_OUT==True):
+                print "--- New date, new insert", region, " / ", item, "(", history[6].date(), " - ", timestamp, ")"
+            # dates differ, need to move the data
+            sql = """INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (history[0], history[1], history[2], history[3], history[4], history[5], region, item, history[6])
+            try:
+                curs.execute(sql)
+            except psycopg2.DatabaseError, e:
+                print "Error: ", e
+                print "SQL: ", sql
+        elif (TERM_OUT==True):
+            print "/// Timestamps match:", region, " / ", item, "(", history[6].date(), " - ", timestamp, ")"
+    else:
+        if (TERM_OUT==True):
+            print "--- No history, new insert", region, " / ", item
+        sql = """INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, region, item, timestamp)
+        try:
+            curs.execute(sql)
+        except psycopg2.DatabaseError, e:
+            print "Error: ", e
+            print "SQL: ", sql
+        
+    # if it's an item in fastupdate, stick it in the cache
+    if item in fastupdate:
+        item_stats['buyavg']=buyavg
+        item_stats['sellavg'] = sellavg
+        item_stats['buymedian'] = buymedian
+        item_stats['sellmedian'] = sellmedian
+        mc.set(mckey + str(item), json.dumps(item_stats), time=86400)
+        print "CACHE INSERT: ", item, "[", item_stats['buyavg'], " / ", item_stats['sellavg'], "]"
+        
+    # insert it into the DB or update if already exists
+    if history == None:
+        sql = """INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, lastupdate)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, region, item, timestamp)
+    else:
+        sql = """UPDATE market_data_itemregionstat SET buymean = %s, buyavg = %s, buymedian = %s, sellmean = %s, sellavg = %s, sellmedian = %s, lastupdate = '%s'
+                    WHERE mapregion_id = %s AND invtype_id = %s""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, timestamp, region, item)
+    #print sql
+    try:
+        curs.execute(sql)
+    except psycopg2.DatabaseError, e:
+        print "Error: ", e
+        print "SQL: ", sql
+        
+    dbcon.commit()
 
 def thread(message):
     """
@@ -107,8 +238,6 @@ def thread(message):
         duplicateData = 0
         hashList = []
         statsData = []
-        combo = {}
-        fastupdatepush = []
         row=(5,)
         statsData.append(row)
         sql = ""
@@ -120,12 +249,11 @@ def thread(message):
         for uploadKey in market_list.upload_keys:
             if uploadKey['name'] == 'EMDR':
                 ipHash = uploadKey['key']
+        # empty order (no buy or sell orders)
         if len(market_list)==0:
             for item_region_list in market_list._orders.values():
                 if TERM_OUT==True:
                     print "NO ORDERS for region: ", item_region_list.region_id, " item: ", item_region_list.type_id
-                #sql = "SELECT * FROM seenOrders WHERE orderID = %s" % (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id)))+1)
-                #curs.execute(sql)
                 row = (abs(hash(str(item_region_list.region_id)+str(item_region_list.type_id))), item_region_list.type_id, item_region_list.region_id)
                 insertEmpty.append(row)
                 row = (0,)
@@ -146,10 +274,11 @@ def thread(message):
                 except psycopg2.DatabaseError, e:
                     if TERM_OUT == True:
                         print "Key collision: ", components
-            
+        # at least some results to process    
         else:
             for item_region_list in market_list.get_all_order_groups():
                 for order in item_region_list:
+                    # if order is in the future, skip it
                     if order.generated_at > now_dtime_in_utc():
                         if TERM_OUT==True:
                             print "000 Order has gen_at in the future 000"
@@ -162,7 +291,8 @@ def thread(message):
                             bid = True
                         else:
                             bid = False
-                            
+                        
+                        # Check to see if the order is in the warehouse when it shouldn't be, just in case    
                         sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
                         curs.execute(sql)
                         result = curs.fetchone()
@@ -203,7 +333,6 @@ def thread(message):
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result:
-                            #get_at_dtime = datetime.datetime.strptime(generated_at,"%Y-%m-%d %H:%M:%S+%z")
                             if result[0] < order.generated_at:
                                 row=(2,)
                                 statsData.append(row)
@@ -226,11 +355,7 @@ def thread(message):
                             continue
                         insertSeen.append(row)
                         mc.set(mckey + str(row[0]), True, time=2)
-                        if order.type_id in fastupdate:
-                            print "??? update stat queue ??? (", order.type_id, ") - ", order.type_id, "/", order.region_id
-                            combo['region'] = order.region_id
-                            combo['item'] = order.type_id
-                            fastupdatepush.append(combo)
+                        stats(order.type_id, order.region_id)
                     else:
                         oldCounter += 1
                         row = (3,)
@@ -259,11 +384,6 @@ def thread(message):
                 
                 curs.executemany(sql, insertData)
                 insertData = []
-            
-            if len(fastupdatepush)>0:
-                # push to the stats queue immediately
-                for item in fastupdatepush:
-                    statqueue.put(item)
     
             if duplicateData:
                 if TERM_OUT==True:
