@@ -31,7 +31,8 @@ urlpatterns = patterns('apps.market_data.views',
     # Trading URLs
     #
     
-    # System or Region Live Search
+    # System or Region Search / Live Search
+    url(r'^trading/search/', 'trading.station.search', name = 'trading_search'),
     url(r'^trading/live_search/', 'trading.station.live_search', name = 'trading_live_search'),
     
     # Import AJAX

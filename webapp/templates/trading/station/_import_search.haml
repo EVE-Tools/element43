@@ -1,0 +1,26 @@
+- load humanize
+%h1
+  Search
+- ifequal systems|length 0
+ - ifequal regions|length 0
+    .alert.alert-info
+      %i.icon-white.icon-warning-sign
+      We could not find anything with that name or your request was too generic.
+- if systems
+  %h2 Systems
+  %table.table.table-striped.table-condensed
+    %tbody
+      - for system in systems
+        %tr
+          %td
+            %a{'onClick':'loadSystem({{system.id}});', 'style':'cursor: pointer;'}
+              = system.name
+- if regions
+  %h2 Regions
+  %table.table.table-striped.table-condensed
+    %tbody
+      - for region in regions
+        %tr
+          %td
+            %a{'onClick':'loadRegion({{region.id}});', 'style':'cursor: pointer;'}
+              = region.name

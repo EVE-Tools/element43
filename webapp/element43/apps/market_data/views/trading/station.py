@@ -28,6 +28,34 @@ from django.db.models import Min, Max, Sum
 # Caching
 from django.views.decorators.cache import cache_page
 
+def search(request):
+
+    """
+    Provides a search function to import tool.
+    """
+    
+    # Get request
+    if request.GET.get('query'):
+        query = request.GET.get('query')
+    else:
+        query = ""
+    
+    # Only if the string is longer than 2 characters start looking in the DB
+    if len(query) > 2:
+        
+        # Load published type objects matching the name
+        systems = MapSolarSystem.objects.filter(name__icontains = query)
+        
+        # Load stations
+        regions = MapRegion.objects.filter(name__icontains = query)
+    
+            
+    # Create Context
+    rcontext = RequestContext(request, {'systems':systems, 'regions':regions})     
+    
+    # Render template
+    return render_to_response('trading/station/_import_search.haml', rcontext)
+
 def live_search(request):
 
     """
