@@ -1,6 +1,7 @@
 - extends "base.haml"
 - load cache
 - load humanize
+- load custom_filters
 - block title
   = block.super
   {{station.name}}
@@ -27,6 +28,8 @@
             %td
               Solar System
             %td
+              %span{'class':'sec{{station.solar_system.security_level|sec0to10}}'}
+                • {{station.solar_system.security_level|sec0to1}}
               {{station.solar_system.name}}
     .span5
       %table.table.table-striped
@@ -46,12 +49,19 @@
               Office Rental Cost
             %td
               {{station.office_rental_cost|intcomma}} ISK
+  #import-field.row-fluid{'style':'margin-bottom: 1em; display: none;'}
+    .span4
+    .span4{'style':'margin-top: 2em; text-align:center;'}
+      %input#import-search{'type':'text', 'placeholder':'Region / System...', 'name':'query'}
+      %br
+      %i Please select a suggestion from the list.
+    .span4
   .row-fluid
     .span12
       %ul#tabs.nav.nav-tabs
-        %li.active
+        %li#spread_link.active
           %a{'href':'#spread', 'data_toggle':'tab'} Bid/Ask Spread
-        %li
+        %li#import_link
           %a{'href':'#import', 'data_toggle':'tab'} Import
       .tab-content
         #spread.tab-pane.fade.active.in
@@ -97,4 +107,8 @@
                    %td.text-right
                      {{item.7|floatformat:2|intcomma}}
         #import.tab-pane.fade
-          %i Please complete the steps described above to get your report.
+          %i Choose a region or system to import from with the text field above.
+- block scripts
+  %script{'type':'text/javascript'}
+    var staStationID = {{station.id}};
+  %script{'type':'text/javascript', 'src':'/static/javascripts/station.js'}

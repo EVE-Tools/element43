@@ -11,7 +11,7 @@ $(document).ready(function () {
 		'width':300,
 		'serviceUrl': '/live_search/',
 		'onSelect': function(value, data){
-            // Forward depending on wherther it's a station or a type
+            // Forward depending on whether it's a station or a type
             var id = data;
             if (id.indexOf('type_') != -1) {
                 window.location.href = "/market/" + id.replace('type_', '') + "/"; 

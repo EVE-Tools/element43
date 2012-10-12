@@ -31,11 +31,15 @@ urlpatterns = patterns('apps.market_data.views',
     # Trading URLs
     #
     
+    # System or Region Live Search
+    url(r'^trading/live_search/', 'trading.station.live_search', name = 'trading_live_search'),
+    
+    # Import AJAX
+    url(r'^trading/station/(?P<station_id>[0-9]+)/import/system/(?P<system_id>[0-9]+)/$', 'trading.station.import_system', name = 'import_system'),
+    url(r'^trading/station/(?P<station_id>[0-9]+)/import/region/(?P<region_id>[0-9]+)/$', 'trading.station.import_region', name = 'import_region'),
+    
     # Station Info
     url(r'^trading/station/(?P<station_id>[0-9]+)/$', 'trading.station.station', name = 'station'),
-    
-    # Import tool
-    url(r'^trading/station/(?P<station_id>[0-9]+)/import/$', 'trading.station.import_tool', name = 'import'),
         
     # Station ranking
     url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
