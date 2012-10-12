@@ -193,13 +193,20 @@ def import_system(request, station_id = 60003760, system_id = 30000142):
     for point in markup:
         # Make list from tuple ans add weekly volume
         # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
-        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = system.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        new_data = [point[0],
+                    point[1],
+                    point[2],
+                    point[3],
+                    point[4],
+                    OrderHistory.objects.filter(mapregion_id = system.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum'],
+                    Orders.objects.filter(mapsystem_id = station.system.id, invtype_id = point[0], is_bid=True, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+                    Orders.objects.filter(mapsystem_id = station.system.id, invtype_id = point[0], is_bid=False, price__gte = (point[3]-(point[3]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum']]
         
         # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
         if new_data[5] != None:
             new_data.append((new_data[3] - new_data[2]) * new_data[5])
             data.append(new_data)
-    data.sort(key=itemgetter(6), reverse=True)    
+    data.sort(key=itemgetter(8), reverse=True)    
     rcontext = RequestContext(request, {'system':system, 'markup':data})
 
     return render_to_response('trading/station/_import_system.haml', rcontext)
