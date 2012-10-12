@@ -79,7 +79,7 @@
                   %a{'href':'#', 'rel':'tooltip', 'title':'Absolute spread.'}
                     Spread
                 %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Spread as a percentage of min ask.'}
+                  %a{'href':'#', 'rel':'tooltip', 'title':'Spread as a percentage of max bid.'}
                     Spread Percent
                 %th.text-right
                   %a{'href':'#', 'rel':'tooltip', 'title':'Weekly Volume in this <b><i>region</i></b>.'}
@@ -97,15 +97,15 @@
                    %td.text-right
                      {{item.2|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.3|floatformat:2|intcomma}}
-                   %td.text-right
                      {{item.4|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.5|floatformat:2|intcomma}} %
+                     {{item.6|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.6|floatformat:0|intcomma}}
+                     {{item.7|floatformat:2|intcomma}} %
                    %td.text-right
-                     {{item.7|floatformat:2|intcomma}}
+                     {{item.8|floatformat:0|intcomma}}
+                   %td.text-right
+                     {{item.9|floatformat:2|intcomma}}
         #import.tab-pane.fade
           %i Choose a region or system to import from with the text field above.
 - block scripts

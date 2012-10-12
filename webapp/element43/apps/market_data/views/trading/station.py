@@ -16,6 +16,7 @@ from django.utils import simplejson
 
 # Util
 import datetime
+import pytz
 import ast
 from operator import itemgetter
 
@@ -91,30 +92,29 @@ def station(request, station_id = 60003760):
     spread = bid_ask_spread(station_id)
     
     # Get history data
-    last_week = datetime.date.today() - datetime.timedelta(days=7)
+    last_week = pytz.utc.localize(datetime.datetime.utcnow() - datetime.timedelta(days=7))
     data = []
     
     for point in spread:
         # Make list from tuple ans add weekly volume
-        # Mapping: [invTyeID, invTypeName, foreign_sell, foreign_sell_qty_within_1%, local_buy, local_buy_qty_within_1%, markup, weekly_volume, (+potential profit)]
+        # Mapping: [invTyeID, invTypeName, local_buy, local_buy_qty_within_1%, foreign_sell, foreign_sell_qty_within_1%, spread, spread %, weekly_volume, (+potential profit)]
         new_data = [point[0],
                     point[1],
                     point[2],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=False, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+                    Orders.objects.filter(stastation_id = station.id, invtype_id = point[0], is_bid=True, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
                     point[3],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=True, price__gte = (point[2]-(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+                    Orders.objects.filter(stastation_id = station.id, invtype_id = point[0], is_bid=False, price__gte = (point[3]-(point[3]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
                     point[4],
+                    point[5],
                     OrderHistory.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
         
         # Calculate potential daily profit ((max_bid - min_ask) * weekly_volume) / 7
         # We're using a week's worth of data to eliminate fluctuations
-        if new_data[7] != None:
-            new_data.append(((new_data[4] - new_data[2]) * new_data[7] / 7))
+        if new_data[8] != None:
+            new_data.append((((point[3] - point[2]) * new_data[8]) / 7))
             data.append(new_data)
-          
-    data.sort(key=itemgetter(8), reverse=True)
-    
-    
+            
+    data.sort(key=itemgetter(9), reverse=True)
     rcontext = RequestContext(request, {'station':station, 'spread':data})
     
     return render_to_response('trading/station/station.haml', rcontext)
@@ -162,22 +162,15 @@ def import_tool(request, station_id = 60003760):
     
     for point in markup:
         
-        # Make list from tuple and add weekly volume, plus qty
-        # Mapping: [invTyeID, invTypeName, foreign_sell, foreign_sell_qty_within_1%, local_buy, local_buy_qty_within_1%, markup, weekly_volume, (+potential profit)]
-        new_data = [point[0],
-                    point[1],
-                    point[2],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=False, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[3],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=True, price__gte = (point[2]-(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[4],
-                    OrderHistory.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        # Make list from tuple ans add weekly volume
+        # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
         
         # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
-        if new_data[6] != None:
-            new_data.append((new_data[4] - new_data[2]) * new_data[6])
+        if new_data[5] != None:
+            new_data.append((new_data[3] - new_data[2]) * new_data[5])
             data.append(new_data)
-    data.sort(key=itemgetter(8), reverse=True)
+    data.sort(key=itemgetter(6), reverse=True)
     
     rcontext = RequestContext(request, {'station':station, 'markup':data})
 
@@ -199,22 +192,14 @@ def import_system(request, station_id = 60003760, system_id = 30000142):
     
     for point in markup:
         # Make list from tuple ans add weekly volume
-        # Mapping: [invTyeID, invTypeName, foreign_sell, foreign_sell_qty_within_1%, local_buy, local_buy_qty_within_1%, markup, weekly_volume, (+potential profit)]
-        new_data = [point[0],
-                    point[1],
-                    point[2],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=False, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[3],
-                    Orders.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], is_bid=True, price__gte = (point[2]-(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[4],
-                    OrderHistory.objects.filter(mapregion_id = station.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = system.region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
         
         # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
-        if new_data[6] != None:
-            new_data.append((new_data[4] - new_data[2]) * new_data[6])
+        if new_data[5] != None:
+            new_data.append((new_data[3] - new_data[2]) * new_data[5])
             data.append(new_data)
-    data.sort(key=itemgetter(8), reverse=True)
-    
+    data.sort(key=itemgetter(6), reverse=True)    
     rcontext = RequestContext(request, {'system':system, 'markup':data})
 
     return render_to_response('trading/station/_import_system.haml', rcontext)
@@ -236,21 +221,14 @@ def import_region(request, station_id = 60003760, region_id = 10000002):
     
     for point in markup:
         # Make list from tuple ans add weekly volume
-        # Mapping: [invTyeID, invTypeName, foreign_sell, foreign_sell_qty_within_1%, local_buy, local_buy_qty_within_1%, markup, weekly_volume, (+potential profit)]
-        new_data = [point[0],
-                    point[1],
-                    point[2],
-                    Orders.objects.filter(mapregion_id = region.id, invtype_id = point[0], is_bid=False, price__lte = (point[2]+(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[3],
-                    Orders.objects.filter(mapregion_id = region.id, invtype_id = point[0], is_bid=True, price__gte = (point[2]-(point[2]*0.01))).aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-                    point[4],
-                    OrderHistory.objects.filter(mapregion_id = region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
+        # Mapping: [invTyeID, invTypeName, foreign_sell, local_buy, markup, weekly_volume, (+potential profit)]
+        new_data = [point[0], point[1], point[2], point[3], point[4], OrderHistory.objects.filter(mapregion_id = region.id, invtype_id = point[0], date__gte = last_week).aggregate(Sum("quantity"))['quantity__sum']]
         
         # Calculate potential profit ((foreign_sell - local_buy) * weekly_volume)
-        if new_data[6] != None:
-            new_data.append((new_data[4] - new_data[2]) * new_data[6])
+        if new_data[5] != None:
+            new_data.append((new_data[3] - new_data[2]) * new_data[5])
             data.append(new_data)
-    data.sort(key=itemgetter(8), reverse=True)
+    data.sort(key=itemgetter(6), reverse=True)
     
     rcontext = RequestContext(request, {'region':region, 'markup':data})
 
