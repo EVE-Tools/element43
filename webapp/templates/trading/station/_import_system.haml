@@ -11,8 +11,14 @@
             %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in {{system.name}}'}
               {{system.name}} Ask
           %th.text-right
+            %a{'href':'#', 'rel':'tooltip', 'title':'Ask Qty within 1% of lowest ask price'}
+              Ask Qty
+          %th.text-right
             %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in target station.'}
               Local Bid
+          %th.text-right
+            %a{'href':'#', 'rel':'tooltip', 'title':'Bid Qty within 1% of highest bid price'}
+              Bid Qty
           %th.text-right
             %a{'href':'#', 'rel':'tooltip', 'title':'Markup % between {{system.name}} and target station'}
               Markup
@@ -32,10 +38,14 @@
              %td.text-right
                {{item.2|floatformat:2|intcomma}}
              %td.text-right
+               {{item.7|intcomma}}
+             %td.text-right
                {{item.3|floatformat:2|intcomma}}
+             %td.text-right
+               {{item.6|intcomma}}
              %td.text-right
                {{item.4|floatformat:2|intcomma}} %
              %td.text-right
                {{item.5|intcomma}}
              %td.text-right
-               {{item.6|floatformat:2|intcomma}} 
+               {{item.8|floatformat:2|intcomma}} 
