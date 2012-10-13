@@ -6,11 +6,15 @@
   .span12
     %p
       Jumps: {{jumps}}
-    %p
-      - for system in path
-        %span{'class':'sec{{station.system.security_level|sec0to10}}'}
-          {{system.security_level|sec0to1}}
-        {{system.name}} / 
+      %span
+        %a#more{'href':'#', 'onclick':'$("#more").toggle(400); $("#route").toggle(400);'} [more]
+      #route.well{'style':'display:none;'}
+        - for system in path
+          %span{'class':'sec{{system.security_level|sec0to10}}'}
+            {{system.security_level|sec0to1}}
+          {{system.name}}
+          - if not forloop.last
+            \>
     %table.table.table-striped.table-condensed
       %thead
         %tr
@@ -56,4 +60,4 @@
              %td.text-right
                {{item.5|intcomma}}
              %td.text-right
-               {{item.8|floatformat:2|intcomma}} 
+               {{item.8|floatformat:2|intcomma}}
