@@ -75,7 +75,7 @@ def calculate_material_prices(materials):
     """
     Returns the given materials dictionary with calculated prices.
     
-    Beware: The prices are 'sell median' from 'The Forge' region. 
+    Beware: The prices are 'sell median' from 'The Forge' region.
     """
     try:
         # Build the list of material ids for which the price has to be fetched
@@ -131,7 +131,7 @@ def get_tech2_materials(form_data, blueprint):
     Tech II blueprints require a Tech I item and additional materials to manufacture
     the Tech II item.
     
-    Target Painter II for example requires Target Painter I. One of the exceptions 
+    Target Painter II for example requires Target Painter I. One of the exceptions
     to that rule are Tech II rigs. They don't require their Tech I variant.
     
     To calculate the bill of materials three things have to be considered:
@@ -143,8 +143,8 @@ def get_tech2_materials(form_data, blueprint):
     materials = (tech2_item_materials - tech1_item_materials) + build_requirements
     
     The bill of materials for the Tech II includes the materials required to manufacture
-    the Tech I item. Therefor the bill of materials for Tech I item have to be 
-    subtracted to get a list of materials that are exclusively needed for the 
+    the Tech I item. Therefor the bill of materials for Tech I item have to be
+    subtracted to get a list of materials that are exclusively needed for the
     Tech II item.
     """
 
@@ -172,7 +172,7 @@ def get_tech2_materials(form_data, blueprint):
     extra_materials = InvTypeMaterial.objects.values('material_type__id', 'material_type__name', 'material_type__volume', 'quantity').filter(type=blueprint.product_type)
     
     for extra_material in extra_materials:
-        # If on of the materials from the bill of materials of the Tech II item is 
+        # If on of the materials from the bill of materials of the Tech II item is
         # found in the bill of materials for the Tech I item substract them.
         for tech1_item_material in tech1_item_materials:
             if tech1_item_material['material_type__id'] == extra_material['material_type__id']:
@@ -227,7 +227,7 @@ def calculate_manufacturing_job(form_data):
     materials_volume_total = math.fsum([material['volume'] for material in materials])
     
     # sort materials by name:
-    materials.sort(key=lambda material: material['name']) 
+    materials.sort(key=lambda material: material['name'])
     
     result['materials'] = materials
     result['materials_cost_unit'] = materials_cost_total / blueprint_runs
@@ -269,11 +269,11 @@ def calculate_manufacturing_job(form_data):
     result['blueprint_cost_unit'] = form_data['blueprint_price'] / result['produced_units']
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
-    result['revenue_total'] = form_data['target_sell_price'] * blueprint_runs
+    result['revenue_total'] = form_data['target_sell_price'] * result['produced_units']
     result['total_cost_unit'] = result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
     result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
     result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
-    result['profit_total'] = result['profit_unit'] * blueprint_runs
+    result['profit_total'] = result['profit_unit'] * result['produced_units']
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
