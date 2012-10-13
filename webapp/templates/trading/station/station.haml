@@ -68,11 +68,11 @@
               %tr
                 %th
                 %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in this station.'}
-                    Max Bid
-                %th.text-right
                   %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in this station.'}
                     Min Ask
+                %th.text-right
+                  %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in this station.'}
+                    Max Bid
                 %th.text-right
                   %a{'href':'#', 'rel':'tooltip', 'title':'Absolute spread.'}
                     Spread
@@ -93,9 +93,9 @@
                      %a{'href':'{% url quicklook type_id=item.0 %}'}
                        {{item.1}}
                    %td.text-right
-                     {{item.2|floatformat:2|intcomma}}
-                   %td.text-right
                      {{item.4|floatformat:2|intcomma}}
+                   %td.text-right
+                     {{item.2|floatformat:2|intcomma}}
                    %td.text-right
                      {{item.6|floatformat:2|intcomma}}
                    %td.text-right
