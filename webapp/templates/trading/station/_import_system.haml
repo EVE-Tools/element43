@@ -1,11 +1,17 @@
 - load humanize
+- load custom_filters
 %h2
   Import from {{system.name}}
-%h6
-  Jumps: {{jumps}}
-  // {{path}}
 .row-fluid
   .span12
+    %p
+      Jumps: {{jumps}}
+    %p
+      - for system in path
+        %span{'class':'sec{{station.system.security_level|sec0to10}}'}
+          {{system.security_level|sec0to1}}
+        {{system.name}} / 
+      // {{path}}
     %table.table.table-striped.table-condensed
       %thead
         %tr
