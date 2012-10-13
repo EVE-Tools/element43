@@ -153,20 +153,20 @@ def station(request, station_id=60003760):
     for point in spread:
         # Add new values to dict and if there's a weekly volume append it to list
         new_values = {
-                    'max_buy_qty_filtered': Orders.objects.filter(stastation_id=station.id,
+            'max_buy_qty_filtered': Orders.objects.filter(stastation_id=station.id,
                                                                   invtype_id=point['id'],
                                                                   is_bid=True,
                                                                   price__lte=(point['min_ask'] + (point['min_ask'] * 0.01)))
-                                                                  .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+            .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
-                    'min_sell_qty_filtered': Orders.objects.filter(stastation_id=station.id,
+            'min_sell_qty_filtered': Orders.objects.filter(stastation_id=station.id,
                                                                    invtype_id=point['id'],
                                                                    is_bid=False, price__gte=(point['max_bid'] - (point['max_bid'] * 0.01)))
                                                                    .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
-                    'weekly_volume': OrderHistory.objects.filter(mapregion_id = station.region.id,
-                                                                 invtype_id = point['id'],
-                                                                 date__gte = last_week)
+                    'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
+                                                                 invtype_id=point['id'],
+                                                                 date__gte=last_week)
                                                                 .aggregate(Sum("quantity"))['quantity__sum']}
         point.update(new_values)
 
@@ -180,6 +180,7 @@ def station(request, station_id=60003760):
     rcontext = RequestContext(request, {'station': station, 'spread': data})
 
     return render_to_response('trading/station/station.haml', rcontext)
+
 
 def import_system(request, station_id=60003760, system_id=30000142):
 
@@ -233,7 +234,8 @@ def import_system(request, station_id=60003760, system_id=30000142):
 
     data.sort(key=itemgetter('potential_profit'), reverse=True)
 
-    rcontext = RequestContext(request, {'system': system, 'markup': data, 'path': path, 'jumps': numjumps})
+    rcontext = RequestContext(request, {'system': system, 'markup':
+                              data, 'path': path, 'jumps': numjumps})
 
     return render_to_response('trading/station/_import_system.haml', rcontext)
 

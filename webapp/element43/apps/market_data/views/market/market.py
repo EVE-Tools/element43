@@ -1,3 +1,12 @@
+# Parsing
+import time
+
+# Util
+from datetime import datetime, timedelta
+
+# numpy processing imports
+import numpy as np
+
 # Template and context-related imports
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -16,20 +25,11 @@ from apps.market_data.models import ItemRegionStat
 # JSON for the history API
 from django.utils import simplejson
 
-# Parsing
-import time
-
-# Util
-from datetime import datetime, timedelta
-
 # eve_db models
 from eve_db.models import InvType
 from eve_db.models import InvTypeMaterial
 from eve_db.models import MapRegion
 from eve_db.models import MapSolarSystem
-
-# numpy processing imports
-import numpy as np
 
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
@@ -37,10 +37,15 @@ from apps.market_data.util import group_breadcrumbs
 # Caching
 from django.views.decorators.cache import cache_page
 
-# Calculate cache time for history JSON. The task for refreshing history messages is fired at 00:01UTC so it should be finished by 03:00UTC.
-# That's when the cache should expire.
-@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3, minute=0, second=0, microsecond=0) - datetime.utcnow()).seconds)
-def history_json(request, region_id = 10000002, type_id = 34):
+# Calculate cache time for history JSON. The task for refreshing history messages is fired at 00:01 UTC,
+# so it should be finished by 03:00UTC. That's when the cache should expire.
+
+
+@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3,
+                                                             minute=0,
+                                                             second=0,
+                                                             microsecond=0) - datetime.utcnow()).seconds)
+def history_json(request, region_id=10000002, type_id=34):
 
     """
     Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
@@ -51,7 +56,7 @@ def history_json(request, region_id = 10000002, type_id = 34):
 
     # If we do not have any data for this region, return an empty array
     # Load history and parse data (unsorted)
-    data = OrderHistory.objects.filter(mapregion = region_id, invtype = type_id).order_by('date')
+    data = OrderHistory.objects.filter(mapregion=region_id, invtype=type_id).order_by('date')
 
     last_mean = 0
 
@@ -66,10 +71,14 @@ def history_json(request, region_id = 10000002, type_id = 34):
     json = simplejson.dumps(ohlc_data)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype = 'application/json')
+    return HttpResponse(json, mimetype='application/json')
 
-@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3, minute=0, second=0, microsecond=0) - datetime.utcnow()).seconds)
-def history_compare_json(request, type_id = 34):
+
+@cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3,
+                                                             minute=0,
+                                                             second=0,
+                                                             microsecond=0) - datetime.utcnow()).seconds)
+def history_compare_json(request, type_id=34):
 
     """
     Returns a set of history data in JSON format. Defaults to Tritanium in The Forge.
@@ -82,7 +91,7 @@ def history_compare_json(request, type_id = 34):
 
     # If we do not have any data for this region, return an empty array
     for region in region_ids:
-        data = OrderHistory.objects.filter(mapregion = region, invtype = type_id).order_by('date')
+        data = OrderHistory.objects.filter(mapregion=region, invtype=type_id).order_by('date')
         graph = []
 
         for point in data:
@@ -98,49 +107,58 @@ def history_compare_json(request, type_id = 34):
     json = simplejson.dumps(data_dict)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype = 'application/json')
+    return HttpResponse(json, mimetype='application/json')
 
-def quicklook_region(request, region_id = 10000002, type_id = 34):
+
+def quicklook_region(request, region_id=10000002, type_id=34):
     """
     Generates system level overview for a specific type.
     Defaults to tritanium & the forge.
     """
 
     # Get the item type
-    type_object = InvType.objects.get(id = type_id)
+    type_object = InvType.objects.get(id=type_id)
 
     # Get list of materials to build
-    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
+    materials = InvTypeMaterial.objects.values('material_type__name',
+                                               'quantity',
+                                               'material_type__id').filter(type=type_id)
+
     totalprice = 0
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
         min_price = {}
         try:
-            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
+            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
+                                                     mapregion_id__exact=10000002)
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760, is_bid = False).aggregate(min_price=Min('price'))
-            material['total']=min_price['min_price']*material['quantity']
+            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'],
+                                              mapregion_id__exact=10000002,
+                                              stastation_id__exact=60003760,
+                                              is_bid=False).aggregate(min_price=Min('price'))
+
+            material['total'] = min_price['min_price']*material['quantity']
             material['min_price'] = min_price['min_price']
         except:
-            material['total']=0
+            material['total'] = 0
             material['min_price'] = 0
-        material['price']=stat_object.sellmedian
+        material['price'] = stat_object.sellmedian
         #material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
 
     # Get the region type
-    region_object = MapRegion.objects.get(id = region_id)
+    region_object = MapRegion.objects.get(id=region_id)
 
     #
     # Orders
     #
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapregion_id = region_id).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapregion_id = region_id).order_by('price')
+    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
+    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
 
     orders = []
     orders += buy_orders
@@ -166,27 +184,31 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
                 # Ask values calculated via numpy
                 temp_data.append(np.min(system_ask_prices))
                 temp_data.append(np.max(system_ask_prices))
-                temp_data.append(round(np.average(system_ask_prices),2))
+                temp_data.append(round(np.average(system_ask_prices), 2))
                 temp_data.append(np.median(system_ask_prices))
-                temp_data.append(round(np.std(system_ask_prices),2))
+                temp_data.append(round(np.std(system_ask_prices), 2))
                 temp_data.append(len(system_ask_prices))
-                temp_data.append(Orders.objects.filter(mapsolarsystem_id = system, invtype = type_id, is_bid = False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                temp_data.append(Orders.objects.filter(mapsolarsystem_id=system,
+                                                       invtype=type_id,
+                                                       is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
                 # Else there are no orders in this system -> add a bunch of 0s
-                temp_data.extend([0,0,0,0,0,0,0])
+                temp_data.extend([0, 0, 0, 0, 0, 0, 0])
 
         if len(system_bid_prices) > 0:
                 # Bid values calculated via numpy
                 temp_data.append(np.min(system_bid_prices))
                 temp_data.append(np.max(system_bid_prices))
-                temp_data.append(round(np.average(system_bid_prices),2))
+                temp_data.append(round(np.average(system_bid_prices), 2))
                 temp_data.append(np.median(system_bid_prices))
-                temp_data.append(round(np.std(system_bid_prices),2))
+                temp_data.append(round(np.std(system_bid_prices), 2))
                 temp_data.append(len(system_bid_prices))
-                temp_data.append(Orders.objects.filter(mapsolarsystem_id = system, invtype = type_id, is_bid = True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                temp_data.append(Orders.objects.filter(mapsolarsystem_id=system,
+                                                       invtype=type_id,
+                                                       is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
                 # Else there are no orders in this system -> add a bunch of 0s
-                temp_data.extend([0,0,0,0,0,0,0])
+                temp_data.extend([0, 0, 0, 0, 0, 0, 0])
 
         # Append temp_data to system_data
         system_data.append(temp_data)
@@ -196,62 +218,71 @@ def quicklook_region(request, region_id = 10000002, type_id = 34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER,
-                                        'region':region_object,
-                                        'type':type_object,
-                                        'materials':materials,
-                                        'totalprice':totalprice,
-                                        'buy_orders':buy_orders,
-                                        'sell_orders':sell_orders,
-                                        'systems':system_data,
-                                        'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER': settings.IMAGE_SERVER,
+                                        'region': region_object,
+                                        'type': type_object,
+                                        'materials': materials,
+                                        'totalprice': totalprice,
+                                        'buy_orders': buy_orders,
+                                        'sell_orders': sell_orders,
+                                        'systems': system_data,
+                                        'breadcrumbs': breadcrumbs})
 
     return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
 
-def quicklook(request, type_id = 34):
+
+def quicklook(request, type_id=34):
 
     """
     Generates a market overview for a certain type. Defaults to tritanium.
     """
 
     # Get the item type
-    type_object = InvType.objects.get(id = type_id)
+    type_object = InvType.objects.get(id=type_id)
 
     # Add regions
     region_ids = [10000002, 10000043, 10000032, 10000030]
     region_names = {}
 
     for region in region_ids:
-        region_names[region] = MapRegion.objects.get(id = region).name
+        region_names[region] = MapRegion.objects.get(id=region).name
 
     # Get requested type
-    type_object = InvType.objects.get(id = type_id)
+    type_object = InvType.objects.get(id=type_id)
 
     # Get list of materials to build
-    materials = InvTypeMaterial.objects.values('material_type__name', 'quantity', 'material_type__id').filter(type=type_id)
+    materials = InvTypeMaterial.objects.values('material_type__name',
+                                               'quantity',
+                                               'material_type__id').filter(type=type_id)
     totalprice = 0
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
-        min_price={}
+        min_price = {}
+
         try:
-            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002)
+            stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
+                                                     mapregion_id__exact=10000002)
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'], mapregion_id__exact=10000002, stastation_id__exact=60003760, is_bid = False).aggregate(min_price=Min('price'))
-            material['total']=min_price['min_price']*material['quantity']
+            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'],
+                                              mapregion_id__exact=10000002,
+                                              stastation_id__exact=60003760,
+                                              is_bid=False).aggregate(min_price=Min('price'))
+
+            material['total'] = min_price['min_price'] * material['quantity']
             material['min_price'] = min_price['min_price']
         except:
-            material['total']=0
+            material['total'] = 0
             material['min_price'] = 0
-        material['price']=stat_object.sellmedian
-        #material['total']=min_price['min_price']*material['quantity']
+
+        material['price'] = stat_object.sellmedian
         totalprice += material['total']
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False).order_by('price')
+    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True).order_by('-price')
+    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False).order_by('price')
 
     # Make list with all orders
     orders = []
@@ -281,11 +312,13 @@ def quicklook(request, type_id = 34):
             # Ask values calculated via numpy
             temp_data.append(np.min(region_ask_prices))
             temp_data.append(np.max(region_ask_prices))
-            temp_data.append(round(np.average(region_ask_prices),2))
+            temp_data.append(round(np.average(region_ask_prices), 2))
             temp_data.append(np.median(region_ask_prices))
-            temp_data.append(round(np.std(region_ask_prices),2))
+            temp_data.append(round(np.std(region_ask_prices), 2))
             temp_data.append(len(region_ask_prices))
-            temp_data.append(Orders.objects.filter(mapregion_id = region, invtype = type_id, is_bid = False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+            temp_data.append(Orders.objects.filter(mapregion_id=region,
+                                                   invtype=type_id,
+                                                   is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
@@ -296,15 +329,17 @@ def quicklook(request, type_id = 34):
             # Bid values calculated via numpy
             temp_data.append(np.min(region_bid_prices))
             temp_data.append(np.max(region_bid_prices))
-            temp_data.append(round(np.average(region_bid_prices),2))
+            temp_data.append(round(np.average(region_bid_prices), 2))
             temp_data.append(np.median(region_bid_prices))
-            temp_data.append(round(np.std(region_bid_prices),2))
+            temp_data.append(round(np.std(region_bid_prices), 2))
             temp_data.append(len(region_bid_prices))
-            temp_data.append(Orders.objects.filter(mapregion_id = region, invtype = type_id, is_bid = True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+            temp_data.append(Orders.objects.filter(mapregion_id=region,
+                                                   invtype=type_id,
+                                                   is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
-            temp_data.extend([0,0,0,0,0,0,0])
+            temp_data.extend([0, 0, 0, 0, 0, 0, 0])
             temp_data.append(region)
 
         # Append temp_data to region_data
@@ -314,20 +349,21 @@ def quicklook(request, type_id = 34):
 
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'IMAGE_SERVER':settings.IMAGE_SERVER,
-                                        'type':type_object,
-                                        'region_ids':region_ids,
-                                        'region_names':simplejson.dumps(region_names),
-                                        'materials':materials,
-                                        'totalprice':totalprice,
-                                        'buy_orders':buy_orders[:50],
-                                        'sell_orders':sell_orders[:50],
-                                        'regions':region_data,
-                                        'breadcrumbs':breadcrumbs})
+    rcontext = RequestContext(request, {'IMAGE_SERVER': settings.IMAGE_SERVER,
+                                        'type': type_object,
+                                        'region_ids': region_ids,
+                                        'region_names': simplejson.dumps(region_names),
+                                        'materials': materials,
+                                        'totalprice': totalprice,
+                                        'buy_orders': buy_orders[:50],
+                                        'sell_orders': sell_orders[:50],
+                                        'regions': region_data,
+                                        'breadcrumbs': breadcrumbs})
 
     return render_to_response('market/quicklook/quicklook.haml', rcontext)
 
-def quicklook_ask_filter(request, type_id = 34, min_sec = 0, max_age = 8):
+
+def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
     """
     Returns quicklook partial for filtering
     """
@@ -336,16 +372,20 @@ def quicklook_ask_filter(request, type_id = 34, min_sec = 0, max_age = 8):
     if min_sec == 0:
         min_sec = -10
 
-    filter_time = datetime.now() - timedelta(hours = int(max_age))
+    filter_time = datetime.now() - timedelta(hours=int(max_age))
 
     # Fetch all sell orders from DB
-    sell_orders = Orders.objects.filter(invtype = type_id, is_bid = False, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('price')[:50]
+    sell_orders = Orders.objects.filter(invtype=type_id,
+                                        is_bid=False,
+                                        mapsolarsystem__security_level__gte=min_sec,
+                                        generated_at__gte=filter_time).order_by('price')[:50]
 
-    rcontext = RequestContext(request, {'sell_orders':sell_orders, 'type_id':type_id})
+    rcontext = RequestContext(request, {'sell_orders': sell_orders, 'type_id': type_id})
 
     return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
 
-def quicklook_bid_filter(request, type_id = 34, min_sec = 0, max_age = 8):
+
+def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
     """
     Returns quicklook partial for filtering
     """
@@ -354,11 +394,14 @@ def quicklook_bid_filter(request, type_id = 34, min_sec = 0, max_age = 8):
     if min_sec == 0:
         min_sec = -10
 
-    filter_time = datetime.now() - timedelta(hours = int(max_age))
+    filter_time = datetime.now() - timedelta(hours=int(max_age))
 
     # Fetch all buy orders from DB
-    buy_orders = Orders.objects.filter(invtype = type_id, is_bid = True, mapsolarsystem__security_level__gte = min_sec, generated_at__gte = filter_time).order_by('-price')[:50]
+    buy_orders = Orders.objects.filter(invtype=type_id,
+                                       is_bid=True,
+                                       mapsolarsystem__security_level__gte=min_sec,
+                                       generated_at__gte=filter_time).order_by('-price')[:50]
 
-    rcontext = RequestContext(request, {'buy_orders':buy_orders, 'type_id':type_id})
+    rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type_id': type_id})
 
     return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)

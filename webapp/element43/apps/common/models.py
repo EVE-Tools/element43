@@ -10,14 +10,15 @@ from django.db.models.signals import post_save
 # User Profile
 #
 
+
 class Profile(models.Model):
     """
-    Holds additional profile fields of every User like the API keys. 
+    Holds additional profile fields of every User like the API keys.
     Can be retrieved by the method get_profile() of the User class.
     """
     # Link to User
     user = models.OneToOneField(User)
-    
+
     # Registration and profile data
     activation_key = models.CharField(max_length=255,
                                       help_text="E-mail activation key.")
@@ -28,9 +29,13 @@ class Profile(models.Model):
             verbose_name = "User Profile"
             verbose_name_plural = "User Profiles"
 
-# Signal handler for creating a profile when users are created
+
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal handler for creating a profile when users are created
+    """
+
     if created:
         Profile.objects.create(user=instance)
 
-post_save.connect(create_user_profile, sender=User)
+    post_save.connect(create_user_profile, sender=User)

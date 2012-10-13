@@ -17,12 +17,14 @@ NAMES = [('second', 'seconds'),
          ('month',  'months'),
          ('year',   'years')]
 
+
 def humanize_time(amount, units):
     """
-    Humanizes time. 
-    
+    Humanizes time.
+
     For example: 6000 seconds = 1 hour 40 minutes.
     """
+
     amount = int(amount)
 
     unit = map(lambda a: a[1], NAMES).index(units)
@@ -30,7 +32,7 @@ def humanize_time(amount, units):
     amount = amount * INTERVALS[unit]
 
     result = ""
-    for i in range(len(NAMES)-1, -1, -1):
+    for i in range(len(NAMES) - 1, -1, -1):
         a = amount // INTERVALS[i]
         if a > 0:
             result += "%d %s " % (a, NAMES[i][1 % a])

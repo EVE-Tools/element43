@@ -2,6 +2,7 @@ from django.db import connection
 
 from apps.common.util import dictfetchall
 
+
 def bid_ask_spread(station_id=60008694):
 
     """

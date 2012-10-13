@@ -1,8 +1,8 @@
 # Utility imports
 import datetime
 import pytz
-from celery.task.schedules import crontab
-from celery.task import PeriodicTask, Task
+
+from celery.task import PeriodicTask
 
 # API Models
 from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill
@@ -10,58 +10,68 @@ from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, Char
 # API
 from element43 import eveapi
 
+
 class ProcessCharacterSheet(PeriodicTask):
     """
     Scan the db an refresh all character sheets
     Currently done once an hour
     """
-    
+
     run_every = datetime.timedelta(minutes=15)
-    
+
     def run(self, **kwargs):
         print "BEGIN CHARACTER IMPORT"
-        
+
         #define variables
         i_stats = {}
         implant = {}
         attributes = ['memory', 'intelligence', 'perception', 'willpower', 'charisma']
-        
+
         #grab an api object
         api = eveapi.EVEAPIConnection()
-        
+
         #scan to see if anyone is due for an update
-        update_timers = APITimer.objects.filter(apisheet="CharacterSheet", nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+        update_timers = APITimer.objects.filter(apisheet="CharacterSheet",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
         for update in update_timers:
-            character = Character.objects.get(id = update.character_id)
+
+            character = Character.objects.get(id=update.character_id)
             print ">>> Updating: %s" % character.name
+
             apikey = APIKey.objects.get(id=character.apikey_id)
-            auth = api.auth(keyID = apikey.keyid, vCode = apikey.vcode)
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
             me = auth.character(character.id)
             sheet = me.CharacterSheet()
             i_stats['name'] = ""
             i_stats['value'] = 0
+
             for attr in attributes:
                 implant[attr] = i_stats
-                
+
             # have to check because if you don't have an implant in you get nothing back
             try:
-                implant['memory'] = {'name':sheet.attributeEnhancers.memoryBonus.augmentatorName, 'value':sheet.attributeEnhancers.memoryBonus.augmentatorValue}
+                implant['memory'] = {'name': sheet.attributeEnhancers.memoryBonus.augmentatorName,
+                                     'value': sheet.attributeEnhancers.memoryBonus.augmentatorValue}
             except:
                 pass
             try:
-                implant['perception'] = {'name':sheet.attributeEnhancers.perceptionBonus.augmentatorName, 'value':sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
+                implant['perception'] = {'name': sheet.attributeEnhancers.perceptionBonus.augmentatorName,
+                                         'value': sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
             except:
                 pass
             try:
-                implant['intelligence'] = {'name':sheet.attributeEnhancers.intelligenceBonus.augmentatorName, 'value':sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
+                implant['intelligence'] = {'name': sheet.attributeEnhancers.intelligenceBonus.augmentatorName,
+                                           'value': sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
             except:
                 pass
             try:
-                implant['willpower'] = {'name':sheet.attributeEnhancers.willpowerBonus.augmentatorName, 'value':sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
+                implant['willpower'] = {'name': sheet.attributeEnhancers.willpowerBonus.augmentatorName,
+                                        'value': sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
             except:
                 pass
             try:
-                implant['charisma'] = {'name':sheet.attributeEnhancers.charismaBonus.augmentatorName, 'value':sheet.attributeEnhancers.charismaBonus.augmentatorValue}
+                implant['charisma'] = {'name': sheet.attributeEnhancers.charismaBonus.augmentatorName,
+                                       'value': sheet.attributeEnhancers.charismaBonus.augmentatorValue}
             except:
                 pass
             try:
@@ -70,7 +80,7 @@ class ProcessCharacterSheet(PeriodicTask):
             except:
                 character.alliance_name = ""
                 character.alliance_id = 0
-            
+
             character.corp_name = sheet.corporationName
             character.corp_id = sheet.corporationID
             character.clone_name = sheet.cloneName
@@ -87,39 +97,40 @@ class ProcessCharacterSheet(PeriodicTask):
             character.implant_charisma_name = implant['charisma']['name']
             character.implant_charisma_bonus = implant['charisma']['value']
             #character.cached_until = sheet.cachedUntil
-            
+
             character.save()
-            
+
             for skill in sheet.skills:
                 try:
-                    c_skill = CharSkill.objects.get(character = character.id, skill_id = skill.typeID)
+                    c_skill = CharSkill.objects.get(character=character.id, skill_id=skill.typeID)
                     c_skill.skillpoints = skill.skillpoints
                     c_skill.level = skill.level
                     c_skill.save()
                 except:
-                    new_skill = CharSkill(character = new_char,
-                                          skill_id = skill.typeID,
-                                          skillpoints = skill.skillpoints,
-                                          level = skill.level)
+                    new_skill = CharSkill(character=new_char,
+                                          skill_id=skill.typeID,
+                                          skillpoints=skill.skillpoints,
+                                          level=skill.level)
                     new_skill.save()
-                    
+
             update.nextupdate = pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1))
             update.save()
             print "<<< %s update complete" % character.name
-    
+
+
 class ProcessAPISkillTree(PeriodicTask):
     """
     Grab the skill list, iterate it and store to DB
     """
-    
+
     run_every = datetime.timedelta(hours=24)
 
     def run(self, **kwargs):
-        
+
         print "BEGIN SKILL IMPORT"
         #create our api object
         api = eveapi.EVEAPIConnection()
-        
+
         #load the skilltree
         skilltree = api.eve.SkillTree()
 
@@ -137,16 +148,16 @@ class ProcessAPISkillTree(PeriodicTask):
                 except:
                     s_secondary = ""
                 if skill.published:
-                    published = True;
+                    published = True
                 else:
-                    published = False;
+                    published = False
                 new_skill = Skill(id=skill.typeID,
                                   name=skill.typeName,
-                                  group = new_group,
-                                  published = published,
-                                  description = skill.description,
-                                  rank = skill.rank,
-                                  primary_attribute = s_primary,
-                                  secondary_attribute = s_secondary)
+                                  group=new_group,
+                                  published=published,
+                                  description=skill.description,
+                                  rank=skill.rank,
+                                  primary_attribute=s_primary,
+                                  secondary_attribute=s_secondary)
                 new_skill.save()
         print "COMPLETED SKILL IMPORT"

@@ -1,5 +1,4 @@
-from decimal import Decimal
-
+# Django imports
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
@@ -17,30 +16,32 @@ from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculato
 from eve_db.models import InvBlueprintType
 from apps.market_data.models import ItemRegionStat
 
+
 def select_blueprint(request):
     """
-    View to search for a blueprint. If only one blueprint is found the user will be 
+    View to search for a blueprint. If only one blueprint is found the user will be
     redirected immediately to the calculator. Otherwise he will be shown a list of
     all found blueprints and has to select the one he wants to produce.
     """
-    
+
     template_vars = {}
-    
+
     # When the user selects a new blueprint we better delete the settings he used for
     # his last calculation.
     if request.session.get('form_data'):
         del request.session['form_data']
-    
+
     if request.method == 'POST':
         form = SelectBlueprintForm(request.POST)
-        
+
         if form.is_valid():
             blueprint_name = form.cleaned_data['blueprint']
             blueprints = InvBlueprintType.objects.filter(blueprint_type__name__icontains=blueprint_name)
-            
+
             if len(blueprints) == 1:
-                return HttpResponseRedirect(reverse('manufacturing_calculator', kwargs={ 'blueprint_type_id': blueprints[0].blueprint_type.id }))
-            
+                return HttpResponseRedirect(reverse('manufacturing_calculator',
+                                            kwargs={'blueprint_type_id': blueprints[0].blueprint_type.id}))
+
             # If more than one result was found all blueprints are added to the
             # request context. The select_blueprint.haml will be rendered again
             # but now with a list of found blueprints.
@@ -49,11 +50,12 @@ def select_blueprint(request):
     template_vars['form'] = SelectBlueprintForm()
     template_vars['MANUFACTURING_MAX_BLUEPRINT_HISTORY'] = MANUFACTURING_MAX_BLUEPRINT_HISTORY
     template_vars[MANUFACTURING_BLUEPRINT_HISTORY_SESSION] = request.session.get(MANUFACTURING_BLUEPRINT_HISTORY_SESSION, None)
-    
+
     rcontext = RequestContext(request, template_vars)
     return render_to_response('manufacturing/calculator/select_blueprint.haml', rcontext)
 
-def calculator(request, blueprint_type_id):    
+
+def calculator(request, blueprint_type_id):
     """
     This view contains the form where the user types in all the relevant data
     that is needed to calculate the manufacturing job.
@@ -67,15 +69,15 @@ def calculator(request, blueprint_type_id):
 
     if request.method == 'POST':
         form = ManufacturingCalculatorForm(request.POST)
-        
+
         if form.is_valid():
             # Put the form data in the session. If the user goes back to change the "job" information
             # the form will have those information as initial data!
             request.session['form_data'] = request.POST
             form.cleaned_data['blueprint_type_id'] = blueprint_type_id
             data = calculate_manufacturing_job(form.cleaned_data)
-            
-            rcontext = RequestContext(request, { 'data' : data })
+
+            rcontext = RequestContext(request, {'data': data})
             return render_to_response('manufacturing/calculator/result.haml', rcontext)
     else:
         if request.session.get('form_data'):
@@ -87,8 +89,8 @@ def calculator(request, blueprint_type_id):
                 target_sell_price = stat_object.sellmedian
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
-            
+
             form = ManufacturingCalculatorForm(initial={'target_sell_price': "%.2f" % target_sell_price})
-    
-    rcontext = RequestContext(request, { 'form' : form, 'blueprint': blueprint })
+
+    rcontext = RequestContext(request, {'form': form, 'blueprint': blueprint})
     return render_to_response('manufacturing/calculator/calculator.haml', rcontext)
