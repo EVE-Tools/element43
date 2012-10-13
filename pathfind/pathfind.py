@@ -56,8 +56,8 @@ def pathfind():
     """
     This is where the work gets done.  This is a flask-called routine running on port 3455 (default).
     Daemon can accept GET or POST paramers as follows:
-    source: Source system_id (starting point)
-    target: Destination system_id (end point)
+    start: Source system_id (starting point)
+    finish: Destination system_id (end point)
     seclevel: integer value from 0 to 10 which will get divided by 10 to identify min/max seclevel to attempt to use
     invert: 0 or 1 (false or true).  If true it will attempt to find a path using seclevel or LOWER.  By default (0)
             it will use seclevel or HIGHER (ie, the "normal" autopilot)
@@ -66,13 +66,13 @@ def pathfind():
     invert = 0
     
     if request.method == "POST":
-        source_system = int(request.form['source'])
-        target_system = int(request.form['target'])
+        source_system = int(request.form['start'])
+        target_system = int(request.form['finish'])
         seclevel = int(request.form['seclevel'])
         invert = int(request.form['invert'])
     else:
-        source_system = int(request.args.get('source'))
-        target_system = int(request.args.get('target'))
+        source_system = int(request.args.get('start'))
+        target_system = int(request.args.get('finish'))
         seclevel = int(request.args.get('seclevel'))
         invert = int(request.args.get('invert'))
     
