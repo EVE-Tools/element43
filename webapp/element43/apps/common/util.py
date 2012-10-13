@@ -31,19 +31,22 @@ def validate_characters(user, access_mask):
             characters = Character.objects.filter(apikey = key)
     
     return characters
-
-def pathfind(start_system, finish_system, seclevel, invert):
-    """
-    Queries the pathfinder daemon for path, returns list of system objects in order
-    """
-    post_params = urllib.urlencode({'start': start_system, 'finish': finish_system, 'seclevel':seclevel, 'invert':invert})
-    path_response = urllib.urlopen('http://localhost:3455/path', post_params)
-    full_path = ast.literal_eval(path_response.read())
     
-    response = {}
+def find_path(start, finish, security=5, invert=0):
+    """
+    Returns a list of system objects which represent the path. 
+    min_sec and invert are optional.
+    """
+    
+    # Set params
+    params = urllib.urlencode({'start': start, 'finish': finish, 'seclevel':security, 'invert':invert})
+                               
+    response = urllib.urlopen('http://localhost:3455/path', params)
+    
+    path_list = ast.literal_eval(response.read())
     path = []
-    for system in full_path:
-        system_object = MapSolarSystem.objects.get(id = system)
-        path.append(system_object)
+    
+    for waypoint in path_list:
+        path.append(MapSolarSystem.objects.get(id = waypoint))
     
     return path

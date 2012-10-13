@@ -34,3 +34,7 @@ git+http://github.com/zeromq/pyzmq.git
 
 # celery stuff
 django-celery-with-redis
+
+# Pathfinder
+networkx
+flask

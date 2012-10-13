@@ -24,7 +24,7 @@ import urllib
 # Helper functions
 from apps.market_data.util import group_breadcrumbs
 from apps.market_data.sql import bid_ask_spread, import_markup
-from apps.common.util import pathfind
+from apps.common.util import find_path
 from django.db.models import Min, Max, Sum
 
 # Caching
@@ -221,7 +221,7 @@ def import_system(request, station_id = 60003760, system_id = 30000142):
     station = StaStation.objects.get(id = station_id)
     
     # get the path to destination, assume trying for highsec route
-    path = pathfind(system_id, station.solar_system_id, 5, 0)
+    path = find_path(system_id, station.solar_system_id)
     numjumps = len(path)
     
     # Mapping: (invTyeID, invTypeName, foreign_sell, local_buy, markup, invTyeID)
