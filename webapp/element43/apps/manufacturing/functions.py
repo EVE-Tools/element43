@@ -210,6 +210,7 @@ def calculate_manufacturing_job(form_data):
     result = {} # result dictionary which will be returned
     blueprint_type_id = int(form_data['blueprint_type_id'])
     blueprint_runs = int(form_data['blueprint_runs'])
+    result['produced_units'] = blueprint.product_type.portion_size * blueprint_runs
     blueprint = InvBlueprintType.objects.select_related().get(blueprint_type__id=blueprint_type_id)
     
     # --------------------------------------------------------------------------
@@ -230,7 +231,7 @@ def calculate_manufacturing_job(form_data):
     materials.sort(key=lambda material: material['name'])
     
     result['materials'] = materials
-    result['materials_cost_unit'] = materials_cost_total / blueprint_runs
+    result['materials_cost_unit'] = materials_cost_total / result['produced_units']
     result['materials_cost_total'] = materials_cost_total
     result['materials_volume_total'] = materials_volume_total
     
@@ -264,8 +265,6 @@ def calculate_manufacturing_job(form_data):
     result['production_time_total'] = round(production_time * blueprint_runs)
     
     # add all the other values to the result dictionary
-    # TODO: Optimize the following query. Only fetch the portion size for instance!
-    result['produced_units'] = blueprint.product_type.portion_size * blueprint_runs
     result['blueprint_cost_unit'] = form_data['blueprint_price'] / result['produced_units']
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
