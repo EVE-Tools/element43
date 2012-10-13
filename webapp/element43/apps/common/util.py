@@ -35,7 +35,10 @@ def validate_characters(user, access_mask):
 def find_path(start, finish, security=5, invert=0):
     """
     Returns a list of system objects which represent the path. 
-    min_sec and invert are optional.
+    start: system_id of first system
+    finish: system_id of last system
+    security: sec level of system * 10
+    invert: if true (1), use security as highest seclevel you want to enter, default (0) seclevel is the lowest you want to try to use
     """
     
     # Set params
