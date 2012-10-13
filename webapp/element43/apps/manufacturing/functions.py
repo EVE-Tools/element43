@@ -210,8 +210,8 @@ def calculate_manufacturing_job(form_data):
     result = {} # result dictionary which will be returned
     blueprint_type_id = int(form_data['blueprint_type_id'])
     blueprint_runs = int(form_data['blueprint_runs'])
-    result['produced_units'] = blueprint.product_type.portion_size * blueprint_runs
     blueprint = InvBlueprintType.objects.select_related().get(blueprint_type__id=blueprint_type_id)
+    result['produced_units'] = blueprint.product_type.portion_size * blueprint_runs
     
     # --------------------------------------------------------------------------
     # Calculate bill of materials
