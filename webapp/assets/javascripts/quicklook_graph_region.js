@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    $.getJSON('/market/history/' + mapRegionID + '/' + invTypeID + '/', function (data) {
+$(document).ready(function() {
+    $.getJSON('/market/history/' + mapRegionID + '/' + invTypeID + '/', function(data) {
         // Parse data
         var data_ohlc = [],
             data_high = [],
@@ -8,9 +8,8 @@ $(document).ready(function () {
             length = data.length;
 
         // Only proceed if there is any data
-
-        if (length != 0) {
-            for (i = 0; i < length; i++) {
+        if(length !== 0) {
+            for(i = 0; i < length; i++) {
                 data_ohlc.push([
                 data[i][0], // Timestamp
                 data[i][1], // Open
@@ -21,17 +20,17 @@ $(document).ready(function () {
 
                 data_high.push([
                 data[i][0], // Timestamp
-                data[i][2], // High
+                data[i][2]  // High
                 ]);
 
                 data_low.push([
                 data[i][0], // Timestamp
-                data[i][3], // Low
+                data[i][3]  // Low
                 ]);
 
                 data_volume.push([
                 data[i][0], // Timestamp
-                data[i][5], // Volume
+                data[i][5]  // Volume
                 ]);
             }
 

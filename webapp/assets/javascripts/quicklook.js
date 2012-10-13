@@ -1,43 +1,40 @@
-$(document).ready(function () {
+$(document).ready(function() {
     //
     // Market Quicklook for element43
     //
-
     // Show / Hide filters section
 
-
-    $('#ask_link').click(function (e) {
-        if (!($('#filters').is(':visible'))) {
+    $('#ask_link').click(function(e) {
+        if(!($('#filters').is(':visible'))) {
             $('#filters').slideDown();
         }
     });
 
-    $('#bid_link').click(function (e) {
-        if (!($('#filters').is(':visible'))) {
+    $('#bid_link').click(function(e) {
+        if(!($('#filters').is(':visible'))) {
             $('#filters').slideDown();
         }
-    })
+    });
 
-    $('#region_link').click(function (e) {
-        if ($('#filters').is(':visible')) {
+    $('#region_link').click(function(e) {
+        if($('#filters').is(':visible')) {
             $('#filters').slideUp();
         }
-    })
+    });
 
-    $('#mats_link').click(function (e) {
-        if ($('#filters').is(':visible')) {
+    $('#mats_link').click(function(e) {
+        if($('#filters').is(':visible')) {
             $('#filters').slideUp();
         }
-    })
+    });
 
     // Sliders
-
     $("#security-slider").slider({
         value: 0.4,
         min: 0.0,
         max: 1.0,
         step: 0.1,
-        slide: function (event, ui) {
+        slide: function(event, ui) {
             $("#system-security").html(ui.value);
             $("#system-security").switchClass($("#system-security").attr('class'), "sec" + (ui.value * 10), 200);
         }
@@ -50,7 +47,7 @@ $(document).ready(function () {
         min: 1,
         max: 8,
         step: 1,
-        slide: function (event, ui) {
+        slide: function(event, ui) {
             $("#data-age").html(ui.value);
         }
     });
@@ -58,10 +55,9 @@ $(document).ready(function () {
     $("#data-age").html($("#age-slider").slider("value"));
 
     // Handle filtering
-
     $('#filter-button').click(
 
-    function () {
+    function() {
         $('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
         $('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
     });
