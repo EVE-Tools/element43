@@ -89,21 +89,21 @@
               - for item in spread
                  %tr
                    %td
-                     %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.0}}_16.png'}
-                     %a{'href':'{% url quicklook type_id=item.0 %}'}
-                       {{item.1}}
+                     %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.id}}_16.png'}
+                     %a{'href':'{% url quicklook type_id=item.id %}'}
+                       {{item.name}}
                    %td.text-right
-                     {{item.4|floatformat:2|intcomma}}
+                     {{item.min_ask|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.2|floatformat:2|intcomma}}
+                     {{item.max_bid|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.6|floatformat:2|intcomma}}
+                     {{item.spread|floatformat:2|intcomma}}
                    %td.text-right
-                     {{item.7|floatformat:2|intcomma}} %
+                     {{item.spread_percent|floatformat:2|intcomma}} %
                    %td.text-right
-                     {{item.8|floatformat:0|intcomma}}
+                     {{item.weekly_volume|floatformat:0|intcomma}}
                    %td.text-right
-                     {{item.9|floatformat:2|intcomma}}
+                     {{item.potential_daily_profit|floatformat:2|intcomma}}
         #import.tab-pane.fade
           %i Choose a region or system to import from with the text field above.
 - block scripts

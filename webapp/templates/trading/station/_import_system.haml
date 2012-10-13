@@ -44,20 +44,20 @@
         - for item in markup
            %tr
              %td
-               %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.0}}_16.png'}
-               %a{'href':'{% url quicklook type_id=item.0 %}'}
-                 {{item.1}}
+               %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.id}}_16.png'}
+               %a{'href':'{% url quicklook type_id=item.id %}'}
+                 {{item.name}}
              %td.text-right
-               {{item.2|floatformat:2|intcomma}}
+               {{item.foreign_ask|floatformat:2|intcomma}}
              %td.text-right
-               {{item.7|intcomma}}
+               {{item.ask_qty_filtered|intcomma}}
              %td.text-right
-               {{item.3|floatformat:2|intcomma}}
+               {{item.local_bid|floatformat:2|intcomma}}
              %td.text-right
-               {{item.6|intcomma}}
+               {{item.bid_qty_filtered|intcomma}}
              %td.text-right
-               {{item.4|floatformat:2|intcomma}} %
+               {{item.markup|floatformat:2|intcomma}} %
              %td.text-right
-               {{item.5|intcomma}}
+               {{item.weekly_volume|intcomma}}
              %td.text-right
-               {{item.8|floatformat:2|intcomma}}
+               {{item.potential_profit|floatformat:2|intcomma}}
