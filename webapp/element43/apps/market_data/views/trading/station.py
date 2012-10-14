@@ -183,7 +183,7 @@ def import_system(request, station_id=60003760, system_id=30000142):
 
     # get the path to destination, assume trying for highsec route
     path = find_path(system_id, station.solar_system_id)
-    numjumps = len(path)
+    numjumps = len(path) - 1 # don't count the start system
 
     # Mapping: (invTyeID, invTypeName, foreign_ask, local_bid, markup, invTyeID)
     markup = import_markup(station_id, 0, system_id, 0)
