@@ -7,82 +7,86 @@
   - if not request.user.is_authenticated
     .hero-unit
       %h1 More bang for the buck!
-      %p Welcome to element43, an open-source all-in-one tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
+      %p Welcome to element43, an open-source all-in-one tool providing you with all the information
+         you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
       %p
         %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
           Get started now »
 - block content
   .row-fluid
+    #history.span8
+    .span4
+      %h2 Contribute
+      %p Element43 is an open-source project based on the Python web framework Django.
+         If you have some feedback for us or want to contribute to the project, click the button below.
+      %a.btn.btn-primary{'href':'{% url about_page %}'}
+        Get involved »
+  %hr
+  .row-fluid
     .span4
       %h2 Market Data
       %p
         Trading sounds simple. Buy low, sell high. But where to find the best deals?
-    .span4
-      %h2 Industry Manager
-      %p
-        Never lose track of your blueprints and your industrial activities.
-    .span4
-      %h2 Wallet Manager
-      %p
-        Analyze your trades one item at a time. Stay aware of your current situation.
+        Element43 relies on user-submitted data from the EVE Market Data Relay (EMDR) network.
+        Help us to improve our database by using an EMDR compatible uploader.
+      %a.btn.btn-primary{'href':'http://eve-market-data-relay.readthedocs.org/en/latest/uploading.html', 'target':'_blank'}
+        Download Client »
+    .span8
+     %h2 Live Mineral Index and PLEX - Jita / The Forge
+     %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
+       %thead
+         %tr
+           %th.span2
+           %th.span5{'colspan':'3', 'text-align':'center'}
+             Bid
+           %th.span5{'colspan':'3', 'text-align':'center'}
+             Ask
+         %tr
+           %th
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in Jita.'}
+               Highest Price
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Median of all bids in The Forge.'}
+               Median
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of bids in The Forge.'}
+               Move
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in Jita.'}
+               Lowest Price
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Median of all asks in The Forge.'}
+               Median
+           %th
+             %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of asks in The Forge.'}
+               Move
+       %tbody
+         - for item in types
+           %tr
+             %td
+               %a{'href':'{% url quicklook type_id=item.id %}'}
+                 - if item.name == "30 Day Pilot's License Extension (PLEX)"
+                   PLEX
+                 - else
+                   {{item.name}}
+             %td{'id':'bid_max_{{item.id}}'}
+               0.00
+             %td
+               %span{'id':'bid_median_{{item.id}}'}
+                 0.00
+             %td
+               %span{'id':'bid_median_move_{{item.id}}'}
+                 +0.00
+             %td{'id':'ask_min_{{item.id}}'}
+               0.00
+             %td
+               %span{'id':'ask_median_{{item.id}}'}
+                 0.00
+             %td
+               %span{'id':'ask_median_move_{{item.id}}'}
+                 +0.00
   %hr
-  #stats
-    .row-fluid
-      .span12
-       %h3 Mineral Index and PLEX - Jita / The Forge
-       %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
-         %thead
-           %tr
-             %th.span2
-             %th.span5{'colspan':'3', 'text-align':'center'}
-               Bid
-             %th.span5{'colspan':'3', 'text-align':'center'}
-               Ask
-           %tr
-             %th
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in Jita.'}
-                 Highest Price
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Median of all bids in The Forge.'}
-                 Median
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of bids in The Forge.'}
-                 Move
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in Jita.'}
-                 Lowest Price
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Median of all asks in The Forge.'}
-                 Median
-             %th
-               %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of asks in The Forge.'}
-                 Move
-         %tbody
-           - for item in types
-             %tr
-               %td
-                 %a{'href':'{% url quicklook type_id=item.id %}'}
-                   - if item.name == "30 Day Pilot's License Extension (PLEX)"
-                     PLEX
-                   - else
-                     {{item.name}}
-               %td{'id':'bid_max_{{item.id}}'}
-                 0.00
-               %td
-                 %span{'id':'bid_median_{{item.id}}'}
-                   0.00
-               %td
-                 %span{'id':'bid_median_move_{{item.id}}'}
-                   +0.00
-               %td{'id':'ask_min_{{item.id}}'}
-                 0.00
-               %td
-                 %span{'id':'ask_median_{{item.id}}'}
-                   0.00
-               %td
-                 %span{'id':'ask_median_move_{{item.id}}'}
-                   +0.00
     .row-fluid
       .span6
         %h3 EMDR Stats (per minute)
