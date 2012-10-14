@@ -3,14 +3,15 @@
 - block title
   = block.super
   Home
-- block content
+- block top
   - if not request.user.is_authenticated
-    .hero-unit
-      %h1{'style':'text-transform: none;'} More bang for the buck!
-      %p Welcome to element43, a tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
-      %p
-        %a.btn.btn-warning.btn-large{'href':'{% url registration %}'}
-          Get started now »
+  .hero-unit
+    %h1 More bang for the buck!
+    %p Welcome to element43, an open-source all-in-one tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
+    %p
+      %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
+        Get started now »
+- block content
   .row-fluid
     .span4
       %h2 Market Data
@@ -92,7 +93,7 @@
                 New Orders
               %td#new_orders.span3
                 0
-            %tr  
+            %tr
               %td.span3
                 Updated Orders
               %td#updated_orders.span3
