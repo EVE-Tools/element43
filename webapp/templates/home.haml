@@ -5,12 +5,12 @@
   Home
 - block top
   - if not request.user.is_authenticated
-  .hero-unit
-    %h1 More bang for the buck!
-    %p Welcome to element43, an open-source all-in-one tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
-    %p
-      %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
-        Get started now »
+    .hero-unit
+      %h1 More bang for the buck!
+      %p Welcome to element43, an open-source all-in-one tool providing you with all the information you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
+      %p
+        %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
+          Get started now »
 - block content
   .row-fluid
     .span4
