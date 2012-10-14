@@ -31,9 +31,8 @@
         - for station in stations
           %tr
             %td
-              %a{'href':'{% url import station_id=station.id %}'}
+              %a{'href':'{% url station station_id=station.id %}'}
                 = station.name
             %td
                 = station.description|truncatechars:128
-            
-      
+
