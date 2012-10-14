@@ -3,7 +3,7 @@ from django.db import connection
 from apps.common.util import dictfetchall
 
 
-def bid_ask_spread(station_id=60008694, region_id=10000002):
+def bid_ask_spread(station_id=60008694, region_id=10000002, market_group_id=1413):
 
     """
     Returns top 100 spread items on a given station.
@@ -12,7 +12,7 @@ def bid_ask_spread(station_id=60008694, region_id=10000002):
     """
 
     cursor = connection.cursor()
-    params = [station_id, station_id, region_id]
+    params = [market_group_id, station_id, station_id, region_id]
 
     query = """SELECT id, name, min_ask, max_bid, spread, spread_percent, weekly_volume,
                      ((min_ask - max_bid) * weekly_volume / 7) AS potential_daily_profit
@@ -20,7 +20,10 @@ def bid_ask_spread(station_id=60008694, region_id=10000002):
                     SELECT t.id, t.name, b.max_bid, a.min_ask,
                            (a.min_ask - b.max_bid) AS spread,
                            ((a.min_ask / b.max_bid) - 1) * 100 AS spread_percent
-                    FROM eve_db_invtype t
+                    FROM ( SELECT id, name
+                           FROM eve_db_invtype z
+                           WHERE market_group_id = %s AND is_published = 't') t
+
                     INNER JOIN ( SELECT invtype_id, Max(price) AS max_bid
                                  FROM market_data_orders
                                  WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND minimum_volume = 1
@@ -30,7 +33,6 @@ def bid_ask_spread(station_id=60008694, region_id=10000002):
                                  WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1
                                  GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
                     ORDER BY spread_percent DESC
-                    LIMIT 300
                 ) q
                 INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
                              FROM market_data_orderhistory

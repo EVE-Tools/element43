@@ -63,50 +63,15 @@
           %a{'href':'#import', 'data_toggle':'tab'} Import
       .tab-content
         #spread.tab-pane.fade.active.in
-          %table.table.table-striped.table-condensed
-            %thead
-              %tr
-                %th
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in this station.'}
-                    Min Ask
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in this station.'}
-                    Max Bid
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Absolute spread.'}
-                    Spread
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Spread as a percentage of max bid.'}
-                    Spread Percent
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Weekly Volume in this <b><i>region</i></b>.'}
-                    Weekly Volume
-                %th.text-right
-                  %a{'href':'#', 'rel':'tooltip', 'title':'Potential daily profit based on daily volume and spread - assumes you control the entire <b><i>region&rsquo;s</i></b> market for this item.'}
-                    Potential Daily Profit
-            %tbody
-              - for item in spread
-                 %tr
-                   %td
-                     %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.id}}_16.png'}
-                     %a{'href':'{% url quicklook type_id=item.id %}'}
-                       {{item.name}}
-                   %td.text-right
-                     {{item.min_ask|floatformat:2|intcomma}}
-                   %td.text-right
-                     {{item.max_bid|floatformat:2|intcomma}}
-                   %td.text-right
-                     {{item.spread|floatformat:2|intcomma}}
-                   %td.text-right
-                     {{item.spread_percent|floatformat:2|intcomma}} %
-                   %td.text-right
-                     {{item.weekly_volume|floatformat:0|intcomma}}
-                   %td.text-right
-                     {{item.potential_daily_profit|floatformat:2|intcomma}}
+          .row-fluid
+            #tree.span3
+            #group.span9
+              %i Please select a group on the left side to display spread details.
         #import.tab-pane.fade
           %i Choose a region or system to import from with the text field above.
 - block scripts
   %script{'type':'text/javascript'}
     var staStationID = {{station.id}};
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.dynatree.min.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.cookie.js'}
   %script{'type':'text/javascript', 'src':'/static/javascripts/station.js'}

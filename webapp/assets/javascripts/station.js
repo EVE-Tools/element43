@@ -1,7 +1,38 @@
 $(document).ready(function() {
 	//
-	// Market Quicklook for element43
+	// Station view for element43
 	//
+
+	// Initialize tree
+	$('#tree').dynatree({
+		title: "market",
+		// Tree's name
+		autoCollapse: true,
+		// Auto-collapse other branches
+		imagePath: " ",
+		// Path to a folder containing icons.
+		initAjax: {
+			url: "/market/browse/tree/"
+		},
+		// Initial AJAX location
+		fx: {
+			height: "toggle",
+			duration: 200
+		},
+		// Animation
+		onLazyRead: function(node) {
+			node.appendAjax({
+				url: "/market/browse/tree/" + node.data.key + "/"
+			}); // AJAX URL
+		},
+		onActivate: function(node) {
+			if(node.data.hasItems) {
+				$('#group').text('Loading...');
+				$('#group').load('/market/trading/station/' + staStationID + '/import/browse/panel/' + node.data.key + '/'); // Load right panel
+			}
+		}
+	});
+
 	// Show / Hide filters section
 
 	$('#spread_link').click(function(e) {

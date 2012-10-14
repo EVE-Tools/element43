@@ -142,11 +142,32 @@ def station(request, station_id=60003760):
         station_id = jita_cnap_id
         station = StaStation.objects.get(id=station_id)
 
-    # Get Bid/Ask Spread
-    spread = bid_ask_spread(station_id, station.region_id)
-    rcontext = RequestContext(request, {'station': station, 'spread': spread})
+    rcontext = RequestContext(request, {'station': station})
 
     return render_to_response('trading/station/station.haml', rcontext)
+
+
+def panel(request, station_id=60003760, group_id=1413):
+
+    """
+    Shows spread for market group.
+    """
+
+    # The station id of Jita IV/4
+    jita_cnap_id = 60003760
+
+    # Get station object - default to CNAP if something goes wrong
+    try:
+        station = StaStation.objects.get(id=station_id)
+    except:
+        station_id = jita_cnap_id
+        station = StaStation.objects.get(id=station_id)
+
+    # Get Bid/Ask Spread
+    spread = bid_ask_spread(station_id, station.region_id, group_id)
+    rcontext = RequestContext(request, {'station': station, 'spread': spread})
+
+    return render_to_response('trading/station/_panel.haml', rcontext)
 
 
 def import_system(request, station_id=60003760, system_id=30000142):
@@ -238,13 +259,13 @@ def import_region(request, station_id=60003760, region_id=10000002):
             'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
                                                       invtype_id=point['id'], is_bid=True,
                                                       price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
-                                                      .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+            .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
             # Get filtered ask qty of the other region
             'ask_qty_filtered': Orders.objects.filter(mapregion_id=region_id,
                                                       invtype_id=point['id'], is_bid=False,
                                                       price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
-                                                      .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
+            .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
         point.update(new_values)
 
         # Calculate potential profit ((foreign_ask - local_bid) * weekly_volume)
