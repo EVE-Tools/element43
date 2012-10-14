@@ -143,41 +143,8 @@ def station(request, station_id=60003760):
         station = StaStation.objects.get(id=station_id)
 
     # Get Bid/Ask Spread
-    spread = bid_ask_spread(station_id)
-
-    # Get history data
-    last_week = pytz.utc.localize(
-        datetime.datetime.utcnow() - datetime.timedelta(days=7))
-    data = []
-
-    for point in spread:
-        # Add new values to dict and if there's a weekly volume append it to list
-        new_values = {
-            'max_buy_qty_filtered': Orders.objects.filter(stastation_id=station.id,
-                                                                  invtype_id=point['id'],
-                                                                  is_bid=True,
-                                                                  price__lte=(point['min_ask'] + (point['min_ask'] * 0.01)))
-            .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-
-            'min_sell_qty_filtered': Orders.objects.filter(stastation_id=station.id,
-                                                                   invtype_id=point['id'],
-                                                                   is_bid=False, price__gte=(point['max_bid'] - (point['max_bid'] * 0.01)))
-                                                                   .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
-
-                    'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
-                                                                 invtype_id=point['id'],
-                                                                 date__gte=last_week)
-                                                                .aggregate(Sum("quantity"))['quantity__sum']}
-        point.update(new_values)
-
-        # Calculate potential daily profit ((max_bid - min_ask) * weekly_volume) / 7
-        # We're using a week's worth of data to eliminate fluctuations
-        if point['weekly_volume'] is not None:
-            point['potential_daily_profit'] = (point['max_bid'] - point['min_ask']) * (point['weekly_volume'] / 7)
-            data.append(point)
-
-    data.sort(key=itemgetter('potential_daily_profit'), reverse=True)
-    rcontext = RequestContext(request, {'station': station, 'spread': data})
+    spread = bid_ask_spread(station_id, station.region_id)
+    rcontext = RequestContext(request, {'station': station, 'spread': spread})
 
     return render_to_response('trading/station/station.haml', rcontext)
 
@@ -208,23 +175,23 @@ def import_system(request, station_id=60003760, system_id=30000142):
     for point in markup:
         # Add new values to dict and if there's a weekly volume append it to list
         new_values = {
-                    # Get local weekly volume for that item
-                    'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
+            # Get local weekly volume for that item
+            'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
                                                                  invtype_id=point['id'],
                                                                  date__gte=last_week)
-                                                                 .aggregate(Sum("quantity"))['quantity__sum'],
+            .aggregate(Sum("quantity"))['quantity__sum'],
 
-                    # Get filtered local bid qty
-                    'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
-                                                              invtype_id=point['id'], is_bid=True,
-                                                              price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
-                                                              .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+            # Get filtered local bid qty
+            'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
+                                                      invtype_id=point['id'], is_bid=True,
+                                                      price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
+            .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
-                    # Get filtered ask qty of the other system
-                    'ask_qty_filtered': Orders.objects.filter(mapsolarsystem_id=system_id,
-                                                              invtype_id=point['id'], is_bid=False,
-                                                              price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
-                                                              .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
+            # Get filtered ask qty of the other system
+            'ask_qty_filtered': Orders.objects.filter(mapsolarsystem_id=system_id,
+                                                      invtype_id=point['id'], is_bid=False,
+                                                      price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
+            .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
         point.update(new_values)
 
         # Calculate potential profit ((local_bid - foreign_ask) * weekly_volume)
@@ -261,23 +228,23 @@ def import_region(request, station_id=60003760, region_id=10000002):
     for point in markup:
     # Add new values to dict and if there's a weekly volume append it to list
         new_values = {
-                    # Get local weekly volume for that item
-                    'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
-                                                                 invtype_id=point['id'],
-                                                                 date__gte=last_week)
-                                                                 .aggregate(Sum("quantity"))['quantity__sum'],
+            # Get local weekly volume for that item
+            'weekly_volume': OrderHistory.objects.filter(mapregion_id=station.region.id,
+                                                         invtype_id=point['id'],
+                                                         date__gte=last_week)
+            .aggregate(Sum("quantity"))['quantity__sum'],
 
-                    # Get filtered local bid qty
-                    'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
-                                                              invtype_id=point['id'], is_bid=True,
-                                                              price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
-                                                              .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
+            # Get filtered local bid qty
+            'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
+                                                      invtype_id=point['id'], is_bid=True,
+                                                      price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
+                                                      .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
-                    # Get filtered ask qty of the other region
-                    'ask_qty_filtered': Orders.objects.filter(mapregion_id=region_id,
-                                                              invtype_id=point['id'], is_bid=False,
-                                                              price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
-                                                              .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
+            # Get filtered ask qty of the other region
+            'ask_qty_filtered': Orders.objects.filter(mapregion_id=region_id,
+                                                      invtype_id=point['id'], is_bid=False,
+                                                      price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
+                                                      .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
         point.update(new_values)
 
         # Calculate potential profit ((foreign_ask - local_bid) * weekly_volume)

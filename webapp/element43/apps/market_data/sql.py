@@ -3,7 +3,7 @@ from django.db import connection
 from apps.common.util import dictfetchall
 
 
-def bid_ask_spread(station_id=60008694):
+def bid_ask_spread(station_id=60008694, region_id=10000002):
 
     """
     Returns top 100 spread items on a given station.
@@ -12,13 +12,15 @@ def bid_ask_spread(station_id=60008694):
     """
 
     cursor = connection.cursor()
-    params = [station_id, station_id]
+    params = [station_id, station_id, region_id]
 
     query = """SELECT *
                FROM (
                     SELECT t.id, t.name, b.max_bid, a.min_ask,
-                           (b.max_bid - a.min_ask) AS spread,
-                           ((b.max_bid / a.min_ask) - 1) * 100 AS spread_percent
+                           (a.min_ask - b.max_bid) AS spread,
+                           ((a.min_ask / b.max_bid) - 1) * 100 AS spread_percent,
+                           v.weekly_volume AS weekly_volume,
+                           ((a.min_ask - b.max_bid) * v.weekly_volume / 7) AS potential_daily_profit
                     FROM eve_db_invtype t
                     INNER JOIN ( SELECT invtype_id, Max(price) AS max_bid
                                  FROM market_data_orders
@@ -28,10 +30,14 @@ def bid_ask_spread(station_id=60008694):
                                  FROM market_data_orders
                                  WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1
                                  GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
+                    INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
+                                 FROM market_data_orderhistory
+                                 WHERE mapregion_id = %s AND date >= current_date - interval '7 days'
+                                 GROUP BY invtype_id ) v ON (t.id = v.invtype_id AND weekly_volume > 0)
                 ) q
                 WHERE q.spread > 0
-                ORDER BY q.spread DESC
-                LIMIT 100;"""
+                ORDER BY q.potential_daily_profit DESC
+                LIMIT 300;"""
 
     # Data retrieval operation - no commit required
     cursor.execute(query, params)
