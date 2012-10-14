@@ -102,12 +102,12 @@ class ProcessCharacterSheet(PeriodicTask):
 
             for skill in sheet.skills:
                 try:
-                    c_skill = CharSkill.objects.get(character=character.id, skill_id=skill.typeID)
+                    c_skill = CharSkill.objects.get(character=character, skill_id=skill.typeID)
                     c_skill.skillpoints = skill.skillpoints
                     c_skill.level = skill.level
                     c_skill.save()
                 except:
-                    new_skill = CharSkill(character=new_char,
+                    new_skill = CharSkill(character=character,
                                           skill_id=skill.typeID,
                                           skillpoints=skill.skillpoints,
                                           level=skill.level)
