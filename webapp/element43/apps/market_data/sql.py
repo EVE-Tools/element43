@@ -32,7 +32,6 @@ def bid_ask_spread(station_id=60008694, region_id=10000002, market_group_id=1413
                                  FROM market_data_orders
                                  WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1
                                  GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
-                    ORDER BY spread_percent DESC
                 ) q
                 INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
                              FROM market_data_orderhistory
