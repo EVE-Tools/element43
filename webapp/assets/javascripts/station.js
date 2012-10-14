@@ -28,7 +28,7 @@ $(document).ready(function() {
 		onActivate: function(node) {
 			if(node.data.hasItems) {
 				$('#group').text('Loading...');
-				$('#group').load('/market/trading/station/' + staStationID + '/import/browse/panel/' + node.data.key + '/'); // Load right panel
+				$('#group').load('/market/trading/station/' + staStationID + '/import/browse/panel/' + node.data.key + '/', function(){$("[rel=tooltip]").tooltip();}); // Load right panel
 			}
 		}
 	});
