@@ -14,13 +14,12 @@ def bid_ask_spread(station_id=60008694, region_id=10000002):
     cursor = connection.cursor()
     params = [station_id, station_id, region_id]
 
-    query = """SELECT *
+    query = """SELECT id, name, min_ask, max_bid, spread, spread_percent, weekly_volume,
+                     ((min_ask - max_bid) * weekly_volume / 7) AS potential_daily_profit
                FROM (
                     SELECT t.id, t.name, b.max_bid, a.min_ask,
                            (a.min_ask - b.max_bid) AS spread,
-                           ((a.min_ask / b.max_bid) - 1) * 100 AS spread_percent,
-                           v.weekly_volume AS weekly_volume,
-                           ((a.min_ask - b.max_bid) * v.weekly_volume / 7) AS potential_daily_profit
+                           ((a.min_ask / b.max_bid) - 1) * 100 AS spread_percent
                     FROM eve_db_invtype t
                     INNER JOIN ( SELECT invtype_id, Max(price) AS max_bid
                                  FROM market_data_orders
@@ -30,14 +29,14 @@ def bid_ask_spread(station_id=60008694, region_id=10000002):
                                  FROM market_data_orders
                                  WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1
                                  GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
-                    INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
-                                 FROM market_data_orderhistory
-                                 WHERE mapregion_id = %s AND date >= current_date - interval '7 days'
-                                 GROUP BY invtype_id ) v ON (t.id = v.invtype_id AND weekly_volume > 0)
+                    ORDER BY spread_percent DESC
+                    LIMIT 300
                 ) q
-                WHERE q.spread > 0
-                ORDER BY q.potential_daily_profit DESC
-                LIMIT 300;"""
+                INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
+                             FROM market_data_orderhistory
+                             WHERE mapregion_id = %s AND date >= current_date - interval '7 days'
+                             GROUP BY invtype_id ) v ON (q.id = invtype_id AND weekly_volume > 0)
+                ORDER BY potential_daily_profit DESC;"""
 
     # Data retrieval operation - no commit required
     cursor.execute(query, params)
