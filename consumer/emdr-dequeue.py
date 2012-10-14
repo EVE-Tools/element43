@@ -3,13 +3,6 @@
 Get the data from EMDR and shove it into the database
 Greg Oberfield gregoberfield@gmail.com
 
-TODO:
-1. Documentation
-2. History message processing (sort of done: 7/20/12) - DONE
-3. wrap try/catch blocks around SQL statements - mostly done
-4. cleaner date processing - pgsql supports timezones whereas Mysql did not so it's a little hokey right now - DONE
-5. move settings to external file so I don't have to keep changing them - DONE
-
 """
 
 from emds.formats import unified
@@ -69,12 +62,15 @@ statqueue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
 # Handle DBs without password
 if not dbpass:
     # Connect without password
-    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="
+                             +dbname+" port="+dbport)
 else:
-    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass
+                             +" dbname="+dbname+" port="+dbport)
     
 #connect to memcache
-mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
+mc = pylibmc.Client([mcserver], binary=True,
+                    behaviors={"tcp_nodelay": True, "ketama": True})
     
 dbcon.autocommit = True
 
@@ -102,22 +98,25 @@ def stats(item, region):
         
     curs = dbcon.cursor()
 
-    # get the current record so we can compare dates and see if we need to move current records to the history table (this is for history use)
-    sql = "SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (region, item)
+    # get the current record so we can compare dates and see if we
+    # need to move current records to the history table (this is for history use)
+    sql = """SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, lastupdate
+                FROM market_data_itemregionstat
+                WHERE mapregion_id = %s AND invtype_id = %s""" % (region, item)
     try:
         curs.execute(sql)
     except psycopg2.DatabaseError, e:
         print "Error: ", e
         print "SQL: ", sql
     history = curs.fetchone()
-    # Delete the old region/item stats from the DB if it exists
-    #sql = "DELETE FROM market_data_itemregionstat WHERE mapregion_id = %s AND invtype_id = %s" % (data['region'], data['item'])
-    #curs.execute(sql)
     # Grab all the live orders for this item/region combo
-    sql = "SELECT price, is_bid, volume_remaining FROM market_data_orders WHERE mapregion_id = %s AND invtype_id = %s" % (region, item)
+    sql = """SELECT price, is_bid, volume_remaining
+                FROM market_data_orders
+                WHERE mapregion_id = %s AND invtype_id = %s""" % (region, item)
     curs.execute(sql)
     for record in curs:
-        # Depending on buy/sell status, append to the proper list pricing and volume
+        # Depending on buy/sell status,
+        # append to the proper list pricing and volume
         if record[1] == False:
             sellprice.append(record[0])
             sellcount.append(record[2])
@@ -139,8 +138,8 @@ def stats(item, region):
         buymean = np.nan_to_num(ma.mean(buy_masked))
         buymedian = np.nan_to_num(ma.median(buy_masked))
         if len(buyprice) < 4:
-            buyAvg = np.nan_to_num(ma.average(buyprice))
-            buyMean = np.nan_to_num(ma.mean(buyprice))
+            buyavg = np.nan_to_num(ma.average(buyprice))
+            buymean = np.nan_to_num(ma.mean(buyprice))
         buyprice.sort()
         buy = buyprice.pop()
         
@@ -164,12 +163,22 @@ def stats(item, region):
     
     # process for history
     if (history is not None) and (history[6] is not None):
-        if history[6].date() <> timestamp:
+        if history[6].date() != timestamp:
             if (TERM_OUT==True):
                 print "--- New date, new insert", region, " / ", item, "(", history[6].date(), " - ", timestamp, ")"
             # dates differ, need to move the data
-            sql = """INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, mapregion_id, invtype_id, date)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (history[0], history[1], history[2], history[3], history[4], history[5], region, item, history[6])
+            sql = """INSERT INTO market_data_itemregionstathistory
+                        (buymean, buyavg, buymedian, sellmean, sellavg,
+                        sellmedian, mapregion_id, invtype_id, date)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (history[0],
+                                                                            history[1],
+                                                                            history[2],
+                                                                            history[3],
+                                                                            history[4],
+                                                                            history[5],
+                                                                            region,
+                                                                            item,
+                                                                            history[6])
             try:
                 curs.execute(sql)
             except psycopg2.DatabaseError, e:
