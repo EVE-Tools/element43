@@ -14,25 +14,8 @@
           Get started now »
 - block content
   .row-fluid
-    #history.span8
-    .span4
-      %h2 Contribute
-      %p Element43 is an open-source project based on the Python web framework Django.
-         If you have some feedback for us or want to contribute to the project, click the button below.
-      %a.btn.btn-primary{'href':'{% url about_page %}'}
-        Get involved »
-  %hr
-  .row-fluid
-    .span4
-      %h2 Market Data
-      %p
-        Trading sounds simple. Buy low, sell high. But where to find the best deals?
-        Element43 relies on user-submitted data from the EVE Market Data Relay (EMDR) network.
-        Help us to improve our database by using an EMDR compatible uploader.
-      %a.btn.btn-primary{'href':'http://eve-market-data-relay.readthedocs.org/en/latest/uploading.html', 'target':'_blank'}
-        Download Client »
     .span8
-     %h2 Live Mineral Index and PLEX - Jita / The Forge
+      %h2 Live Mineral Index and PLEX - Jita / The Forge
      %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
        %thead
          %tr
@@ -86,6 +69,24 @@
              %td
                %span{'id':'ask_median_move_{{item.id}}'}
                  +0.00
+    .span4
+      %h2 Contribute
+      %p Element43 is an open-source project based on the Python web framework Django.
+         If you have some feedback for us or want to contribute to the project, click the button below.
+      %a.btn.btn-primary{'href':'{% url about_page %}'}
+        Get involved »
+  %hr
+  .row-fluid
+    .span4
+      %h2 Market Data
+      %p
+        Trading sounds simple. Buy low, sell high. But where to find the best deals?
+        Element43 relies on user-submitted data from the EVE Market Data Relay (EMDR) network.
+        Help us to improve our database by using an EMDR compatible uploader.
+      %a.btn.btn-primary{'href':'http://eve-market-data-relay.readthedocs.org/en/latest/uploading.html', 'target':'_blank'}
+        Download Client »
+    #history.span8
+
   %hr
     .row-fluid
       .span6
