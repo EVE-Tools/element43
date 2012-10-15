@@ -77,6 +77,7 @@ class ItemRegionStat(models.Model):
     Stats for items on a per region basis
     processed when new orders come in during warehousing
     """
+    
     mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
     invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text="FK to type table")
     buymean = models.FloatField(help_text="Mean of buy price")
@@ -85,6 +86,10 @@ class ItemRegionStat(models.Model):
     sellavg = models.FloatField(help_text="Avg of sell price")
     buymedian = models.FloatField(help_text="Median of buy price")
     sellmedian = models.FloatField(help_text="Median of sell price")
+    buyvolume = models.BigIntegerField(help_text="total volume traded")
+    sellvolume = models.BigIntegerField(help_text="total volume traded")
+    buy_95_percentile = models.FloatField(help_text="95th % of buy orders")
+    sell_95_percentile = models.FloatField(help_text="95th % of sell orders")
     lastupdate = models.DateTimeField(blank=True, null=True, help_text="Date the stats were updated")
 
     class Meta(object):
@@ -106,6 +111,10 @@ class ItemRegionStatHistory(models.Model):
     sellavg = models.FloatField(help_text="Avg of sell price")
     buymedian = models.FloatField(help_text="Median of buy price")
     sellmedian = models.FloatField(help_text="Median of sell price")
+    buyvolume = models.BigIntegerField(help_text="total volume traded")
+    sellvolume = models.BigIntegerField(help_text="total volume traded")
+    buy_95_percentile = models.FloatField(help_text="95th % of buy orders")
+    sell_95_percentile = models.FloatField(help_text="95th % of sell orders")
     date = models.DateTimeField(blank=True, null=True, help_text="Date the stats were inserted")
 
     class Meta(object):
