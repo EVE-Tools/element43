@@ -7,8 +7,9 @@
   - if not request.user.is_authenticated
     .hero-unit
       %h1 More bang for the buck!
-      %p Welcome to element43, an open-source all-in-one tool providing you with all the information
-         you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
+      %p
+        Welcome to element43, an open-source all-in-one tool providing you with all the information
+        you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
       %p
         %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
           Get started now »
@@ -71,8 +72,9 @@
                  +0.00
     .span4
       %h2 Contribute
-      %p Element43 is an open-source project based on the Python web framework Django.
-         If you have some feedback for us or want to contribute to the project, click the button below.
+      %p
+        Element43 is an open-source project based on the Python web framework Django.
+        If you have some feedback for us or want to contribute to the project, click the button below.
       %a.btn.btn-primary{'href':'{% url about_page %}'}
         Get involved »
   %hr
