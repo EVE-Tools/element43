@@ -1,0 +1,54 @@
+- extends "base.haml"
+- load humanize
+- block title
+  = block.super
+  Dashboard
+- block content
+  .row-fluid
+    #graph.span8
+    .span4
+      %table.table.table-condensed
+        - for point in market_data
+          %tr
+            %td{'width':'64px'}
+              %img{'src':'http://image.eveonline.com/Character/{{point.char.id}}_64.jpg', 'alt':'{{point.char.name}}'}
+            %td
+              .row-fluid
+                .span12
+                  %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/dashboard/char_sheet/{{point.char.id}}/"});'}
+                    {{point.char.name}}
+                  .balance
+                    {{point.char.balance|intcomma}} ISK
+              .row-fluid
+                .span12
+                  Next Update: {{point.next_update|naturaltime}}
+  .row-fluid
+    .span8
+      %h2 Actice Orders
+      %table.table.table-condensed.table-striped
+    .span4
+      %table.table.table-condensed.table-striped
+        %tbody
+          %tr
+            %td Sell volume:
+            %td 10,254,561 ISK
+          %tr
+            %td Buy volume:
+            %td 3,541,985 ISK
+          %tr
+            %td Total:
+            %td 13,796,546 ISK
+  .row-fluid
+    .span12
+      %h2
+        Active Industry Jobs
+      %table.table.table-condensed.table-striped
+  #char-sheet.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
+    .modal-header
+      %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
+      %h3#sheet-label Character Sheet
+    .modal-body
+    .modal-footer
+      %button.btn{'data-dismiss':'modal', 'aria-hidden':'true'} Close
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/dashboard.js'}

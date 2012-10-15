@@ -64,7 +64,14 @@ input[type="color"],
   font-size: 18px;
 }
 
-/* line 93, main.scss */
+/* line 91, main.scss */
+.balance {
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 3px #33b5e5;
+}
+
+/* line 99, main.scss */
 .autocomplete-w1 {
   background-color: #121417;
   position: absolute;
@@ -73,7 +80,7 @@ input[type="color"],
   margin: 6px 0 0 6px;
 }
 
-/* line 94, main.scss */
+/* line 100, main.scss */
 .autocomplete {
   border: 1px solid #333333;
   background: #121417;
@@ -82,79 +89,79 @@ input[type="color"],
   overflow: auto;
 }
 
-/* line 95, main.scss */
+/* line 101, main.scss */
 .autocomplete .selected {
   background: #444444;
 }
 
-/* line 96, main.scss */
+/* line 102, main.scss */
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden;
 }
 
-/* line 97, main.scss */
+/* line 103, main.scss */
 .autocomplete strong {
   font-weight: normal;
   color: #33b5e5;
 }
 
-/* line 100, main.scss */
+/* line 106, main.scss */
 .navbar-top .container {
   width: 940px;
 }
 
 @media (min-width: 1200px) {
-  /* line 105, main.scss */
+  /* line 111, main.scss */
   .navbar-top .container {
     width: 1170px;
   }
 }
-/* line 110, main.scss */
+/* line 116, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
-/* line 114, main.scss */
+/* line 120, main.scss */
 .content {
   background-color: #121417;
   padding: 10px;
 }
 
-/* line 121, main.scss */
+/* line 127, main.scss */
 .scan_done {
   background: #50c878;
 }
 
-/* line 127, main.scss */
+/* line 133, main.scss */
 .clock {
   color: #fff;
   margin: 0 auto;
   padding: 0;
 }
-/* line 132, main.scss */
+/* line 138, main.scss */
 .clock ul {
   display: inline-block;
   list-style: none;
   margin: 0 auto;
   padding: 0;
 }
-/* line 139, main.scss */
+/* line 145, main.scss */
 .clock ul li {
   display: inline;
   text-shadow: 0 0 3px #33b5e5;
   padding: 0;
 }
 
-/* line 146, main.scss */
+/* line 152, main.scss */
 #date {
   display: inline-block;
   text-shadow: 0 0 2px #33b5e5;
 }
 
-/* line 151, main.scss */
+/* line 157, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
@@ -164,19 +171,19 @@ input[type="color"],
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
-  /* line 162, main.scss */
+  /* line 168, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 
-  /* line 163, main.scss */
+  /* line 169, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 164, main.scss */
+  /* line 170, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
@@ -184,96 +191,96 @@ input[type="color"],
 }
 
 @-moz-keyframes clktrans {
-  /* line 169, main.scss */
+  /* line 175, main.scss */
   0% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 
-  /* line 170, main.scss */
+  /* line 176, main.scss */
   50% {
     opacity: 0;
     text-shadow: none;
   }
 
-  /* line 171, main.scss */
+  /* line 177, main.scss */
   100% {
     opacity: 1.0;
     text-shadow: 0 0 20px #33b5e5;
   }
 }
 
-/* line 176, main.scss */
+/* line 182, main.scss */
 .red {
   color: red;
 }
 
-/* line 180, main.scss */
+/* line 186, main.scss */
 .green {
   color: #50c878;
 }
 
-/* line 186, main.scss */
+/* line 192, main.scss */
 .sec10 {
   color: #2FEFEF;
 }
 
-/* line 190, main.scss */
+/* line 196, main.scss */
 .sec9 {
   color: #48F0C0;
 }
 
-/* line 194, main.scss */
+/* line 200, main.scss */
 .sec8 {
   color: #00EF47;
 }
 
-/* line 198, main.scss */
+/* line 204, main.scss */
 .sec7 {
   color: #00F000;
 }
 
-/* line 202, main.scss */
+/* line 208, main.scss */
 .sec6 {
   color: #8FEF2F;
 }
 
-/* line 206, main.scss */
+/* line 212, main.scss */
 .sec5 {
   color: #EFEF00;
 }
 
-/* line 210, main.scss */
+/* line 216, main.scss */
 .sec4 {
   color: #D77700;
 }
 
-/* line 214, main.scss */
+/* line 220, main.scss */
 .sec3 {
   color: #F06000;
 }
 
-/* line 218, main.scss */
+/* line 224, main.scss */
 .sec2 {
   color: #F04800;
 }
 
-/* line 222, main.scss */
+/* line 228, main.scss */
 .sec1 {
   color: #D73000;
 }
 
-/* line 226, main.scss */
+/* line 232, main.scss */
 .sec0 {
   color: #F00000;
 }
 
-/* line 230, main.scss */
+/* line 236, main.scss */
 .breadcrumb {
   padding: 8px 0px;
 }
 
-/* line 234, main.scss */
+/* line 240, main.scss */
 .breadcrumb li {
   text-shadow: none;
   color: white;

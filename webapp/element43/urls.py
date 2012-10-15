@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     # Authentication and registration
     url(r'', include('apps.auth.urls')),
 
+    # Dashboard
+    url(r'^dashboard/', include('apps.dashboard.urls')),
+
     # Market data
     url(r'^market/', include('apps.market_data.urls')),
 

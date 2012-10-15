@@ -1,0 +1,47 @@
+- load humanize
+%h3 {{char.name}}
+.row-fluid
+	.span4
+		%img{'src':'http://image.eveonline.com/Character/{{char.id}}_128.jpg', 'alt':'{{char.name}}'}
+	.span8
+		%i {{char.race}} - {{char.bloodline}} - {{char.ancestry}}
+		%table.table.table-condensed
+			%tbody
+				%tr
+					%td
+						Account Balance
+					- if char.balance > 0
+						%td.balance.green
+							{{char.balance|intcomma}} ISK
+					- else
+						%td.balance.red
+							{{char.balance|intcomma}} ISK
+				%tr
+					%td
+						Skill Points
+					%td
+						{{skill_points|intcomma}}
+				%tr
+					%td
+						Clone
+					%td
+						{{char.clone_name}} / {{char.clone_skill_points|intcomma}} SP
+.row-fluid
+	%table.table.table-condensed
+		%thead
+			%tr
+				%th
+				%th
+					Level
+				%th
+					Skill Points
+		%tbody
+			- for skill in skills
+				%tr
+					%td
+						{{skill.skill.name}}
+					%td
+						{{skill.level}}
+					%td
+						{{skill.skillpoints|intcomma}}
+
