@@ -1,3 +1,16 @@
+var pow=Math.pow, floor=Math.floor, abs=Math.abs, log=Math.log;
+
+function round(n, precision) {
+    var prec = Math.pow(10, precision);
+    return Math.round(n*prec)/prec;
+}
+
+function abbreviateNumber(n) {
+    var base = floor(log(abs(n))/log(1000));
+    var suffix = 'kMB'[base-1];
+    return suffix ? round(n/pow(1000,base),2)+suffix : ''+n;
+}
+
 $(document).ready(function() {
 
     // More JSON
@@ -99,13 +112,14 @@ $(document).ready(function() {
                         $.each(type_val, function(type_val_key, type_val_val) {
                             // Set values
                             var element = $('#' + type_val_key + '_' + type_key);
-                            var old_val = parseFloat(element.text().replace(/,/g, ""));
+                            var old_val = parseFloat(element.attr('data-isk'));
                             var new_val = type_val_val.toFixed(2);
 
                             // Pulse values on change
                             if(old_val > new_val) {
                                 // If new value is smaller, pulse red, remove style left over from the pulse afterwards
-                                element.text(new_val.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                element.text(abbreviateNumber(new_val));
+                                element.attr('data-isk', new_val);
                                 element.pulse({
                                     color: '#FF0000'
                                 }, {
@@ -115,7 +129,8 @@ $(document).ready(function() {
                                 });
                             } else if(old_val < new_val) {
                                 // If new value is higher, pulse green, remove style left over from the pulse afterwards
-                                element.text(new_val.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                element.text(abbreviateNumber(new_val));
+                                element.attr('data-isk', new_val);
                                 element.pulse({
                                     color: '#50C878'
                                 }, {
