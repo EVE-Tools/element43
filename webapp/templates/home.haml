@@ -2,7 +2,7 @@
 - load humanize
 - block title
   = block.super
-  Home
+  Know the Market
 - block top
   - if not request.user.is_authenticated
     .hero-unit
@@ -20,10 +20,10 @@
      %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
        %thead
          %tr
-           %th.span2
-           %th.span5{'colspan':'3', 'text-align':'center'}
+           %th
+           %th{'colspan':'3', 'text-align':'center'}
              Bid
-           %th.span5{'colspan':'3', 'text-align':'center'}
+           %th{'colspan':'3', 'text-align':'center'}
              Ask
          %tr
            %th
