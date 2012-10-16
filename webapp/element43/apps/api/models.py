@@ -22,7 +22,6 @@ class APIKey(models.Model):
         verbose_name = "API Key"
         verbose_name_plural = "API Keys"
 
-
 class Character(models.Model):
     """
     Holds information specific to a character.  This is a one-to-many relationship between users & characters
@@ -63,7 +62,6 @@ class Character(models.Model):
         verbose_name = "Character"
         verbose_name_plural = "Characters"
 
-
 class CharSkill(models.Model):
     """
     Trackign skills
@@ -76,7 +74,6 @@ class CharSkill(models.Model):
 #
 # API table
 #
-
 
 class APITimer(models.Model):
     """
@@ -93,7 +90,6 @@ class APITimer(models.Model):
 #
 # Skill tree
 #
-
 
 class SkillGroup(models.Model):
     """
@@ -121,3 +117,24 @@ class Skill(models.Model):
     rank = models.PositiveIntegerField(help_text="skill difficulty rank")
     primary_attribute = models.TextField(help_text="Primary attribute for skill")
     secondary_attribute = models.TextField(help_text="secondary attribute for skill")
+    
+    class Meta(object):
+        verbose_name = "Skill"
+        verbose_name_plural = "Skills"
+    
+# Market Orders
+class MarketOrder(models.Model):
+    """
+    This is the market order table off the CCP API
+    """
+    
+    id = models.ForeignKey('market_data.Orders', primary_key=True, help_text="Unique key for this order, uses CCP order ID")
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
+    order_state = models.PositiveIntegerField(help_text = "Valid states: 0 = open/active, 1 = closed, 2 = expired (or fulfilled), 3 = cancelled, 4 = pending, 5 = character deleted")
+    account_key = models.PositiveIntegerField(help_text = "Which division this order is using as its account. Always 1000 for characters, but in the range 1000 to 1006 for corporations.")
+    escrow = models.FloatField(help_text = "Escrow amount for this order")
+    
+    class Meta(object):
+        verbose_name = "API Market Order"
+        verbose_name_plural = "API Market Orders"
+    
