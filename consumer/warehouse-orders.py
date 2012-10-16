@@ -107,7 +107,7 @@ def thread(region):
                 print "Region: ", region, "Type: ", row[0]
             #rowdata = recannon.match(row[0])
             typeID = row[0]
-            sql = """UPDATE market_data_orders SET live = 'f'
+            sql = """UPDATE market_data_orders SET is_active = 'f'
                         WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id
                         NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
             try:
