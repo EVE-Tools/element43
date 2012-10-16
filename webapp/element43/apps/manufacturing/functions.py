@@ -85,14 +85,14 @@ def calculate_material_prices(materials):
     try:
         # Build the list of material ids for which the price has to be fetched
         material_ids = [material['id'] for material in materials]
-        materials_prices = ItemRegionStat.objects.values('invtype__id', 'sellmedian').filter(invtype_id__in=material_ids,
+        materials_prices = ItemRegionStat.objects.values('invtype__id', 'sell_95_percentile').filter(invtype_id__in=material_ids,
                                                                                              mapregion_id__exact=10000002)
 
         for material_price in materials_prices:
             for material in materials:
                 if material['id'] == material_price['invtype__id']:
-                    material['price'] = material_price['sellmedian']
-                    material['price_total'] = material_price['sellmedian'] * material['quantity']
+                    material['price'] = material_price['sell_95_percentile']
+                    material['price_total'] = material_price['sell_95_percentile'] * material['quantity']
 
     except Exception:
         connection._rollback()
