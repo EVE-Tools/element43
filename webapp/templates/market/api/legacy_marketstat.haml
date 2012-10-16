@@ -1,0 +1,33 @@
+!!! XML
+
+%evec_api{'method':'marketstat_xml', 'version':'2.0'}
+  %marketstat
+    %type{'id':'{{params.typeid.0}}'}
+      %buy
+        - for stat in stats
+          %volume
+            {{stat.buyvolume}}
+          %average
+            {{stat.buyavg}}
+          %max
+            {{buystats.price__max}}
+          %min
+            {{buystats.price__min}}
+          %median
+            {{stat.buymedian}}
+          %percentile
+            {{stat.buy_95_percentile}}
+      %sell
+        - for stat in stats
+          %volume
+            {{stat.sellvolume}}
+          %average
+            {{stat.sellavg}}
+          %max
+            {{sellstats.price__max}}
+          %min
+            {{sellstats.price__min}}
+          %median
+            {{stat.sellmedian}}
+          %percentile
+            {{stat.sell_95_percentile}}

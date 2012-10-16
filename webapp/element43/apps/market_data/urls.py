@@ -47,5 +47,12 @@ urlpatterns = patterns('apps.market_data.views',
 
     # Station ranking
     url(r'^trading/station/ranking/', 'trading.station.ranking', name = 'station_ranking'),
+    
+    #
+    # API URLs
+    #
+    
+    # legacy marketstat
+    url(r'^api/marketstat/$', 'api.marketstat.legacy_marketstat', name = 'legacy_marketstat'),
 
 )
