@@ -1,6 +1,9 @@
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 # market_data models
 from apps.market_data.models import Orders
@@ -25,31 +28,17 @@ def region(request):
         if 'HTTP_EVE_REGIONID' in request.META:
             if MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID']) != None:
                 # Pick types based on region and age
-                types = []
-                orders = []
 
-                # Get all orders in this region ordered by age (limit to 1500 for performance)
-                orders += Orders.active.filter(mapregion=MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
+                region = MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])
 
-                print len(orders)
+                # Get all orders in this region ordered by age
+                types = Orders.active.filter(mapregion=region).order_by('generated_at').values_list('invtype_id', flat=True).distinct()[:50]
 
-                # Collect as many types as possible until we reach 50
-                counter = 0
-                for order in orders:
-                        counter += 1
-                        if not order.invtype in types:
-                            types.append(order.invtype)
-                        if len(types) >= 50:
-                            break
-
-                print counter
-
-                rcontext = RequestContext(request, {'types': types, 'region': MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])})
+                rcontext = RequestContext(request, {'types': types, 'region': region})
+                return render_to_response('market/scanners/regionscanner.haml', rcontext)
             else:
-                # Else do nothing
-                rcontext = RequestContext(request, {})
-
-            return render_to_response('market/scanners/regionscanner.haml', rcontext)
-
-        rcontext = RequestContext(request, {})
-        return render_to_response('home.haml', rcontext)
+                messages.info(request, 'It seems like you did not grant trust to Element43 in the IGB.')
+                return HttpResponseRedirect(reverse('home'))
+        else:
+            messages.info(request, 'It seems like you did not grant trust to Element43 in the IGB.')
+            return HttpResponseRedirect(reverse('home'))
