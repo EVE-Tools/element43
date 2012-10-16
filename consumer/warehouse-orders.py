@@ -107,15 +107,9 @@ def thread(region):
                 print "Region: ", region, "Type: ", row[0]
             #rowdata = recannon.match(row[0])
             typeID = row[0]
-            sql = """INSERT INTO market_data_orderswarehouse (generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id) 
-                     SELECT generated_at, price, order_range, id, is_bid, issue_date, duration, volume_entered, uploader_ip_hash, message_key, is_suspicious, invtype_id, mapregion_id, mapsolarsystem_id, stastation_id FROM market_data_orders
-                     WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
-            try:
-                tcurs.execute(sql)
-            except psycopg2.DatabaseError, e:
-                print e.pgerror
-                pass
-            sql = "DELETE FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)" % (typeID, region, typeID, region)
+            sql = """UPDATE market_data_orders SET is_active = 'f'
+                        WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id
+                        NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
             try:
                 tcurs.execute(sql)
             except psycopg2.DatabaseError, e:

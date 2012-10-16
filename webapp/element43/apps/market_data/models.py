@@ -257,7 +257,7 @@ class Orders(models.Model):
         help_text="The unique hash that of the market message.")
     uploader_ip_hash = models.CharField(max_length=255, db_index=True,
         help_text="The unique hash for the person who uploaded this message.")
-    live = models.BooleanField(help_text="is this a live order or is it history")
+    is_active = models.BooleanField(help_text="is this a live order or is it history", default = True)
 
     # Managers
     objects = models.Manager()
