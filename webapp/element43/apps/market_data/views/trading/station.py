@@ -35,7 +35,7 @@ def ranking(request, group=0):
     This function generates the station ranks based on active orders in the DB
     """
 
-    rank_list = Orders.objects.values('stastation__id').annotate(
+    rank_list = Orders.active.values('stastation__id').annotate(
         ordercount=Count('id')).order_by('-ordercount')[:50]
 
     for rank in rank_list:
@@ -203,13 +203,13 @@ def import_system(request, station_id=60003760, system_id=30000142):
             .aggregate(Sum("quantity"))['quantity__sum'],
 
             # Get filtered local bid qty
-            'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
+            'bid_qty_filtered': Orders.active.filter(stastation_id=station_id,
                                                       invtype_id=point['id'], is_bid=True,
                                                       price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
             # Get filtered ask qty of the other system
-            'ask_qty_filtered': Orders.objects.filter(mapsolarsystem_id=system_id,
+            'ask_qty_filtered': Orders.active.filter(mapsolarsystem_id=system_id,
                                                       invtype_id=point['id'], is_bid=False,
                                                       price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
@@ -256,13 +256,13 @@ def import_region(request, station_id=60003760, region_id=10000002):
             .aggregate(Sum("quantity"))['quantity__sum'],
 
             # Get filtered local bid qty
-            'bid_qty_filtered': Orders.objects.filter(stastation_id=station_id,
+            'bid_qty_filtered': Orders.active.filter(stastation_id=station_id,
                                                       invtype_id=point['id'], is_bid=True,
                                                       price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
             # Get filtered ask qty of the other region
-            'ask_qty_filtered': Orders.objects.filter(mapregion_id=region_id,
+            'ask_qty_filtered': Orders.active.filter(mapregion_id=region_id,
                                                       invtype_id=point['id'], is_bid=False,
                                                       price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
