@@ -33,10 +33,10 @@ def legacy_marketstat(request):
                                           mapregion_id=params['regionlimit'][0])
     buystats = Orders.objects.filter(invtype_id=params['typeid'][0],
                                      mapregion_id=params['regionlimit'][0],
-                                     is_bid=True).aggregate(Min('price'), Max('price'), StdDev('price'))
+                                     is_bid=True, live=True).aggregate(Min('price'), Max('price'), StdDev('price'))
     sellstats = Orders.objects.filter(invtype_id=params['typeid'][0],
                                      mapregion_id=params['regionlimit'][0],
-                                     is_bid=False).aggregate(Min('price'), Max('price'), StdDev('price'))
+                                     is_bid=False, live=True).aggregate(Min('price'), Max('price'), StdDev('price'))
     
     rcontext = RequestContext(request, {'params':params,
                                         'stats':stats,
