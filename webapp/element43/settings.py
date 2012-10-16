@@ -18,6 +18,9 @@ djcelery.setup_loader()
 # Our User profile class
 AUTH_PROFILE_MODULE = 'common.Profile'
 
+# Admin site is disabled by default
+ADMIN_ENABLED = False
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
