@@ -4,30 +4,32 @@
   %marketstat
     %type{'id':'{{params.typeid.0}}'}
       %buy
-        - for stat in stats
-          %volume
-            {{stat.buyvolume}}
-          %average
-            {{stat.buyavg}}
-          %max
-            {{buystats.price__max}}
-          %min
-            {{buystats.price__min}}
-          %median
-            {{stat.buymedian}}
-          %percentile
-            {{stat.buy_95_percentile}}
+        %volume
+          {{stats.buyvolume}}
+        %average
+          {{stats.buyavg}}
+        %max
+          {{buystats.price__max}}
+        %min
+          {{buystats.price__min}}
+        %median
+          {{stats.buymedian}}
+        %percentile
+          {{stats.buy_95_percentile}}
+        %deviation
+          {{buystats.price__stddev}}
       %sell
-        - for stat in stats
-          %volume
-            {{stat.sellvolume}}
-          %average
-            {{stat.sellavg}}
-          %max
-            {{sellstats.price__max}}
-          %min
-            {{sellstats.price__min}}
-          %median
-            {{stat.sellmedian}}
-          %percentile
-            {{stat.sell_95_percentile}}
+        %volume
+          {{stats.sellvolume}}
+        %average
+          {{stats.sellavg}}
+        %max
+          {{sellstats.price__max}}
+        %min
+          {{sellstats.price__min}}
+        %median
+          {{stats.sellmedian}}
+        %percentile
+          {{stats.sell_95_percentile}}
+        %deviation
+          {{sellstats.price__stddev}}
