@@ -17,13 +17,13 @@
       %p
         = type.description|striptags
   #history
-  
+
   #filters{'style':'margin-bottom: 1em; display:none;'}
     .row-fluid
       .span2
       .span4
         %h5
-          Minimal System Security 
+          Minimal System Security
         #system-security.sec4
           0.4
         #security-slider
@@ -41,7 +41,7 @@
         #filter-button.btn.btn-primary
           Filter Orders
       .span5
-          
+
   %ul#tabs.nav.nav-tabs
     %li.active
       %a#region_link{'href':'#regions', 'data_toggle':'tab'} Regions
@@ -123,6 +123,8 @@
             %th.text-right
               Remaining
             %th.text-right
+              Minimum Volume
+            %th.text-right
               Price
             %th.text-right
               Last Seen
@@ -137,11 +139,13 @@
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
                   = order.mapregion.name
-                \- 
+                \-
                 %a{'href':'{% url station station_id=order.stastation.id %}'}
                   = order.stastation.name
               %td.text-right
                 = order.volume_remaining|intcomma
+              %td.text-right
+                = order.minimum_volume|intcomma
               %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
@@ -163,6 +167,8 @@
             %th.text-right
               Remaining
             %th.text-right
+              Minimum Volume
+            %th.text-right
               Price
             %th.text-right
               Last Seen
@@ -180,11 +186,13 @@
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
                   = order.mapregion.name
-                \- 
+                \-
                 %a{'href':'{% url station station_id=order.stastation.id %}'}
                   = order.stastation.name
               %td.text-right
                 = order.volume_remaining|intcomma
+              %td.text-right
+                = order.minimum_volume|intcomma
               %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
@@ -241,11 +249,11 @@
           %td.text-right
             %b
               = totalprice|floatformat:"2"|intcomma
-      
+
       * Assumes perfect refining
-      
+
       ** If pricing shows "0" it means we do not have enough data from Jita to estimate
-                
+
 - block scripts
   %script{'type':'text/javascript'}
     var invTypeID = {{type.id}};
