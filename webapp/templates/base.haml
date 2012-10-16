@@ -55,7 +55,8 @@
                   Help
                   %b.caret
                 %ul.dropdown-menu
-                  %a{'href':'{% url about_page %}'} About Element43
+                  %li
+                    %a{'href':'{% url about_page %}'} About Element43
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
