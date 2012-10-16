@@ -1,0 +1,44 @@
+- extends "base.haml"
+- load humanize
+- block title
+  = block.super
+  About Element43
+- block content
+  %h2 About Element43
+  %p
+    Element43 is an all-in-one site to track the markets, your industry jobs, trading, you name it.  Our goal with Element43 is to provide you, the capsuleer,
+    with everything you need to successfully manage your Eve-wide enterprises.
+  %p
+    Element43 is built on a multitude of technologies including Python, Django, Postgresql, Redis, Celery, Memcache, Numpy, Lighthttpd, HAML and others.
+    We are an open source project available on github at
+    %a{'href':'https://github.com/EVE-Tools/element43'} https://github.com/EVE-Tools/element43
+  %h2 Element43 Team
+    %h5 Project Leads:
+    %p
+      %a{'href':'mailto:greg@element-43.com'} Greg Oberfield
+    %p
+      %a{'href':'mailto:zweizeichen@element-43.com'} Zweizeichen
+    %h5 Developers:
+    %p
+      %a{'href':'mailto:greg@element-43.com'} Greg Oberfield
+    %p
+      %a{'href':'mailto:zweizeichen@element-43.com'} Zweizeichen
+    %p
+      %a{'href':'mailto:jens@element-43.com'} Jens Lauterbach
+    %h5 System Admin (and gracious hardware provider):
+    %p
+      %a{'href':'mailto:snipa@element-43.com'} Snipa
+    %h5 Consulting Industrialist:
+    %p
+      %a{'href':'http://k162space.com'} Blake
+    %h5 Additional Code/Support/Help
+    %p
+      %a{'href':'http://eve-emdr.com'} Greg Taylor
+  %h2 Contact Us
+  %p
+    Contact the Element43 team at
+    %a{'href':'mailto:info@element-43.com'} info@element-43.com
+    with comments, questions or bugs.  You can also reach us on irc.coldfront.net on channel
+      %a{'href':'irc://irc.coldfront.net:6667/element43'} #element43
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}

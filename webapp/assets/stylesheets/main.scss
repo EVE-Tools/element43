@@ -22,19 +22,8 @@ $padding:           10px;
 // Mixins
 
 @mixin panel {
-    background-color: rgba(255, 255, 255, 0.2); 
+    background-color: rgba(255, 255, 255, 0.2);
     padding: $padding;
-}
-
-@mixin heading {
-    text-transform: uppercase;
-    margin-bottom: 1em;
-}
-
-// HTML Elements
-
-h1, h2, h3 {
-    @include heading;
 }
 
 body {
@@ -46,26 +35,37 @@ footer {
 }
 
 // Input color override
-textarea, 
-input[type="text"], 
-input[type="password"], 
-input[type="datetime"], 
-input[type="datetime-local"], 
-input[type="date"], 
-input[type="month"], 
-input[type="time"], 
-input[type="week"], 
-input[type="number"], 
-input[type="email"], 
-input[type="url"], 
-input[type="search"], 
-input[type="tel"], 
-input[type="color"], 
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
 .uneditable-input {
     color: $grey;
 }
 
 // Classes
+
+.hero-unit {
+    // Clear box
+    background:transparent;
+    box-shadow: none;
+    border: none;
+
+    // Style text
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: white;
+}
 
 .text-right {
     text-align: right !important;
@@ -88,6 +88,12 @@ input[type="color"],
     font-size: 18px;
 }
 
+.balance {
+    font-family: 'Orbitron', sans-serif;
+    color: $white;
+    text-shadow: 0 0 3px $contrast-blue;
+}
+
 // Search field
 
 .autocomplete-w1 { background-color: $background-grey; position:absolute; top:0px; left:0px; margin:6px 0 0 6px;}
@@ -103,7 +109,7 @@ input[type="color"],
 
 @media (min-width: 1200px) {
     .navbar-top .container {
-    width: 1170px;
+        width: 1170px;
     }
 }
 
@@ -128,7 +134,7 @@ input[type="color"],
     color: #fff;
     margin: 0 auto;
     padding: 0;
-    
+
     ul {
         display: inline-block;
         list-style:none;
@@ -157,18 +163,18 @@ input[type="color"],
 
 
 /* Simple Animation */
-@-webkit-keyframes clktrans 
+@-webkit-keyframes clktrans
 {
 0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
 }
 
-@-moz-keyframes clktrans 
+@-moz-keyframes clktrans
 {
 0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }   
+100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
 }
 
 // Color classes

@@ -8,6 +8,7 @@
 local_settings.py
 docs_src/_build/*
 local_consumer.conf
+local_pathfind.conf
 eve_db
 *.db3
 .pydevproject

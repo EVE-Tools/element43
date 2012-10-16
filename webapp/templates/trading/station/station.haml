@@ -1,0 +1,77 @@
+- extends "base.haml"
+- load cache
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{station.name}}
+- block content
+  %h1
+    {{station.name}}
+  .row-fluid
+    .span2
+      %img{'src':'{{IMAGE_SERVER}}/Render/{{station.type.id}}_128.png', 'alt':'station render'}
+    .span5
+      %table.table.table-striped
+        %tbody
+          %tr
+            %td
+              Region
+            %td
+              {{station.region.name}}
+          %tr
+            %td
+              Constellation
+            %td
+              {{station.constellation.name}}
+          %tr
+            %td
+              Solar System
+            %td
+              %span{'class':'sec{{station.solar_system.security_level|sec0to10}}'}
+                • {{station.solar_system.security_level|sec0to1}}
+              {{station.solar_system.name}}
+    .span5
+      %table.table.table-striped
+        %tbody
+          %tr
+            %td
+              Reprocessing Efficiency
+            %td
+              {{station.reprocessing_efficiency}}
+          %tr
+            %td
+              Reprocessing Mineral Cost
+            %td
+              {{station.reprocessing_stations_take}}
+          %tr
+            %td
+              Office Rental Cost
+            %td
+              {{station.office_rental_cost|intcomma}} ISK
+  #import-field.row-fluid{'style':'margin-bottom: 1em; display: none;'}
+    .span4
+    .span4{'style':'margin-top: 2em; text-align:center;'}
+      %input#import-search{'type':'text', 'placeholder':'Region / System...', 'name':'query'}
+    .span4
+  .row-fluid
+    .span12
+      %ul#tabs.nav.nav-tabs
+        %li#spread_link.active
+          %a{'href':'#spread', 'data_toggle':'tab'} Bid/Ask Spread
+        %li#import_link
+          %a{'href':'#import', 'data_toggle':'tab'} Import
+      .tab-content
+        #spread.tab-pane.fade.active.in
+          .row-fluid
+            #tree.span3
+            #group.span9
+              %i Please select a group on the left side to display spread details.
+        #import.tab-pane.fade
+          %i Choose a region or system to import from with the text field above.
+- block scripts
+  %script{'type':'text/javascript'}
+    var staStationID = {{station.id}};
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.dynatree.min.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.cookie.js'}
+  %script{'type':'text/javascript', 'src':'/static/javascripts/station.js'}

@@ -8,6 +8,8 @@
       %th.text-right
         Remaining
       %th.text-right
+        Minimum Volume
+      %th.text-right
         Price
       %th.text-right
         Last Seen
@@ -21,11 +23,14 @@
           %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
             • {{order.mapsolarsystem.security_level|sec0to1}}
           %a{'href':'{% url quicklook_region region_id=order.mapregion.id type_id=type_id %}'}
-            {{order.mapregion.name}}
-          \- 
-          = order.stastation.name
+            = order.mapregion.name
+          \-
+          %a{'href':'{% url station station_id=order.stastation.id %}'}
+            = order.stastation.name
         %td.text-right
           = order.volume_remaining|intcomma
+        %td.text-right
+          = order.minimum_volume|intcomma
         %td.text-right
           = order.price|floatformat:"2"|intcomma
         %td.text-right

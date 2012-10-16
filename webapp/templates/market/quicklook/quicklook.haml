@@ -17,13 +17,13 @@
       %p
         = type.description|striptags
   #history
-  
+
   #filters{'style':'margin-bottom: 1em; display:none;'}
     .row-fluid
       .span2
       .span4
         %h5
-          Minimal System Security 
+          Minimal System Security
         #system-security.sec4
           0.4
         #security-slider
@@ -41,7 +41,7 @@
         #filter-button.btn.btn-primary
           Filter Orders
       .span5
-          
+
   %ul#tabs.nav.nav-tabs
     %li.active
       %a#region_link{'href':'#regions', 'data_toggle':'tab'} Regions
@@ -123,6 +123,8 @@
             %th.text-right
               Remaining
             %th.text-right
+              Minimum Volume
+            %th.text-right
               Price
             %th.text-right
               Last Seen
@@ -136,11 +138,14 @@
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
-                  {{order.mapregion.name}}
-                \- 
-                = order.stastation.name
+                  = order.mapregion.name
+                \-
+                %a{'href':'{% url station station_id=order.stastation.id %}'}
+                  = order.stastation.name
               %td.text-right
                 = order.volume_remaining|intcomma
+              %td.text-right
+                = order.minimum_volume|intcomma
               %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
@@ -162,6 +167,8 @@
             %th.text-right
               Remaining
             %th.text-right
+              Minimum Volume
+            %th.text-right
               Price
             %th.text-right
               Last Seen
@@ -169,7 +176,7 @@
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
             %th.text-center
-              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
+              %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the Jita minimum cost of its components'}
                 %i.icon-white.icon-question-sign
         %tbody
           - for order in sell_orders
@@ -178,11 +185,14 @@
                 %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
                   • {{order.mapsolarsystem.security_level|sec0to1}}
                 %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
-                  {{order.mapregion.name}}
-                \- 
-                = order.stastation.name
+                  = order.mapregion.name
+                \-
+                %a{'href':'{% url station station_id=order.stastation.id %}'}
+                  = order.stastation.name
               %td.text-right
                 = order.volume_remaining|intcomma
+              %td.text-right
+                = order.minimum_volume|intcomma
               %td.text-right
                 = order.price|floatformat:"2"|intcomma
               %td.text-right
@@ -207,9 +217,11 @@
             %th.text-right
               Quantity
             %th.text-right
-              Jita Median Price Per Unit
+              Forge Median PPU
             %th.text-right
-              Total Materials Cost
+              Jita Min PPU
+            %th.text-right
+              Total Median Materials Cost
         %tbody
         - for material in materials
           %tr
@@ -223,9 +235,12 @@
             %td.text-right
               = material.price|floatformat:"2"|intcomma
             %td.text-right
+              = material.min_price|floatformat:"2"|intcomma
+            %td.text-right
               = material.total|floatformat:"2"|intcomma
         %tr
         %tr
+          %td
           %td
           %td
           %td.text-right
@@ -234,16 +249,16 @@
           %td.text-right
             %b
               = totalprice|floatformat:"2"|intcomma
-      
+
       * Assumes perfect refining
-      
+
       ** If pricing shows "0" it means we do not have enough data from Jita to estimate
-                
+
 - block scripts
   %script{'type':'text/javascript'}
     var invTypeID = {{type.id}};
     var invTypeName = "{{type.name}}";
     var mapRegionIDs = {{region_ids}};
-    var mapRegionNames = {{region_names|safe}};
+    var mapRegions = {{region_names|safe}};
   %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
   %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook_graph.js'}

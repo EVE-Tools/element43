@@ -18,6 +18,9 @@ djcelery.setup_loader()
 # Our User profile class
 AUTH_PROFILE_MODULE = 'common.Profile'
 
+# Admin site is disabled by default
+ADMIN_ENABLED = False
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -32,7 +35,7 @@ DEFAULT_FROM_EMAIL = 'no_reply@element-43.com'
 
 # Login
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'dashboard/'
 
 MANAGERS = ADMINS
 
@@ -144,7 +147,7 @@ TEMPLATE_LOADERS = (
 
     'element43.template_loaders.DjamlFilesystemLoader',
     'element43.template_loaders.DjamlAppDirectoriesLoader',
-        
+
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     #'django.template.loaders.eggs.Loader',
@@ -203,21 +206,20 @@ INSTALLED_APPS = (
     'django.contrib.formtools',
 
     'compressor',
-    
+
     'raven.contrib.django',
 
     'south',
     'devserver',
     'djcelery',
 
+    'eve_db',
     'apps.common',
     'apps.market_data',
     'apps.api',
-    'apps.manufacturing',
     'apps.auth',
     'apps.user_settings',
-    
-    'eve_db',
+    'apps.manufacturing',
 )
 
 DEVSERVER_MODULES = (

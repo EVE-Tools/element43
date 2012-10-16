@@ -24,7 +24,12 @@ TERM_OUT = config.getboolean('Consumer', 'term_out')
 
 
 def main():
-    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+    # Handle DBs without password
+    if not dbpass:
+        # Connect without password
+        dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+    else:
+        dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
     curs = dbcon.cursor()
 
     apiURL = 'https://api.eveonline.com/eve/ConquerableStationList.xml.aspx'

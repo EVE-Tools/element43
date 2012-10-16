@@ -24,7 +24,10 @@
       Result
   
   %h3
-    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs - {{ data.produced_units|intcomma }} Unit{{ data.produced_units|pluralize }}) 
+    Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs -
+    %span#produced_units
+      {{ data.produced_units|intcomma }} 
+    Unit{{ data.produced_units|pluralize }}) 
   
   %form.form-inline
     %table#billofmaterials.table.table-striped
@@ -50,7 +53,7 @@
             %strong
               Total
           %td.text-right
-            %strong#materials_cost_total_unit
+            %strong#materials_cost_total_bom
               = data.materials_cost_total|floatformat:2|intcomma
           %td.text-right
             %strong
@@ -60,21 +63,21 @@
         %tr
           %td
             - if not request|is_igb
-              %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.material_type__id }}_16.png' }
-              = material.material_type__name
+              %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.id }}_16.png' }
+              = material.name
             - else
-              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.material_type__id }})'}
-                = material.material_type__name
+              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.id }})'}
+                = material.name
           %td
-            %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.material_type__id }}' }
+            %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.id }}' }
           %td.text-right
-            %span{'id': 'material_quantity_{{ material.material_type__id }}'}
+            %span{'id': 'material_quantity_{{ material.id }}'}
               = material.quantity|intcomma
           %td.text-right
-            %span{'id': 'material_price_{{ material.material_type__id }}'}
-              = material.total|floatformat:2|intcomma
+            %span{'id': 'material_price_{{ material.id }}'}
+              = material.price_total|floatformat:2|intcomma
           %td.text-right
-            = material.volume_total|floatformat:2|intcomma
+            = material.volume|floatformat:2|intcomma
     
   %h3
     Cost and Profit Overview

@@ -1,0 +1,12 @@
+from django.conf.urls.defaults import patterns, url
+
+urlpatterns = patterns('apps.dashboard.views',
+    #
+    # Account management
+    #
+
+    # Settings
+    url(r'^$', 'dashboard', name='dashboard'),
+    url(r'^char_sheet/(?P<char_id>[0-9]+)/$', 'char_sheet', name='char_sheet')
+
+)

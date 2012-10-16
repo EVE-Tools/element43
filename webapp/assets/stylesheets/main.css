@@ -1,17 +1,18 @@
-@import url("http://fonts.googleapis.com/css?family=Orbitron:500");
 /*
  * Main CSS file for element43
  */
-h1, h2, h3 {
-  text-transform: uppercase;
-  margin-bottom: 1em; }
-
+@import url('http://fonts.googleapis.com/css?family=Orbitron:500');
+/* line 29, main.scss */
 body {
-  background: url("/static/images/background.jpg") no-repeat scroll center top black; }
+  background: url("/static/images/background.jpg") no-repeat scroll center top black;
+}
 
+/* line 33, main.scss */
 footer {
-  text-align: center; }
+  text-align: center;
+}
 
+/* line 53, main.scss */
 textarea,
 input[type="text"],
 input[type="password"],
@@ -28,159 +29,259 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-  color: #333333; }
+  color: #333333;
+}
 
+/* line 59, main.scss */
+.hero-unit {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  color: white;
+}
+
+/* line 70, main.scss */
 .text-right {
-  text-align: right !important; }
+  text-align: right !important;
+}
 
+/* line 74, main.scss */
 .text-center {
-  text-align: center !important; }
+  text-align: center !important;
+}
 
+/* line 80, main.scss */
 .typeinfo {
-  margin-top: 1em; }
+  margin-top: 1em;
+}
 
+/* line 84, main.scss */
 .price {
   font-family: 'Orbitron', sans-serif;
   color: white;
   text-shadow: 0 0 3px #33b5e5;
-  font-size: 18px; }
+  font-size: 18px;
+}
 
+/* line 91, main.scss */
+.balance {
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 3px #33b5e5;
+}
+
+/* line 99, main.scss */
 .autocomplete-w1 {
   background-color: #121417;
   position: absolute;
   top: 0px;
   left: 0px;
-  margin: 6px 0 0 6px; }
+  margin: 6px 0 0 6px;
+}
 
+/* line 100, main.scss */
 .autocomplete {
   border: 1px solid #333333;
   background: #121417;
   cursor: default;
   text-align: left;
-  overflow: auto; }
+  overflow: auto;
+}
 
+/* line 101, main.scss */
 .autocomplete .selected {
-  background: #444444; }
+  background: #444444;
+}
 
+/* line 102, main.scss */
 .autocomplete div {
   padding: 2px 5px;
   white-space: nowrap;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
+/* line 103, main.scss */
 .autocomplete strong {
   font-weight: normal;
-  color: #33b5e5; }
+  color: #33b5e5;
+}
 
+/* line 106, main.scss */
 .navbar-top .container {
-  width: 940px; }
+  width: 940px;
+}
 
 @media (min-width: 1200px) {
+  /* line 111, main.scss */
   .navbar-top .container {
-    width: 1170px; } }
+    width: 1170px;
+  }
+}
+/* line 116, main.scss */
 .panel-wrapper {
   background-color: rgba(255, 255, 255, 0.2);
-  padding: 10px; }
+  padding: 10px;
+}
 
+/* line 120, main.scss */
 .content {
   background-color: #121417;
-  padding: 10px; }
+  padding: 10px;
+}
 
+/* line 127, main.scss */
 .scan_done {
-  background: #50c878; }
+  background: #50c878;
+}
 
+/* line 133, main.scss */
 .clock {
   color: #fff;
   margin: 0 auto;
-  padding: 0; }
-  .clock ul {
-    display: inline-block;
-    list-style: none;
-    margin: 0 auto;
-    padding: 0; }
-  .clock ul li {
-    display: inline;
-    text-shadow: 0 0 3px #33b5e5;
-    padding: 0; }
+  padding: 0;
+}
+/* line 138, main.scss */
+.clock ul {
+  display: inline-block;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+/* line 145, main.scss */
+.clock ul li {
+  display: inline;
+  text-shadow: 0 0 3px #33b5e5;
+  padding: 0;
+}
 
+/* line 152, main.scss */
 #date {
   display: inline-block;
-  text-shadow: 0 0 2px #33b5e5; }
+  text-shadow: 0 0 2px #33b5e5;
+}
 
+/* line 157, main.scss */
 #point {
   position: relative;
   -moz-animation: clktrans 1s ease infinite;
   -webkit-animation: clktrans 1s ease infinite;
-  padding: 0; }
+  padding: 0;
+}
 
 /* Simple Animation */
 @-webkit-keyframes clktrans {
+  /* line 168, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #33b5e5; }
+    text-shadow: 0 0 20px #33b5e5;
+  }
 
+  /* line 169, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none; }
+    text-shadow: none;
+  }
 
+  /* line 170, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #33b5e5; } }
+    text-shadow: 0 0 20px #33b5e5;
+  }
+}
 
 @-moz-keyframes clktrans {
+  /* line 175, main.scss */
   0% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #33b5e5; }
+    text-shadow: 0 0 20px #33b5e5;
+  }
 
+  /* line 176, main.scss */
   50% {
     opacity: 0;
-    text-shadow: none; }
+    text-shadow: none;
+  }
 
+  /* line 177, main.scss */
   100% {
     opacity: 1.0;
-    text-shadow: 0 0 20px #33b5e5; } }
+    text-shadow: 0 0 20px #33b5e5;
+  }
+}
 
+/* line 182, main.scss */
 .red {
-  color: red; }
+  color: red;
+}
 
+/* line 186, main.scss */
 .green {
-  color: #50c878; }
+  color: #50c878;
+}
 
+/* line 192, main.scss */
 .sec10 {
-  color: #2FEFEF; }
+  color: #2FEFEF;
+}
 
+/* line 196, main.scss */
 .sec9 {
-  color: #48F0C0; }
+  color: #48F0C0;
+}
 
+/* line 200, main.scss */
 .sec8 {
-  color: #00EF47; }
+  color: #00EF47;
+}
 
+/* line 204, main.scss */
 .sec7 {
-  color: #00F000; }
+  color: #00F000;
+}
 
+/* line 208, main.scss */
 .sec6 {
-  color: #8FEF2F; }
+  color: #8FEF2F;
+}
 
+/* line 212, main.scss */
 .sec5 {
-  color: #EFEF00; }
+  color: #EFEF00;
+}
 
+/* line 216, main.scss */
 .sec4 {
-  color: #D77700; }
+  color: #D77700;
+}
 
+/* line 220, main.scss */
 .sec3 {
-  color: #F06000; }
+  color: #F06000;
+}
 
+/* line 224, main.scss */
 .sec2 {
-  color: #F04800; }
+  color: #F04800;
+}
 
+/* line 228, main.scss */
 .sec1 {
-  color: #D73000; }
+  color: #D73000;
+}
 
+/* line 232, main.scss */
 .sec0 {
-  color: #F00000; }
+  color: #F00000;
+}
 
+/* line 236, main.scss */
 .breadcrumb {
-  padding: 8px 0px; }
+  padding: 8px 0px;
+}
 
+/* line 240, main.scss */
 .breadcrumb li {
   text-shadow: none;
-  color: white; }
+  color: white;
+}

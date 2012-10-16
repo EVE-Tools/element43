@@ -12,7 +12,7 @@
       %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
-      element43 - 
+      element43 -
   %body
     %header
       .navbar.navbar-top
@@ -24,7 +24,7 @@
                 BETA
             %ul.nav
               %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
                   Market
                   %b.caret
                 %ul.dropdown-menu
@@ -37,19 +37,26 @@
                       %li
                         %a{'href':'{% url scanner_region %}'} Market Scanner - Region
               %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
                   Trading
                   %b.caret
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url station_ranking %}'} Top Stations
               %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'} 
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
                   Manufacturing
                   %b.caret
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url manufacturing_select_blueprint %}'} Calculator
+              %li.dropdown
+                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                  Help
+                  %b.caret
+                %ul.dropdown-menu
+                  %li
+                    %a{'href':'{% url about_page %}'} About Element43
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
@@ -65,7 +72,7 @@
                     %b.caret
                   %ul.dropdown-menu
                     %li
-                      %a{'href':'{% url home %}'}
+                      %a{'href':'{% url dashboard %}'}
                         %i.icon-white.icon-home
                         Dashboard
                     %li
@@ -78,11 +85,13 @@
                         Logout
               %form.navbar-search{'id':'search','method':'post','action':'{% url search %}'}
                 - csrf_token
-                %input#main-search.search-query{'type':'text', 'placeholder':'Search...', 'name':'query'}
+                %input#main-search.search-query{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
+    .container
+        - include '_base_messages.haml'
+        - block top
     .container
       .panel-wrapper.clearfix
         .content
-          - include '_base_messages.haml'
           - block content
     .container{'style':'padding-top: 2em;'}
       .row-fluid

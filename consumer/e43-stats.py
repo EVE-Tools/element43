@@ -42,8 +42,14 @@ fastupdateitems = [34, 35, 36, 37, 38, 39, 40, 29668]
 # use a greenlet pool to cap the number of workers at a reasonable level
 greenlet_pool = Pool(size=MAX_NUM_POOL_WORKERS)
 
-queue =  HotQueue("e43-stats", host=redisdb, port=6379, db=0)
-dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
+queue = HotQueue("e43-stats", host=redisdb, port=6379, db=0)
+
+# Handle DBs without password
+if not dbpass:
+    # Connect without password
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" dbname="+dbname+" port="+dbport)
+else:
+    dbcon = psycopg2.connect("host="+dbhost+" user="+dbuser+" password="+dbpass+" dbname="+dbname+" port="+dbport)
 
 #connect to memcache
 mc = pylibmc.Client([mcserver], binary=True, behaviors={"tcp_nodelay": True, "ketama": True})
@@ -112,7 +118,7 @@ def thread(data):
             
     # process the buy side
     if len(buyprice) > 1:
-        top = stats.scoreatpercentile(buyprice, 99)
+        top = stats.scoreatpercentile(buyprice, 95)
         bottom = stats.scoreatpercentile(buyprice, 5)
         # mask out the top 1% and bottom 5% of orders so we can try to eliminate the BS
         buy_masked = ma.masked_outside(buyprice, bottom, top)
@@ -132,7 +138,7 @@ def thread(data):
     # same processing for sell side as buy side
     if len(sellprice) > 1:
         top = stats.scoreatpercentile(sellprice, 95)
-        bottom = stats.scoreatpercentile(sellprice, 1)
+        bottom = stats.scoreatpercentile(sellprice, 5)
         sell_masked = ma.masked_outside(sellprice, bottom, top)
         tempmask = sell_masked.mask
         sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)

@@ -7,6 +7,7 @@ from django.utils import simplejson
 # Models
 from eve_db.models import InvBlueprintType
 
+
 def blueprint_search(request):
     """
     Adds the blueprint search to the first form of the manufacturing calculator.
@@ -29,7 +30,9 @@ def blueprint_search(request):
     if len(query) > 2:
 
         # Load published type objects matching the name
-        types = InvBlueprintType.objects.filter(blueprint_type__name__icontains = query, product_type__is_published = True, blueprint_type__is_published = True)
+        types = InvBlueprintType.objects.filter(blueprint_type__name__icontains=query,
+                                                product_type__is_published=True,
+                                                blueprint_type__is_published=True)
 
         for single_type in types:
             type_names.append(single_type.blueprint_type.name)
@@ -42,4 +45,4 @@ def blueprint_search(request):
         types_json = simplejson.dumps(types_json)
 
     # Return JSON without using any template
-    return HttpResponse(types_json, mimetype = 'application/json')
+    return HttpResponse(types_json, mimetype='application/json')

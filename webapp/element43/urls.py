@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
+from django.conf import settings
+
 admin.autodiscover()
 
 # Custom error handlers
@@ -13,19 +15,22 @@ handler500 = 'apps.common.views.handler_500'
 #
 
 urlpatterns = patterns('',
-    
+
     # Common URLs
     url(r'', include('apps.common.urls')),
-    
+
     # Authentication and registration
     url(r'', include('apps.auth.urls')),
-    
+
+    # Dashboard
+    url(r'^dashboard/', include('apps.dashboard.urls')),
+
     # Market data
     url(r'^market/', include('apps.market_data.urls')),
-    
+
     # Account management
     url(r'^settings/', include('apps.user_settings.urls')),
-    
+
     # Manufacturing
     url(r'^manufacturing/', include('apps.manufacturing.urls')),
 )
@@ -34,8 +39,9 @@ urlpatterns = patterns('',
 # Administration views
 #
 
-urlpatterns += patterns('',     
-    # Admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-)
+if settings.ADMIN_ENABLED:
+    urlpatterns += patterns('',
+        # Admin documentation:
+        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+        url(r'^admin/', include(admin.site.urls)),
+    )

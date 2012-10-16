@@ -2,72 +2,77 @@ from django import template
 
 register = template.Library()
 
+
 def sec0to1(val):
-	"""
-	Converts the system security values into values between 0 and 1
-	"""
-	retval = 0.0
-	
-	if val < 0:
-		retval = 0.0
-	elif val > 1:
-		retval = 1.0
-	else:
-		retval = round(val, 1)
-	
-	return retval
+    """
+    Converts the system security values into values between 0 and 1
+    """
+    retval = 0.0
+
+    if val < 0:
+        retval = 0.0
+    elif val > 1:
+        retval = 1.0
+    else:
+        retval = round(val, 1)
+
+    return retval
 
 register.filter('sec0to1', sec0to1)
 
+
 def sec0to10(val):
-	"""
-	Converts the system security values into values between 0 and 10
-	"""
-	retval = val * 10
-	
-	if retval < 0:
-		retval = 0
-	elif retval > 10:
-		retval = 10
-	else:
-		retval = int(round(retval))
-	
-	return retval
+    """
+    Converts the system security values into values between 0 and 10
+    """
+    retval = val * 10
+
+    if retval < 0:
+        retval = 0
+    elif retval > 10:
+        retval = 10
+    else:
+        retval = int(round(retval))
+
+    return retval
 
 register.filter('sec0to10', sec0to10)
 
+
 def is_igb(request):
-	"""
-	Checks the headers for IGB headers.
-	"""
-	
-	if 'HTTP_EVE_TRUSTED' in request.META:
-		return True
-	
-	return False
-	
+    """
+    Checks the headers for IGB headers.
+    """
+
+    if 'HTTP_EVE_TRUSTED' in request.META:
+        return True
+
+    return False
+
 register.filter('is_igb', is_igb)
 
+
 def igb_is_trusted(request):
-	"""
-	Checks the headers for IGB trust.
-	"""
-	
-	if request.META['HTTP_EVE_TRUSTED'] == 'Yes':
-		return True
-	
-	return False
-	
+    """
+    Checks the headers for IGB trust.
+    """
+
+    if request.META['HTTP_EVE_TRUSTED'] == 'Yes':
+        return True
+
+    return False
+
 register.filter('igb_is_trusted', igb_is_trusted)
 
+
 def css_error(field):
-	"""
-	Returns " error" if field has an error. 
-	"""
-	
-	if field.errors:
-			return " error"
-	
-	return ""
-	
+    """
+    Returns " error" if field has an error.
+    """
+
+    if field.errors:
+            return " error"
+
+    return ""
+
 register.filter('css_error', css_error)

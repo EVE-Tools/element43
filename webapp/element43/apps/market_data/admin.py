@@ -1,6 +1,7 @@
 from django.contrib import admin
 from apps.market_data.models import UUDIFMessage, Orders
 
+
 class UUDIFMessageAdmin(admin.ModelAdmin):
     """
     Admin site definition for the UUDIFMessage model.
@@ -12,6 +13,7 @@ class UUDIFMessageAdmin(admin.ModelAdmin):
     date_hierarchy = 'received_dtime'
 
 admin.site.register(UUDIFMessage, UUDIFMessageAdmin)
+
 
 class OrdersAdmin(admin.ModelAdmin):
     """
