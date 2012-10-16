@@ -18,7 +18,7 @@
                   %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/dashboard/char_sheet/{{point.char.id}}/"});'}
                     {{point.char.name}}
                   .balance
-                    {{point.char.balance|intcomma}} ISK
+                    {{point.char.balance|intcomma}}
               .row-fluid
                 .span12
                   Next Update: {{point.next_update|naturaltime}}
@@ -31,13 +31,13 @@
         %tbody
           %tr
             %td Sell volume:
-            %td 10,254,561 ISK
+            %td 10,254,561
           %tr
             %td Buy volume:
-            %td 3,541,985 ISK
+            %td 3,541,985
           %tr
             %td Total:
-            %td 13,796,546 ISK
+            %td 13,796,546
   .row-fluid
     .span12
       %h2

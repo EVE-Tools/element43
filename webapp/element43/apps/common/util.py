@@ -31,7 +31,7 @@ def validate_characters(user, access_mask):
         # Do a simple bitwise operation to determine if we have sufficient rights with this key.
         if ((access_mask & key.accessmask) == access_mask):
             # Get all chars from that key which have sufficient permissions.
-            characters = Character.objects.filter(apikey=key)
+            characters.append(Character.objects.filter(apikey=key))
 
     return characters
 
