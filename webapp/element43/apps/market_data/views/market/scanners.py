@@ -32,7 +32,9 @@ def region(request):
                 region = MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])
 
                 # Get all orders in this region ordered by age
-                types = Orders.active.filter(mapregion=region).order_by('generated_at').values_list('invtype_id', flat=True).distinct()[:50]
+                type_ids = Orders.active.filter(mapregion=region).order_by('generated_at').values_list('invtype_id', flat=True).distinct()[:50]
+
+                types = InvType.objects.filter(id__in=list(type_ids))
 
                 rcontext = RequestContext(request, {'types': types, 'region': region})
                 return render_to_response('market/scanners/regionscanner.haml', rcontext)
