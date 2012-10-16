@@ -29,7 +29,7 @@ def region(request):
                 orders = []
 
                 # Get all orders in this region ordered by age (limit to 1500 for performance)
-                orders += Orders.objects.filter(mapregion=MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
+                orders += Orders.active.filter(mapregion=MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])).order_by('generated_at')[:1500]
 
                 print len(orders)
 
