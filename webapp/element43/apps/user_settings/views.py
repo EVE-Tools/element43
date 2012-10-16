@@ -222,7 +222,7 @@ def api_character(request, api_id, api_verification_code):
                     pass
                 try:
                     a_name = sheet.allianceName
-                    a_id = sheet_allianceID
+                    a_id = sheet.allianceID
 
                 except:
                     a_name = ""
@@ -256,6 +256,9 @@ def api_character(request, api_id, api_verification_code):
                                     implant_charisma_name=implant['charisma']['name'],
                                     implant_charisma_bonus=implant['charisma']['value'])
                 new_char.save()
+
+                # Remove existing API timers for this char
+                APITimer.objects.filter(character=new_char).delete()
 
                 new_apitimer = APITimer(character=new_char,
                                         apisheet="CharacterSheet",
