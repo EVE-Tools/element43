@@ -140,7 +140,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
                                               stastation_id__exact=60003760,
                                               is_bid=False).aggregate(min_price=Min('price'))
 
-            material['total'] = min_price['min_price']*material['quantity']
+            material['total'] = min_price['min_price'] * material['quantity']
             material['min_price'] = min_price['min_price']
         except:
             material['total'] = 0
@@ -322,7 +322,7 @@ def quicklook(request, type_id=34):
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
-            temp_data.extend([0,0,0,0,0,0,0])
+            temp_data.extend([0, 0, 0, 0, 0, 0, 0])
             temp_data.append(region)
 
         if len(region_bid_prices) > 0:
