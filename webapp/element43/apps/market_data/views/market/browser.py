@@ -89,12 +89,12 @@ def panel(request, group=0):
 
     for item in types:
         try:
-            ask = Orders.objects.filter(invtype=item, is_bid=False).order_by("price")[:1][0].price
+            ask = Orders.active.filter(invtype=item, is_bid=False).order_by("price")[:1][0].price
         except:
             ask = 0
 
         try:
-            bid = Orders.objects.filter(invtype=item, is_bid=True).order_by("-price")[:1][0].price
+            bid = Orders.active.filter(invtype=item, is_bid=True).order_by("-price")[:1][0].price
         except:
             bid = 0
 
