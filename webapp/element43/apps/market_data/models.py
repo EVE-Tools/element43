@@ -206,7 +206,7 @@ class ActiveOrdersManager(models.Manager):
     Example: Get all active orders --> Orders.active.all()
     """
     def get_query_set(self):
-        return super(LiveOrdersManager, self).get_query_set().filter(is_active=True)
+        return super(ActiveOrdersManager, self).get_query_set().filter(is_active=True)
 
 class ArchivedOrdersManager(models.Manager):
     """
@@ -215,7 +215,7 @@ class ArchivedOrdersManager(models.Manager):
     Example: Get all archived orders --> Orders.archived.all()
     """
     def get_query_set(self):
-        return super(HistoryOrdersManager, self).get_query_set().filter(live=False)
+        return super(ArchivedOrdersManager, self).get_query_set().filter(is_active=False)
 
 class Orders(models.Model):
     """
