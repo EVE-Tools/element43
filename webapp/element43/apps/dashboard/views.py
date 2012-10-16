@@ -21,7 +21,8 @@ def dashboard(request):
     market_data = []
 
     for char in chars_market:
-        market_data.append({'char': char, 'next_update': APITimer.objects.get(character_id=char.id, apisheet='CharacterSheet').nextupdate})
+        market_data.append({'char': char, 'next_update': APITimer.objects.get(character_id=char.id,
+                                                                              apisheet='CharacterSheet').nextupdate})
 
     rcontext = RequestContext(request, {'market_data': market_data})
     return render_to_response('dashboard/dashboard.haml', rcontext)
@@ -37,7 +38,8 @@ def char_sheet(request, char_id):
         return HttpResponseRedirect(reverse('home'))
 
     # Get skills
-    skills = CharSkill.objects.filter(character_id=char.id)
+    skills = CharSkill.objects.filter(character_id=char.id).order_by('skill__group')
+
     skill_points = CharSkill.objects.filter(character_id=char.id).aggregate(Sum('skillpoints'))['skillpoints__sum']
 
     rcontext = RequestContext(request, {'char': char, 'skills': skills, 'skill_points': skill_points})
