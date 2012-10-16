@@ -26,11 +26,11 @@ def bid_ask_spread(station_id=60008694, region_id=10000002, market_group_id=1413
 
                     INNER JOIN ( SELECT invtype_id, Max(price) AS max_bid
                                  FROM market_data_orders
-                                 WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND minimum_volume = 1
+                                 WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND minimum_volume = 1 AND is_active = 't'
                                  GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND max_bid > 0)
                     INNER JOIN ( SELECT invtype_id, Min(price) AS min_ask
                                  FROM market_data_orders
-                                 WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1
+                                 WHERE stastation_id = %s AND is_bid = 'f' AND is_suspicious = 'f' AND minimum_volume = 1 AND is_active = 't'
                                  GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND min_ask > 0)
                 ) q
                 INNER JOIN ( SELECT invtype_id, Sum(quantity) AS weekly_volume
@@ -87,11 +87,11 @@ def import_markup(import_station_id=60008494, export_region_id=0, export_system_
     else:
         query += "WHERE stastation_id = %s "
 
-    query += """ AND is_bid = 'f' AND is_suspicious = 'f'
+    query += """ AND is_bid = 'f' AND is_suspicious = 'f' AND is_active = 't'
                 GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND foreign_ask > 0)
             INNER JOIN (SELECT invtype_id, Max(price) AS local_bid
                         FROM market_data_orders
-                        WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f'
+                        WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND is_active = 't'
                         GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND local_bid > 0)
 
             WHERE t.id IN (SELECT DISTINCT market_data_orders.invtype_id
