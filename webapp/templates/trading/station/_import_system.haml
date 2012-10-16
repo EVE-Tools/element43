@@ -5,14 +5,26 @@
 .row-fluid
   .span12
     %p
-      Jumps: {{jumps}}
+      Jumps: {{jumps}} -
+      - if request|is_igb
+        - if request|igb_is_trusted
+          %a{'href':'#', 'onclick':'CCPEVE.setDestination({{system.id}});'}
+            %i.icon-white.icon-map-marker
+            Set {{system.name}} as destination
       %span
         %a#more{'href':'#', 'onclick':'$("#more").toggle(400); $("#route").toggle(400);'} [more]
       #route.well{'style':'display:none;'}
         - for system in path
-          %span{'class':'sec{{system.security_level|sec0to10}}'}
-            {{system.security_level|sec0to1}}
-          {{system.name}}
+          - if request|is_igb
+           - if request|igb_is_trusted
+              %a{'href':'#', 'onclick':'CCPEVE.setDestination({{system.id}});'}
+                %span{'class':'sec{{system.security_level|sec0to10}}'}
+                  {{system.security_level|sec0to1}}
+                {{system.name}}
+          - else
+            %span{'class':'sec{{system.security_level|sec0to10}}'}
+              {{system.security_level|sec0to1}}
+            {{system.name}}
           - if not forloop.last
             \>
     %table.table.table-striped.table-condensed
