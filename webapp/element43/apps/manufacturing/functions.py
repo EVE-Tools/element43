@@ -218,6 +218,40 @@ def get_tech2_materials(form_data, blueprint):
 
     return materials
 
+def calculate_production_time(form_data, blueprint):
+    """ Returns the production time for the given blueprint. """
+    
+    """
+    The following data is taken into account while calculation:
+    
+    1. Players industry skill level
+    2. Players hardwirings
+    3. Installation slot production time modifier
+    4. Blueprint Production efficiency
+    """
+    # implant modifiers. (type_id, modifier)
+    IMPLANT_MODIFIER = {
+        0: 0.00,  # no hardwiring
+        27170: 0.01,  # Zainou 'Beancounter' Industry BX-801
+        27167: 0.02,  # Zainou 'Beancounter' Industry BX-802
+        27171: 0.04  # Zainou 'Beancounter' Industry BX-804
+    }
+    
+    # calculate production time modifuer
+    implant_modifier = IMPLANT_MODIFIER[int(form_data['hardwiring'])]
+    slot_productivity_modifier = form_data['slot_production_time_modifier']
+    production_time_modifier = (1 - (0.04 * float(form_data['skill_industry']))) * (1 - implant_modifier) * slot_productivity_modifier
+    
+    base_production_time = blueprint.production_time
+    production_time = base_production_time * production_time_modifier
+    blueprint_pe = form_data['blueprint_production_efficiency']
+    
+    if blueprint_pe >= 0:
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
+    else:
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
+    
+    return production_time
 
 def calculate_manufacturing_job(form_data):
     """
@@ -262,28 +296,7 @@ def calculate_manufacturing_job(form_data):
     # --------------------------------------------------------------------------
     # Calculate production time
     # --------------------------------------------------------------------------
-
-    # implant modifiers. (type_id, modifier)
-    IMPLANT_MODIFIER = {
-        0: 0.00,  # no hardwiring
-        27170: 0.01,  # Zainou 'Beancounter' Industry BX-801
-        27167: 0.02,  # Zainou 'Beancounter' Industry BX-802
-        27171: 0.04  # Zainou 'Beancounter' Industry BX-804
-    }
-
-    # calculate production time modifuer
-    implant_modifier = IMPLANT_MODIFIER[int(form_data['hardwiring'])]
-    slot_productivity_modifier = form_data['slot_production_time_modifier']
-    production_time_modifier = (1 - (0.04 * float(form_data['skill_industry']))) * (1 - implant_modifier) * slot_productivity_modifier
-
-    base_production_time = blueprint.production_time
-    production_time = base_production_time * production_time_modifier
-    blueprint_pe = form_data['blueprint_production_efficiency']
-
-    if blueprint_pe >= 0:
-        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
-    else:
-        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
+    production_time = calculate_production_time(form_data, blueprint)
 
     result['production_time_run'] = round(production_time)
     result['production_time_total'] = round(production_time * blueprint_runs)
