@@ -330,8 +330,12 @@ def thread(message):
                             if TERM_OUT==True:
                                 print "/// Bad order archived, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
                                 sql = "UPDATE market_data_orders SET is_active='t' WHERE id = %s" % order.order_id
-                                curs.execute(sql)
-                        
+                                try:
+                                    curs.execute(sql)
+                                    continue
+                                except psycopg2.DatabaseError, e:
+                                    if TERM_OUT == True:
+                                        print "&^&^ Update status FAILED:", e
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
                         # of the mean AND where there are more than 5 orders of like type in the region will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
