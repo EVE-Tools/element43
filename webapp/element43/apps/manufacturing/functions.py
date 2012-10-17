@@ -99,6 +99,16 @@ def calculate_material_prices(materials):
 
     return materials
 
+def get_materials(form_data, blueprint):
+    """
+    Returns the amount of materials required for manufacturing the given blueprint.
+    """
+    if is_advanced_manufacturing(blueprint):
+        materials = get_tech2_materials(form_data, blueprint)
+    else:
+        materials = get_tech1_materials(form_data, blueprint)
+    
+    return materials
 
 def get_tech1_materials(form_data, blueprint):
     """
@@ -274,13 +284,7 @@ def calculate_manufacturing_job(form_data):
     # --------------------------------------------------------------------------
     # Calculate bill of materials
     # --------------------------------------------------------------------------
-    materials = []
-
-    if is_advanced_manufacturing(blueprint):
-        materials = get_tech2_materials(form_data, blueprint)
-    else:
-        materials = get_tech1_materials(form_data, blueprint)
-
+    materials = get_materials(form_data, blueprint)
     materials = calculate_material_prices(materials)
     materials_cost_total = math.fsum([material['price_total'] for material in materials])
     materials_volume_total = math.fsum([material['volume'] for material in materials])
