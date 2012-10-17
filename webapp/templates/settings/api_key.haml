@@ -15,42 +15,64 @@
             Modify Profile
         %li
           %a{'href':'{% url manage_characters %}'}
-            Manage Characters  
+            Manage Characters
         %li.active
           %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
     .span9
-      %h3
-        Your API Keys
-      %table.table.table-striped
-        %thead
-          %tr
-            %td
-              Characters
-            %td
-              ID
-            %td
-            %td
-        %tbody
-          - for key in keys
-            %tr
-              %td
-                - for char in key.character_set.all
-                  - if forloop.last
-                    {{char.name}}
-                  - else
-                    {{char.name}},
-              %td
-                = key.keyid
-              %td.text-right
-                %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
-                  .btn.btn-primary
-                    Add Chars
-              %td.text-right
-                %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
-                  .btn.btn-danger
-                    Remove
-      %hr
+      - if char_keys or corp_keys
+        %h3
+          Your API Keys
+        - if char_keys
+            %h4
+              Character Keys
+            %table.table.table-striped
+              %thead
+                %tr
+                  %td
+                    Characters
+                  %td
+                    ID
+                  %td
+                  %td
+              %tbody
+                - for key in char_keys
+                  %tr
+                    %td
+                      - for char in key.character_set.all
+                        - if forloop.last
+                          {{char.name}}
+                        - else
+                          {{char.name}},
+                    %td
+                      = key.keyid
+                    %td.text-right
+                      %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
+                        .btn.btn-primary
+                          Add Chars
+                    %td.text-right
+                      %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
+                        .btn.btn-danger
+                          Remove
+        - if corp_keys
+          %h4
+            Corporate Keys
+          %table.table.table-striped
+            %thead
+              %tr
+                %td
+                  ID
+                %td
+            %tbody
+              - for key in corp_keys
+                %tr
+                  %td
+                    = key.keyid
+                  %td.text-right
+                    %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
+                      .btn.btn-danger
+                        Remove
+        %hr
       %h3
         Add API Key
       %form.form-horizontal.well{'action':'{% url manage_api_keys %}', 'method':'post'}
@@ -108,6 +130,6 @@
           %li Research
           %li IndustryJobs
       %p
-        Your access mask should read 
+        Your access mask should read
         %code 23531659
         now.
