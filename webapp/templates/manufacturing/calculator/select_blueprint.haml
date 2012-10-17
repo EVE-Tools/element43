@@ -37,7 +37,7 @@
                 = blueprint.name
   
   - if blueprints
-    %h3 
+    %h3
       Select your Blueprint
     %table.table.table-striped.table-condensed
       %tbody
@@ -48,7 +48,8 @@
                 %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.blueprint_type.id }}_32.png'), 'alt':'type image'}
               %a{'href': '{% url manufacturing_calculator blueprint.blueprint_type.id %}'}
                 = blueprint.blueprint_type.name
-        
 
 - block scripts
   %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
+  %script{'type':'text/javascript'}
+    $(document).ready(function() {$('#id_blueprint').focus(); });
