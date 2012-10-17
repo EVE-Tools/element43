@@ -10,6 +10,32 @@ from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, Char
 # API
 from element43 import eveapi
 
+class ProcessMarketOrders(PeriodicTask):
+    """
+    Scan the db and refresh all market orders from the API
+    done once every 23 hours for each character
+    """
+    
+    run_every = datetime.timedelta(minutes=1)
+    
+    def run(self, **kwargs):
+        api = eveapi.EVEAPIConnection()
+        
+        update_timers = APITimer.objects.filter(apisheet="MarketOrders",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+        
+        for update in update_timers:
+            
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Market Orders: %s" % character.name
+            
+            apikey = APIKey.objects.get(id=character.apikey_id)
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
+            orders = me.MarketOrders()
+            
+            for order in orders.orders:
+                print order
 
 class ProcessCharacterSheet(PeriodicTask):
     """

@@ -135,13 +135,11 @@ def quicklook_region(request, region_id=10000002, type_id=34):
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.active.filter(invtype_id__exact=material['material_type__id'],
-                                              mapregion_id__exact=10000002,
-                                              stastation_id__exact=60003760,
-                                              is_bid=False).aggregate(min_price=Min('price'))
+            stats = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
+                                              mapregion_id__exact=10000002)
 
-            material['total'] = min_price['min_price'] * material['quantity']
-            material['min_price'] = min_price['min_price']
+            material['total'] = stats['sell_95_percentile'] * material['quantity']
+            material['min_price'] = stats['sell_95_percentile']
         except:
             material['total'] = 0
             material['min_price'] = 0
@@ -266,13 +264,11 @@ def quicklook(request, type_id=34):
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.active.filter(invtype_id__exact=material['material_type__id'],
-                                              mapregion_id__exact=10000002,
-                                              stastation_id__exact=60003760,
-                                              is_bid=False).aggregate(min_price=Min('price'))
+            stats = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
+                                              mapregion_id__exact=10000002)
 
-            material['total'] = min_price['min_price'] * material['quantity']
-            material['min_price'] = min_price['min_price']
+            material['total'] = stats['sell_95_percentile'] * material['quantity']
+            material['min_price'] = stats['sell_95_percentile']
         except:
             material['total'] = 0
             material['min_price'] = 0
@@ -281,8 +277,8 @@ def quicklook(request, type_id=34):
         totalprice += material['total']
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True).order_by('-price')
-    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False).order_by('price')
+    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
+    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
 
     # Make list with all orders
     orders = []

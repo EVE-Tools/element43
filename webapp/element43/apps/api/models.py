@@ -16,6 +16,7 @@ class APIKey(models.Model):
     expires = models.DateTimeField(help_text="Expiry date for the key")
     accessmask = models.BigIntegerField(help_text="Access mask for this key")
     is_valid = models.BooleanField(help_text="Is this key valid?")
+    is_character_key = models.BooleanField(help_text="Is this a character key?  false = corporation key", default = True)
     user = models.ForeignKey('auth.User', help_text="Fkey relationship to user table")
 
     class Meta(object):
@@ -79,7 +80,8 @@ class APITimer(models.Model):
     """
     Tracking API timers
     """
-    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table")
+    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table", null=True, default = None)
+    corporation = models.ForeignKey('api.Corp', help_text="FKey relationship to corporation table", null=True, default = None)
     apisheet = models.TextField(help_text="Filename of API Call sheet")
     nextupdate = models.DateTimeField(help_text="Date/Time of next allowed API refresh")
 
@@ -121,6 +123,47 @@ class Skill(models.Model):
     class Meta(object):
         verbose_name = "Skill"
         verbose_name_plural = "Skills"
+        
+# Corporation
+class Corp(models.Model):
+    """
+    Table for CorporationSheet information
+    """
+    
+    corp_id = models.BigIntegerField(help_text="Corporation ID", db_index=True)
+    name = models.TextField(help_text="Corporation name")
+    ticker = models.TextField(help_text="Corp ticker")
+    ceo_id = models.BigIntegerField(help_text="character ID of CEO")
+    ceo_name = models.TextField(help_text="CEO Name")
+    stastation = models.ForeignKey('eve_db.StaStation', help_text="Station corp headquarters is in")
+    description = models.TextField(help_text="Description of corp if provided")
+    url = models.TextField(help_text="URL for corporation")
+    tax_rate = models.PositiveIntegerField(help_text="Tax rate of corporation")
+    member_count = models.PositiveIntegerField(help_text="Number of members of corp")
+    member_limit = models.PositiveIntegerField(help_text="Max number of members corp can support")
+    shares = models.PositiveIntegerField(help_text="Number of shares of corp outstanding")
+    
+    class Meta(object):
+        verbose_name = "Corporation"
+        verbose_name_plural = "Corporations"
+        
+class CorpDivision(models.Model):
+    """
+    Divisions in a corp
+    """
+    
+    corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
+    account_key = models.PositiveIntegerField(help_text="account key of corporation division")
+    description = models.TextField(help_text="Name of division")
+    
+class CorpWalletDivision(models.Model):
+    """
+    Divisions in a corp
+    """
+    
+    corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
+    account_key = models.PositiveIntegerField(help_text="account key of corporation wallet account division")
+    description = models.TextField(help_text="Name of wallet account division")
     
 # Market Orders
 class MarketOrder(models.Model):
