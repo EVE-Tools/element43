@@ -13,10 +13,7 @@ def blueprint_search(request):
     Adds the blueprint search to the first form of the manufacturing calculator.
     """
 
-    if request.GET.get('query'):
-        query = request.GET.get('query')
-    else:
-        query = ""
+    query = request.GET.get('query', '')
 
     # Prepare lists
     types = []
@@ -30,13 +27,16 @@ def blueprint_search(request):
     if len(query) > 2:
 
         # Load published type objects matching the name
-        types = InvBlueprintType.objects.filter(blueprint_type__name__icontains=query,
-                                                product_type__is_published=True,
-                                                blueprint_type__is_published=True)
+        blueprints = InvBlueprintType.objects.select_related()
+        blueprints = blueprints.filter(
+            blueprint_type__name__icontains=query,
+            product_type__is_published=True,
+            blueprint_type__is_published=True
+        )
 
-        for single_type in types:
-            type_names.append(single_type.blueprint_type.name)
-            type_ids.append(single_type.blueprint_type.id)
+        for blueprint in list(blueprints):
+            type_names.append(blueprint.blueprint_type.name)
+            type_ids.append(blueprint.blueprint_type.id)
 
         # Add additional data for Ajax AutoComplete
         types_json = {'query': query, 'suggestions': type_names, 'data': type_ids}

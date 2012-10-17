@@ -86,7 +86,7 @@ def calculator(request, blueprint_type_id):
             # find the sale price for the product
             try:
                 stat_object = ItemRegionStat.objects.get(invtype_id__exact=blueprint.product_type.id, mapregion_id__exact=10000002)
-                target_sell_price = stat_object.sellmedian
+                target_sell_price = stat_object.sell_95_percentile
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
 
