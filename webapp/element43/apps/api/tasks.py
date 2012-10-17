@@ -16,7 +16,7 @@ class ProcessMarketOrders(PeriodicTask):
     done once every 23 hours for each character
     """
     
-    run_every = datetime.timedelta(minutes=1)
+    run_every = datetime.timedelta(hours=23)
     
     def run(self, **kwargs):
         api = eveapi.EVEAPIConnection()
