@@ -179,7 +179,8 @@ def api_character(request, api_id, api_verification_code):
                                  vcode=api_verification_code,
                                  expires=key_expiration,
                                  accessmask=key_info.key.accessMask,
-                                 is_valid=True)
+                                 is_valid=True,
+                                 is_character_key=True)
 
                     key.save()
 
@@ -261,6 +262,7 @@ def api_character(request, api_id, api_verification_code):
                 APITimer.objects.filter(character=new_char).delete()
 
                 new_apitimer = APITimer(character=new_char,
+                                        corporation=None,
                                         apisheet="CharacterSheet",
                                         nextupdate=pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1)))
                 new_apitimer.save()
