@@ -321,21 +321,7 @@ def thread(message):
                             bid = True
                         else:
                             bid = False
-                        
-                        # Check to see if the order is in the warehouse when it shouldn't be, just in case    
-                        sql = "SELECT id FROM market_data_orders WHERE id = %s and is_active='f'" % order.order_id
-                        curs.execute(sql)
-                        result = curs.fetchone()
-                        if result is not None:
-                            if TERM_OUT==True:
-                                print "/// Bad order archived, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                                sql = "UPDATE market_data_orders SET is_active='t' WHERE id = %s" % order.order_id
-                                try:
-                                    curs.execute(sql)
-                                    continue
-                                except psycopg2.DatabaseError, e:
-                                    if TERM_OUT == True:
-                                        print "&^&^ Update status FAILED:", e
+
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
                         # of the mean AND where there are more than 5 orders of like type in the region will be flagged.  Flagging could
                         # be done on a per-web-request basis but doing it on order entry means you can report a little more on it.
@@ -402,8 +388,13 @@ def thread(message):
             if len(updateData)>0:
                 if TERM_OUT==True:
                     print "::: UPDATING "+str(len(updateData))+" ORDERS :::"
-                sql = "UPDATE market_data_orders SET price=%s, volume_remaining=%s, generated_at=%s, issue_date=%s, message_key=%s, is_suspicious=%s, uploader_ip_hash=%s WHERE id = %s"
-                curs.executemany(sql, updateData)
+                sql = """UPDATE market_data_orders SET price=%s, volume_remaining=%s, generated_at=%s,
+                            issue_date=%s, message_key=%s, is_suspicious=%s, uploader_ip_hash=%s, is_active='t' WHERE id = %s"""
+                try:
+                    curs.executemany(sql, updateData)
+                except psycopg2.DatabaseError, e:
+                    if TERM_OUT==True:
+                        print e.pgerror
                 updateData = []
     
             if len(insertData)>0:
