@@ -61,8 +61,6 @@
       
       %div{'class':'control-group{{ form.blueprint_price|css_error }}'}
         %label.control-label{'for':'id_blueprint_price'} Blueprint copy price
-          %a{'href':'#', 'rel':'tooltip', 'title':'Price = The Forge Sell Median'}
-            %i.icon-white.icon-question-sign
         .controls
           = form.blueprint_price
           - if form.blueprint_price.errors

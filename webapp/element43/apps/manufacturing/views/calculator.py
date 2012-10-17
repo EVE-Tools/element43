@@ -93,4 +93,4 @@ def calculator(request, blueprint_type_id):
             form = ManufacturingCalculatorForm(initial={'target_sell_price': "%.2f" % target_sell_price})
 
     rcontext = RequestContext(request, {'form': form, 'blueprint': blueprint})
-    return render_to_response('manufacturing/calculator/calculator.haml', rcontext)
+    return render_to_response('manufacturing/calculator/jobparameter.haml', rcontext)
