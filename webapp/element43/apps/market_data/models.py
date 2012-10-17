@@ -199,6 +199,23 @@ class OrdersWarehouse(models.Model):
         verbose_name = "Market Data"
         verbose_name_plural = "Market Data"
 
+class ActiveOrdersManager(models.Manager):
+    """
+    Custom manager that only returns active orders.
+    
+    Example: Get all active orders --> Orders.active.all()
+    """
+    def get_query_set(self):
+        return super(ActiveOrdersManager, self).get_query_set().filter(is_active=True)
+
+class ArchivedOrdersManager(models.Manager):
+    """
+    Custom manager that only returns archived orders.
+    
+    Example: Get all archived orders --> Orders.archived.all()
+    """
+    def get_query_set(self):
+        return super(ArchivedOrdersManager, self).get_query_set().filter(is_active=False)
 
 class Orders(models.Model):
     """
@@ -240,7 +257,13 @@ class Orders(models.Model):
         help_text="The unique hash that of the market message.")
     uploader_ip_hash = models.CharField(max_length=255, db_index=True,
         help_text="The unique hash for the person who uploaded this message.")
+    is_active = models.BooleanField(help_text="is this a live order or is it history", default = True)
 
+    # Managers
+    objects = models.Manager()
+    active = ActiveOrdersManager()
+    archived = ArchivedOrdersManager()
+    
     class Meta(object):
         verbose_name = "Market Order"
         verbose_name_plural = "Market Orders"

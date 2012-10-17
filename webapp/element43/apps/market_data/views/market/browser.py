@@ -1,5 +1,3 @@
-import re
-
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -8,7 +6,6 @@ from django.http import HttpResponse
 # eve_db models
 from eve_db.models import InvType
 from eve_db.models import InvMarketGroup
-from eve_db.models import EveIcon
 
 # Models
 from apps.market_data.models import Orders
@@ -37,11 +34,11 @@ def tree(request, group=0):
 
             icon_name = "/static/images/icons/eve/22_32_42.png"
             group_json.append({'title': group.name,
-                                'key': str(group.id),
-                                'icon': icon_name,
-                                'isLazy': True,
-                                'isFolder': True,
-                                'noLink': True})
+                               'key': str(group.id),
+                               'icon': icon_name,
+                               'isLazy': True,
+                               'isFolder': True,
+                               'noLink': True})
 
         group_json = sorted(group_json, key=lambda k: k['title'])
 
@@ -60,18 +57,18 @@ def tree(request, group=0):
 
             if group.has_items:
                 items.append({'title': group.name,
-                                    'key': str(group.id),
-                                    'icon': icon_name,
-                                    'hasItems': True,
-                                    'isFolder': False,
-                                    'noLink': False})
+                              'key': str(group.id),
+                              'icon': icon_name,
+                              'hasItems': True,
+                              'isFolder': False,
+                              'noLink': False})
             else:
                 no_items.append({'title': group.name,
-                                    'key': str(group.id),
-                                    'isLazy': True,
-                                    'icon': icon_name,
-                                    'isFolder': True,
-                                    'noLink': True})
+                                 'key': str(group.id),
+                                 'isLazy': True,
+                                 'icon': icon_name,
+                                 'isFolder': True,
+                                 'noLink': True})
 
         group_json = []
         group_json += sorted(no_items, key=lambda k: k['title'])
@@ -92,12 +89,12 @@ def panel(request, group=0):
 
     for item in types:
         try:
-            ask = Orders.objects.filter(invtype=item, is_bid=False).order_by("price")[:1][0].price
+            ask = Orders.active.filter(invtype=item, is_bid=False).order_by("price")[:1][0].price
         except:
             ask = 0
 
         try:
-            bid = Orders.objects.filter(invtype=item, is_bid=True).order_by("-price")[:1][0].price
+            bid = Orders.active.filter(invtype=item, is_bid=True).order_by("-price")[:1][0].price
         except:
             bid = 0
 

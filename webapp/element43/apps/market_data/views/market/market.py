@@ -135,12 +135,12 @@ def quicklook_region(request, region_id=10000002, type_id=34):
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'],
+            min_price = Orders.active.filter(invtype_id__exact=material['material_type__id'],
                                               mapregion_id__exact=10000002,
                                               stastation_id__exact=60003760,
                                               is_bid=False).aggregate(min_price=Min('price'))
 
-            material['total'] = min_price['min_price']*material['quantity']
+            material['total'] = min_price['min_price'] * material['quantity']
             material['min_price'] = min_price['min_price']
         except:
             material['total'] = 0
@@ -157,8 +157,8 @@ def quicklook_region(request, region_id=10000002, type_id=34):
     #
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
+    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
+    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
 
     orders = []
     orders += buy_orders
@@ -188,7 +188,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
                 temp_data.append(np.median(system_ask_prices))
                 temp_data.append(round(np.std(system_ask_prices), 2))
                 temp_data.append(len(system_ask_prices))
-                temp_data.append(Orders.objects.filter(mapsolarsystem_id=system,
+                temp_data.append(Orders.active.filter(mapsolarsystem_id=system,
                                                        invtype=type_id,
                                                        is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
@@ -203,7 +203,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
                 temp_data.append(np.median(system_bid_prices))
                 temp_data.append(round(np.std(system_bid_prices), 2))
                 temp_data.append(len(system_bid_prices))
-                temp_data.append(Orders.objects.filter(mapsolarsystem_id=system,
+                temp_data.append(Orders.active.filter(mapsolarsystem_id=system,
                                                        invtype=type_id,
                                                        is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
@@ -266,7 +266,7 @@ def quicklook(request, type_id=34):
         except:
             stat_object.sellmedian = 0
         try:
-            min_price = Orders.objects.filter(invtype_id__exact=material['material_type__id'],
+            min_price = Orders.active.filter(invtype_id__exact=material['material_type__id'],
                                               mapregion_id__exact=10000002,
                                               stastation_id__exact=60003760,
                                               is_bid=False).aggregate(min_price=Min('price'))
@@ -281,8 +281,8 @@ def quicklook(request, type_id=34):
         totalprice += material['total']
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False).order_by('price')
+    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True).order_by('-price')
+    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False).order_by('price')
 
     # Make list with all orders
     orders = []
@@ -316,13 +316,13 @@ def quicklook(request, type_id=34):
             temp_data.append(np.median(region_ask_prices))
             temp_data.append(round(np.std(region_ask_prices), 2))
             temp_data.append(len(region_ask_prices))
-            temp_data.append(Orders.objects.filter(mapregion_id=region,
+            temp_data.append(Orders.active.filter(mapregion_id=region,
                                                    invtype=type_id,
                                                    is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
-            temp_data.extend([0,0,0,0,0,0,0])
+            temp_data.extend([0, 0, 0, 0, 0, 0, 0])
             temp_data.append(region)
 
         if len(region_bid_prices) > 0:
@@ -333,7 +333,7 @@ def quicklook(request, type_id=34):
             temp_data.append(np.median(region_bid_prices))
             temp_data.append(round(np.std(region_bid_prices), 2))
             temp_data.append(len(region_bid_prices))
-            temp_data.append(Orders.objects.filter(mapregion_id=region,
+            temp_data.append(Orders.active.filter(mapregion_id=region,
                                                    invtype=type_id,
                                                    is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
@@ -375,7 +375,7 @@ def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
     filter_time = datetime.now() - timedelta(hours=int(max_age))
 
     # Fetch all sell orders from DB
-    sell_orders = Orders.objects.filter(invtype=type_id,
+    sell_orders = Orders.active.filter(invtype=type_id,
                                         is_bid=False,
                                         mapsolarsystem__security_level__gte=min_sec,
                                         generated_at__gte=filter_time).order_by('price')[:50]
@@ -397,7 +397,7 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
     filter_time = datetime.now() - timedelta(hours=int(max_age))
 
     # Fetch all buy orders from DB
-    buy_orders = Orders.objects.filter(invtype=type_id,
+    buy_orders = Orders.active.filter(invtype=type_id,
                                        is_bid=True,
                                        mapsolarsystem__security_level__gte=min_sec,
                                        generated_at__gte=filter_time).order_by('-price')[:50]

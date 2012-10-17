@@ -66,12 +66,12 @@ def stats_json(request, region_id):
     if (mc.get("e43-stats-activeorders") is not None):
         active_orders = mc.get("e43-stats-activeorders")
     else:
-        active_orders = Orders.objects.count()
+        active_orders = Orders.active.count()
         mc.set("e43-stats-activeorders", active_orders, time=3600)
     if (mc.get("e43-stats-archivedorders") is not None):
         archived_orders = mc.get("e43-stats-archivedorders")
     else:
-        archived_orders = OrdersWarehouse.objects.count()
+        archived_orders = Orders.archived.count()
         mc.set("e43-stats-archivedorders", archived_orders, time=3600)
     if (mc.get("e43-stats-history") is not None):
         history = mc.get("e43-stats-history")
@@ -122,8 +122,8 @@ def stats_json(request, region_id):
             region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id=region_id, invtype_id=item).order_by("-date")[:1][0]
 
             # Get Jita prices
-            buy = Orders.objects.filter(mapsolarsystem=30000142, invtype=item, is_bid=True).order_by("-price")[:1][0].price
-            sell = Orders.objects.filter(mapsolarsystem=30000142, invtype=item, is_bid=False).order_by("price")[:1][0].price
+            buy = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=True).order_by("-price")[:1][0].price
+            sell = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=False).order_by("price")[:1][0].price
 
             stats = {'bid_max': buy,
                      'ask_min': sell,

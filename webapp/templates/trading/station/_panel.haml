@@ -1,4 +1,5 @@
 - load humanize
+- load custom_filters
 - if spread
   %table.table.table-striped.table-condensed
     %thead
@@ -22,6 +23,10 @@
         %th.text-right
           %a{'href':'#', 'rel':'tooltip', 'title':'Potential daily profit based on daily volume and spread - assumes you control the entire <b><i>region&rsquo;s</i></b> market for this item.'}
             Potential Daily Profit
+        - if request|is_igb
+          %th.text-right
+            %a{'href':'#', 'rel':'tooltip', 'title':'Open market info for this item.'}
+              %i.icon-info-sign.icon-white
     %tbody
       - for item in spread
          %tr
@@ -41,5 +46,9 @@
              {{item.weekly_volume|floatformat:0|intcomma}}
            %td.text-right
              {{item.potential_daily_profit|floatformat:2|intcomma}}
+           - if request|is_igb
+            %th.text-right
+              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{item.id}});'}
+                %i.icon-shopping-cart.icon-white
 - else
   %i Sorry - we don't have enough data for this group to generate this view.

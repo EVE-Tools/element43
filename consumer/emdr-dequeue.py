@@ -117,7 +117,7 @@ def stats(item, region):
     # Grab all the live orders for this item/region combo
     sql = """SELECT price, is_bid, volume_remaining
                 FROM market_data_orders
-                WHERE mapregion_id = %s AND invtype_id = %s""" % (region, item)
+                WHERE mapregion_id = %s AND invtype_id = %s AND is_active = 't'""" % (region, item)
     curs.execute(sql)
     for record in curs:
         # Depending on buy/sell status,
@@ -293,7 +293,7 @@ def thread(message):
                 if mckey + str(components[0]) in mc:
                     continue
                 try:
-                    sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % components[0]
+                    sql = "SELECT id FROM market_data_orders WHERE id = %s and is_active='f'" % components[0]
                     curs.execute(sql)
                     result = curs.fetchone()
                     if result is not None:
@@ -323,13 +323,13 @@ def thread(message):
                             bid = False
                         
                         # Check to see if the order is in the warehouse when it shouldn't be, just in case    
-                        sql = "SELECT id FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                        sql = "SELECT id FROM market_data_orders WHERE id = %s and is_active='f'" % order.order_id
                         curs.execute(sql)
                         result = curs.fetchone()
                         if result is not None:
                             if TERM_OUT==True:
-                                print "/// Bad order in warehouse, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
-                                sql = "DELETE FROM market_data_orderswarehouse WHERE id = %s" % order.order_id
+                                print "/// Bad order archived, ID: %s Region: %s TypeID: %s ///" % (order.order_id, order.region_id, order.type_id)
+                                sql = "UPDATE market_data_orders SET is_active='t' WHERE id = %s" % order.order_id
                                 curs.execute(sql)
                         
                         # Check order if "supicious" which is an arbitrary definition.  Any orders that are outside 2 standard deviations
@@ -410,7 +410,7 @@ def thread(message):
                 sql = "INSERT INTO market_data_orders (id, invtype_id, stastation_id, mapsolarsystem_id, mapregion_id,"
                 sql += "is_bid, price, order_range, "
                 sql += "duration, volume_remaining, volume_entered, minimum_volume, generated_at, "
-                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql += "issue_date, message_key, is_suspicious, uploader_ip_hash, is_active) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 't')"
                 
                 curs.executemany(sql, insertData)
                 insertData = []
