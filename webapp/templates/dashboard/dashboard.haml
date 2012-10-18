@@ -1,5 +1,6 @@
 - extends "base.haml"
 - load humanize
+- load custom_filters
 - block title
   = block.super
   Dashboard
@@ -8,7 +9,7 @@
     #graph.span8
     .span4
       %table.table.table-condensed
-        - for point in market_data
+        - for point in sheet_data
           %tr
             %td{'width':'64px'}
               %img{'src':'http://image.eveonline.com/Character/{{point.char.id}}_64.jpg', 'alt':'{{point.char.name}}'}
@@ -22,27 +23,90 @@
               .row-fluid
                 .span12
                   Next Update: {{point.next_update|naturaltime}}
+  %h2 Actice Orders
   .row-fluid
     .span8
-      %h2 Actice Orders
-      %table.table.table-condensed.table-striped
+      - if market_data.ask
+        %h3 Ask
+        %table.table.table-condensed.table-striped
+          %thead
+            %tr
+              %th
+                Location
+              %th
+                Item
+              %th
+                Price
+              %th
+                Volume
+          %tbody
+            - for market_order in market_data.ask
+              %tr
+                %td
+                  %span{'class':'sec{{market_order.id.solar_system.security_level|sec0to10}}'}
+                    • {{market_order.id.solar_system.security_level|sec0to1}}
+                  %a{'href':'{% url quicklook_region type_id=market_order.id.invtype.id region_id=market_order.id.mapregion.id %}'}
+                    = market_order.id.mapregion.name
+                  \-
+                  %a{'href':'{% url station station_id=market_order.id.stastation.id %}'}
+                    = market_order.id.stastation.name
+                %td
+                  {{market_order.id.invtype.name}}
+                %td
+                  {{market_order.id.price|intcomma}}
+                %td
+                  {{market_order.id.volume_remaining}}/{{market_order.id.volume_entered}}
+      - if market_data.bid
+        %h3 Bid
+        %table.table.table-condensed.table-striped
+          %thead
+            %tr
+              %th
+                Location
+              %th
+                Item
+              %th
+                Price
+              %th
+                Volume
+          %tbody
+            - for market_order in market_data.bid
+              %tr
+                %td
+                  %span{'class':'sec{{market_order.id.solar_system.security_level|sec0to10}}'}
+                    • {{market_order.id.solar_system.security_level|sec0to1}}
+                  %a{'href':'{% url quicklook_region type_id=market_order.id.invtype.id region_id=market_order.id.mapregion.id %}'}
+                    = market_order.id.mapregion.name
+                  \-
+                  %a{'href':'{% url station station_id=market_order.id.stastation.id %}'}
+                    = market_order.id.stastation.name
+                %td
+                  {{market_order.id.invtype.name}}
+                %td
+                  {{market_order.id.price|intcomma}}
+                %td
+                  {{market_order.id.volume_remaining}}/{{market_order.id.volume_entered}}
     .span4
       %table.table.table-condensed.table-striped
         %tbody
           %tr
             %td Sell volume:
-            %td 10,254,561
+            %td.green {{market_data.ask_volume|intcomma}}
           %tr
             %td Buy volume:
-            %td 3,541,985
+            %td.red {{market_data.bid_volume|intcomma}}
           %tr
             %td Total:
-            %td 13,796,546
-  .row-fluid
-    .span12
-      %h2
-        Active Industry Jobs
-      %table.table.table-condensed.table-striped
+            - if market_data.total_volume > 0
+              %td.green {{market_data.total_volume|intcomma}}
+            - else
+              %td.red {{market_data.total_volume|intcomma}}
+  - if industry_data
+    .row-fluid
+      .span12
+        %h2
+          Active Industry Jobs
+        %table.table.table-condensed.table-striped
   #char-sheet.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
     .modal-header
       %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
