@@ -1,9 +1,11 @@
 # utility functions
 import ast
 import urllib
+import datetime
+import pytz
 
 # API Models
-from apps.api.models import APIKey, Character
+from apps.api.models import APIKey, Character, APITimer
 
 # Eve_DB Models
 from eve_db.models import MapSolarSystem
@@ -16,6 +18,38 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+
+def manage_character_api_timers(character):
+    """
+    Adds and removes character APITimers for a given character depending on the character's key permissions.
+    When we add more functions, we need to add them to the masks dictionary.
+    """
+
+    masks = {'CharacterSheet': 8,
+             'MarketOrders': 4096}
+
+    key_mask = character.apikey.accessmask
+
+    for sheet in masks:
+        mask = masks[sheet]
+
+        if ((mask & key_mask) == mask):
+            # If we have permission, create timer if not already present
+            try:
+                APITimer.objects.get(character=character, apisheet=sheet)
+            except APITimer.DoesNotExist:
+                new_timer = APITimer(character=character,
+                                     corporation=None,
+                                     apisheet=sheet,
+                                     nextupdate=pytz.utc.localize(datetime.datetime.utcnow()))
+                new_timer.save()
+        else:
+            # If we are not permitted to do this, remove existent timers
+            try:
+                APITimer.objects.get(character=character, apisheet=sheet).delete
+            except APITimer.DoesNotExist:
+                pass
 
 
 def validate_characters(user, access_mask):

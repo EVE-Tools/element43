@@ -1,6 +1,5 @@
 # Utility imports
 import datetime
-import pytz
 
 # Template and context-related imports
 from django.core.urlresolvers import reverse
@@ -18,6 +17,9 @@ from apps.user_settings.forms import ProfileForm, APIKeyForm
 
 # API
 from element43 import eveapi
+
+# Char management utilities
+from apps.common.util import manage_character_api_timers
 
 
 @login_required
@@ -200,6 +202,10 @@ def api_character(request, api_id, api_verification_code):
                         char_to_move = Character.objects.get(id=char.characterID, user=request.user)
                         char_to_move.apikey_id = key.id
                         char_to_move.save()
+
+                        # Update timers
+                        manage_character_api_timers(char_to_move)
+
                         added_chars = True
 
                     except Character.DoesNotExist:
@@ -274,14 +280,14 @@ def api_character(request, api_id, api_verification_code):
                                             implant_charisma_bonus=implant['charisma']['value'])
                         new_char.save()
 
-                        # Remove existing API timers for this char
-                        APITimer.objects.filter(character=new_char).delete()
-
                         new_apitimer = APITimer(character=new_char,
                                                 corporation=None,
                                                 apisheet="CharacterSheet",
-                                                nextupdate=pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1)))
+                                                nextupdate=datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
                         new_apitimer.save()
+
+                        # Update other timers
+                        manage_character_api_timers(new_char)
 
                         for skill in sheet.skills:
                             new_skill = CharSkill(character=new_char,

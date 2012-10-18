@@ -155,7 +155,7 @@ class ProcessCharacterSheet(PeriodicTask):
                     new_skill.save()
 
             # Set nextupdate to cachedUntil
-            update.nextupdate = datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil)
+            update.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
             update.save()
             print "<<< %s update complete" % character.name
 
