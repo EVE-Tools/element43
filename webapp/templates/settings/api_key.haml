@@ -67,12 +67,15 @@
                       %td
                         = key.keyid
                       %td.text-right
-                        .btn.inactive
+                        %a.btn.btn-primary{'href':'{% url refresh_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                          %i.icon-refresh.icon-white
+                          Refresh Key
+                        %a.btn.btn-inactive{'href':'#'}
+                          %i.icon-plus.icon-white
                           Add Chars
-                      %td.text-right
-                        %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
-                          .btn.btn-danger
-                            Remove
+                        %a.btn.btn-danger{'href':'{% url remove_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                          %i.icon-remove.icon-white
+                          Remove
         - if corp_keys
           %h4
             Corporate Keys
