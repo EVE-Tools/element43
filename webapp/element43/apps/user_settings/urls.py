@@ -12,6 +12,7 @@ urlpatterns = patterns('apps.user_settings.views',
     url(r'^characters/remove/(?P<char_id>[0-9]+)/$', 'remove_character', name='remove_character'),
     url(r'^api/key/$', 'api_key', name='manage_api_keys'),
     url(r'^api/key/remove/(?P<apikey_id>[0-9]+)/$', 'remove_api_key', name='remove_api_key'),
+    url(r'^api/key/refresh/(?P<apikey_id>[0-9]+)/$', 'refresh_api_key', name='refresh_api_key'),
     url(r'^api/character/(?P<api_id>[0-9]+)/(?P<api_verification_code>[a-zA-Z0-9]+)/$', 'api_character', name='add_characters'),
 
 )

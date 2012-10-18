@@ -34,7 +34,6 @@
                   %td
                     ID
                   %td
-                  %td
               %tbody
                 - for key in char_keys
                   - if key.is_valid
@@ -48,13 +47,15 @@
                       %td
                         = key.keyid
                       %td.text-right
-                        %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
-                          .btn.btn-primary
-                            Add Chars
-                      %td.text-right
-                        %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
-                          .btn.btn-danger
-                            Remove
+                        %a.btn.btn-primary{'href':'{% url refresh_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                          %i.icon-refresh.icon-white
+                          Refresh Key
+                        %a.btn.btn-primary{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}', 'rel':'tooltip', 'title':'Adds characters with this key. You can move characters to another key by simply adding them to a that key. After this you can remove the old key.'}
+                          %i.icon-plus.icon-white
+                          Add Chars
+                        %a.btn.btn-danger{'href':'{% url remove_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                          %i.icon-remove.icon-white
+                          Remove
                   - else
                     %tr.error
                       %td

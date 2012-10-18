@@ -130,6 +130,71 @@ def remove_api_key(request, apikey_id):
 
 
 @login_required
+def refresh_api_key(request, apikey_id):
+    """
+    Refreshes the selected key. Updates API timers for that key too.
+    """
+
+    try:
+        # Refresh that key
+        key = APIKey.objects.get(user=request.user, keyid=apikey_id)
+
+        # Try to authenticate with supplied key / ID pair and fetch api key meta data.
+        try:
+            # Fetch info
+            api = eveapi.EVEAPIConnection()
+            auth = api.auth(keyID=key.keyid, vCode=key.vcode)
+            key_info = auth.account.APIKeyInfo()
+        except:
+            # Message and redirect
+            messages.error(request, """Verification of your API key failed.
+                                       Please follow the instructions on the right half of this page to generate a valid one.""")
+            return HttpResponseRedirect(reverse('manage_api_keys'))
+
+        # Do a simple bitwise operation to determine if we have sufficient rights with this key.
+        min_access_mask = 8
+        if not ((min_access_mask & key_info.key.accessMask) == min_access_mask):
+            # Message and redirect
+            messages.error(request, """The API key you supplied does not have sufficient rights.
+                                       Please follow the instructions on the right half of this page to generate a valid one.""")
+            return HttpResponseRedirect(reverse('manage_api_keys'))
+
+        # Handle keys which never expire
+        try:
+            key_expiration = datetime.datetime.fromtimestamp(key_info.key.expires)
+        except:
+            key_expiration = "9999-12-31 00:00:00"
+
+        key.expires = key_expiration
+        key.accessmask = key_info.key.accessMask
+        key.is_valid = True
+
+        if key_info.key.type == "Character" or key_info.key.type == "Account":
+            key.is_character_key = True
+        else:
+            key.is_character_key = False
+
+        # Save
+        key.save()
+
+        # Refresh characters
+        chars = Character.objects.filter(apikey=key)
+
+        for char in chars:
+            manage_character_api_timers(char)
+
+        # Message and redirect
+        messages.success(request, 'Successfully refreshed API key and all associated characters.')
+
+    except:
+        # Message and redirect
+        messages.error(request, 'There is no such key.')
+        return HttpResponseRedirect(reverse('manage_api_keys'))
+
+    return HttpResponseRedirect(reverse('manage_api_keys'))
+
+
+@login_required
 def api_character(request, api_id, api_verification_code):
 
     """
@@ -150,7 +215,7 @@ def api_character(request, api_id, api_verification_code):
 
     if key_info.key.type == "Character" or key_info.key.type == "Account":
 
-        # Now check the access mask
+        # Minimum access mask
         min_access_mask = 8
 
         # attributes & implants
