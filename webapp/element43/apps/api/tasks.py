@@ -211,6 +211,7 @@ class ProcessCharacterSheet(PeriodicTask):
             character.clone_name = sheet.cloneName
             character.clone_skill_points = sheet.cloneSkillPoints
             character.balance = sheet.balance
+            character.dob = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet.DoB)),
             character.implant_memory_name = implant['memory']['name']
             character.implant_memory_bonus = implant['memory']['value']
             character.implant_perception_name = implant['perception']['name']
