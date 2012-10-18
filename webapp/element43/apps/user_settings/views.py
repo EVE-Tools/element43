@@ -1,5 +1,6 @@
 # Utility imports
 import datetime
+import pytz
 
 # Template and context-related imports
 from django.core.urlresolvers import reverse
@@ -259,8 +260,7 @@ def api_character(request, api_id, api_verification_code):
                                             corp_id=sheet.corporationID,
                                             alliance_name=a_name,
                                             alliance_id=a_id,
-                                            # still have to fix the DOB problem!
-                                            dob="2012-10-04 00:00:00",
+                                            dob=pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet.DoB)),
                                             race=sheet.race,
                                             bloodline=sheet.bloodLine,
                                             ancestry=sheet.ancestry,
@@ -283,7 +283,7 @@ def api_character(request, api_id, api_verification_code):
                         new_apitimer = APITimer(character=new_char,
                                                 corporation=None,
                                                 apisheet="CharacterSheet",
-                                                nextupdate=datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+                                                nextupdate=pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil)))
                         new_apitimer.save()
 
                         # Update other timers
