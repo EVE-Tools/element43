@@ -37,23 +37,41 @@
                   %td
               %tbody
                 - for key in char_keys
-                  %tr
-                    %td
-                      - for char in key.character_set.all
-                        - if forloop.last
-                          {{char.name}}
-                        - else
-                          {{char.name}},
-                    %td
-                      = key.keyid
-                    %td.text-right
-                      %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
-                        .btn.btn-primary
+                  - if key.is_valid
+                    %tr
+                      %td
+                        - for char in key.character_set.all
+                          - if forloop.last
+                            {{char.name}}
+                          - else
+                            {{char.name}},
+                      %td
+                        = key.keyid
+                      %td.text-right
+                        %a{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}'}
+                          .btn.btn-primary
+                            Add Chars
+                      %td.text-right
+                        %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
+                          .btn.btn-danger
+                            Remove
+                  - else
+                    %tr.error
+                      %td
+                        - for char in key.character_set.all
+                          - if forloop.last
+                            {{char.name}}
+                          - else
+                            {{char.name}},
+                      %td
+                        = key.keyid
+                      %td.text-right
+                        .btn.inactive
                           Add Chars
-                    %td.text-right
-                      %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
-                        .btn.btn-danger
-                          Remove
+                      %td.text-right
+                        %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
+                          .btn.btn-danger
+                            Remove
         - if corp_keys
           %h4
             Corporate Keys

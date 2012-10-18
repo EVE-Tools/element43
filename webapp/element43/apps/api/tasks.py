@@ -10,37 +10,42 @@ from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, Char
 # API
 from element43 import eveapi
 
+# API error handling
+from apps.api.api_exceptions import handle_api_exception
+
+
 class ProcessMarketOrders(PeriodicTask):
     """
     Scan the db and refresh all market orders from the API
-    done once every 23 hours for each character
+    Done hourly for each character
     """
-    
-    run_every = datetime.timedelta(hours=23)
-    
+
+    run_every = datetime.timedelta(hours=1)
+
     def run(self, **kwargs):
         api = eveapi.EVEAPIConnection()
-        
+
         update_timers = APITimer.objects.filter(apisheet="MarketOrders",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
-        
+
         for update in update_timers:
-            
+
             character = Character.objects.get(id=update.character_id)
             print ">>> Market Orders: %s" % character.name
-            
+
             apikey = APIKey.objects.get(id=character.apikey_id)
             auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
             me = auth.character(character.id)
             orders = me.MarketOrders()
-            
+
             for order in orders.orders:
                 print order
+
 
 class ProcessCharacterSheet(PeriodicTask):
     """
     Scan the db an refresh all character sheets
-    Currently done once an hour
+    Currently done once every 15 minutes
     """
 
     run_every = datetime.timedelta(minutes=15)
@@ -64,12 +69,23 @@ class ProcessCharacterSheet(PeriodicTask):
             character = Character.objects.get(id=update.character_id)
             print ">>> Updating: %s" % character.name
 
-            apikey = APIKey.objects.get(id=character.apikey_id)
-            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-            me = auth.character(character.id)
-            sheet = me.CharacterSheet()
-            i_stats['name'] = ""
-            i_stats['value'] = 0
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+                sheet = me.CharacterSheet()
+                i_stats['name'] = ""
+                i_stats['value'] = 0
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
 
             for attr in attributes:
                 implant[attr] = i_stats
@@ -102,7 +118,7 @@ class ProcessCharacterSheet(PeriodicTask):
                 pass
             try:
                 character.alliance_name = sheet.allianceName
-                character.alliance_id = sheet_allianceID
+                character.alliance_id = sheet.allianceID
             except:
                 character.alliance_name = ""
                 character.alliance_id = 0
@@ -122,7 +138,6 @@ class ProcessCharacterSheet(PeriodicTask):
             character.implant_willpower_bonus = implant['willpower']['value']
             character.implant_charisma_name = implant['charisma']['name']
             character.implant_charisma_bonus = implant['charisma']['value']
-            #character.cached_until = sheet.cachedUntil
 
             character.save()
 
@@ -139,7 +154,8 @@ class ProcessCharacterSheet(PeriodicTask):
                                           level=skill.level)
                     new_skill.save()
 
-            update.nextupdate = pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1))
+            # Set nextupdate to cachedUntil
+            update.nextupdate = datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil)
             update.save()
             print "<<< %s update complete" % character.name
 
