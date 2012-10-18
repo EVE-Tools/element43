@@ -195,94 +195,102 @@ def api_character(request, api_id, api_verification_code):
                     else:
                         key = APIKey.objects.get(user=request.user, keyid=api_id, vcode=api_verification_code)
 
-                    # Add character
-                    me = auth.character(char.characterID)
-                    sheet = me.CharacterSheet()
-                    i_stats['name'] = ""
-                    i_stats['value'] = 0
-                    for attr in attributes:
-                        implant[attr] = i_stats
-
-                    # have to check because if you don't have an implant in you get nothing back
+                    # If char already is assigned to another key, just move it
                     try:
-                        implant['memory'] = {'name': sheet.attributeEnhancers.memoryBonus.augmentatorName,
-                                             'value': sheet.attributeEnhancers.memoryBonus.augmentatorValue}
-                    except:
-                        pass
-                    try:
-                        implant['perception'] = {'name': sheet.attributeEnhancers.perceptionBonus.augmentatorName,
-                                                 'value': sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
-                    except:
-                        pass
-                    try:
-                        implant['intelligence'] = {'name': sheet.attributeEnhancers.intelligenceBonus.augmentatorName,
-                                                   'value': sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
-                    except:
-                        pass
-                    try:
-                        implant['willpower'] = {'name': sheet.attributeEnhancers.willpowerBonus.augmentatorName,
-                                                'value': sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
-                    except:
-                        pass
-                    try:
-                        implant['charisma'] = {'name': sheet.attributeEnhancers.charismaBonus.augmentatorName,
-                                               'value': sheet.attributeEnhancers.charismaBonus.augmentatorValue}
-                    except:
-                        pass
-                    try:
-                        a_name = sheet.allianceName
-                        a_id = sheet.allianceID
+                        char_to_move = Character.objects.get(id=char.characterID, user=request.user)
+                        char_to_move.apikey_id = key.id
+                        char_to_move.save()
+                        added_chars = True
 
-                    except:
-                        a_name = ""
-                        a_id = 0
+                    except Character.DoesNotExist:
+                        # Add character
+                        me = auth.character(char.characterID)
+                        sheet = me.CharacterSheet()
+                        i_stats['name'] = ""
+                        i_stats['value'] = 0
+                        for attr in attributes:
+                            implant[attr] = i_stats
 
-                    new_char = Character(id=char.characterID,
-                                        name=char.name,
-                                        user=request.user,
-                                        apikey=key,
-                                        corp_name=sheet.corporationName,
-                                        corp_id=sheet.corporationID,
-                                        alliance_name=a_name,
-                                        alliance_id=a_id,
-                                        # still have to fix the DOB problem!
-                                        dob="2012-10-04 00:00:00",
-                                        race=sheet.race,
-                                        bloodline=sheet.bloodLine,
-                                        ancestry=sheet.ancestry,
-                                        gender=sheet.gender,
-                                        clone_name=sheet.cloneName,
-                                        clone_skill_points=sheet.cloneSkillPoints,
-                                        balance=sheet.balance,
-                                        implant_memory_name=implant['memory']['name'],
-                                        implant_memory_bonus=implant['memory']['value'],
-                                        implant_perception_name=implant['perception']['name'],
-                                        implant_perception_bonus=implant['perception']['value'],
-                                        implant_intelligence_name=implant['intelligence']['name'],
-                                        implant_intelligence_bonus=implant['intelligence']['value'],
-                                        implant_willpower_name=implant['willpower']['name'],
-                                        implant_willpower_bonus=implant['willpower']['value'],
-                                        implant_charisma_name=implant['charisma']['name'],
-                                        implant_charisma_bonus=implant['charisma']['value'])
-                    new_char.save()
+                        # have to check because if you don't have an implant in you get nothing back
+                        try:
+                            implant['memory'] = {'name': sheet.attributeEnhancers.memoryBonus.augmentatorName,
+                                                 'value': sheet.attributeEnhancers.memoryBonus.augmentatorValue}
+                        except:
+                            pass
+                        try:
+                            implant['perception'] = {'name': sheet.attributeEnhancers.perceptionBonus.augmentatorName,
+                                                     'value': sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
+                        except:
+                            pass
+                        try:
+                            implant['intelligence'] = {'name': sheet.attributeEnhancers.intelligenceBonus.augmentatorName,
+                                                       'value': sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
+                        except:
+                            pass
+                        try:
+                            implant['willpower'] = {'name': sheet.attributeEnhancers.willpowerBonus.augmentatorName,
+                                                    'value': sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
+                        except:
+                            pass
+                        try:
+                            implant['charisma'] = {'name': sheet.attributeEnhancers.charismaBonus.augmentatorName,
+                                                   'value': sheet.attributeEnhancers.charismaBonus.augmentatorValue}
+                        except:
+                            pass
+                        try:
+                            a_name = sheet.allianceName
+                            a_id = sheet.allianceID
 
-                    # Remove existing API timers for this char
-                    APITimer.objects.filter(character=new_char).delete()
+                        except:
+                            a_name = ""
+                            a_id = 0
 
-                    new_apitimer = APITimer(character=new_char,
-                                            corporation=None,
-                                            apisheet="CharacterSheet",
-                                            nextupdate=pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1)))
-                    new_apitimer.save()
+                        new_char = Character(id=char.characterID,
+                                            name=char.name,
+                                            user=request.user,
+                                            apikey=key,
+                                            corp_name=sheet.corporationName,
+                                            corp_id=sheet.corporationID,
+                                            alliance_name=a_name,
+                                            alliance_id=a_id,
+                                            # still have to fix the DOB problem!
+                                            dob="2012-10-04 00:00:00",
+                                            race=sheet.race,
+                                            bloodline=sheet.bloodLine,
+                                            ancestry=sheet.ancestry,
+                                            gender=sheet.gender,
+                                            clone_name=sheet.cloneName,
+                                            clone_skill_points=sheet.cloneSkillPoints,
+                                            balance=sheet.balance,
+                                            implant_memory_name=implant['memory']['name'],
+                                            implant_memory_bonus=implant['memory']['value'],
+                                            implant_perception_name=implant['perception']['name'],
+                                            implant_perception_bonus=implant['perception']['value'],
+                                            implant_intelligence_name=implant['intelligence']['name'],
+                                            implant_intelligence_bonus=implant['intelligence']['value'],
+                                            implant_willpower_name=implant['willpower']['name'],
+                                            implant_willpower_bonus=implant['willpower']['value'],
+                                            implant_charisma_name=implant['charisma']['name'],
+                                            implant_charisma_bonus=implant['charisma']['value'])
+                        new_char.save()
 
-                    for skill in sheet.skills:
-                        new_skill = CharSkill(character=new_char,
-                                              skill_id=skill.typeID,
-                                              skillpoints=skill.skillpoints,
-                                              level=skill.level)
-                        new_skill.save()
+                        # Remove existing API timers for this char
+                        APITimer.objects.filter(character=new_char).delete()
 
-                    added_chars = True
+                        new_apitimer = APITimer(character=new_char,
+                                                corporation=None,
+                                                apisheet="CharacterSheet",
+                                                nextupdate=pytz.utc.localize(datetime.datetime.utcnow() + datetime.timedelta(hours=1)))
+                        new_apitimer.save()
+
+                        for skill in sheet.skills:
+                            new_skill = CharSkill(character=new_char,
+                                                  skill_id=skill.typeID,
+                                                  skillpoints=skill.skillpoints,
+                                                  level=skill.level)
+                            new_skill.save()
+
+                        added_chars = True
 
             # Change message depending on what we did
             if added_chars:
