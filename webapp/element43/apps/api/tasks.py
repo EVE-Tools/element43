@@ -4,8 +4,10 @@ import pytz
 
 from celery.task import PeriodicTask
 
-# API Models
-from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill
+# Models
+from eve_db.models import StaStation
+from apps.market_data.models import Orders
+from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder
 
 # API
 from element43 import eveapi
@@ -16,11 +18,11 @@ from apps.api.api_exceptions import handle_api_exception
 
 class ProcessMarketOrders(PeriodicTask):
     """
-    Scan the db and refresh all market orders from the API
-    Done hourly for each character
+    Scan the db and refresh all market orders from the API.
+    Done every 5 minutes.
     """
 
-    run_every = datetime.timedelta(hours=1)
+    run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
         api = eveapi.EVEAPIConnection()
@@ -33,13 +35,94 @@ class ProcessMarketOrders(PeriodicTask):
             character = Character.objects.get(id=update.character_id)
             print ">>> Market Orders: %s" % character.name
 
-            apikey = APIKey.objects.get(id=character.apikey_id)
-            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-            me = auth.character(character.id)
-            orders = me.MarketOrders()
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+                orders = me.MarketOrders()
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
 
             for order in orders.orders:
-                print order
+                #
+                # Import orders
+                #
+
+                # Look if we have this order in our DB
+                try:
+                    db_order = Orders.objects.get(id=order.orderID)
+
+                    # Now that we found that order - let's update it
+                    db_order.generated_at = pytz.utc.localize(datetime.datetime.utcnow())
+                    db_order.price = order.price
+                    db_order.volume_remaining = order.volRemaining
+                    db_order.volume_entered = order.volEntered
+                    db_order.is_suspicious = False
+
+                    if order.orderState == 0:
+                        db_order.is_active = True
+                    else:
+                        db_order.is_active = False
+
+                    db_order.save()
+
+                except Orders.DoesNotExist:
+
+                    # Try to get the station of that order to get the region/system since it isn't provided by the API
+                    station = StaStation.objects.get(id=order.stationID)
+                    region = station.region
+                    system = station.solar_system
+
+                    new_order = Orders(id=order.orderID,
+                                       generated_at=pytz.utc.localize(datetime.datetime.utcnow()),
+                                       mapregion=region,
+                                       invtype_id=order.typeID,
+                                       price=order.price,
+                                       volume_remaining=order.volRemaining,
+                                       volume_entered=order.volEntered,
+                                       minimum_volume=order.minVolume,
+                                       order_range=order.range,
+                                       is_bid=order.bid,
+                                       issue_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(order.issued)),
+                                       duration=order.duration,
+                                       stastation=station,
+                                       mapsolarsystem=system,
+                                       is_suspicious=False,
+                                       message_key='eveapi',
+                                       uploader_ip_hash='eveapi',
+                                       is_active=True)
+                    new_order.save()
+
+                # Now try to get the MarketOrder
+                try:
+                    market_order = MarketOrder.objects.get(id=order.orderID)
+
+                    # If this succeeds, update market order
+                    market_order.order_state = order.orderState
+                    market_order.save()
+
+                except MarketOrder.DoesNotExist:
+                    market_order = MarketOrder(id_id=order.orderID,
+                                               character=character,
+                                               order_state=order.orderState,
+                                               account_key=order.accountKey,
+                                               escrow=order.escrow)
+                    market_order.save()
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='MarketOrders')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(orders._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's Market orders were completed successfully." % character.name
 
 
 class ProcessCharacterSheet(PeriodicTask):
