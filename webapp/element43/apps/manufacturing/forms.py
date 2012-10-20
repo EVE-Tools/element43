@@ -1,6 +1,7 @@
 from django import forms
 from eve_db.models import InvBlueprintType
 
+from apps.api.models import Character, CharSkill, Skill
 
 class SelectBlueprintForm(forms.Form):
     """
@@ -29,6 +30,59 @@ class ManufacturingCalculatorForm(forms.Form):
     This is the form where the user types in the information for the manufacturing job. Based
     on those information the calculations will be made.
     """
+    
+    def __init__(self, user, *args, **kwargs):
+        super(ManufacturingCalculatorForm, self).__init__(*args, **kwargs)
+        self.has_character = False
+        
+        # If the user is logged in and has characters associated with his account set 'has_characters'
+        # to True and add the characters as choices to the 'character' field. The 'has_characters'
+        # field on the form will be used in the template to determine what part of the form has to
+        # be rendered.
+        if user and user.is_authenticated():
+            characters = Character.objects.filter(user=user)
+            if len(characters) > 0:
+                self.has_character = True
+                self.fields['character'].choices = [(character.id, character.name) for character in list(characters)]
+                
+                # When the 'character' field is displayed the other to fields are obsolete. Therefor
+                # they are removed from the form. I consider this a 'hack'. If someone finds a better
+                # way feel free to refactor this code. By removing the two fields cleaning/validation
+                # gets a whole lot easier.
+                # Note: Although the two fields are removed their values will be set. This will happen
+                # in the 'clean' method (see below).
+                del self.fields['skill_industry']
+                del self.fields['skill_production_efficiency']
+
+    def clean(self):
+        cleaned_data = super(ManufacturingCalculatorForm, self).clean()
+        
+        if self.has_character:
+            # The fields 'skill_industry' and 'skill_production_efficiency' have to be set
+            # here, since they were removed from the form and not displayed to the user.
+            character_id = cleaned_data['character']
+            character = Character.objects.get(pk=character_id)
+            
+            # Get the characters skill levels. If the character doesn't have the skills trained
+            # no CharSkill instance will be returned for that skill. Therefor we have to do some
+            # more checking.
+            # 3380 = Industry
+            # 3388 = Production Efficiency
+            skills = CharSkill.objects.values('skill__id', 'level').filter(character=character, skill__id__in=(3380, 3388)).order_by('skill__id')
+            
+            # Not really pretty but works. Basically set skill levels to 0 and if the query found
+            # skills for that character override the default levels.
+            cleaned_data['skill_industry'] = 0
+            cleaned_data['skill_production_efficiency'] = 0
+            
+            if skills:
+                for skill in skills:
+                    if skill['skill__id'] == 3380:
+                        cleaned_data['skill_industry'] = skill['level']
+                    elif skill['skill__id'] == 3388:
+                        cleaned_data['skill_production_efficiency'] = skill['level']
+        
+        return cleaned_data
 
     SKILL_INDUSTRY_CHOICES = (
         (0, 0),
@@ -78,7 +132,17 @@ class ManufacturingCalculatorForm(forms.Form):
                                          initial=0,
                                          required=True)
 
-    # player skill and item related fields
+    # Player skill and item related fields
+    #
+    # Note about the fields 'character', 'skill_industry' and 'skill_production_efficiency':
+    #
+    # If the user is logged in and has characters added to his profile only the character
+    # field will be displayed. If the user doesn't have characters associated with his
+    # profile or is not logged in the fields 'skill_industry' and 'skill_production_efficiency'
+    # will be displayed. Additionally, if the 'character' field is displayed it will be
+    # dynamically initialized by the forms __init__ method (see above).
+    character = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'input-xlarge required'}))
+    
     skill_industry = forms.ChoiceField(choices=SKILL_INDUSTRY_CHOICES,
                                        initial=5,
                                        required=True,
