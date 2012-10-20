@@ -212,7 +212,7 @@ class JournalEntry(models.Model):
 
     ref_id = models.BigIntegerField(help_text="Unique refID from CCP for this journal entry. Not primary key - multiple characters could have access to a single corporation's wallet API.")
     character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
-    is_coporate_transaction = models.BooleanField(help_text="Marks whether this transaction was retrieved with this character's personal key or via a corporate key.")
+    is_corporate_transaction = models.BooleanField(help_text="Marks whether this transaction was retrieved with this character's personal key or via a corporate key.")
     date = models.DateTimeField(help_text="Date and time of the transaction.")
     ref_type = models.ForeignKey('api.RefType', help_text="Transaction type FKey relationship.")
     amount = models.FloatField(help_text="Amount transferred between parties.")
