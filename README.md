@@ -27,6 +27,7 @@ Before you begin a word of warning: element43 was not designed to run in Windows
 * Create a ``local_settings.py`` file and copy/paste/modify anything
   from ``settings.py`` that you'd like to change. This file won't be committed
   to git, and is safe to store passwords and dev workstation settings.
+  It is highly advised to change the SECRET_KEY variable - it is a central part of many of Django's security concepts!
 
 Applying DB schema migrations
 -----------------------------
