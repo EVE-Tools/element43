@@ -67,7 +67,7 @@ class Character(models.Model):
 
 class CharSkill(models.Model):
     """
-    Trackign skills
+    Tracking skills
     """
     character = models.ForeignKey('api.Character', help_text="FKey relationship to character table")
     skill = models.ForeignKey('api.Skill', help_text="FK relationship to skill table")
@@ -193,7 +193,7 @@ class MarketOrder(models.Model):
 # RefTypes for journal entries
 class RefType(models.Model):
     """
-    This is the wallet journal table off the CCP API
+    This provides descriptions for the diffrent RefTypes.
     """
 
     id = models.PositiveIntegerField(help_text="Unique refTypeID from API.", primary_key=True)
@@ -202,3 +202,31 @@ class RefType(models.Model):
     class Meta(object):
         verbose_name = "API RefTypeID to name mapping"
         verbose_name_plural = "API RefTypeID to name mappings"
+
+
+# JournalEntries
+class JournalEntry(models.Model):
+    """
+    Stores char/corp journal entries.
+    """
+
+    ref_id = models.BigIntegerField(help_text="Unique refID from CCP for this journal entry. Not primary key - multiple characters could have access to a single corporation's wallet API.")
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
+    is_coporate_transaction = models.BooleanField(help_text="Marks whether this transaction was retrieved with this character's personal key or via a corporate key.")
+    date = models.DateTimeField(help_text="Date and time of the transaction.")
+    ref_type = models.ForeignKey('api.RefType', help_text="Transaction type FKey relationship.")
+    amount = models.FloatField(help_text="Amount transferred between parties.")
+    balance = models.FloatField(help_text="Balance in this wallet after this transaction.")
+    owner_name_1 = models.TextField(help_text="Name of first party in the transaction.")
+    owner_id_1 = models.BigIntegerField(help_text="Character or corporation ID of the first party.")
+    owner_name_2 = models.TextField(help_text="Name of second party in the transaction.")
+    owner_id_2 = models.BigIntegerField(help_text="Character or corporation ID of the second party.")
+    arg_name_1 = models.TextField(help_text="Has different meanings - see: http://wiki.eve-id.net/APIv2_Char_JournalEntries_XML#Arguments")
+    arg_id_1 = models.PositiveIntegerField(help_text="Has different meanings - see: http://wiki.eve-id.net/APIv2_Char_JournalEntries_XML#Arguments")
+    reason = models.TextField(help_text="Has different meanings - see: http://wiki.eve-id.net/APIv2_Char_JournalEntries_XML#Arguments")
+    tax_receiver_id = models.BigIntegerField(help_text="CorpID who received tax for this transaction.")
+    tax_amount = models.FloatField(help_text="Amount of tax for this transaction.")
+
+    class Meta(object):
+        verbose_name = "Journal Entry"
+        verbose_name_plural = "Journal Entries"
