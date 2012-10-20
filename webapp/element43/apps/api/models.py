@@ -230,3 +230,28 @@ class JournalEntry(models.Model):
     class Meta(object):
         verbose_name = "Journal Entry"
         verbose_name_plural = "Journal Entries"
+
+
+# MarketTransaction
+class MarketTransaction(models.Model):
+    """
+    Stores char/corp market transactions.
+    """
+
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
+    date = models.DateTimeField(help_text="Date and time of the transaction.")
+    transaction_id = models.BigIntegerField(help_text="Non-unique transaction ID.")
+    invtype = models.ForeignKey('eve_db.InvType', help_text="The item traded in this transaction.")
+    quantity = models.IntegerField(help_text="Number of items bought/sold.")
+    price = models.FloatField(help_text="Price per unit of the item.")
+    client_id = models.BigIntegerField(help_text="Character or corporation ID of the other party.")
+    client_name = models.TextField(help_text="Name of other party.")
+    station = models.ForeignKey('eve_db.StaStation', help_text="Station the transaction took place at.")
+    is_bid = models.BooleanField(help_text="Marks whether this item was bought or sold.")
+    is_corporate_transaction = models.BooleanField(help_text="Marks whether this is a corporate or a personal transaction.")
+    journal_transaction_id = models.BigIntegerField(help_text="Journal refID for this transaction.")
+    journal_entry = models.ForeignKey('api.JournalEntry', help_text="The corresponding journal entry. This is NOT the refID - the entries are mapped by the task adding the orders.")
+
+    class Meta(object):
+            verbose_name = "Market Transaction"
+            verbose_name_plural = "Market Transactions"
