@@ -19,6 +19,73 @@ from element43 import eveapi
 from apps.api.api_exceptions import handle_api_exception
 
 
+class ProcessWalletTransactions(PeriodicTask):
+    """
+    Processes char/corp wallet transactions.
+    TODO: Add corp key handling.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING TRANSACTIONS'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="WalletTransactions",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating transactions for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+                sheet = me.WalletTransactions()
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            for transaction in sheet.transactions:
+
+                # Try to get the corresponding journal entry for the transaction.
+                try:
+                    MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
+                except MarketTransaction.DoesNotExist:
+
+                    # If it does not exist, create transaction
+                    entry = MarketTransaction(character=character,
+                                              date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                              transaction_id=transaction.transactionID,
+                                              invtype_id=transaction.typeID,
+                                              quantity=transaction.quantity,
+                                              price=transaction.price,
+                                              client_id=transaction.clientID,
+                                              client_name=transaction.clientName,
+                                              station_id=transaction.stationID,
+                                              is_bid=(transaction.transactionType == 'buy'),
+                                              is_corporate_transaction=(transaction.transactionFor == 'corporation'),
+                                              journal_transaction_id=transaction.journalTransactionID)
+                    entry.save()
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='WalletTransactions')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's transaction import was completed successfully." % character.name
+
+
 class ProcessWalletJournal(PeriodicTask):
     """
     Processes char/corp journal. Done every 5 minutes.
@@ -66,8 +133,8 @@ class ProcessWalletJournal(PeriodicTask):
                     JournalEntry.objects.get(ref_id=transaction.refID, character=character)
                     # If this succeeds, it's already in the DB
                 except JournalEntry.DoesNotExist:
-                    # Add entry to DB
 
+                    # Add entry to DB
                     entry = JournalEntry(ref_id=transaction.refID,
                                          character=character,
                                          is_corporate_transaction=False,
