@@ -51,32 +51,55 @@ class ProcessWalletTransactions(PeriodicTask):
             try:
                 auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
                 me = auth.character(character.id)
-                sheet = me.WalletTransactions()
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.WalletTransactions(rowCount=2560)
 
             except eveapi.Error, e:
                 handle_api_exception(e, apikey)
 
-            for transaction in sheet.transactions:
+            walking = True
 
-                # Try to get the corresponding journal entry for the transaction.
-                try:
-                    MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
-                except MarketTransaction.DoesNotExist:
+            while walking:
 
-                    # If it does not exist, create transaction
-                    entry = MarketTransaction(character=character,
-                                              date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
-                                              transaction_id=transaction.transactionID,
-                                              invtype_id=transaction.typeID,
-                                              quantity=transaction.quantity,
-                                              price=transaction.price,
-                                              client_id=transaction.clientID,
-                                              client_name=transaction.clientName,
-                                              station_id=transaction.stationID,
-                                              is_bid=(transaction.transactionType == 'buy'),
-                                              is_corporate_transaction=(transaction.transactionFor == 'corporation'),
-                                              journal_transaction_id=transaction.journalTransactionID)
-                    entry.save()
+                # Check if new set contains any entries
+                if len(sheet.transactions):
+
+                    # Process transactions
+                    for transaction in sheet.transactions:
+
+                        # Try to get the corresponding journal entry for the transaction.
+                        try:
+                            MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
+
+                        except MarketTransaction.DoesNotExist:
+
+                            # If it does not exist, create transaction
+                            entry = MarketTransaction(character=character,
+                                                      date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                                      transaction_id=transaction.transactionID,
+                                                      invtype_id=transaction.typeID,
+                                                      quantity=transaction.quantity,
+                                                      price=transaction.price,
+                                                      client_id=transaction.clientID,
+                                                      client_name=transaction.clientName,
+                                                      station_id=transaction.stationID,
+                                                      is_bid=(transaction.transactionType == 'buy'),
+                                                      is_corporate_transaction=(transaction.transactionFor == 'corporation'),
+                                                      journal_transaction_id=transaction.journalTransactionID)
+                            entry.save()
+
+                    # Fetch next page if we're still walking
+                    if walking:
+                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
+                        sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+
+                else:
+                    walking = False
 
             # Update timer
             timer = APITimer.objects.get(character=character, apisheet='WalletTransactions')
@@ -118,40 +141,59 @@ class ProcessWalletJournal(PeriodicTask):
             try:
                 auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
                 me = auth.character(character.id)
-                sheet = me.WalletJournal()
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.WalletJournal(rowCount=2560)
 
             except eveapi.Error, e:
                 handle_api_exception(e, apikey)
 
-            for transaction in sheet.transactions:
-                #
-                # Import entries
-                #
+            walking = True
 
-                # Now try to get the Entry
-                try:
-                    JournalEntry.objects.get(ref_id=transaction.refID, character=character)
-                    # If this succeeds, it's already in the DB
-                except JournalEntry.DoesNotExist:
+            while walking:
 
-                    # Add entry to DB
-                    entry = JournalEntry(ref_id=transaction.refID,
-                                         character=character,
-                                         is_corporate_transaction=False,
-                                         date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
-                                         ref_type_id=transaction.refTypeID,
-                                         amount=transaction.amount,
-                                         balance=transaction.balance,
-                                         owner_name_1=transaction.ownerName1,
-                                         owner_id_1=transaction.ownerID1,
-                                         owner_name_2=transaction.ownerName2,
-                                         owner_id_2=transaction.ownerID2,
-                                         arg_name_1=transaction.argName1,
-                                         arg_id_1=transaction.argID1,
-                                         reason=transaction.reason,
-                                         tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
-                                         tax_amount=cast_empty_string_to_float(transaction.taxAmount))
-                    entry.save()
+                # Check if new set contains any entries
+                if len(sheet.transactions):
+
+                    # Process journal entries
+                    for transaction in sheet.transactions:
+
+                        # Try to get the corresponding journal entry for the transaction.
+                        try:
+                            JournalEntry.objects.get(ref_id=transaction.refID, character=character)
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
+
+                        except JournalEntry.DoesNotExist:
+
+                            # Add entry to DB
+                            entry = JournalEntry(ref_id=transaction.refID,
+                                                 character=character,
+                                                 is_corporate_transaction=False,
+                                                 date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
+                                                 ref_type_id=transaction.refTypeID,
+                                                 amount=transaction.amount,
+                                                 balance=transaction.balance,
+                                                 owner_name_1=transaction.ownerName1,
+                                                 owner_id_1=transaction.ownerID1,
+                                                 owner_name_2=transaction.ownerName2,
+                                                 owner_id_2=transaction.ownerID2,
+                                                 arg_name_1=transaction.argName1,
+                                                 arg_id_1=transaction.argID1,
+                                                 reason=transaction.reason,
+                                                 tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
+                                                 tax_amount=cast_empty_string_to_float(transaction.taxAmount))
+                            entry.save()
+
+                    # Fetch next page if we're still walking
+                    if walking:
+                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        oldest_id = JournalEntry.objects.filter(character=character).order_by('date')[:1][0].ref_id
+                        sheet = me.WalletJournal(rowCount=2560, fromID=oldest_id)
+
+                else:
+                    walking = False
 
             # Update timer
             timer = APITimer.objects.get(character=character, apisheet='WalletJournal')
