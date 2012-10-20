@@ -5,16 +5,93 @@ import pytz
 from celery.task import PeriodicTask
 from celery.task.schedules import crontab
 
+from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
+
 # Models
 from eve_db.models import StaStation
 from apps.market_data.models import Orders
-from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder, RefType
+from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder, RefType, JournalEntry, MarketTransaction
 
 # API
 from element43 import eveapi
 
 # API error handling
 from apps.api.api_exceptions import handle_api_exception
+
+
+class ProcessWalletJournal(PeriodicTask):
+    """
+    Processes char/corp journal. Done every 5 minutes.
+    TODO: Add corp key handling.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING JOURNAL ENTRIES'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="WalletJournal",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating journal entries for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+                sheet = me.WalletJournal()
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            for transaction in sheet.transactions:
+                #
+                # Import entries
+                #
+
+                # Now try to get the Entry
+                try:
+                    JournalEntry.objects.get(ref_id=transaction.refID, character=character)
+                    # If this succeeds, it's already in the DB
+                except JournalEntry.DoesNotExist:
+                    # Add entry to DB
+
+                    entry = JournalEntry(ref_id=transaction.refID,
+                                         character=character,
+                                         is_corporate_transaction=False,
+                                         date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
+                                         ref_type_id=transaction.refTypeID,
+                                         amount=transaction.amount,
+                                         balance=transaction.balance,
+                                         owner_name_1=transaction.ownerName1,
+                                         owner_id_1=transaction.ownerID1,
+                                         owner_name_2=transaction.ownerName2,
+                                         owner_id_2=transaction.ownerID2,
+                                         arg_name_1=transaction.argName1,
+                                         arg_id_1=transaction.argID1,
+                                         reason=transaction.reason,
+                                         tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
+                                         tax_amount=cast_empty_string_to_float(transaction.taxAmount))
+                    entry.save()
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='WalletJournal')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's journal import was completed successfully." % character.name
 
 
 class ProcessRefTypes(PeriodicTask):

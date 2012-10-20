@@ -20,6 +20,22 @@ def dictfetchall(cursor):
     ]
 
 
+def cast_empty_string_to_int(string):
+    """
+    Casts empty string to 0
+    """
+    string = string.strip()
+    return int(string) if string else 0
+
+
+def cast_empty_string_to_float(string):
+    """
+    Casts empty string to 0
+    """
+    string = string.strip()
+    return float(string) if string else 0
+
+
 def manage_character_api_timers(character):
     """
     Adds and removes character APITimers for a given character depending on the character's key permissions.
