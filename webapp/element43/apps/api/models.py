@@ -188,3 +188,17 @@ class MarketOrder(models.Model):
     class Meta(object):
         verbose_name = "API Market Order"
         verbose_name_plural = "API Market Orders"
+
+
+# RefTypes for journal entries
+class RefType(models.Model):
+    """
+    This is the wallet journal table off the CCP API
+    """
+
+    id = models.PositiveIntegerField(help_text="Unique refTypeID from API.", primary_key=True)
+    name = models.TextField(help_text="Name of this refType")
+
+    class Meta(object):
+        verbose_name = "API RefTypeID to name mapping"
+        verbose_name_plural = "API RefTypeID to name mappings"

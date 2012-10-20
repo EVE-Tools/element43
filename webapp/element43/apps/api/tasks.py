@@ -3,17 +3,46 @@ import datetime
 import pytz
 
 from celery.task import PeriodicTask
+from celery.task.schedules import crontab
 
 # Models
 from eve_db.models import StaStation
 from apps.market_data.models import Orders
-from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder
+from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder, RefType
 
 # API
 from element43 import eveapi
 
 # API error handling
 from apps.api.api_exceptions import handle_api_exception
+
+
+class ProcessRefTypes(PeriodicTask):
+    """
+    Reloads the refTypeID to name mappings. Done daily at 00:00 just before history is processed.
+    """
+
+    run_every = crontab(hour=0, minute=0)
+
+    def run(self, **kwargs):
+
+        print '>>>  Updating refTypeIDs...'
+
+        api = eveapi.EVEAPIConnection()
+        ref_types = api.eve.RefTypes()
+
+        for ref_type in ref_types.refTypes:
+            # Try to find mapping in DB. If found -> update. If not found -> create
+            try:
+                type_object = RefType.objects.get(id=ref_type.refTypeID)
+                type_object.name = ref_type.refTypeName
+                type_object.save()
+
+            except RefType.DoesNotExist:
+                type_object = RefType(id=ref_type.refTypeID, name=ref_type.refTypeName)
+                type_object.save()
+
+        print '<<< Finished updating refTypeIDs.'
 
 
 class ProcessMarketOrders(PeriodicTask):
