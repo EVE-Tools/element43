@@ -16,12 +16,13 @@ class APIKey(models.Model):
     expires = models.DateTimeField(help_text="Expiry date for the key")
     accessmask = models.BigIntegerField(help_text="Access mask for this key")
     is_valid = models.BooleanField(help_text="Is this key valid?")
-    is_character_key = models.BooleanField(help_text="Is this a character key?  false = corporation key", default = True)
+    is_character_key = models.BooleanField(help_text="Is this a character key?  false = corporation key", default=True)
     user = models.ForeignKey('auth.User', help_text="Fkey relationship to user table")
 
     class Meta(object):
         verbose_name = "API Key"
         verbose_name_plural = "API Keys"
+
 
 class Character(models.Model):
     """
@@ -63,6 +64,7 @@ class Character(models.Model):
         verbose_name = "Character"
         verbose_name_plural = "Characters"
 
+
 class CharSkill(models.Model):
     """
     Trackign skills
@@ -76,12 +78,13 @@ class CharSkill(models.Model):
 # API table
 #
 
+
 class APITimer(models.Model):
     """
     Tracking API timers
     """
-    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table", null=True, default = None)
-    corporation = models.ForeignKey('api.Corp', help_text="FKey relationship to corporation table", null=True, default = None)
+    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table", null=True, default=None)
+    corporation = models.ForeignKey('api.Corp', help_text="FKey relationship to corporation table", null=True, default=None)
     apisheet = models.TextField(help_text="Filename of API Call sheet")
     nextupdate = models.DateTimeField(help_text="Date/Time of next allowed API refresh")
 
@@ -92,6 +95,7 @@ class APITimer(models.Model):
 #
 # Skill tree
 #
+
 
 class SkillGroup(models.Model):
     """
@@ -119,17 +123,18 @@ class Skill(models.Model):
     rank = models.PositiveIntegerField(help_text="skill difficulty rank")
     primary_attribute = models.TextField(help_text="Primary attribute for skill")
     secondary_attribute = models.TextField(help_text="secondary attribute for skill")
-    
+
     class Meta(object):
         verbose_name = "Skill"
         verbose_name_plural = "Skills"
-        
+
+
 # Corporation
 class Corp(models.Model):
     """
     Table for CorporationSheet information
     """
-    
+
     corp_id = models.BigIntegerField(help_text="Corporation ID", db_index=True)
     name = models.TextField(help_text="Corporation name")
     ticker = models.TextField(help_text="Corp ticker")
@@ -142,42 +147,44 @@ class Corp(models.Model):
     member_count = models.PositiveIntegerField(help_text="Number of members of corp")
     member_limit = models.PositiveIntegerField(help_text="Max number of members corp can support")
     shares = models.PositiveIntegerField(help_text="Number of shares of corp outstanding")
-    
+
     class Meta(object):
         verbose_name = "Corporation"
         verbose_name_plural = "Corporations"
-        
+
+
 class CorpDivision(models.Model):
     """
     Divisions in a corp
     """
-    
+
     corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
     account_key = models.PositiveIntegerField(help_text="account key of corporation division")
     description = models.TextField(help_text="Name of division")
-    
+
+
 class CorpWalletDivision(models.Model):
     """
     Divisions in a corp
     """
-    
+
     corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
     account_key = models.PositiveIntegerField(help_text="account key of corporation wallet account division")
     description = models.TextField(help_text="Name of wallet account division")
-    
+
+
 # Market Orders
 class MarketOrder(models.Model):
     """
     This is the market order table off the CCP API
     """
-    
+
     id = models.ForeignKey('market_data.Orders', primary_key=True, help_text="Unique key for this order, uses CCP order ID")
     character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
-    order_state = models.PositiveIntegerField(help_text = "Valid states: 0 = open/active, 1 = closed, 2 = expired (or fulfilled), 3 = cancelled, 4 = pending, 5 = character deleted")
-    account_key = models.PositiveIntegerField(help_text = "Which division this order is using as its account. Always 1000 for characters, but in the range 1000 to 1006 for corporations.")
-    escrow = models.FloatField(help_text = "Escrow amount for this order")
-    
+    order_state = models.PositiveIntegerField(help_text="Valid states: 0 = open/active, 1 = closed, 2 = expired (or fulfilled), 3 = cancelled, 4 = pending, 5 = character deleted")
+    account_key = models.PositiveIntegerField(help_text="Which division this order is using as its account. Always 1000 for characters, but in the range 1000 to 1006 for corporations.")
+    escrow = models.FloatField(help_text="Escrow amount for this order")
+
     class Meta(object):
         verbose_name = "API Market Order"
         verbose_name_plural = "API Market Orders"
-    
