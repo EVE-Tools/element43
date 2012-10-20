@@ -27,7 +27,9 @@ def manage_character_api_timers(character):
     """
 
     masks = {'CharacterSheet': 8,
-             'MarketOrders': 4096}
+             'MarketOrders': 4096,
+             'WalletJournal': 2097152,
+             'WalletTransactions': 4194304}
 
     key_mask = character.apikey.accessmask
 
