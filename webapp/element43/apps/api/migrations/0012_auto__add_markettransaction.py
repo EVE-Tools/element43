@@ -23,7 +23,6 @@ class Migration(SchemaMigration):
             ('is_bid', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('is_corporate_transaction', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('journal_transaction_id', self.gf('django.db.models.fields.BigIntegerField')()),
-            ('journal_entry', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['api.JournalEntry'])),
         ))
         db.send_create_signal('api', ['MarketTransaction'])
 
@@ -130,7 +129,7 @@ class Migration(SchemaMigration):
             'character': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['api.Character']"}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_coporate_transaction': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_corporate_transaction': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'owner_id_1': ('django.db.models.fields.BigIntegerField', [], {}),
             'owner_id_2': ('django.db.models.fields.BigIntegerField', [], {}),
             'owner_name_1': ('django.db.models.fields.TextField', [], {}),
@@ -159,7 +158,6 @@ class Migration(SchemaMigration):
             'invtype': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['eve_db.InvType']"}),
             'is_bid': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_corporate_transaction': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'journal_entry': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['api.JournalEntry']"}),
             'journal_transaction_id': ('django.db.models.fields.BigIntegerField', [], {}),
             'price': ('django.db.models.fields.FloatField', [], {}),
             'quantity': ('django.db.models.fields.IntegerField', [], {}),

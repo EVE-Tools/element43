@@ -250,7 +250,6 @@ class MarketTransaction(models.Model):
     is_bid = models.BooleanField(help_text="Marks whether this item was bought or sold.")
     is_corporate_transaction = models.BooleanField(help_text="Marks whether this is a corporate or a personal transaction.")
     journal_transaction_id = models.BigIntegerField(help_text="Journal refID for this transaction.")
-    journal_entry = models.ForeignKey('api.JournalEntry', help_text="The corresponding journal entry. This is NOT the refID - the entries are mapped by the task adding the orders.")
 
     class Meta(object):
             verbose_name = "Market Transaction"
