@@ -10,13 +10,71 @@ from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_floa
 # Models
 from eve_db.models import StaStation
 from apps.market_data.models import Orders
-from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder, RefType, JournalEntry, MarketTransaction
+from apps.api.models import *
 
 # API
 from element43 import eveapi
 
 # API error handling
 from apps.api.api_exceptions import handle_api_exception
+
+
+class ProcessResearch(PeriodicTask):
+    """
+    Updates the research agents for all characters.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING RESEARCH AGENTS'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="Research",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating research agents for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.Research()
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            # Clear all existing jobs for this character and add new ones. We don't want to keep expired data.
+            Research.objects.filter(character=character).delete()
+
+            for job in sheet.research:
+                new_job = Research(character=character,
+                                   agent_id=job.agentID,
+                                   skill_id=job.skillTypeID,
+                                   start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.reserachStartDate)),
+                                   points_per_day=job.pointsPerDay,
+                                   remainder_points=job.remainderPoints)
+                new_job.save()
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='Research')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's research import was completed successfully." % character.name
 
 
 class ProcessWalletTransactions(PeriodicTask):
@@ -68,7 +126,6 @@ class ProcessWalletTransactions(PeriodicTask):
                     # Process transactions
                     for transaction in sheet.transactions:
 
-                        # Try to get the corresponding journal entry for the transaction.
                         try:
                             MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
                             # If there already is an entry with this id, we can stop walking.
@@ -158,7 +215,6 @@ class ProcessWalletJournal(PeriodicTask):
                     # Process journal entries
                     for transaction in sheet.transactions:
 
-                        # Try to get the corresponding journal entry for the transaction.
                         try:
                             JournalEntry.objects.get(ref_id=transaction.refID, character=character)
                             # If there already is an entry with this id, we can stop walking.

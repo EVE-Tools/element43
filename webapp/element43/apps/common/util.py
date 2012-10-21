@@ -44,6 +44,7 @@ def manage_character_api_timers(character):
 
     masks = {'CharacterSheet': 8,
              'MarketOrders': 4096,
+             'Research': 65536,
              'WalletJournal': 2097152,
              'WalletTransactions': 4194304}
 

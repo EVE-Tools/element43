@@ -1,5 +1,5 @@
+import datetime
 from django.db import models
-from datetime import datetime
 
 #
 # Character information
@@ -36,7 +36,7 @@ class Character(models.Model):
     user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
     apikey = models.ForeignKey('api.APIKey', help_text='FKey relationship to api key table')
     name = models.TextField(help_text="Name of character")
-    dob = models.DateTimeField(help_text="DoB of character", default=datetime.now())
+    dob = models.DateTimeField(help_text="DoB of character", default=datetime.datetime.now())
     race = models.TextField(help_text="Race of character", default="")
     bloodline = models.TextField(help_text="Bloodline of character", default="")
     ancestry = models.TextField(help_text="Ancestry of character", default="")
@@ -58,7 +58,7 @@ class Character(models.Model):
     implant_willpower_bonus = models.PositiveIntegerField(help_text="willpower bonus", default=0)
     implant_perception_name = models.TextField(help_text="name of perception implant", default="")
     implant_perception_bonus = models.PositiveIntegerField(help_text="perception bonus", default=0)
-    cached_until = models.DateTimeField(help_text="data cached until", default=datetime.now())
+    cached_until = models.DateTimeField(help_text="data cached until", default=datetime.datetime.now())
 
     class Meta(object):
         verbose_name = "Character"
@@ -254,3 +254,21 @@ class MarketTransaction(models.Model):
     class Meta(object):
             verbose_name = "Market Transaction"
             verbose_name_plural = "Market Transactions"
+
+
+# Character Research
+class Research(models.Model):
+    """
+    Stores research jobs.
+    """
+
+    character = models.ForeignKey('api.Character', help_text="Character who owns this job.")
+    agent = models.ForeignKey('eve_db.agtAgent', help_text="The agent.")
+    skill = models.ForeignKey('api.Skill', help_text="The skill used for the research.")
+    start_date = models.DateTimeField(help_text="The date the character began the current research with the agent at the current points per day.")
+    points_per_day = models.FloatField(help_text="The number of points generated per day.")
+    remainder_points = models.FloatField(help_text="The number of points remaining since last datacore purchase and/or points_per_day update.")
+
+    class Meta(object):
+            verbose_name = "Research Job"
+            verbose_name_plural = "Research Jobs"
