@@ -1,8 +1,14 @@
+# Utility
+import time
+import datetime
+from django.utils import simplejson
+
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
@@ -10,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Sum
 
 # API Models
-from apps.api.models import Character, APITimer, CharSkill, MarketOrder
+from apps.api.models import Character, APITimer, CharSkill, MarketOrder, JournalEntry
 from apps.common.util import validate_characters
 
 
@@ -55,6 +61,32 @@ def dashboard(request):
 
     rcontext = RequestContext(request, {'sheet_data': sheet_data, 'market_data': market_data})
     return render_to_response('dashboard/dashboard.haml', rcontext)
+
+
+@login_required
+def journal_json(request):
+    # Get all chars with journal permissions
+    chars = validate_characters(request.user, 2097152)
+
+    wallet_series = {}
+
+    # Append wallet history of all characters to dict
+    for char in chars:
+        series = []
+        journal = JournalEntry.objects.filter(character=char).order_by('date')
+
+        for point in journal:
+            series.append([int(time.mktime(point.date.timetuple())) * 1000, point.balance])
+
+        # Add current balance in the end for a more consistent look
+        series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal)-1].balance])
+
+        wallet_series[char.name] = series
+
+    json = simplejson.dumps(wallet_series)
+
+    # Return JSON without using any template
+    return HttpResponse(json, mimetype='application/json')
 
 
 @login_required
