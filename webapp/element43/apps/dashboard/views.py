@@ -46,10 +46,10 @@ def dashboard(request):
         market_data['bid'] += MarketOrder.objects.filter(character=char, order_state=0, id__is_bid=True)
 
     for order in market_data['ask']:
-        market_data['ask_volume'] += -1 * order.id.price * order.id.volume_remaining
+        market_data['ask_volume'] += order.id.price * order.id.volume_remaining
 
     for order in market_data['bid']:
-        market_data['ask_volume'] += order.id.price * order.id.volume_remaining
+        market_data['bid_volume'] += -1 * order.id.price * order.id.volume_remaining
 
     market_data['total_volume'] = market_data['ask_volume'] + market_data['bid_volume']
 

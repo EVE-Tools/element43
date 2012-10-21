@@ -91,16 +91,16 @@
         %tbody
           %tr
             %td Sell volume:
-            %td.green {{market_data.ask_volume|intcomma}}
+            %td.green {{market_data.ask_volume|floatformat:2|intcomma}}
           %tr
             %td Buy volume:
-            %td.red {{market_data.bid_volume|intcomma}}
+            %td.red {{market_data.bid_volume|floatformat:2|intcomma}}
           %tr
             %td Total:
             - if market_data.total_volume > 0
-              %td.green {{market_data.total_volume|intcomma}}
+              %td.green {{market_data.total_volume|floatformat:2|intcomma}}
             - else
-              %td.red {{market_data.total_volume|intcomma}}
+              %td.red {{market_data.total_volume|floatformat:2|intcomma}}
   - if industry_data
     .row-fluid
       .span12
