@@ -79,7 +79,7 @@ def journal_json(request):
             series.append([int(time.mktime(point.date.timetuple())) * 1000, point.balance])
 
         # Add current balance in the end for a more consistent look
-        series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal)-1].balance])
+        series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal) - 1].balance])
 
         wallet_series[char.name] = series
 
