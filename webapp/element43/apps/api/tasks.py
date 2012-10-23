@@ -3,17 +3,288 @@ import datetime
 import pytz
 
 from celery.task import PeriodicTask
+from celery.task.schedules import crontab
+
+from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
 
 # Models
 from eve_db.models import StaStation
 from apps.market_data.models import Orders
-from apps.api.models import SkillGroup, Skill, APITimer, Character, APIKey, CharSkill, MarketOrder
+from apps.api.models import *
 
 # API
 from element43 import eveapi
 
 # API error handling
 from apps.api.api_exceptions import handle_api_exception
+
+
+class ProcessResearch(PeriodicTask):
+    """
+    Updates the research agents for all characters.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING RESEARCH AGENTS'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="Research",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating research agents for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.Research()
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            # Clear all existing jobs for this character and add new ones. We don't want to keep expired data.
+            Research.objects.filter(character=character).delete()
+
+            for job in sheet.research:
+                new_job = Research(character=character,
+                                   agent_id=job.agentID,
+                                   skill_id=job.skillTypeID,
+                                   start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.reserachStartDate)),
+                                   points_per_day=job.pointsPerDay,
+                                   remainder_points=job.remainderPoints)
+                new_job.save()
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='Research')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's research import was completed successfully." % character.name
+
+
+class ProcessWalletTransactions(PeriodicTask):
+    """
+    Processes char/corp wallet transactions.
+    TODO: Add corp key handling.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING TRANSACTIONS'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="WalletTransactions",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating transactions for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.WalletTransactions(rowCount=2560)
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            walking = True
+
+            while walking:
+
+                # Check if new set contains any entries
+                if len(sheet.transactions):
+
+                    # Process transactions
+                    for transaction in sheet.transactions:
+
+                        try:
+                            MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
+
+                        except MarketTransaction.DoesNotExist:
+
+                            # If it does not exist, create transaction
+                            entry = MarketTransaction(character=character,
+                                                      date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                                      transaction_id=transaction.transactionID,
+                                                      invtype_id=transaction.typeID,
+                                                      quantity=transaction.quantity,
+                                                      price=transaction.price,
+                                                      client_id=transaction.clientID,
+                                                      client_name=transaction.clientName,
+                                                      station_id=transaction.stationID,
+                                                      is_bid=(transaction.transactionType == 'buy'),
+                                                      is_corporate_transaction=(transaction.transactionFor == 'corporation'),
+                                                      journal_transaction_id=transaction.journalTransactionID)
+                            entry.save()
+
+                    # Fetch next page if we're still walking
+                    if walking:
+                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
+                        sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+
+                else:
+                    walking = False
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='WalletTransactions')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's transaction import was completed successfully." % character.name
+
+
+class ProcessWalletJournal(PeriodicTask):
+    """
+    Processes char/corp journal. Done every 5 minutes.
+    TODO: Add corp key handling.
+    """
+
+    run_every = datetime.timedelta(minutes=5)
+
+    def run(self, **kwargs):
+        print 'UPDATING JOURNAL ENTRIES'
+
+        api = eveapi.EVEAPIConnection()
+
+        update_timers = APITimer.objects.filter(apisheet="WalletJournal",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+            print ">>> Updating journal entries for %s" % character.name
+
+            # Try to fetch a valid key from DB
+            try:
+                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+            except APIKey.DoesNotExist:
+                print('There is no valid key for %s.' % character.name)
+                raise
+
+            # Try to authenticate and handle exceptions properly
+            try:
+                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+                me = auth.character(character.id)
+
+                # Get newest page - use maximum row count to minimize amount of requests
+                sheet = me.WalletJournal(rowCount=2560)
+
+            except eveapi.Error, e:
+                handle_api_exception(e, apikey)
+
+            walking = True
+
+            while walking:
+
+                # Check if new set contains any entries
+                if len(sheet.transactions):
+
+                    # Process journal entries
+                    for transaction in sheet.transactions:
+
+                        try:
+                            JournalEntry.objects.get(ref_id=transaction.refID, character=character)
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
+
+                        except JournalEntry.DoesNotExist:
+
+                            # Add entry to DB
+                            entry = JournalEntry(ref_id=transaction.refID,
+                                                 character=character,
+                                                 is_corporate_transaction=False,
+                                                 date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
+                                                 ref_type_id=transaction.refTypeID,
+                                                 amount=transaction.amount,
+                                                 balance=transaction.balance,
+                                                 owner_name_1=transaction.ownerName1,
+                                                 owner_id_1=transaction.ownerID1,
+                                                 owner_name_2=transaction.ownerName2,
+                                                 owner_id_2=transaction.ownerID2,
+                                                 arg_name_1=transaction.argName1,
+                                                 arg_id_1=transaction.argID1,
+                                                 reason=transaction.reason,
+                                                 tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
+                                                 tax_amount=cast_empty_string_to_float(transaction.taxAmount))
+                            entry.save()
+
+                    # Fetch next page if we're still walking
+                    if walking:
+                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        oldest_id = JournalEntry.objects.filter(character=character).order_by('date')[:1][0].ref_id
+                        sheet = me.WalletJournal(rowCount=2560, fromID=oldest_id)
+
+                else:
+                    walking = False
+
+            # Update timer
+            timer = APITimer.objects.get(character=character, apisheet='WalletJournal')
+            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+            timer.save()
+
+            print "<<<  %s's journal import was completed successfully." % character.name
+
+
+class ProcessRefTypes(PeriodicTask):
+    """
+    Reloads the refTypeID to name mappings. Done daily at 00:00 just before history is processed.
+    """
+
+    run_every = crontab(hour=0, minute=0)
+
+    def run(self, **kwargs):
+
+        print '>>>  Updating refTypeIDs...'
+
+        api = eveapi.EVEAPIConnection()
+        ref_types = api.eve.RefTypes()
+
+        for ref_type in ref_types.refTypes:
+            # Try to find mapping in DB. If found -> update. If not found -> create
+            try:
+                type_object = RefType.objects.get(id=ref_type.refTypeID)
+                type_object.name = ref_type.refTypeName
+                type_object.save()
+
+            except RefType.DoesNotExist:
+                type_object = RefType(id=ref_type.refTypeID, name=ref_type.refTypeName)
+                type_object.save()
+
+        print '<<< Finished updating refTypeIDs.'
 
 
 class ProcessMarketOrders(PeriodicTask):
