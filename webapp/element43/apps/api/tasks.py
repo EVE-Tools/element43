@@ -145,7 +145,6 @@ class ProcessWalletTransactions(PeriodicTask):
                                                       client_name=transaction.clientName,
                                                       station_id=transaction.stationID,
                                                       is_bid=(transaction.transactionType == 'buy'),
-                                                      is_corporate_transaction=(transaction.transactionFor == 'corporation'),
                                                       journal_transaction_id=transaction.journalTransactionID)
                             entry.save()
 
@@ -226,7 +225,6 @@ class ProcessWalletJournal(PeriodicTask):
                             # Add entry to DB
                             entry = JournalEntry(ref_id=transaction.refID,
                                                  character=character,
-                                                 is_corporate_transaction=False,
                                                  date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
                                                  ref_type_id=transaction.refTypeID,
                                                  amount=transaction.amount,
