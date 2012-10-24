@@ -180,7 +180,8 @@ class MarketOrder(models.Model):
     """
 
     id = models.ForeignKey('market_data.Orders', primary_key=True, help_text="Unique key for this order, uses CCP order ID")
-    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table", null=True, default=None)
+    corporation = models.ForeignKey('api.Corp', help_text="FK relationship to corporation table", null=True, default=None)
     order_state = models.PositiveIntegerField(help_text="Valid states: 0 = open/active, 1 = closed, 2 = expired (or fulfilled), 3 = cancelled, 4 = pending, 5 = character deleted")
     account_key = models.PositiveIntegerField(help_text="Which division this order is using as its account. Always 1000 for characters, but in the range 1000 to 1006 for corporations.")
     escrow = models.FloatField(help_text="Escrow amount for this order")
@@ -211,8 +212,8 @@ class JournalEntry(models.Model):
     """
 
     ref_id = models.BigIntegerField(help_text="Unique refID from CCP for this journal entry. Not primary key - multiple characters could have access to a single corporation's wallet API.")
-    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
-    is_corporate_transaction = models.BooleanField(help_text="Marks whether this transaction was retrieved with this character's personal key or via a corporate key.")
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table", null=True, default=None)
+    corporation = models.ForeignKey('api.Corp', help_text="FK relationship to corporation table", null=True, default=None)
     date = models.DateTimeField(help_text="Date and time of the transaction.")
     ref_type = models.ForeignKey('api.RefType', help_text="Transaction type FKey relationship.")
     amount = models.FloatField(help_text="Amount transferred between parties.")
@@ -238,7 +239,8 @@ class MarketTransaction(models.Model):
     Stores char/corp market transactions.
     """
 
-    character = models.ForeignKey('api.Character', help_text="FK relationship to character table")
+    character = models.ForeignKey('api.Character', help_text="FK relationship to character table", null=True, default=None)
+    corporation = models.ForeignKey('api.Corp', help_text="FK relationship to corporation table", null=True, default=None)
     date = models.DateTimeField(help_text="Date and time of the transaction.")
     transaction_id = models.BigIntegerField(help_text="Non-unique transaction ID.")
     invtype = models.ForeignKey('eve_db.InvType', help_text="The item traded in this transaction.")
