@@ -36,10 +36,10 @@ def quicklook(request):
                                           mapregion_id=params['regionlimit'][0])
     buystats = Orders.active.filter(invtype_id=params['typeid'][0],
                                      mapregion_id=params['regionlimit'][0],
-                                     is_bid=True).aggregate(Min('price'), Max('price'), StdDev('price'))
+                                     is_bid=True).aggregate(Min('price'), Max('price'))
     sellstats = Orders.active.filter(invtype_id=params['typeid'][0],
                                      mapregion_id=params['regionlimit'][0],
-                                     is_bid=False).aggregate(Min('price'), Max('price'), StdDev('price'))
+                                     is_bid=False).aggregate(Min('price'), Max('price'))
     
     info = []
     info.append(params)

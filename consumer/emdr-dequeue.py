@@ -98,6 +98,8 @@ def stats(item, region):
     sellvolume = 0
     buy_95_percentile = 0
     sell_95_percentile = 0
+    buy_std_dev = 0
+    sell_std_dev = 0
     timestamp = date.today()
         
     curs = dbcon.cursor()
@@ -330,6 +332,7 @@ def thread(message):
         # at least some results to process    
         else:
             for item_region_list in market_list.get_all_order_groups():
+                
                 for order in item_region_list:
                     # if order is in the future, skip it
                     if order.generated_at > now_dtime_in_utc():

@@ -86,6 +86,8 @@ class ItemRegionStat(models.Model):
     sellvolume = models.BigIntegerField(help_text="total volume traded")
     buy_95_percentile = models.FloatField(help_text="95th % of buy orders")
     sell_95_percentile = models.FloatField(help_text="95th % of sell orders")
+    buy_std_dev = models.FloatField(help_text="standard deviation of buy orders")
+    sell_std_dev = models.FloatField(help_text="standard deviation of sell orders")
     lastupdate = models.DateTimeField(blank=True, null=True, help_text="Date the stats were updated")
 
     class Meta(object):
