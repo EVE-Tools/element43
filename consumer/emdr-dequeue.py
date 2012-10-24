@@ -105,7 +105,7 @@ def stats(item, region):
     # get the current record so we can compare dates and see if we
     # need to move current records to the history table (this is for history use)
     sql = """SELECT buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, buyvolume, sellvolume,
-                buy_95_percentile, sell_95_percentile, lastupdate
+                buy_95_percentile, sell_95_percentile, lastupdate, buy_std_dev, sell_std_dev
                 FROM market_data_itemregionstat
                 WHERE mapregion_id = %s AND invtype_id = %s""" % (region, item)
     try:
@@ -131,7 +131,7 @@ def stats(item, region):
             
     # process the buy side
     if len(buyprice) > 1:
-        top = scoreatpercentile(buyprice, 95)
+        top = scoreatpercentile(buyprice, 99)
         bottom = scoreatpercentile(buyprice, 5)
         # mask out the bottom 5% of orders so we can try to eliminate the BS
         buy_masked = ma.masked_outside(buyprice, bottom, top)
@@ -142,6 +142,7 @@ def stats(item, region):
         buyavg = np.nan_to_num(ma.average(buy_masked, 0, buycount_masked))
         buymean = np.nan_to_num(ma.mean(buy_masked))
         buymedian = np.nan_to_num(ma.median(buy_masked))
+        buy_std_dev = np.nan_to_num(np.std(buy_masked))
         buy_95_percentile = top
         if len(buyprice) < 4:
             buyavg = np.nan_to_num(ma.average(buyprice))
@@ -152,7 +153,7 @@ def stats(item, region):
     # same processing for sell side as buy side
     if len(sellprice) > 1:
         top = scoreatpercentile(sellprice, 95)
-        bottom = scoreatpercentile(sellprice, 5)
+        bottom = scoreatpercentile(sellprice, 1)
         sell_masked = ma.masked_outside(sellprice, bottom, top)
         tempmask = sell_masked.mask
         sellcount_masked = ma.array(sellcount, mask=tempmask, fill_value = 0)
@@ -162,6 +163,7 @@ def stats(item, region):
         sellmean = np.nan_to_num(ma.mean(sell_masked))
         sellmedian = np.nan_to_num(ma.median(sell_masked))
         sell_95_percentile = bottom
+        sell_std_dev = np.nan_to_num(np.std(sell_masked))
         if len(sellprice) < 4:
             sellAvg = np.nan_to_num(ma.average(sellprice))
             sellMean = np.nan_to_num(ma.mean(sellprice))
@@ -176,8 +178,8 @@ def stats(item, region):
             # dates differ, need to move the data
             sql = """INSERT INTO market_data_itemregionstathistory
                         (buymean, buyavg, buymedian, sellmean, sellavg,
-                        sellmedian, buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, date)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (history[0],
+                        sellmedian, buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, date, buy_std_dev, sell_std_dev)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s)""" % (history[0],
                                                                                             history[1],
                                                                                             history[2],
                                                                                             history[3],
@@ -189,7 +191,9 @@ def stats(item, region):
                                                                                             history[9],
                                                                                             region,
                                                                                             item,
-                                                                                            history[10])
+                                                                                            history[10],
+                                                                                            history[11],
+                                                                                            history[12],)
             try:
                 curs.execute(sql)
             except psycopg2.DatabaseError, e:
@@ -201,9 +205,23 @@ def stats(item, region):
         if (TERM_OUT==True):
             print "--- No history, new insert", region, " / ", item
         sql = """INSERT INTO market_data_itemregionstathistory (buymean, buyavg, buymedian, sellmean,
-                    sellavg, sellmedian, buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, date)
+                    sellavg, sellmedian, buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, date, buy_std_dev, sell_std_dev)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    '%s')""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian, sum(buycount), sum(sellcount), buy_95_percentile, sell_95_percentile, region, item, timestamp)
+                    '%s', %s, %s)""" % (buymean,
+                                        buyavg,
+                                        buymedian,
+                                        sellmean,
+                                        sellavg,
+                                        sellmedian,
+                                        sum(buycount),
+                                        sum(sellcount),
+                                        buy_95_percentile,
+                                        sell_95_percentile,
+                                        region,
+                                        item,
+                                        timestamp,
+                                        buy_std_dev,
+                                        sell_std_dev)
         try:
             curs.execute(sql)
         except psycopg2.DatabaseError, e:
@@ -222,14 +240,15 @@ def stats(item, region):
     # insert it into the DB or update if already exists
     if history == None:
         sql = """INSERT INTO market_data_itemregionstat (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian,
-                    buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, lastupdate)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s')""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian,
-                                                                                        sum(buycount), sum(sellcount), buy_95_percentile, sell_95_percentile, region, item, timestamp)
+                    buyvolume, sellvolume, buy_95_percentile, sell_95_percentile, mapregion_id, invtype_id, lastupdate, buy_std_dev, sell_std_dev)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', %s, %s)""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian,
+                                                                                        sum(buycount), sum(sellcount), buy_95_percentile, sell_95_percentile, region, item, timestamp,
+                                                                                        buy_std_dev, sell_std_dev)
     else:
         sql = """UPDATE market_data_itemregionstat SET buymean = %s, buyavg = %s, buymedian = %s, sellmean = %s, sellavg = %s, sellmedian = %s,
-                    buyvolume = %s, sellvolume = %s, buy_95_percentile = %s, sell_95_percentile = %s, lastupdate = '%s'
+                    buyvolume = %s, sellvolume = %s, buy_95_percentile = %s, sell_95_percentile = %s, lastupdate = '%s', buy_std_dev = %s, sell_std_dev = %s
                     WHERE mapregion_id = %s AND invtype_id = %s""" % (buymean, buyavg, buymedian, sellmean, sellavg, sellmedian,
-                                                                      sum(buycount), sum(sellcount), buy_95_percentile, sell_95_percentile, timestamp, region, item)
+                                                                      sum(buycount), sum(sellcount), buy_95_percentile, sell_95_percentile, timestamp, buy_std_dev, sell_std_dev, region, item)
     #print sql
     try:
         curs.execute(sql)
@@ -238,6 +257,10 @@ def stats(item, region):
         print "SQL: ", sql
         
     dbcon.commit()
+    
+#
+# Main greenlet code
+#
 
 def thread(message):
     """

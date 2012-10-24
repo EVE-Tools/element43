@@ -27,7 +27,6 @@ class UUDIFMessage(models.Model):
         verbose_name = "UUDIF Message"
         verbose_name_plural = "UUDIF Messages"
 
-
 class SeenOrders(models.Model):
     """
     Track which orders we've seen in this last cycle.
@@ -42,7 +41,6 @@ class SeenOrders(models.Model):
     class Meta(object):
         verbose_name = "Seen Order"
         verbose_name_plural = "Seen Orders"
-
 
 class EmdrStats(models.Model):
     """
@@ -59,7 +57,6 @@ class EmdrStats(models.Model):
         verbose_name = "Message Statistics Data"
         verbose_name_plural = "Message Statistics Data"
 
-
 class EmdrStatsWorking(models.Model):
     """
     Tracking statistics for EMDR messages
@@ -70,7 +67,6 @@ class EmdrStatsWorking(models.Model):
     class Meta(object):
         verbose_name = "Message Statistics Live Data"
         verbose_name_plural = "Message Statistics Live Data"
-
 
 class ItemRegionStat(models.Model):
     """
@@ -96,7 +92,6 @@ class ItemRegionStat(models.Model):
         verbose_name = "Stat Data"
         verbose_name_plural = "Stats Data"
 
-
 class ItemRegionStatHistory(models.Model):
     """
     Stats for items on a per region basis
@@ -115,12 +110,13 @@ class ItemRegionStatHistory(models.Model):
     sellvolume = models.BigIntegerField(help_text="total volume traded")
     buy_95_percentile = models.FloatField(help_text="95th % of buy orders")
     sell_95_percentile = models.FloatField(help_text="95th % of sell orders")
+    buy_std_dev = models.FloatField(help_text="standard deviation of buy orders")
+    sell_std_dev = models.FloatField(help_text="standard deviation of sell orders")
     date = models.DateTimeField(blank=True, null=True, help_text="Date the stats were inserted")
 
     class Meta(object):
         verbose_name = "Stat History Data"
         verbose_name_plural = "Stat History Data"
-
 
 class History(models.Model):
     """
@@ -140,7 +136,6 @@ class History(models.Model):
         verbose_name = "History Data"
         verbose_name_plural = "History Data"
 
-
 class OrderHistory(models.Model):
     """
     Post-processed history
@@ -156,48 +151,6 @@ class OrderHistory(models.Model):
     high = models.FloatField(help_text="high price of orders for this item/region")
     mean = models.FloatField(help_text="mean price of orders for this item/region")
     quantity = models.BigIntegerField(help_text="quantity of item sold for this item/region")
-
-
-class OrdersWarehouse(models.Model):
-    """
-    A parsed order message with the details broken out into the various fields.
-    This represents a single line in a UUDIF rowset.
-    """
-
-    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
-        help_text="Region ID the order originated from.")
-    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
-        help_text="The Type ID of the item in the order.")
-    stastation = models.ForeignKey('eve_db.StaStation', db_index=True,
-        help_text="The station that this order is in.")
-    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
-        help_text="ID of the solar system the order is in.")
-    generated_at = models.DateTimeField(blank=True, null=True,
-        help_text="When the market data was generated on the user's machine.")
-    price = models.FloatField(
-        help_text="Item price, as reported in the message.")
-    volume_entered = models.PositiveIntegerField(
-        help_text="Number of items initially put up for sale.")
-    order_range = models.IntegerField(
-        help_text="How far the order is visible.  32767 = region-wide")
-    id = models.BigIntegerField(primary_key=True,
-        help_text="Unique order ID from EVE for this order.")
-    is_bid = models.BooleanField(
-        help_text="If True, this is a buy order. If False, this is a sell order.")
-    issue_date = models.DateTimeField(
-        help_text="When the order was issued.")
-    duration = models.PositiveSmallIntegerField(
-        help_text="The duration of the order, in days.")
-    is_suspicious = models.BooleanField(
-        help_text="If this is True, we have reason to question this order's validity")
-    message_key = models.CharField(max_length=255,
-        help_text="The unique hash of the market message.")
-    uploader_ip_hash = models.CharField(max_length=255, db_index=True,
-        help_text="The unique hash for the person who uploaded this message.")
-
-    class Meta(object):
-        verbose_name = "Market Data"
-        verbose_name_plural = "Market Data"
 
 class ActiveOrdersManager(models.Manager):
     """
