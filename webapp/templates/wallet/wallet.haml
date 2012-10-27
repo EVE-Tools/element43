@@ -1,0 +1,239 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  Wallet - {{request.user.username}}
+- block content
+  %h1 Wallet
+  %ul#tabs.nav.nav-tabs
+    %li.dropdown.active
+      %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+        Orders
+        %b.caret
+      %ul.dropdown-menu
+        %li.active
+          %a{'href':'#all-orders', 'data-toggle':'tab'} All Orders
+        %li
+          %a{'href':'#all-active-orders', 'data-toggle':'tab'} All Active Orders
+    %li.dropdown
+      %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+        Journal
+        %b.caret
+      %ul.dropdown-menu
+        - for char_id, char_journal in journal.items
+          %li
+            %a{'href':'#journal-{{char_id}}', 'data-toggle':'tab'}
+              {{char_journal.0.character.name}}
+    %li
+      %a{'href':'#transactions', 'data-toggle':'tab'} Transactions
+
+  .tab-content
+    #all-orders.tab-pane.fade.active.in
+      - if orders_ask
+        %h2 Ask
+        %table.table.table-striped
+          %thead
+            %tr
+              %th
+                Character
+              %th
+                Location
+              %th
+                Item
+              %th
+                Amount
+              %th
+                Price
+              %th
+                Total Value
+              %th
+                Status
+          %tbody
+            - for order in orders_ask
+              %tr
+                %td
+                  {{order.character.name}}
+                %td
+                  %span{'class':'sec{{order.id.solar_system.security_level|sec0to10}}'}
+                    • {{order.id.solar_system.security_level|sec0to1}}
+                  %a{'href':'{% url quicklook_region type_id=order.id.invtype.id region_id=order.id.mapregion.id %}'}
+                    = order.id.mapregion.name
+                  \-
+                  %a{'href':'{% url station station_id=order.id.stastation.id %}'}
+                    = order.id.stastation.name
+                %td
+                  {{order.id.invtype.name}}
+                %td
+                  {{order.id.volume_remaining}} / {{order.id.volume_entered}}
+                %td
+                  {{order.id.price|intcomma}}
+                %td
+                  {{order.total_value_remaining|intcomma}} / {{order.total_value|intcomma}}
+                %td
+                  - if order.order_state == 0
+                    Active
+                  - else
+                    Inactive
+        %h2 Bid
+        %table.table.table-striped
+          %thead
+            %tr
+              %th
+                Character
+              %th
+                Location
+              %th
+                Item
+              %th
+                Amount
+              %th
+                Price
+              %th
+                Total Value
+              %th
+                Status
+          %tbody
+            - for order in orders_bid
+              %tr
+                %td
+                  {{order.character.name}}
+                %td
+                  %span{'class':'sec{{order.id.solar_system.security_level|sec0to10}}'}
+                    • {{order.id.solar_system.security_level|sec0to1}}
+                  %a{'href':'{% url quicklook_region type_id=order.id.invtype.id region_id=order.id.mapregion.id %}'}
+                    = order.id.mapregion.name
+                  \-
+                  %a{'href':'{% url station station_id=order.id.stastation.id %}'}
+                    = order.id.stastation.name
+                %td
+                  {{order.id.invtype.name}}
+                %td
+                  {{order.id.volume_remaining}} / {{order.id.volume_entered}}
+                %td
+                  {{order.id.price|intcomma}}
+                %td
+                  {{order.total_value_remaining|intcomma}} / {{order.total_value|intcomma}}
+                %td
+                  - if order.order_state == 0
+                    Active
+                  - else
+                    Inactive
+    #all-active-orders.tab-pane.fade
+      - if orders_ask
+        %h2 Ask
+        %table.table.table-striped
+          %thead
+            %tr
+              %th
+                Character
+              %th
+                Location
+              %th
+                Item
+              %th
+                Amount
+              %th
+                Price
+              %th
+                Total Value
+          %tbody
+            - for order in orders_ask
+              - if order.order_state == 0
+                %tr
+                  %td
+                    {{order.character.name}}
+                  %td
+                    %span{'class':'sec{{order.id.solar_system.security_level|sec0to10}}'}
+                      • {{order.id.solar_system.security_level|sec0to1}}
+                    %a{'href':'{% url quicklook_region type_id=order.id.invtype.id region_id=order.id.mapregion.id %}'}
+                      = order.id.mapregion.name
+                    \-
+                    %a{'href':'{% url station station_id=order.id.stastation.id %}'}
+                      = order.id.stastation.name
+                  %td
+                    {{order.id.invtype.name}}
+                  %td
+                    {{order.id.volume_remaining}} / {{order.id.volume_entered}}
+                  %td
+                    {{order.id.price|intcomma}}
+                  %td
+                    {{order.total_value_remaining|intcomma}} / {{order.total_value|intcomma}}
+      - if orders_bid
+        %h2 Bid
+        %table.table.table-striped
+          %thead
+            %tr
+              %th
+                Character
+              %th
+                Location
+              %th
+                Item
+              %th
+                Amount
+              %th
+                Price
+              %th
+                Total Value
+          %tbody
+            - for order in orders_bid
+              - if order.order_state == 0
+                %tr
+                  %td
+                    {{order.character.name}}
+                  %td
+                    %span{'class':'sec{{order.id.solar_system.security_level|sec0to10}}'}
+                      • {{order.id.solar_system.security_level|sec0to1}}
+                    %a{'href':'{% url quicklook_region type_id=order.id.invtype.id region_id=order.id.mapregion.id %}'}
+                      = order.id.mapregion.name
+                    \-
+                    %a{'href':'{% url station station_id=order.id.stastation.id %}'}
+                      = order.id.stastation.name
+                  %td
+                    {{order.id.invtype.name}}
+                  %td
+                    {{order.id.volume_remaining}} / {{order.id.volume_entered}}
+                  %td
+                    {{order.id.price|intcomma}}
+                  %td
+                    {{order.total_value_remaining|intcomma}} / {{order.total_value|intcomma}}
+    - for char_id, char_journal in journal.items
+      .tab-pane.fade{'id':'journal-{{char_id}}'}
+        %h2 Journal of {{char_journal.0.character.name}}
+        %table.table.table-striped.table-condensed
+            %thead
+              %tr
+                %th
+                  Type
+                %th
+                  From
+                %th
+                  To
+                %th.text-right
+                  Amount
+                %th.text-right
+                  Tax
+                %th.text-right
+                  Balance
+            %tbody
+              - for entry in char_journal
+                %tr
+                  %td
+                    {{entry.ref_type.name}}
+                  %td
+                    {{entry.owner_name_1}}
+                  %td
+                    {{entry.owner_name_2}}
+                  - if entry.amount < 0
+                    %td.red.text-right
+                      {{entry.amount|intcomma}}
+                  - else
+                    %td.green.text-right
+                      {{entry.amount|intcomma}}
+                  %td.text-right
+                    {{entry.tax_amount|intcomma}}
+                  %td.text-right
+                    {{entry.balance|intcomma}}
+    #transactions.tab-pane.fade
+      %h2 Transactions

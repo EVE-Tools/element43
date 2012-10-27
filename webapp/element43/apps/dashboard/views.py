@@ -16,8 +16,12 @@ from django.core.urlresolvers import reverse
 from django.db.models import Sum
 
 # API Models
-from apps.api.models import Character, APITimer, CharSkill, MarketOrder, JournalEntry
-from apps.common.util import validate_characters
+from element43.apps.api.models import JournalEntry
+from apps.api.models import Character, APITimer, CharSkill, MarketTransaction
+
+# Util
+from apps.common.util import validate_characters, calculate_character_access_mask
+from apps.dashboard.util import calculate_profit_stats
 
 
 @login_required
@@ -27,46 +31,36 @@ def dashboard(request):
     """
 
     # Sheet based data
-    chars_sheet = validate_characters(request.user, 8)
+    chars_sheet = validate_characters(request.user, calculate_character_access_mask(['CharacterSheet']))
     sheet_data = []
 
     for char in chars_sheet:
         sheet_data.append({'char': char, 'next_update': APITimer.objects.get(character_id=char.id,
                                                                               apisheet='CharacterSheet').nextupdate})
 
-    # Order based data
-    chars_order = validate_characters(request.user, 4096)
-    market_data = {}
+    # Get all WalletJournal/WalletTransactions Chars
+    market_chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal', 'WalletTransactions']))
 
-    market_data['ask'] = []
-    market_data['ask_volume'] = 0
+    # Collect stats
+    month = calculate_profit_stats(market_chars, 30)
+    week = calculate_profit_stats(market_chars, 7)
+    day = calculate_profit_stats(market_chars, 1)
 
-    market_data['bid'] = []
-    market_data['bid_volume'] = 0
+    last_ten_sales = MarketTransaction.objects.filter(character__in=market_chars, is_bid=False).extra(select={'value': "price * quantity"}).order_by('-date')[:10]
 
-    market_data['total_volume'] = 0
+    rcontext = RequestContext(request, {'sheet_data': sheet_data,
+                                        'month': month,
+                                        'week': week,
+                                        'day': day,
+                                        'last_ten_sales': last_ten_sales})
 
-    # Calculate volumes
-    for char in chars_order:
-        market_data['ask'] += MarketOrder.objects.filter(character=char, order_state=0, id__is_bid=False)
-        market_data['bid'] += MarketOrder.objects.filter(character=char, order_state=0, id__is_bid=True)
-
-    for order in market_data['ask']:
-        market_data['ask_volume'] += order.id.price * order.id.volume_remaining
-
-    for order in market_data['bid']:
-        market_data['bid_volume'] += -1 * order.id.price * order.id.volume_remaining
-
-    market_data['total_volume'] = market_data['ask_volume'] + market_data['bid_volume']
-
-    rcontext = RequestContext(request, {'sheet_data': sheet_data, 'market_data': market_data})
     return render_to_response('dashboard/dashboard.haml', rcontext)
 
 
 @login_required
 def journal_json(request):
     # Get all chars with journal permissions
-    chars = validate_characters(request.user, 2097152)
+    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
 
     wallet_series = {}
 
@@ -78,8 +72,12 @@ def journal_json(request):
         for point in journal:
             series.append([int(time.mktime(point.date.timetuple())) * 1000, point.balance])
 
-        # Add current balance in the end for a more consistent look
-        series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal) - 1].balance])
+        # If there aren't any journal entries, catch the resulting AssertionError and return empty list
+        try:
+            # Add current balance in the end for a more consistent look
+            series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal) - 1].balance])
+        except AssertionError:
+            series = []
 
         wallet_series[char.name] = series
 

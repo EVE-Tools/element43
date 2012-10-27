@@ -25,6 +25,9 @@ urlpatterns = patterns('',
     # Dashboard
     url(r'^dashboard/', include('apps.dashboard.urls')),
 
+    # Wallet
+    url(r'^wallet/', include('apps.wallet.urls')),
+
     # Market data
     url(r'^market/', include('apps.market_data.urls')),
 
