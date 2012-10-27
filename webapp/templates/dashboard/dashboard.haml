@@ -69,7 +69,10 @@
             %td
               %img{'src':'{{IMAGE_SERVER}}/Type/{{sale.invtype_id}}_16.png', 'alt':'icon'}
             %td
-              {{sale.quantity|intcomma}} x {{sale.invtype.name}}
+              {{sale.quantity|intcomma}}
+            %td
+              %a{'href':'{% url wallet_type type_id=sale.invtype_id %}'}
+                {{sale.invtype.name}}
             %td.text-right
               {{sale.price|intcomma}}
             %td.text-right.green
