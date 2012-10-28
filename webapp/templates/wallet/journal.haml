@@ -1,0 +1,94 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{request.user.username}} - Journal
+- block content
+  %h1 Journals
+  %ul#tabs.nav.nav-tabs
+    - for char_id, char_journal in journal.items
+      - if forloop.first
+        %li.active
+          %a{'href':'#journal-{{char_id}}', 'data-toggle':'tab'}
+            {{char_journal.0.character.name}}
+      - else
+        %li
+          %a{'href':'#journal-{{char_id}}', 'data-toggle':'tab'}
+            {{char_journal.0.character.name}}
+  .tab-content
+    - for char_id, char_journal in journal.items
+      - if forloop.first
+        .tab-pane.fade.in.active{'id':'journal-{{char_id}}'}
+          %h2 Journal of {{char_journal.0.character.name}}
+          %table.table.table-striped.table-condensed
+            %thead
+              %tr
+                %th
+                  Type
+                %th
+                  From
+                %th
+                  To
+                %th.text-right
+                  Amount
+                %th.text-right
+                  Tax
+                %th.text-right
+                  Balance
+            %tbody
+              - for entry in char_journal
+                %tr
+                  %td
+                    {{entry.ref_type.name}}
+                  %td
+                    {{entry.owner_name_1}}
+                  %td
+                    {{entry.owner_name_2}}
+                  - if entry.amount < 0
+                    %td.red.text-right
+                      {{entry.amount|intcomma}}
+                  - else
+                    %td.green.text-right
+                      {{entry.amount|intcomma}}
+                  %td.text-right
+                    {{entry.tax_amount|intcomma}}
+                  %td.text-right
+                    {{entry.balance|intcomma}}
+      - else
+        .tab-pane.fade{'id':'journal-{{char_id}}'}
+          %h2 Journal of {{char_journal.0.character.name}}
+          %table.table.table-striped.table-condensed
+            %thead
+              %tr
+                %th
+                  Type
+                %th
+                  From
+                %th
+                  To
+                %th.text-right
+                  Amount
+                %th.text-right
+                  Tax
+                %th.text-right
+                  Balance
+            %tbody
+              - for entry in char_journal
+                %tr
+                  %td
+                    {{entry.ref_type.name}}
+                  %td
+                    {{entry.owner_name_1}}
+                  %td
+                    {{entry.owner_name_2}}
+                  - if entry.amount < 0
+                    %td.red.text-right
+                      {{entry.amount|intcomma}}
+                  - else
+                    %td.green.text-right
+                      {{entry.amount|intcomma}}
+                  %td.text-right
+                    {{entry.tax_amount|intcomma}}
+                  %td.text-right
+                    {{entry.balance|intcomma}}
