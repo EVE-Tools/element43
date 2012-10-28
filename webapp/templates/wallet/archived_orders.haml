@@ -9,6 +9,14 @@
   .row-fluid
     .span12
       %table.table.table-condensed
+        %thead
+          %tr
+            %th{'colspan':2}
+            %th Character
+            %th Location
+            %th Amount
+            %th.text-right Price
+            %th.text-right Status
         %tbody
           - for order in orders
             %tr
