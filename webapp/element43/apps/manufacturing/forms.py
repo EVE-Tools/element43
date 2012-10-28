@@ -34,7 +34,7 @@ class ManufacturingCalculatorForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(ManufacturingCalculatorForm, self).__init__(*args, **kwargs)
         self.has_character = False
-        
+
         # If the user is logged in and has characters associated with his account set 'has_characters'
         # to True and add the characters as choices to the 'character' field. The 'has_characters'
         # field on the form will be used in the template to determine what part of the form has to
@@ -53,6 +53,9 @@ class ManufacturingCalculatorForm(forms.Form):
                 # in the 'clean' method (see below).
                 del self.fields['skill_industry']
                 del self.fields['skill_production_efficiency']
+        else:
+            # remove the characters field
+            del self.fields['character']
 
     def clean(self):
         cleaned_data = super(ManufacturingCalculatorForm, self).clean()
@@ -61,6 +64,35 @@ class ManufacturingCalculatorForm(forms.Form):
             # The fields 'skill_industry' and 'skill_production_efficiency' have to be set
             # here, since they were removed from the form and not displayed to the user.
             character_id = cleaned_data['character']
+            
+            # The following is meant for a rare edge case. When a user is logged out, types
+            # in job parameters, calculates the job and returns to the job parameter form and
+            # then logs in, an exception would occur. The reason being that cleander_data['character']
+            # is supposed to hold the character id but doesn't, because it was not set when
+            # the form first was send (user wasn't logged in at that time). But when the user
+            # logged in, after sending the form, this form would init (see __init__) with the
+            # 'has_character' flag set to true, hence reaching this point without a character
+            # id. To solve the problem the first id in the fields choices will be selected.
+            # The user will have to manually select the right character.
+            if not character_id:
+                characters = self.fields['character'].choices
+                character_id = self.fields['character'].choices[0][0]
+                
+                # Character is not valid (yet) so better remove it from cleaned_data.
+                del cleaned_data['character']
+                
+                # If there are more then one character, then the user has to be informed
+                # that he has to select a character
+                if len(characters) > 1:
+                    # field error
+                    field_error = u"Please select a character."
+                    self._errors['character'] = self.error_class([field_error])
+    
+                    # form error
+                    form_error = u"You logged in while you were filling out this form."
+                    form_error+= u"Therefor you have to select one of your characters."
+                    raise forms.ValidationError(form_error)
+            
             character = Character.objects.get(pk=character_id)
             
             # Get the characters skill levels. If the character doesn't have the skills trained

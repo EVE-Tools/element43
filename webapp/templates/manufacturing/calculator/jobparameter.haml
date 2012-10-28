@@ -15,7 +15,16 @@
     %li
       %span.divider >
         Change Job Parameters
-        
+  
+  -# This is a bit dirty. There is at the moment only on form "error". It's not
+  -# really an error, more a note to the user. So keep that in mind if you add
+  -# another form error.
+  - if form.non_field_errors
+    %div.alert.alert-info
+      %strong Please note:
+      - for err in form.non_field_errors
+        = err
+
   %form.form-horizontal{'action':'{% url manufacturing_calculator blueprint.blueprint_type.id %}', 'method':'post'}
     - csrf_token
     
@@ -87,8 +96,8 @@
             = form.character
             - if form.character.errors
               %span.help-inline
-              - for error in form.skill_industry.errors
-                = error|escape
+                - for error in form.character.errors
+                  = error|escape
       - else
   
         %div{'class':'control-group{{ form.skill_industry|css_error }}'}
