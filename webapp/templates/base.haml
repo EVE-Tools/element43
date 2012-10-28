@@ -81,19 +81,19 @@
                         Trading
                       %ul.dropdown-menu
                         %li
-                          %a{'href':'{% url wallet_overview %}'}
+                          %a{'href':'{% url wallet_orders_active %}'}
                             %i.icon-white.icon-asterisk
                             Active Orders
                         %li
-                          %a{'href':'{% url wallet_overview %}'}
+                          %a{'href':'{% url wallet_orders_archived %}'}
                             %i.icon-white.icon-calendar
-                            Order History
+                            Archived Orders
                         %li
-                          %a{'href':'{% url wallet_overview %}'}
+                          %a{'href':'{% url wallet_journal %}'}
                             %i.icon-white.icon-book
                             Journal
                         %li
-                          %a{'href':'{% url wallet_overview %}'}
+                          %a{'href':'{% url wallet_transactions %}'}
                             %i.icon-white.icon-share
                             Transactions
                     %li.divider

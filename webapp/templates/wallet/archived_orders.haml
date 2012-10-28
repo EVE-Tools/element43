@@ -1,0 +1,55 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{request.user.username}} - Archived Orders
+- block content
+  %h1 Archived Orders
+  .row-fluid
+    .span12
+      %table.table.table-condensed
+        %tbody
+          - for order in orders
+            %tr
+              %td
+                %img{'src':'{{IMAGE_SERVER}}/Type/{{order.id.invtype.id}}_16.png'}
+              %td
+                %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                  {{order.id.invtype.name}}
+              %td
+                {{order.character.name}}
+              %td
+                {{order.id.stastation.name}}
+              %td
+                {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
+              %td.text-right
+                {{order.id.price|intcomma}}
+              %td.text-right
+                - if order.order_state == 1
+                  Closed
+                - elif order.order_state == 2
+                  Fulfilled
+                - elif order.order_state == 3
+                  Cancelled
+                - elif order.order_state == 4
+                  Pending
+                - elif order.order_state == 5
+                  Character Deleted
+      %ul.pager
+        - if orders.has_previous
+          %li.previous
+            %a{'href':'?page={{orders.previous_page_number}}'}
+              &larr; Newer
+        - else
+          %li.previous.disabled
+            %a{'href':'#'}
+              &larr; Newer
+        - if orders.has_next
+            %li.next
+              %a{'href':'?page={{orders.next_page_number}}'}
+                Older &rarr;
+        - else
+            %li.next.disabled
+              %a{'href':'#'}
+                Older &rarr;

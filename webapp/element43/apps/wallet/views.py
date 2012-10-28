@@ -13,10 +13,91 @@ from apps.api.models import MarketOrder, JournalEntry, MarketTransaction
 from apps.common.util import validate_characters, calculate_character_access_mask
 
 
+def active_orders(request):
+
+    # Get all characters with sufficient permissions
+    chars = validate_characters(request.user, calculate_character_access_mask(['MarketOrders']))
+
+    # Get all active orders ordered by station for later regrouping
+    orders = MarketOrder.objects.filter(character__in=chars, order_state=0).select_related('id').extra(select={'total_value': "price * volume_entered",
+                                                                                                               'volume_percent': "(volume_remaining / volume_entered::float) * 100"}).order_by('id__stastation')
+
+    # Add data to context
+    rcontext = RequestContext(request, {'orders': orders})
+    return render_to_response('wallet/active_orders.haml', rcontext)
+
+
+def archived_orders(request):
+
+    # Get all characters with sufficient permissions
+    chars = validate_characters(request.user, calculate_character_access_mask(['MarketOrders']))
+
+    # Get all active orders ordered by station for later regrouping
+    all_orders = MarketOrder.objects.filter(character__in=chars).exclude(order_state=0).select_related('id').order_by('-id__generated_at')
+
+    # Pagination
+    paginator = Paginator(all_orders, 25)
+
+    page = request.GET.get('page')
+    try:
+        orders = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        orders = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        orders = paginator.page(paginator.num_pages)
+
+    # Add data to context
+    rcontext = RequestContext(request, {'orders': orders})
+    return render_to_response('wallet/archived_orders.haml', rcontext)
+
+
+def transactions(request):
+
+    # Get all characters with sufficient permissions
+    chars = validate_characters(request.user, calculate_character_access_mask(['WalletTransactions']))
+
+    # Add data to context
+    rcontext = RequestContext(request, {'transactions': transactions})
+    return render_to_response('wallet/transactions.haml', rcontext)
+
+def journal(request):
+
+    # Get all characters with sufficient permissions
+    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
+
+    # Prepare lists
+    orders_bid = []
+    orders_ask = []
+    transactions = {}
+    journal = {}
+
+    # Get the data
+    for char in chars:
+        orders_bid += MarketOrder.objects.filter(character=char,
+                                                 id__is_bid=True).select_related('id').extra(select={'total_value': "price * volume_entered",
+                                                                                                     'total_value_remaining': "price * volume_remaining"}).order_by('order_state')
+
+        orders_ask += MarketOrder.objects.filter(character=char,
+                                                 id__is_bid=False).select_related('id').extra(select={'total_value': "price * volume_entered",
+                                                                                                      'total_value_remaining': "price * volume_remaining"}).order_by('order_state')
+
+        transactions[char.id] = MarketTransaction.objects.filter(character=char).select_related('ref_type')
+        journal[char.id] = JournalEntry.objects.filter(character=char)
+
+    # Add data to context
+    rcontext = RequestContext(request, {'orders_bid': orders_bid,
+                                        'orders_ask': orders_ask,
+                                        'transactions': transactions,
+                                        'journal': journal})
+
+    return render_to_response('wallet/wallet.haml', rcontext)
+
 def wallet(request):
 
     # Get all characters with sufficient permissions
-    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal', 'WalletTransactions']))
+    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
 
     # Prepare lists
     orders_bid = []

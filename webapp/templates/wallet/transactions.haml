@@ -1,0 +1,7 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{request.user.username}} - Transactions
+- block content
