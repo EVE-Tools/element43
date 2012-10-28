@@ -75,14 +75,32 @@
                       %a{'href':'{% url dashboard %}'}
                         %i.icon-white.icon-home
                         Dashboard
+                    %li.dropdown-submenu
+                      %a{'tabindex':'-1', 'href':'#'}
+                        %i.icon-white.icon-book
+                        Trading
+                      %ul.dropdown-menu
+                        %li
+                          %a{'href':'{% url wallet_overview %}'}
+                            %i.icon-white.icon-asterisk
+                            Active Orders
+                        %li
+                          %a{'href':'{% url wallet_overview %}'}
+                            %i.icon-white.icon-calendar
+                            Order History
+                        %li
+                          %a{'href':'{% url wallet_overview %}'}
+                            %i.icon-white.icon-book
+                            Journal
+                        %li
+                          %a{'href':'{% url wallet_overview %}'}
+                            %i.icon-white.icon-share
+                            Transactions
+                    %li.divider
                     %li
                       %a{'href':'{% url settings %}'}
                         %i.icon-white.icon-wrench
                         Settings
-                    %li
-                      %a{'href':'{% url wallet_overview %}'}
-                        %i.icon-white.icon-book
-                        Wallet
                     %li
                       %a{'href':'{% url logout %}'}
                         %i.icon-white.icon-off

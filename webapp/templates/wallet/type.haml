@@ -1,0 +1,89 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{request.user.username}} - {{type.name}}
+- block content
+  %h1 {{type.name}}
+  .row-fluid
+    .span1
+      %img{'src':'{{IMAGE_SERVER}}/Type/{{type.id}}_64.png', 'alt':'type image'}
+    .span7
+      %p
+        Volume: {{type.volume|intcomma}}m&#179;
+      %p
+        = type.description|striptags
+    .span4
+      %table.table.table-striped
+        %tbody
+          %tr
+            %td
+              Spent
+            %td
+              %span.price
+                {{spent|intcomma}}
+          %tr
+            %td
+              Income
+            %td
+              %span.price
+                {{income|intcomma}}
+          %tr
+            %td
+              Profit
+            %td
+              - if profit > 0
+                %span.price.green
+                  {{profit|intcomma}}
+              - else
+                %span.price.red
+                  {{profit|intcomma}}
+  .row-fluid
+    %table.table.table-striped.table-condensed
+      %thead
+        %tr
+          %th
+            Date
+          %th
+            Station
+          %th.text-right
+            Quantity
+          %th.text-right
+            Price
+          %th.text-right
+            Revenue
+      %tbody
+        - for transaction in transactions
+          %tr
+            %td
+              {{transaction.date}}
+            %td
+              {{transaction.station.name}}
+            %td.text-right
+              {{transaction.quantity|intcomma}}
+            %td.text-right
+              {{transaction.price|intcomma}}
+            - if transaction.is_bid
+              %td.text-right.red
+                {{transaction.revenue|intcomma}}
+            - else
+              %td.text-right.green
+                {{transaction.revenue|intcomma}}
+    %ul.pager
+      - if transactions.has_previous
+        %li.previous
+          %a{'href':'?page={{transactions.previous_page_number}}'}
+            &larr; Newer
+      - else
+        %li.previous.disabled
+          %a{'href':'#'}
+            &larr; Newer
+      - if transactions.has_next
+          %li.next
+            %a{'href':'?page={{transactions.next_page_number}}'}
+              Older &rarr;
+      - else
+          %li.next.disabled
+            %a{'href':'#'}
+              Older &rarr;
