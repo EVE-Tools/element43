@@ -68,7 +68,11 @@ def cast_empty_string_to_float(string):
     """
     Casts empty string to 0
     """
-    string = string.strip()
+
+    # Strip stuff only if it's a string
+    if isinstance(string, str):
+        string = string.strip()
+
     return float(string) if string else 0
 
 
