@@ -6,6 +6,7 @@ from django.template import RequestContext
 # Type Model
 from eve_db.models import InvType
 
+from element43.apps.api.models import Character
 # API Models
 from apps.api.models import MarketOrder, JournalEntry, MarketTransaction
 
@@ -53,32 +54,56 @@ def archived_orders(request):
     return render_to_response('wallet/archived_orders.haml', rcontext)
 
 
-def transactions(request):
+def transactions(request, char_id):
 
     # Get all characters with sufficient permissions
-    chars = validate_characters(request.user, calculate_character_access_mask(['WalletTransactions']))
+    char = Character.objects.get(id=char_id)
+
+    all_transactions = MarketTransaction.objects.filter(character=char).extra(select={'revenue': "price * quantity"}).order_by('-date')
+
+    # Pagination
+    paginator = Paginator(all_transactions, 25)
+
+    page = request.GET.get('page')
+    try:
+        transactions = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        transactions = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        transactions = paginator.page(paginator.num_pages)
 
     # Add data to context
-    rcontext = RequestContext(request, {'transactions': transactions})
+    rcontext = RequestContext(request, {'transactions': transactions, 'char': char})
     return render_to_response('wallet/transactions.haml', rcontext)
 
 
-def journal(request):
+def journal(request, char_id):
 
     # Get all characters with sufficient permissions
-    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
+    char = Character.objects.get(id=char_id)
 
-    # Prepare lists
-    journal = {}
+    all_journal_entries = JournalEntry.objects.filter(character=char).order_by('-date')
 
-    # Get the data
-    for char in chars:
-        journal[char.id] = JournalEntry.objects.filter(character=char)
+    # Pagination
+    paginator = Paginator(all_journal_entries, 25)
+
+    page = request.GET.get('page')
+    try:
+        journal_entries = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        journal_entries = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        journal_entries = paginator.page(paginator.num_pages)
 
     # Add data to context
-    rcontext = RequestContext(request, {'journal': journal})
+    rcontext = RequestContext(request, {'journal': journal_entries, 'char': char})
 
     return render_to_response('wallet/journal.haml', rcontext)
+
 
 def wallet(request):
 

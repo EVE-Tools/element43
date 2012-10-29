@@ -88,14 +88,26 @@
                           %a{'href':'{% url wallet_orders_archived %}'}
                             %i.icon-white.icon-calendar
                             Archived Orders
-                        %li
-                          %a{'href':'{% url wallet_journal %}'}
-                            %i.icon-white.icon-book
-                            Journal
-                        %li
-                          %a{'href':'{% url wallet_transactions %}'}
-                            %i.icon-white.icon-share
-                            Transactions
+                        - if characters_journal
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-book
+                              Journals
+                            %ul.dropdown-menu
+                              - for char in characters_journal
+                                %li
+                                  %a{'href':'{% url wallet_journal char_id=char.id %}'}
+                                    {{char.name}}
+                        - if characters_transaction
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-share
+                              Transactions
+                            %ul.dropdown-menu
+                              - for char in characters_transaction
+                                %li
+                                  %a{'href':'{% url wallet_transactions char_id=char.id %}'}
+                                    {{char.name}}
                     %li.divider
                     %li
                       %a{'href':'{% url settings %}'}

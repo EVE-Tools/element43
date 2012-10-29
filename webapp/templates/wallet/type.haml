@@ -40,6 +40,23 @@
                 %span.price.red
                   {{profit|intcomma}}
   .row-fluid
+    %ul.pager
+      - if transactions.has_previous
+        %li.previous
+          %a{'href':'?page={{transactions.previous_page_number}}'}
+            &larr; Newer
+      - else
+        %li.previous.disabled
+          %a{'href':'#'}
+            &larr; Newer
+      - if transactions.has_next
+          %li.next
+            %a{'href':'?page={{transactions.next_page_number}}'}
+              Older &rarr;
+      - else
+          %li.next.disabled
+            %a{'href':'#'}
+              Older &rarr;
     %table.table.table-striped.table-condensed
       %thead
         %tr
@@ -70,20 +87,3 @@
             - else
               %td.text-right.green
                 {{transaction.revenue|intcomma}}
-    %ul.pager
-      - if transactions.has_previous
-        %li.previous
-          %a{'href':'?page={{transactions.previous_page_number}}'}
-            &larr; Newer
-      - else
-        %li.previous.disabled
-          %a{'href':'#'}
-            &larr; Newer
-      - if transactions.has_next
-          %li.next
-            %a{'href':'?page={{transactions.next_page_number}}'}
-              Older &rarr;
-      - else
-          %li.next.disabled
-            %a{'href':'#'}
-              Older &rarr;

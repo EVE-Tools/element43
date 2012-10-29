@@ -13,8 +13,8 @@ urlpatterns = patterns('apps.wallet.views',
     url(r'^orders/archived/$', 'archived_orders', name='wallet_orders_archived'),
 
     # Journal
-    url(r'^journal/$', 'journal', name='wallet_journal'),
+    url(r'^journal/(?P<char_id>[0-9]+)/$', 'journal', name='wallet_journal'),
 
     # Transactions
-    url(r'^transactions/$', 'transactions', name='wallet_transactions')
+    url(r'^transactions/(?P<char_id>[0-9]+)/$', 'transactions', name='wallet_transactions')
 )
