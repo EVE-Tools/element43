@@ -163,7 +163,7 @@
     
     %fieldset
       %legend
-        Per Unit Sale Information
+        Sale Information
       
       %div{'class':'control-group{{ form.target_sell_price|css_error }}'}
         %label.control-label{'for':'id_target_sell_price'} Target sell price
@@ -177,6 +177,24 @@
           - if form.target_sell_price.errors
             %span.help-inline
               - for error in form.target_sell_price.errors
+                = error|escape
+      
+      %div{'class':'control-group{{ form.brokers_fee|css_error }}'}
+        %label.control-label{'for':'id_brokers_fee'} Broker's fee (%)
+        .controls
+          = form.brokers_fee
+          - if form.brokers_fee.errors
+            %span.help-inline
+              - for error in form.brokers_fee.errors
+                = error|escape
+
+      %div{'class':'control-group{{ form.sales_tax|css_error }}'}
+        %label.control-label{'for':'id_sales_tax'} Sales tax (%)
+        .controls
+          = form.sales_tax
+          - if form.sales_tax.errors
+            %span.help-inline
+              - for error in form.sales_tax.errors
                 = error|escape
 
     .control-group

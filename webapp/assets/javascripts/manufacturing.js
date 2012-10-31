@@ -27,6 +27,8 @@ $(document).ready(function() {
     var material_id = $(event.target).attr('id').replace('material_', '');
     var blueprint_runs = parseInt($('#blueprint_runs').text().replace(/,/g, ''), 10);
     var blueprint_cost_unit = parseFloat($('#blueprint_cost_unit').text().replace(/,/g, ''));
+    var brokers_fee = parseFloat($('#brokers_fee_unit').text().replace(/,/g, ''));
+    var sales_tax = parseFloat($('#sales_tax_unit').text().replace(/,/g, ''));
     var produced_units = parseInt($('#produced_units').text().replace(/,/g, ''), 10);
     var price = $('#material_' + material_id + '').val().replace(/,/g, '');
     var quantity = $('#material_quantity_' + material_id + '').text().replace(/,/g, '');
@@ -42,7 +44,7 @@ $(document).ready(function() {
 
     var total_cost_unit = blueprint_cost_unit + (materials_cost_total / produced_units);
     var revenue_unit = parseFloat($('#revenue_unit').text().replace(/,/g, ''));
-    var profit_unit = revenue_unit - total_cost_unit;
+    var profit_unit = revenue_unit - total_cost_unit - sales_tax - brokers_fee;
 
     // Next step is to update all fields
     $('#materials_cost_unit').text(addCommas((materials_cost_total / produced_units).toFixed(2)));

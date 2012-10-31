@@ -208,6 +208,18 @@ class ManufacturingCalculatorForm(forms.Form):
                                            decimal_places=2,
                                            initial="0",
                                            required=True)
+    
+    brokers_fee = forms.DecimalField(min_value=0,
+                                     max_value=10,
+                                     decimal_places=2,
+                                     initial="0.00",
+                                     required=False)
+
+    sales_tax = forms.DecimalField(min_value=0,
+                                   max_value=10,
+                                   decimal_places=2,
+                                   initial="0.00",
+                                   required=False)
 
     def clean_blueprint_runs(self):
         """
