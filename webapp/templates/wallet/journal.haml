@@ -6,6 +6,11 @@
   {{request.user.username}} - Journal
 - block content
   %h1 Journal of {{char.name}}
+  %h3 Filter by Reference Type
+  %select#ref-type-select{'name':'ref-type'}
+    - for ref_type in ref_types
+      %option{'value':'{{ref_type.id}}'}
+        {{ref_type.name}}
   %ul.pager
     - if journal.has_previous
       %li.previous
@@ -57,3 +62,10 @@
             {{entry.tax_amount|intcomma}}
           %td.text-right
             {{entry.balance|intcomma}}
+- block scripts
+  %script{'type':'text/javascript'}
+    $(document).ready(function() {
+      $('#ref-type-select').bind('change', function(){
+        window.location = window.location.href.split('?')[0] + '?ref_id=' + $(this).val();
+      });
+    });

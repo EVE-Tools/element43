@@ -8,7 +8,7 @@ from eve_db.models import InvType
 
 from element43.apps.api.models import Character
 # API Models
-from apps.api.models import MarketOrder, JournalEntry, MarketTransaction
+from apps.api.models import MarketOrder, JournalEntry, MarketTransaction, RefType
 
 # Utils
 from apps.common.util import validate_characters, calculate_character_access_mask
@@ -83,8 +83,21 @@ def journal(request, char_id):
 
     # Get all characters with sufficient permissions
     char = Character.objects.get(id=char_id)
+    ref_id = request.GET.get('ref_id')
 
-    all_journal_entries = JournalEntry.objects.filter(character=char).order_by('-date')
+    # Apply refID filter, if supplied
+    if ref_id:
+        # If we don't have a numerical input, default to all transactions
+        try:
+            all_journal_entries = JournalEntry.objects.filter(character=char, ref_type_id=ref_id).order_by('-date')
+        except ValueError:
+            all_journal_entries = JournalEntry.objects.filter(character=char).order_by('-date')
+    else:
+        # Simply get all transactions if no filter was supplied
+        all_journal_entries = JournalEntry.objects.filter(character=char).order_by('-date')
+
+    # Get refTypes for dropdown list
+    ref_types = RefType.objects.exclude(name='').order_by('name')
 
     # Pagination
     paginator = Paginator(all_journal_entries, 25)
@@ -100,7 +113,7 @@ def journal(request, char_id):
         journal_entries = paginator.page(paginator.num_pages)
 
     # Add data to context
-    rcontext = RequestContext(request, {'journal': journal_entries, 'char': char})
+    rcontext = RequestContext(request, {'journal': journal_entries, 'char': char, 'ref_types': ref_types})
 
     return render_to_response('wallet/journal.haml', rcontext)
 
