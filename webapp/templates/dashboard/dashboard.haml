@@ -13,7 +13,7 @@
           %tr
             %th
             %th
-              Gross Profit
+              Profit
             %th
               Brokers Fee
             %th
@@ -22,8 +22,12 @@
           %tr
             %td
               Month
-            %td.green
-              {{month.gross_profit|intcomma}}
+            - if month.profit > 0
+              %td.green
+                {{month.profit|intcomma}}
+            - else
+              %td.red
+                {{month.profit|intcomma}}
             %td.red
               {{month.brokers_fee|intcomma}}
             %td.red
@@ -31,8 +35,12 @@
           %tr
             %td
               Week
-            %td.green
-              {{week.gross_profit|intcomma}}
+            - if week.profit > 0
+              %td.green
+                {{week.profit|intcomma}}
+            - else
+              %td.red
+                {{week.profit|intcomma}}
             %td.red
               {{week.brokers_fee|intcomma}}
             %td.red
@@ -40,8 +48,12 @@
           %tr
             %td
               Day
-            %td.green
-              {{day.gross_profit|intcomma}}
+            - if day.profit > 0
+              %td.green
+                {{day.profit|intcomma}}
+            - else
+              %td.red
+                {{day.profit|intcomma}}
             %td.red
               {{day.brokers_fee|intcomma}}
             %td.red

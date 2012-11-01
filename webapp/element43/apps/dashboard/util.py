@@ -2,10 +2,11 @@
 import datetime
 
 # API Models
-from apps.api.models import JournalEntry, MarketTransaction
+from apps.api.models import JournalEntry
 
 # Django Aggregation
 from django.db.models import Sum
+
 
 def calculate_profit_stats(characters, days):
     """
@@ -19,21 +20,15 @@ def calculate_profit_stats(characters, days):
 
     # Gets brokers fee
     dictionary['brokers_fee'] = JournalEntry.objects.filter(character__in=characters,
-                                                    		ref_type_id=46,
-                                                    		date__gte=days_ago).aggregate(Sum('amount'))['amount__sum']
+                                                            ref_type_id=46,
+                                                            date__gte=days_ago).aggregate(Sum('amount'))['amount__sum']
 
     # Gets taxes
     dictionary['taxes'] = JournalEntry.objects.filter(character__in=characters,
-                                              		  ref_type_id=54,
-                                              		  date__gte=days_ago).aggregate(Sum('amount'))['amount__sum']
+                                                      ref_type_id=54,
+                                                      date__gte=days_ago).aggregate(Sum('amount'))['amount__sum']
 
-    # Gets gross profit
-    gross_profit = MarketTransaction.objects.filter(character__in=characters,
-											                      is_bid=False,
-											                      date__gte=days_ago).extra(select={'amount': 'price * quantity'})
-    dictionary['gross_profit'] = 0
-
-    for entry in gross_profit:
-    	dictionary['gross_profit'] += entry.amount
-
+    # Gets profit
+    dictionary['profit'] = JournalEntry.objects.filter(character__in=characters,
+                                                       date__gte=days_ago).aggregate(Sum('amount'))['amount__sum']
     return dictionary
