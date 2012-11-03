@@ -65,11 +65,8 @@
                   %td
                     {{order.character.name}}
                   %td
-                    - if order.id.is_bid
-                      Bid
-                    - else
-                      Ask
-                    \- {{order.id.invtype.name}}
+                    %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                      {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
                   %td.span3
