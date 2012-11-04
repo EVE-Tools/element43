@@ -2,6 +2,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 
 # Type Model
 from eve_db.models import InvType
@@ -14,6 +15,7 @@ from apps.api.models import MarketOrder, JournalEntry, MarketTransaction, RefTyp
 from apps.common.util import validate_characters, calculate_character_access_mask
 
 
+@login_required
 def active_orders(request):
 
     # Get all characters with sufficient permissions
@@ -28,6 +30,7 @@ def active_orders(request):
     return render_to_response('wallet/active_orders.haml', rcontext)
 
 
+@login_required
 def archived_orders(request):
 
     # Get all characters with sufficient permissions
@@ -54,6 +57,7 @@ def archived_orders(request):
     return render_to_response('wallet/archived_orders.haml', rcontext)
 
 
+@login_required
 def transactions(request, char_id):
 
     # Get all characters with sufficient permissions
@@ -79,6 +83,7 @@ def transactions(request, char_id):
     return render_to_response('wallet/transactions.haml', rcontext)
 
 
+@login_required
 def journal(request, char_id):
 
     # Get all characters with sufficient permissions
@@ -118,6 +123,7 @@ def journal(request, char_id):
     return render_to_response('wallet/journal.haml', rcontext)
 
 
+@login_required
 def wallet(request):
 
     # Get all characters with sufficient permissions
@@ -151,6 +157,7 @@ def wallet(request):
     return render_to_response('wallet/wallet.haml', rcontext)
 
 
+@login_required
 def station_scanner(request, station_id):
 
     # Get all characters with sufficient permissions
@@ -173,6 +180,7 @@ def station_scanner(request, station_id):
     return render_to_response('wallet/scanner.haml', rcontext)
 
 
+@login_required
 def type(request, type_id):
 
     type_object = InvType.objects.get(id=type_id)
