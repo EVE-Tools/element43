@@ -17,7 +17,7 @@ def element43_settings(request):
         return {'IMAGE_SERVER': settings.IMAGE_SERVER,
                 'GOOGLE_ANALYTICS_ENABLED': settings.GOOGLE_ANALYTICS_ENABLED,
                 'GOOGLE_ANALYTICS_TRACKING_ID': settings.GOOGLE_ANALYTICS_TRACKING_ID,
-                'GOOGLE_ANALYTICS_DOMAIN_NAME':settings.GOOGLE_ANALYTICS_DOMAIN_NAME}
+                'GOOGLE_ANALYTICS_DOMAIN_NAME': settings.GOOGLE_ANALYTICS_DOMAIN_NAME}
 
     return {'IMAGE_SERVER': settings.IMAGE_SERVER,
             'GOOGLE_ANALYTICS_ENABLED': settings.GOOGLE_ANALYTICS_ENABLED,
