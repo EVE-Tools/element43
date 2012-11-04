@@ -397,10 +397,10 @@ class ProcessMarketOrders(PeriodicTask):
 class ProcessCharacterSheet(PeriodicTask):
     """
     Scan the db an refresh all character sheets
-    Currently done once every 15 minutes
+    Currently done once every 5 minutes
     """
 
-    run_every = datetime.timedelta(minutes=15)
+    run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
         print "BEGIN CHARACTER IMPORT"
