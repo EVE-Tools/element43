@@ -14,6 +14,14 @@ def element43_settings(request):
             journal_chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
             transaction_chars = validate_characters(request.user, calculate_character_access_mask(['WalletTransactions']))
     except TypeError:
-        return {'IMAGE_SERVER': settings.IMAGE_SERVER}
+        return {'IMAGE_SERVER': settings.IMAGE_SERVER,
+                'GOOGLE_ANALYTICS_ENABLED': settings.GOOGLE_ANALYTICS_ENABLED,
+                'GOOGLE_ANALYTICS_TRACKING_ID': settings.GOOGLE_ANALYTICS_TRACKING_ID,
+                'GOOGLE_ANALYTICS_DOMAIN_NAME':settings.GOOGLE_ANALYTICS_DOMAIN_NAME}
 
-    return {'IMAGE_SERVER': settings.IMAGE_SERVER, 'characters_journal': journal_chars, 'characters_transaction': transaction_chars}
+    return {'IMAGE_SERVER': settings.IMAGE_SERVER,
+            'GOOGLE_ANALYTICS_ENABLED': settings.GOOGLE_ANALYTICS_ENABLED,
+            'GOOGLE_ANALYTICS_TRACKING_ID': settings.GOOGLE_ANALYTICS_TRACKING_ID,
+            'GOOGLE_ANALYTICS_DOMAIN_NAME': settings.GOOGLE_ANALYTICS_DOMAIN_NAME,
+            'characters_journal': journal_chars,
+            'characters_transaction': transaction_chars}
