@@ -151,6 +151,28 @@ def wallet(request):
     return render_to_response('wallet/wallet.haml', rcontext)
 
 
+def station_scanner(request, station_id):
+
+    # Get all characters with sufficient permissions
+    chars = validate_characters(request.user, calculate_character_access_mask(['MarketOrders']))
+
+    # Get types of active orders in that station from db
+    types = []
+    type_ids = []
+
+    orders = MarketOrder.objects.filter(character__in=chars, order_state=0, id__stastation=station_id).distinct('id__invtype')
+
+    for order in orders:
+        type_ids.append(order.id.invtype.id)
+
+    for type_object in types:
+        type_ids.append(type_object.id)
+
+    rcontext = RequestContext(request, {'type_ids': type_ids})
+
+    return render_to_response('wallet/scanner.haml', rcontext)
+
+
 def type(request, type_id):
 
     type_object = InvType.objects.get(id=type_id)

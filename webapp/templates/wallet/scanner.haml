@@ -1,0 +1,25 @@
+.row-fluid
+  %p Scanning...
+%script{'type':'text/javascript'}
+  $(document).ready(function() {
+    var i = 0;
+    var type_ids = {{type_ids}};
+
+    function scan(){
+      setTimeout(function() {
+        if(i < type_ids.length) {
+          CCPEVE.showMarketDetails(type_ids[i]);
+          i++;
+        } else {
+          i = 0;
+          CCPEVE.showMarketDetails(type_ids[i]);
+          i++;
+        }
+        if ($("#station-scanner").is(":visible")){
+          scan();
+        }
+      }, 3000);
+    }
+
+    scan();
+  });
