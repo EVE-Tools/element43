@@ -26,8 +26,8 @@
   %h3
     Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs -
     %span#produced_units
-      {{ data.produced_units|intcomma }} 
-    Unit{{ data.produced_units|pluralize }}) 
+      {{ data.produced_units|intcomma }}
+    Unit{{ data.produced_units|pluralize }})
   
   %form.form-inline
     %table#billofmaterials.table.table-striped
@@ -136,22 +136,44 @@
           Revenue:
         %td.text-right
           %span#revenue_unit
-            = data.revenue_unit|floatformat:2|intcomma 
+            = data.revenue_unit|floatformat:2|intcomma
           ISK
         %td.text-right
           %span#revenue_total
-            = data.revenue_total|floatformat:2|intcomma 
+            = data.revenue_total|floatformat:2|intcomma
           ISK
       %tr
         %td
-          Profit:
+          Profit overall:
         %td.text-right
           %span#profit_unit{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
-            = data.profit_unit|floatformat:2|intcomma 
+            = data.profit_unit|floatformat:2|intcomma
           ISK
         %td.text-right
           %span#profit_total{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
-            = data.profit_total|floatformat:2|intcomma 
+            = data.profit_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Profit per hour:
+        %td.text-right
+          %span#profit_unit_hour{'class': '{% if data.profit_unit_hour > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_unit_hour|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#profit_total_hour{'class': '{% if data.profit_total_hour > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_total_hour|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
+          Profit per day:
+        %td.text-right
+          %span#profit_unit_day{'class': '{% if data.profit_unit_day > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_unit_day|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#profit_total_day{'class': '{% if data.profit_total_day > 0 %}green{% else %}red{% endif %}' }
+            = data.profit_total_day|floatformat:2|intcomma
           ISK
 
 - block scripts
