@@ -11,6 +11,11 @@ from apps.manufacturing.settings import MANUFACTURING_MAX_BLUEPRINT_HISTORY, MAN
 from eve_db.models import InvBlueprintType, InvTypeMaterial, RamTypeRequirement
 from apps.market_data.models import ItemRegionStat
 
+def is_producible(type_id):
+    """
+    Returns 'True' if the given type_id can be built with an Blueprint and 'False' otherwise.
+    """
+    return InvBlueprintType.objects.filter(product_type__id=type_id).exists()
 
 def is_tech1(type_id):
     """
@@ -130,7 +135,8 @@ def get_tech1_materials(form_data, blueprint):
             'quantity': base_material['quantity'],
             'volume': base_material['material_type__volume'],
             'price': 0,
-            'price_total': 0
+            'price_total': 0,
+            'producible': is_producible(base_material['material_type__id'])
         }))
 
     materials = calculate_quantities(form_data, blueprint, materials)
@@ -187,7 +193,8 @@ def get_tech2_materials(form_data, blueprint):
             'quantity': build_requirement['quantity'] * blueprint_runs,
             'volume': build_requirement['required_type__volume'] * build_requirement['quantity'] * blueprint_runs,
             'price': 0,
-            'price_total': 0
+            'price_total': 0,
+            'producible':is_producible(build_requirement['required_type__id'])
         }))
 
         # If recycle is True the build_requirement is the required Tech I item.
@@ -220,7 +227,8 @@ def get_tech2_materials(form_data, blueprint):
                 'quantity': extra_material['quantity'],
                 'volume': extra_material['material_type__volume'],
                 'price': 0,
-                'price_total': 0
+                'price_total': 0,
+                'producible':is_producible(extra_material['material_type__id'])
             }
 
             mat = calculate_quantity(form_data, blueprint, mat)
