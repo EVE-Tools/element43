@@ -138,8 +138,8 @@ def quicklook_region(request, region_id=10000002, type_id=34):
             stats = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
                                               mapregion_id__exact=10000002)
 
-            material['total'] = stats['sell_95_percentile'] * material['quantity']
-            material['min_price'] = stats['sell_95_percentile']
+            material['total'] = stats.sell_95_percentile * material['quantity']
+            material['min_price'] = stats.sell_95_percentile
         except:
             material['total'] = 0
             material['min_price'] = 0
@@ -265,10 +265,10 @@ def quicklook(request, type_id=34):
             stat_object.sellmedian = 0
         try:
             stats = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
-                                              mapregion_id__exact=10000002)
+                                               mapregion_id__exact=10000002)
 
-            material['total'] = stats['sell_95_percentile'] * material['quantity']
-            material['min_price'] = stats['sell_95_percentile']
+            material['total'] = stats.sell_95_percentile * material['quantity']
+            material['min_price'] = stats.sell_95_percentile
         except:
             material['total'] = 0
             material['min_price'] = 0
