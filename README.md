@@ -32,6 +32,11 @@ Before you begin a word of warning: element43 was not designed to run in Windows
 Applying DB schema migrations
 -----------------------------
 
+There is one index that needs to be built manually due to limitations in South.  You will want to build an index in the market_data_orders table similar to:
+"market_data_orders_mia" btree (mapregion_id, invtype_id, is_active) WHERE is_active = true
+
+Without this database performance will be atrocious to the point of killing your site.
+
 If you receive notice that an update requires a schema modification, you'll
 want to run the following::
 

@@ -9,6 +9,9 @@ urlpatterns = patterns('apps.wallet.views',
     # Active Orders
     url(r'^orders/active/$', 'active_orders', name='wallet_orders_active'),
 
+    # Station Scanner
+    url(r'^orders/active/scanner/(?P<station_id>[0-9]+)/$', 'station_scanner', name='wallet_station_scanner'),
+
     # Archived Orders
     url(r'^orders/archived/$', 'archived_orders', name='wallet_orders_archived'),
 

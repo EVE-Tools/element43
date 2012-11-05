@@ -11,6 +11,11 @@
       - regroup orders by id.stastation as order_list
       - for order_list_item in order_list
         %h2 {{order_list_item.grouper}}
+        - if request|is_igb
+          %a{'href':'#', 'onclick':'$("#station-scanner").modal({"remote":"{% url wallet_station_scanner station_id=order_list_item.grouper.id %}"});'}
+            .btn.btn-primary
+              %i.icon-white.icon-search
+              Open Scanner
         .row-fluid
           %h3 Bid
           %table.table
@@ -65,11 +70,8 @@
                   %td
                     {{order.character.name}}
                   %td
-                    - if order.id.is_bid
-                      Bid
-                    - else
-                      Ask
-                    \- {{order.id.invtype.name}}
+                    %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                      {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
                   %td.span3
@@ -86,3 +88,16 @@
                     {{order.total_value|intcomma}}
                   %td
                     {{order.id.generated_at|naturaltime}}
+  - if request|is_igb
+    #station-scanner.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'scanner-label', 'aria-hidden':'true'}
+      .modal-header
+        %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
+        %h3#sheet-label Station Scanner
+      .modal-body
+      .modal-footer
+        %button.btn{'data-dismiss':'modal', 'aria-hidden':'true'} Close
+- block scripts
+  %script{'type':'text/javascript'}
+    $('body').on('hidden', '.modal', function () {
+        $(this).removeData('modal');
+    });

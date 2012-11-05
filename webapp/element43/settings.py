@@ -43,6 +43,11 @@ RAVEN_CONFIG = {
     'dsn': 'http://public:secret@example.com/1',
 }
 
+# Google Analytics
+GOOGLE_ANALYTICS_ENABLED = False
+GOOGLE_ANALYTICS_TRACKING_ID = 'YOURIDGOESHERE'
+GOOGLE_ANALYTICS_DOMAIN_NAME = 'YOURDOMAINGOESHERE'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
