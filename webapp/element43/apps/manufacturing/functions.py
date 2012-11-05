@@ -314,10 +314,10 @@ def calculate_manufacturing_job(form_data):
     result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
     result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
     result['profit_unit_hour'] = result['profit_unit'] / Decimal(result['production_time_total'] / 3600)
-    result['profit_unit_day'] = 0
+    result['profit_unit_day'] = result['profit_unit_hour'] * 24
     result['profit_total'] = result['profit_unit'] * result['produced_units']
-    result['profit_total_hour'] = 0
-    result['profit_total_day'] = 0
+    result['profit_total_hour'] = result['profit_total'] / Decimal(result['production_time_total'] / 3600)
+    result['profit_total_day'] = result['profit_total_hour'] * 24
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
