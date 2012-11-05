@@ -157,9 +157,7 @@
         %td
           Profit per hour:
         %td.text-right
-          %span#profit_unit_hour{'class': '{% if data.profit_unit_hour > 0 %}green{% else %}red{% endif %}' }
-            = data.profit_unit_hour|floatformat:2|intcomma
-          ISK
+          &nbsp;
         %td.text-right
           %span#profit_total_hour{'class': '{% if data.profit_total_hour > 0 %}green{% else %}red{% endif %}' }
             = data.profit_total_hour|floatformat:2|intcomma
@@ -168,9 +166,7 @@
         %td
           Profit per day:
         %td.text-right
-          %span#profit_unit_day{'class': '{% if data.profit_unit_day > 0 %}green{% else %}red{% endif %}' }
-            = data.profit_unit_day|floatformat:2|intcomma
-          ISK
+          &nbsp;
         %td.text-right
           %span#profit_total_day{'class': '{% if data.profit_total_day > 0 %}green{% else %}red{% endif %}' }
             = data.profit_total_day|floatformat:2|intcomma
