@@ -8,6 +8,56 @@
   .row-fluid
     .span8
       #history
+      %table.table.table-condensed
+        %thead
+          %tr
+            %th
+            %th
+              Profit
+            %th
+              Brokers Fee
+            %th
+              Taxes
+        %tbody
+          %tr
+            %td
+              Month
+            - if month.profit > 0
+              %td.green
+                {{month.profit|intcomma}}
+            - else
+              %td.red
+                {{month.profit|intcomma}}
+            %td.red
+              {{month.brokers_fee|intcomma}}
+            %td.red
+              {{month.taxes|intcomma}}
+          %tr
+            %td
+              Week
+            - if week.profit > 0
+              %td.green
+                {{week.profit|intcomma}}
+            - else
+              %td.red
+                {{week.profit|intcomma}}
+            %td.red
+              {{week.brokers_fee|intcomma}}
+            %td.red
+              {{week.taxes|intcomma}}
+          %tr
+            %td
+              Day
+            - if day.profit > 0
+              %td.green
+                {{day.profit|intcomma}}
+            - else
+              %td.red
+                {{day.profit|intcomma}}
+            %td.red
+              {{day.brokers_fee|intcomma}}
+            %td.red
+              {{day.taxes|intcomma}}
     .span4
       %table.table.table-condensed
         - for point in sheet_data
@@ -24,90 +74,21 @@
               .row-fluid
                 .span12
                   Next Update: {{point.next_update|naturaltime}}
-  %h2 Active Orders
-  .row-fluid
-    .span8
-      - if market_data.ask
-        %h3 Ask
-        %table.table.table-condensed.table-striped
-          %thead
-            %tr
-              %th
-                Location
-              %th
-                Item
-              %th
-                Price
-              %th
-                Volume
-          %tbody
-            - for market_order in market_data.ask
-              %tr
-                %td
-                  %span{'class':'sec{{market_order.id.solar_system.security_level|sec0to10}}'}
-                    • {{market_order.id.solar_system.security_level|sec0to1}}
-                  %a{'href':'{% url quicklook_region type_id=market_order.id.invtype.id region_id=market_order.id.mapregion.id %}'}
-                    = market_order.id.mapregion.name
-                  \-
-                  %a{'href':'{% url station station_id=market_order.id.stastation.id %}'}
-                    = market_order.id.stastation.name
-                %td
-                  {{market_order.id.invtype.name}}
-                %td
-                  {{market_order.id.price|intcomma}}
-                %td
-                  {{market_order.id.volume_remaining}}/{{market_order.id.volume_entered}}
-      - if market_data.bid
-        %h3 Bid
-        %table.table.table-condensed.table-striped
-          %thead
-            %tr
-              %th
-                Location
-              %th
-                Item
-              %th
-                Price
-              %th
-                Volume
-          %tbody
-            - for market_order in market_data.bid
-              %tr
-                %td
-                  %span{'class':'sec{{market_order.id.solar_system.security_level|sec0to10}}'}
-                    • {{market_order.id.solar_system.security_level|sec0to1}}
-                  %a{'href':'{% url quicklook_region type_id=market_order.id.invtype.id region_id=market_order.id.mapregion.id %}'}
-                    = market_order.id.mapregion.name
-                  \-
-                  %a{'href':'{% url station station_id=market_order.id.stastation.id %}'}
-                    = market_order.id.stastation.name
-                %td
-                  {{market_order.id.invtype.name}}
-                %td
-                  {{market_order.id.price|intcomma}}
-                %td
-                  {{market_order.id.volume_remaining}}/{{market_order.id.volume_entered}}
-    .span4
-      %table.table.table-condensed.table-striped
-        %tbody
+      %h5 Last 10 Sales
+      %table.table.table-condensed
+        - for sale in last_ten_sales
           %tr
-            %td Sell volume:
-            %td.green {{market_data.ask_volume|floatformat:2|intcomma}}
-          %tr
-            %td Buy volume:
-            %td.red {{market_data.bid_volume|floatformat:2|intcomma}}
-          %tr
-            %td Total:
-            - if market_data.total_volume > 0
-              %td.green {{market_data.total_volume|floatformat:2|intcomma}}
-            - else
-              %td.red {{market_data.total_volume|floatformat:2|intcomma}}
-  - if industry_data
-    .row-fluid
-      .span12
-        %h2
-          Active Industry Jobs
-        %table.table.table-condensed.table-striped
+            %td
+              %img{'src':'{{IMAGE_SERVER}}/Type/{{sale.invtype_id}}_16.png', 'alt':'icon'}
+            %td
+              {{sale.quantity|intcomma}}
+            %td
+              %a{'href':'{% url wallet_type type_id=sale.invtype_id %}'}
+                {{sale.invtype.name}}
+            %td.text-right
+              {{sale.price|intcomma}}
+            %td.text-right.green
+              {{sale.value|intcomma}}
   #char-sheet.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
     .modal-header
       %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×

@@ -319,6 +319,24 @@ def calculate_manufacturing_job(form_data):
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
+    
+    brokers_fee = form_data.get('brokers_fee', 0)
+    sales_tax = form_data.get('sales_tax', 0)
+    
+    if not brokers_fee:
+        brokers_fee = 0
+        
+    if not sales_tax:
+        sales_tax = 0
+    
+    result['brokers_fee_unit'] = result['revenue_unit'] * (brokers_fee / 100)
+    result['brokers_fee_total'] = result['brokers_fee_unit'] * result['produced_units']
+    result['sales_tax_unit'] = result['revenue_unit'] * (sales_tax / 100)
+    result['sales_tax_total'] = result['sales_tax_unit'] * result['produced_units']
+    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit'] - result['sales_tax_unit'] - result['brokers_fee_unit']
+    result['profit_total'] = result['profit_unit'] * result['produced_units']
+    
+    print result
 
     return result
 

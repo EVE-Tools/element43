@@ -109,17 +109,19 @@
           %span#materials_cost_total
             = data.materials_cost_total|floatformat:2|intcomma
           ISK
-      %tr
-        %td
-          Blueprint cost:
-        %td.text-right
-          %span#blueprint_cost_unit
-            = data.blueprint_cost_unit|floatformat:2|intcomma
-          ISK
-        %td.text-right
-          %span#blueprint_cost_total
-          = data.blueprint_cost_total|floatformat:2|intcomma
-          ISK
+      
+      - if data.blueprint_cost_unit
+        %tr
+          %td
+            Blueprint cost:
+          %td.text-right
+            %span#blueprint_cost_unit
+              = data.blueprint_cost_unit|floatformat:2|intcomma
+            ISK
+          %td.text-right
+            %span#blueprint_cost_total
+            = data.blueprint_cost_total|floatformat:2|intcomma
+            ISK
       %tr
         %td
           Total cost:
@@ -142,6 +144,32 @@
           %span#revenue_total
             = data.revenue_total|floatformat:2|intcomma
           ISK
+
+      - if data.brokers_fee_unit
+        %tr
+          %td
+            Brokers Fee:
+          %td.text-right
+            %span#brokers_fee_unit
+              = data.brokers_fee_unit|floatformat:2|intcomma
+            ISK
+          %td.text-right
+            %span#brokers_fee_total
+            = data.brokers_fee_total|floatformat:2|intcomma
+            ISK
+      
+      - if data.sales_tax_unit
+        %tr
+          %td
+            Sales Tax:
+          %td.text-right
+            %span#sales_tax_unit
+              = data.sales_tax_unit|floatformat:2|intcomma
+            ISK
+          %td.text-right
+            %span#sales_tax_total
+            = data.sales_tax_total|floatformat:2|intcomma
+            ISK
       %tr
         %td
           Profit overall:

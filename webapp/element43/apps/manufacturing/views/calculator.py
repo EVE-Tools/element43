@@ -18,6 +18,7 @@ from apps.api.models import Character
 from eve_db.models import InvBlueprintType
 from apps.market_data.models import ItemRegionStat
 
+from eveigb import IGBHeaderParser
 
 def select_blueprint(request):
     """
@@ -78,8 +79,7 @@ def calculator(request, blueprint_type_id):
             request.session['form_data'] = request.POST
             form.cleaned_data['blueprint_type_id'] = blueprint_type_id
             data = calculate_manufacturing_job(form.cleaned_data)
-            print "skill_industry", form.cleaned_data['skill_industry']
-            print "skill_production_efficiency", form.cleaned_data['skill_production_efficiency']
+
             rcontext = RequestContext(request, {'data': data})
             return render_to_response('manufacturing/calculator/result.haml', rcontext)
     else:
@@ -93,7 +93,13 @@ def calculator(request, blueprint_type_id):
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
             
-            form = ManufacturingCalculatorForm(request.user, initial={'target_sell_price': "%.2f" % target_sell_price})
+            initial_data = {'target_sell_price': "%.2f" % target_sell_price}
+            
+            headers = IGBHeaderParser(request)
+            if headers.is_igb and headers.charid != 0:
+                initial_data['character'] = headers.charid
+            
+            form = ManufacturingCalculatorForm(request.user, initial=initial_data)
 
     rcontext = RequestContext(request, {'form': form, 'blueprint': blueprint})
     return render_to_response('manufacturing/calculator/jobparameter.haml', rcontext)

@@ -75,14 +75,44 @@
                       %a{'href':'{% url dashboard %}'}
                         %i.icon-white.icon-home
                         Dashboard
+                    %li.dropdown-submenu
+                      %a{'tabindex':'-1', 'href':'#'}
+                        %i.icon-white.icon-book
+                        Trading
+                      %ul.dropdown-menu
+                        %li
+                          %a{'href':'{% url wallet_orders_active %}'}
+                            %i.icon-white.icon-asterisk
+                            Active Orders
+                        %li
+                          %a{'href':'{% url wallet_orders_archived %}'}
+                            %i.icon-white.icon-calendar
+                            Archived Orders
+                        - if characters_journal
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-book
+                              Journals
+                            %ul.dropdown-menu
+                              - for char in characters_journal
+                                %li
+                                  %a{'href':'{% url wallet_journal char_id=char.id %}'}
+                                    {{char.name}}
+                        - if characters_transaction
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-share
+                              Transactions
+                            %ul.dropdown-menu
+                              - for char in characters_transaction
+                                %li
+                                  %a{'href':'{% url wallet_transactions char_id=char.id %}'}
+                                    {{char.name}}
+                    %li.divider
                     %li
                       %a{'href':'{% url settings %}'}
                         %i.icon-white.icon-wrench
                         Settings
-                    %li
-                      %a{'href':'{% url wallet_overview %}'}
-                        %i.icon-white.icon-book
-                        Wallet
                     %li
                       %a{'href':'{% url logout %}'}
                         %i.icon-white.icon-off

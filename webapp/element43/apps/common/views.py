@@ -15,7 +15,7 @@ from django.utils import simplejson
 
 # Models
 from eve_db.models import InvType, StaStation
-from apps.market_data.models import Orders, OrdersWarehouse, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
+from apps.market_data.models import Orders, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
 
 """
 Those are our views. We have to use the RequestContext for CSRF protection,

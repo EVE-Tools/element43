@@ -64,7 +64,7 @@ class ProcessResearch(PeriodicTask):
                 new_job = Research(character=character,
                                    agent_id=job.agentID,
                                    skill_id=job.skillTypeID,
-                                   start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.reserachStartDate)),
+                                   start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.researchStartDate)),
                                    points_per_day=job.pointsPerDay,
                                    remainder_points=job.remainderPoints)
                 new_job.save()

@@ -53,6 +53,9 @@ urlpatterns = patterns('apps.market_data.views',
     #
 
     # legacy marketstat
-    url(r'^api/marketstat/$', 'api.marketstat.legacy_marketstat', name='legacy_marketstat'),
+    url(r'^api/marketstat/$', 'api.marketstat.legacy_marketstat', name = 'legacy_marketstat'),
+    
+    # new API
+    url(r'^api/quicklook/$', 'api.quicklook.quicklook', name = 'quicklook'),
 
 )
