@@ -27,8 +27,17 @@ $(document).ready(function() {
     var material_id = $(event.target).attr('id').replace('material_', '');
     var blueprint_runs = parseInt($('#blueprint_runs').text().replace(/,/g, ''), 10);
     var blueprint_cost_unit = parseFloat($('#blueprint_cost_unit').text().replace(/,/g, ''));
+    
+    if (isNaN(blueprint_cost_unit)) blueprint_cost_unit = 0;
+    
     var brokers_fee = parseFloat($('#brokers_fee_unit').text().replace(/,/g, ''));
+    
+    if (isNaN(brokers_fee)) brokers_fee = 0;
+    
     var sales_tax = parseFloat($('#sales_tax_unit').text().replace(/,/g, ''));
+    
+    if (isNaN(sales_tax)) sales_tax = 0;
+    
     var produced_units = parseInt($('#produced_units').text().replace(/,/g, ''), 10);
     var price = $('#material_' + material_id + '').val().replace(/,/g, '');
     var quantity = $('#material_quantity_' + material_id + '').text().replace(/,/g, '');
