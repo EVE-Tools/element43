@@ -57,6 +57,8 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url about_page %}'} About Element43
+                  %li
+                    %a{'href':'{% url api_docs %}'} API Documentation
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li

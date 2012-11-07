@@ -50,6 +50,15 @@ def about_page(request):
 
     return render_to_response('common/about_page.haml', rcontext)
 
+def api_docs(request):
+    """
+    Returns the about page with information about the API
+    """
+
+    rcontext = RequestContext(request, {})
+
+    return render_to_response('common/api_docs.haml', rcontext)
+
 
 def stats_json(request, region_id):
 
