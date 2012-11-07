@@ -33,7 +33,9 @@ Applying DB schema migrations
 -----------------------------
 
 There is one index that needs to be built manually due to limitations in South.  You will want to build an index in the market_data_orders table similar to:
+
 ``"market_data_orders_mia" btree (mapregion_id, invtype_id, is_active) WHERE is_active = true``
+
 Yes that is for postgresql, not quite sure what the equivalent is for MySQL.
 
 Without this database performance will be atrocious to the point of killing your site.
