@@ -1,7 +1,7 @@
 /*
  * Main CSS file for element43
  */
-@import url('http://fonts.googleapis.com/css?family=Orbitron:500');
+@import url('//fonts.googleapis.com/css?family=Orbitron:500');
 /* line 29, main.scss */
 body {
   background: url("/static/images/background.jpg") no-repeat scroll center top black;
