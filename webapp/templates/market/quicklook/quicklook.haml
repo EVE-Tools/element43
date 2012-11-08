@@ -16,8 +16,55 @@
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description|striptags
+  %h2 Top Orders
+  .row-fluid
+    .span6
+      %h3 Buy
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th.text-right
+              Price
+        %tbody
+          - for order in buy_orders|top:5
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
+                  = order.mapregion.name
+                \-
+                %a{'href':'{% url station station_id=order.stastation.id %}'}
+                  = order.stastation.name
+              %td.text-right
+                = order.price|floatformat:"2"|intcomma
+    .span6
+      %h3 Sell
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th.text-right
+              Price
+        %tbody
+          - for order in sell_orders|top:5
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
+                  = order.mapregion.name
+                \-
+                %a{'href':'{% url station station_id=order.stastation.id %}'}
+                  = order.stastation.name
+              %td.text-right
+                = order.price|floatformat:"2"|intcomma
+  %hr
+  %h2 Market Details
   #history
-
   #filters{'style':'margin-bottom: 1em; display:none;'}
     .row-fluid
       .span2
@@ -46,9 +93,9 @@
     %li.active
       %a#region_link{'href':'#regions', 'data_toggle':'tab'} Regions
     %li
-      %a#ask_link{'href':'#ask', 'data_toggle':'tab'} Ask
+      %a#ask_link{'href':'#ask', 'data_toggle':'tab'} Ask / Sell
     %li
-      %a#bid_link{'href':'#bid', 'data_toggle':'tab'} Bid
+      %a#bid_link{'href':'#bid', 'data_toggle':'tab'} Bid / Buy
     - if materials
       %li
         %a#mats_link{'href':'#mats', 'data_toggle':'tab'} Materials

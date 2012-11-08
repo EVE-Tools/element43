@@ -76,3 +76,13 @@ def css_error(field):
     return ""
 
 register.filter('css_error', css_error)
+
+
+def top(list_to_truncate, number):
+    """
+    Returns top n elements of a list.
+    """
+
+    return list_to_truncate[0:number]
+
+register.filter('top', top)
