@@ -14,7 +14,7 @@
             Modify Profile
         %li
           %a{'href':'{% url manage_characters %}'}
-            Manage Characters  
+            Manage Characters
         %li.active
           %a{'href':'{% url manage_api_keys %}'}
             Manage API Keys
@@ -36,7 +36,7 @@
               - for char in chars
                 %tr
                   %td
-                    %img{'src':'http://image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
+                    %img{'src':'//image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
                   %td
                     = char.name
                   %td
@@ -47,4 +47,4 @@
             .controls
               %button.btn.btn-primary{'type':'submit'}
                 Add Characters
-          
+
