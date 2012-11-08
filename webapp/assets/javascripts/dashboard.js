@@ -4,7 +4,7 @@ $(document).ready(function() {
         $(this).removeData('modal');
     });
 
-    $.getJSON('/dashboard/journal/', function(data) {
+    $.getJSON('/secure/dashboard/journal/', function(data) {
         // Parse data
         var length = data.length;
         var balance = [];
