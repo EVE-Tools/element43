@@ -71,6 +71,9 @@ CACHES = {
 # Store flash messages in session
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+# Secure session cookie if not in debug mode
+SESSION_COOKIE_SECURE = False
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -268,7 +271,7 @@ LOGGING = {
     }
 }
 
-IMAGE_SERVER = 'http://images.element-43.com'
+IMAGE_SERVER = '//images.element-43.com'
 MEMCACHE_SERVER = '127.0.0.1'
 
 # This allows you to override these settings without modifying the defaults.

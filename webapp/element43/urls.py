@@ -19,23 +19,27 @@ urlpatterns = patterns('',
     # Common URLs
     url(r'', include('apps.common.urls')),
 
-    # Authentication and registration
-    url(r'', include('apps.auth.urls')),
-
-    # Dashboard
-    url(r'^dashboard/', include('apps.dashboard.urls')),
-
-    # Wallet
-    url(r'^wallet/', include('apps.wallet.urls')),
-
     # Market data
     url(r'^market/', include('apps.market_data.urls')),
 
-    # Account management
-    url(r'^settings/', include('apps.user_settings.urls')),
-
     # Manufacturing
     url(r'^manufacturing/', include('apps.manufacturing.urls')),
+
+    #
+    # SSL URLs
+    #
+
+    # Authentication and registration
+    url(r'^secure/', include('apps.auth.urls')),
+
+    # Dashboard
+    url(r'^secure/dashboard/', include('apps.dashboard.urls')),
+
+    # Wallet
+    url(r'^secure/wallet/', include('apps.wallet.urls')),
+
+    # Account management
+    url(r'^secure/settings/', include('apps.user_settings.urls')),
 )
 
 #
