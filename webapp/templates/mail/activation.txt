@@ -1,6 +1,6 @@
 Hello {{username}},
 welcome to Element43!
-To activate your account, please visit this site: http://element-43.com/register/activate/{{activation_key}}/
+To activate your account, please visit this site: http://element-43.com/secure/register/activate/{{activation_key}}/
 This link will expire in 48 hours.
 
 Element43 Team
