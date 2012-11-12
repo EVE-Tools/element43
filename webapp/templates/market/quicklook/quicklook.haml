@@ -18,8 +18,8 @@
         = type.description|striptags
   %h2 Top Orders
   .row-fluid
-    .span6
-      %h3 Buy
+    .span12
+      %h3 Ask / Sell
       %table.table.table-striped.table-condensed
         %thead
           %tr
@@ -27,28 +27,10 @@
               Location
             %th.text-right
               Price
-        %tbody
-          - for order in buy_orders|top:5
-            %tr
-              %td
-                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
-                  • {{order.mapsolarsystem.security_level|sec0to1}}
-                %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
-                  = order.mapregion.name
-                \-
-                %a{'href':'{% url station station_id=order.stastation.id %}'}
-                  = order.stastation.name
-              %td.text-right
-                = order.price|floatformat:"2"|intcomma
-    .span6
-      %h3 Sell
-      %table.table.table-striped.table-condensed
-        %thead
-          %tr
-            %th
-              Location
             %th.text-right
-              Price
+              Quantity
+            %th.text-right
+              Last Updated
         %tbody
           - for order in sell_orders|top:5
             %tr
@@ -62,6 +44,39 @@
                   = order.stastation.name
               %td.text-right
                 = order.price|floatformat:"2"|intcomma
+              %td.text-right
+                = order.volume_remaining|intcomma
+              %td.text-right
+                = order.generated_at|naturaltime
+      %h3 Bid / Buy
+      %table.table.table-striped.table-condensed
+        %thead
+          %tr
+            %th
+              Location
+            %th.text-right
+              Price
+            %th.text-right
+              Quantity
+            %th.text-right
+              Last Updated
+        %tbody
+          - for order in buy_orders|top:5
+            %tr
+              %td
+                %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                  • {{order.mapsolarsystem.security_level|sec0to1}}
+                %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
+                  = order.mapregion.name
+                \-
+                %a{'href':'{% url station station_id=order.stastation.id %}'}
+                  = order.stastation.name
+              %td.text-right
+                = order.price|floatformat:"2"|intcomma
+              %td.text-right
+                = order.volume_remaining|intcomma
+              %td.text-right
+                = order.generated_at|naturaltime
   %hr
   %h2 Market Details
   #history
@@ -174,7 +189,7 @@
             %th.text-right
               Price
             %th.text-right
-              Last Seen
+              Last Updated
             %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
@@ -218,7 +233,7 @@
             %th.text-right
               Price
             %th.text-right
-              Last Seen
+              Last Updated
             %th.text-center
               %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
                 %i.icon-white.icon-question-sign
