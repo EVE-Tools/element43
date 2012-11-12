@@ -172,6 +172,18 @@ class CorpWalletDivision(models.Model):
     account_key = models.PositiveIntegerField(help_text="account key of corporation wallet account division")
     description = models.TextField(help_text="Name of wallet account division")
 
+class CorpPermissions(models.Model):
+    """
+    Permissions for corporations so multiple people can see corporation data
+    """
+
+    user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
+    corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
+    character = models.ForeignKey('api.Character', help_text="FKey relationship to character table")
+    view_wallet = models.BooleanField(help_text = "can view corporate wallet")
+    view_transaction = models.BooleanField(help_text = "can view corporate transactions")
+    view_research = models.BooleanField(help_text = "can view corporate research")
+    modify_rights = models.BooleanField(help_text = "can modify corprate rights")
 
 # Market Orders
 class MarketOrder(models.Model):
