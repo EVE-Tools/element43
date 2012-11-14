@@ -4,6 +4,12 @@ $(document).ready(function() {
     //
     // Show / Hide filters section
 
+    $('#overview_link').click(function(e) {
+        if($('#filters').is(':visible')) {
+            $('#filters').slideUp();
+        }
+    });
+
     $('#ask_link').click(function(e) {
         if(!($('#filters').is(':visible'))) {
             $('#filters').slideDown();

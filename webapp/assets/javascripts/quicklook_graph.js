@@ -36,7 +36,8 @@ $(document).ready(function() {
                     renderTo: 'history'
                 },
                 rangeSelector: {
-                    selected: 4
+                    selected: 4,
+                    inputEnabled: false
                 },
                 title: {
                     text: "Average Prices in Main Trading Hubs",

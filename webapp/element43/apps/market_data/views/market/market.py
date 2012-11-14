@@ -15,7 +15,6 @@ from django.conf import settings
 
 # Aggregation
 from django.db.models import Sum
-from django.db.models import Min
 
 # market_data models
 from apps.market_data.models import Orders
@@ -376,9 +375,9 @@ def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
                                         mapsolarsystem__security_level__gte=min_sec,
                                         generated_at__gte=filter_time).order_by('price')[:50]
 
-    rcontext = RequestContext(request, {'sell_orders': sell_orders, 'type_id': type_id})
+    rcontext = RequestContext(request, {'sell_orders': sell_orders, 'type': InvType.objects.get(id=type_id)})
 
-    return render_to_response('market/quicklook/_quicklook_ask_filter.haml', rcontext)
+    return render_to_response('market/quicklook/_quicklook_ask.haml', rcontext)
 
 
 def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
@@ -398,6 +397,6 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
                                        mapsolarsystem__security_level__gte=min_sec,
                                        generated_at__gte=filter_time).order_by('-price')[:50]
 
-    rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type_id': type_id})
+    rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type': InvType.objects.get(id=type_id)})
 
-    return render_to_response('market/quicklook/_quicklook_bid_filter.haml', rcontext)
+    return render_to_response('market/quicklook/_quicklook_bid.haml', rcontext)
