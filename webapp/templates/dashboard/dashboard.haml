@@ -67,7 +67,7 @@
             %td
               .row-fluid
                 .span12
-                  %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/dashboard/char_sheet/{{point.char.id}}/"});'}
+                  %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/secure/dashboard/char_sheet/{{point.char.id}}/"});'}
                     {{point.char.name}}
                   .balance
                     {{point.char.balance|intcomma}}
