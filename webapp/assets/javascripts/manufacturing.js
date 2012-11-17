@@ -64,7 +64,7 @@ $(document).ready(function() {
     $('#profit_unit').text(addCommas(profit_unit.toFixed(2)));
     $('#profit_total').text(addCommas((profit_unit * produced_units).toFixed(2)));
     
-    var profit_percent = (profit_unit / total_cost_unit) / 100;
+    var profit_percent = (profit_unit / total_cost_unit) * 100;
     
     $('#profit_total_percent').text(profit_percent.toFixed(2));
 

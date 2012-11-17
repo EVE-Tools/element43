@@ -326,7 +326,7 @@ def calculate_manufacturing_job(form_data):
     result['profit_total_day'] = result['profit_total_hour'] * 24
     
     if result['profit_total'] > 0 and result['total_cost_total'] > 0:
-        result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) / 100
+        result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) * 100
     else:
         result['profit_total_percent'] = 0
     print "result['profit_total_percent']: ", result['profit_total_percent']
