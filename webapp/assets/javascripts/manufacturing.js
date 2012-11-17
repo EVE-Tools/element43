@@ -63,6 +63,10 @@ $(document).ready(function() {
     $('#total_cost_total').text(addCommas((total_cost_unit * produced_units).toFixed(2)));
     $('#profit_unit').text(addCommas(profit_unit.toFixed(2)));
     $('#profit_total').text(addCommas((profit_unit * produced_units).toFixed(2)));
+    
+    var profit_percent = (profit_unit / total_cost_unit) / 100;
+    
+    $('#profit_total_percent').text(profit_percent.toFixed(2));
 
     // Last thing to do is to update css classes
     if(profit_unit > 0)  {
