@@ -137,19 +137,6 @@
             %span#blueprint_cost_total
               = data.blueprint_cost_total|floatformat:2|intcomma
             ISK
-      %tr
-        %td
-          Total cost:
-        %td.text-right
-          \-
-          %span#total_cost_unit
-            = data.total_cost_unit|floatformat:2|intcomma
-          ISK
-        %td.text-right
-          \-
-          %span#total_cost_total
-            = data.total_cost_total|floatformat:2|intcomma
-          ISK
       - if data.brokers_fee_unit
         %tr
           %td
@@ -179,6 +166,19 @@
             %span#sales_tax_total
               = data.sales_tax_total|floatformat:2|intcomma
             ISK
+      %tr
+        %td
+          Total cost:
+        %td.text-right
+          \-
+          %span#total_cost_unit
+            = data.total_cost_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          \-
+          %span#total_cost_total
+            = data.total_cost_total|floatformat:2|intcomma
+          ISK
       %tr{'style': 'border-top: 2px solid #fff'}
         %td
           Profit overall:
