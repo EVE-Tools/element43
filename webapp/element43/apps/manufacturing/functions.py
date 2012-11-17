@@ -318,19 +318,6 @@ def calculate_manufacturing_job(form_data):
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
     result['revenue_total'] = form_data['target_sell_price'] * result['produced_units']
-    result['total_cost_unit'] = result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
-    result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
-    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
-    result['profit_total'] = result['profit_unit'] * result['produced_units']
-    result['profit_total_hour'] = result['profit_total'] / Decimal(result['production_time_total'] / 3600)
-    result['profit_total_day'] = result['profit_total_hour'] * 24
-    
-    if result['profit_total'] > 0 and result['total_cost_total'] > 0:
-        result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) * 100
-    else:
-        result['profit_total_percent'] = 0
-    print "result['profit_total_percent']: ", result['profit_total_percent']
-        
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
@@ -348,8 +335,20 @@ def calculate_manufacturing_job(form_data):
     result['brokers_fee_total'] = result['brokers_fee_unit'] * result['produced_units']
     result['sales_tax_unit'] = result['revenue_unit'] * (sales_tax / 100)
     result['sales_tax_total'] = result['sales_tax_unit'] * result['produced_units']
-    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit'] - result['sales_tax_unit'] - result['brokers_fee_unit']
+    
+    result['total_cost_unit'] = result['brokers_fee_unit'] + result['sales_tax_unit'] + result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
+    result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
+    
+    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
     result['profit_total'] = result['profit_unit'] * result['produced_units']
+    result['profit_total_hour'] = result['profit_total'] / Decimal(result['production_time_total'] / 3600)
+    result['profit_total_day'] = result['profit_total_hour'] * 24
+
+    if result['profit_total'] > 0 and result['total_cost_total'] > 0:
+        result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) * 100
+    else:
+        result['profit_total_percent'] = 0
+    print "result['profit_total_percent']: ", result['profit_total_percent']
 
     return result
 
