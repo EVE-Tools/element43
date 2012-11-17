@@ -100,12 +100,25 @@
           = data.production_time_total|humanize_time:"seconds"
       %tr
         %td
+          Target sell price:
+        %td.text-right
+          %span#revenue_unit
+            = data.revenue_unit|floatformat:2|intcomma
+          ISK
+        %td.text-right
+          %span#revenue_total
+            = data.revenue_total|floatformat:2|intcomma
+          ISK
+      %tr
+        %td
           Material cost:
         %td.text-right
+          \-
           %span#materials_cost_unit
             = data.materials_cost_unit|floatformat:2|intcomma
           ISK
         %td.text-right
+          \-
           %span#materials_cost_total
             = data.materials_cost_total|floatformat:2|intcomma
           ISK
@@ -115,47 +128,41 @@
           %td
             Blueprint cost:
           %td.text-right
+            \-
             %span#blueprint_cost_unit
               = data.blueprint_cost_unit|floatformat:2|intcomma
             ISK
           %td.text-right
+            \-
             %span#blueprint_cost_total
-            = data.blueprint_cost_total|floatformat:2|intcomma
+              = data.blueprint_cost_total|floatformat:2|intcomma
             ISK
       %tr
         %td
           Total cost:
         %td.text-right
+          \-
           %span#total_cost_unit
             = data.total_cost_unit|floatformat:2|intcomma
           ISK
         %td.text-right
+          \-
           %span#total_cost_total
             = data.total_cost_total|floatformat:2|intcomma
           ISK
-      %tr
-        %td
-          Revenue:
-        %td.text-right
-          %span#revenue_unit
-            = data.revenue_unit|floatformat:2|intcomma
-          ISK
-        %td.text-right
-          %span#revenue_total
-            = data.revenue_total|floatformat:2|intcomma
-          ISK
-
       - if data.brokers_fee_unit
         %tr
           %td
             Brokers Fee:
           %td.text-right
+            \-
             %span#brokers_fee_unit
               = data.brokers_fee_unit|floatformat:2|intcomma
             ISK
           %td.text-right
+            \-
             %span#brokers_fee_total
-            = data.brokers_fee_total|floatformat:2|intcomma
+              = data.brokers_fee_total|floatformat:2|intcomma
             ISK
       
       - if data.sales_tax_unit
@@ -163,22 +170,32 @@
           %td
             Sales Tax:
           %td.text-right
+            \-
             %span#sales_tax_unit
               = data.sales_tax_unit|floatformat:2|intcomma
             ISK
           %td.text-right
+            \-
             %span#sales_tax_total
-            = data.sales_tax_total|floatformat:2|intcomma
+              = data.sales_tax_total|floatformat:2|intcomma
             ISK
-      %tr
+      %tr{'style': 'border-top: 2px solid #fff'}
         %td
           Profit overall:
         %td.text-right
           %span#profit_unit{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+            - if data.profit_unit > 0
+              +
+            - else
+              \-
             = data.profit_unit|floatformat:2|intcomma
           ISK
         %td.text-right
           %span#profit_total{'class': '{% if data.profit_unit > 0 %}green{% else %}red{% endif %}' }
+            - if data.profit_unit > 0
+              +
+            - else
+              \-
             = data.profit_total|floatformat:2|intcomma
           ISK
       %tr
