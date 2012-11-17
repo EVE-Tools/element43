@@ -348,7 +348,6 @@ def calculate_manufacturing_job(form_data):
         result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) * 100
     else:
         result['profit_total_percent'] = 0
-    print "result['profit_total_percent']: ", result['profit_total_percent']
 
     return result
 
