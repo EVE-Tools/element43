@@ -60,11 +60,23 @@ $(document).ready(function() {
 
     $("#data-age").html($("#age-slider").slider("value"));
 
-    // Handle filtering
+    // Handle Filtering
     $('#filter-button').click(
-
     function() {
-        $('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
-        $('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/');
+        if (!$('#filter-button').hasClass('disabled')) {
+            $('#filter-button').addClass('disabled');
+            $('#filter-button').text('Loading...');
+
+            $('#ask').load('/market/tab/ask/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/',
+                function() {
+                    $('#filter-button').removeClass('disabled');
+                    $('#filter-button').text('Filter Orders');
+                });
+            $('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/',
+                function() {
+                    $('#filter-button').removeClass('disabled');
+                    $('#filter-button').text('Filter Orders');
+                });
+        }
     });
 });
