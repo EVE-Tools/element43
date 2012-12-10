@@ -21,6 +21,7 @@ from apps.api.api_exceptions import handle_api_exception
 # Additional exception handling
 from django.db import IntegrityError
 
+
 class ProcessResearch(PeriodicTask):
     """
     Updates the research agents for all characters.
