@@ -249,7 +249,7 @@ class ProcessWalletJournal(PeriodicTask):
                             duplicates = JournalEntry.objects.filter(ref_id=transaction.refID, character=character)
 
                             for duplicate in duplicates[1:]:
-                                print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % duplicate.id, duplicate.ref_id
+                                print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id)
                                 duplicate.delete()
 
 
