@@ -136,19 +136,25 @@ class ProcessWalletTransactions(PeriodicTask):
 
                         except MarketTransaction.DoesNotExist:
 
-                            # If it does not exist, create transaction
-                            entry = MarketTransaction(character=character,
-                                                      date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
-                                                      transaction_id=transaction.transactionID,
-                                                      invtype_id=transaction.typeID,
-                                                      quantity=transaction.quantity,
-                                                      price=transaction.price,
-                                                      client_id=transaction.clientID,
-                                                      client_name=transaction.clientName,
-                                                      station_id=transaction.stationID,
-                                                      is_bid=(transaction.transactionType == 'buy'),
-                                                      journal_transaction_id=transaction.journalTransactionID)
-                            entry.save()
+                            try:
+                                # If it does not exist, create transaction
+                                entry = MarketTransaction(character=character,
+                                                          date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                                          transaction_id=transaction.transactionID,
+                                                          invtype_id=transaction.typeID,
+                                                          quantity=transaction.quantity,
+                                                          price=transaction.price,
+                                                          client_id=transaction.clientID,
+                                                          client_name=transaction.clientName,
+                                                          station_id=transaction.stationID,
+                                                          is_bid=(transaction.transactionType == 'buy'),
+                                                          journal_transaction_id=transaction.journalTransactionID)
+                                entry.save()
+
+                            # Catch integrity errors if
+                            except IntegrityError:
+                                print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
+                                continue
 
                     # Fetch next page if we're still walking
                     if walking:
