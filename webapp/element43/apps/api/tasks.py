@@ -160,9 +160,16 @@ class ProcessWalletTransactions(PeriodicTask):
 
                     # Fetch next page if we're still walking
                     if walking:
-                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
-                        oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
-                        sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+
+                        try:
+                            # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                            oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
+                            sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+
+                        except IndexError:
+                            print 'IndexError: %s (%d) has no valid types in his/her transaction history.' % (character.name, character.id)
+                            walking = False
+                            pass
 
                 else:
                     walking = False
@@ -259,7 +266,6 @@ class ProcessWalletJournal(PeriodicTask):
                             for duplicate in duplicates[1:]:
                                 print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id)
                                 duplicate.delete()
-
 
                     # Fetch next page if we're still walking
                     if walking:
