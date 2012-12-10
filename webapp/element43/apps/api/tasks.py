@@ -243,9 +243,19 @@ class ProcessWalletJournal(PeriodicTask):
                                                  tax_amount=cast_empty_string_to_float(transaction.taxAmount))
                             entry.save()
 
+                        # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
+                        except JournalEntry.MultipleObjectsReturned:
+                            # Remove all duplicate items except for one
+                            duplicates = JournalEntry.objects.filter(ref_id=transaction.refID, character=character)
+
+                            for duplicate in duplicates[1:]:
+                                print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % duplicate.id, duplicate.ref_id
+                                duplicate.delete()
+
+
                     # Fetch next page if we're still walking
                     if walking:
-                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        # Get next page based on oldest id in db - use maximum row count to minimize number of requests
                         oldest_id = JournalEntry.objects.filter(character=character).order_by('date')[:1][0].ref_id
                         sheet = me.WalletJournal(rowCount=2560, fromID=oldest_id)
 
