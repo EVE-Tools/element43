@@ -153,7 +153,7 @@ class ProcessWalletTransactions(PeriodicTask):
                                                           journal_transaction_id=transaction.journalTransactionID)
                                 entry.save()
 
-                            # Catch integrity errors if
+                            # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
                             except IntegrityError:
                                 print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
                                 continue
@@ -372,25 +372,30 @@ class ProcessMarketOrders(PeriodicTask):
                     region = station.region
                     system = station.solar_system
 
-                    new_order = Orders(id=order.orderID,
-                                       generated_at=pytz.utc.localize(datetime.datetime.utcnow()),
-                                       mapregion=region,
-                                       invtype_id=order.typeID,
-                                       price=order.price,
-                                       volume_remaining=order.volRemaining,
-                                       volume_entered=order.volEntered,
-                                       minimum_volume=order.minVolume,
-                                       order_range=order.range,
-                                       is_bid=order.bid,
-                                       issue_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(order.issued)),
-                                       duration=order.duration,
-                                       stastation=station,
-                                       mapsolarsystem=system,
-                                       is_suspicious=False,
-                                       message_key='eveapi',
-                                       uploader_ip_hash='eveapi',
-                                       is_active=True)
-                    new_order.save()
+                    try:
+                        new_order = Orders(id=order.orderID,
+                                           generated_at=pytz.utc.localize(datetime.datetime.utcnow()),
+                                           mapregion=region,
+                                           invtype_id=order.typeID,
+                                           price=order.price,
+                                           volume_remaining=order.volRemaining,
+                                           volume_entered=order.volEntered,
+                                           minimum_volume=order.minVolume,
+                                           order_range=order.range,
+                                           is_bid=order.bid,
+                                           issue_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(order.issued)),
+                                           duration=order.duration,
+                                           stastation=station,
+                                           mapsolarsystem=system,
+                                           is_suspicious=False,
+                                           message_key='eveapi',
+                                           uploader_ip_hash='eveapi',
+                                           is_active=True)
+                        new_order.save()
+                    # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
+                    except IntegrityError:
+                        print 'IntegrityError: Probably the SDE is outdated. typeID: %d, orderID: %d' % (order.typeID, order.orderID)
+                        continue
 
                 # Now try to get the MarketOrder
                 try:
