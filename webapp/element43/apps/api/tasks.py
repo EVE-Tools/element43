@@ -159,6 +159,15 @@ class ProcessWalletTransactions(PeriodicTask):
                                 print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
                                 continue
 
+                        # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
+                        except MarketTransaction.MultipleObjectsReturned:
+                            # Remove all duplicate items except for one
+                            duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
+
+                            for duplicate in duplicates[1:]:
+                                print 'Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id)
+                                duplicate.delete()
+
                     # Fetch next page if we're still walking
                     if walking:
 
