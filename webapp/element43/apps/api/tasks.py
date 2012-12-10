@@ -44,7 +44,8 @@ class ProcessResearch(PeriodicTask):
                 apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
             except APIKey.DoesNotExist:
                 print('There is no valid key for %s.' % character.name)
-                raise
+                # End execution for this character
+                continue
 
             # Try to authenticate and handle exceptions properly
             try:
@@ -103,7 +104,8 @@ class ProcessWalletTransactions(PeriodicTask):
                 apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
             except APIKey.DoesNotExist:
                 print('There is no valid key for %s.' % character.name)
-                raise
+                # End execution for this character
+                continue
 
             # Try to authenticate and handle exceptions properly
             try:
@@ -191,7 +193,8 @@ class ProcessWalletJournal(PeriodicTask):
                 apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
             except APIKey.DoesNotExist:
                 print('There is no valid key for %s.' % character.name)
-                raise
+                # End execution for this character
+                continue
 
             # Try to authenticate and handle exceptions properly
             try:
@@ -309,7 +312,8 @@ class ProcessMarketOrders(PeriodicTask):
                 apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
             except APIKey.DoesNotExist:
                 print('There is no valid key for %s.' % character.name)
-                raise
+                # End execution for this character
+                continue
 
             # Try to authenticate and handle exceptions properly
             try:
@@ -426,7 +430,8 @@ class ProcessCharacterSheet(PeriodicTask):
                 apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
             except APIKey.DoesNotExist:
                 print('There is no valid key for %s.' % character.name)
-                raise
+                # End execution for this character
+                continue
 
             # Try to authenticate and handle exceptions properly
             try:
