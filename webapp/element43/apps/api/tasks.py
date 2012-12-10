@@ -18,6 +18,8 @@ from element43 import eveapi
 # API error handling
 from apps.api.api_exceptions import handle_api_exception
 
+# Additional exception handling
+from django.db import IntegrityError
 
 class ProcessResearch(PeriodicTask):
     """
