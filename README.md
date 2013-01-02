@@ -27,9 +27,18 @@ Before you begin a word of warning: element43 was not designed to run in Windows
 * Create a ``local_settings.py`` file and copy/paste/modify anything
   from ``settings.py`` that you'd like to change. This file won't be committed
   to git, and is safe to store passwords and dev workstation settings.
+  It is highly advised to change the SECRET_KEY variable - it is a central part of many of Django's security concepts!
 
 Applying DB schema migrations
 -----------------------------
+
+There is one index that needs to be built manually due to limitations in South.  You will want to build an index in the market_data_orders table similar to:
+
+``"market_data_orders_mia" btree (mapregion_id, invtype_id, is_active) WHERE is_active = true``
+
+Yes that is for postgresql, not quite sure what the equivalent is for MySQL.
+
+Without this database performance will be atrocious to the point of killing your site.
 
 If you receive notice that an update requires a schema modification, you'll
 want to run the following::

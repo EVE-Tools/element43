@@ -106,8 +106,8 @@ def thread(region):
             #rowdata = recannon.match(row[0])
             typeID = row[0]
             sql = """UPDATE market_data_orders SET is_active = 'f'
-                        WHERE invtype_id=%s AND mapregion_id=%s AND market_data_orders.id
-                        NOT IN (SELECT id FROM market_data_seenordersworking WHERE invtype_id=%s AND mapregion_id=%s)""" % (typeID, region, typeID, region)
+                        WHERE mapregion_id=%s AND invtype_id=%s AND is_active='t' AND market_data_orders.id
+                        NOT IN (SELECT id FROM market_data_seenordersworking WHERE mapregion_id=%s AND invtype_id=%s)""" % (region, typeID, region, typeID)
             try:
                 tcurs.execute(sql)
             except psycopg2.DatabaseError, e:
@@ -115,7 +115,7 @@ def thread(region):
                 pass
             if TERM_OUT==True:
                 print "Type: ", typeID, " Region: ", region, " (affected: ", tcurs.rowcount, ")"
-            sql = "DELETE FROM market_data_seenordersworking WHERE type_id=%s AND region_id=%s" % (typeID, region)
+            sql = "DELETE FROM market_data_seenordersworking WHERE region_id=%s AND type_id=%s" % (region, typeID)
             try:
                 tcurs.execute(sql)
             except psycopg2.DatabaseError, e:

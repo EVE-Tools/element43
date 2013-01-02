@@ -12,10 +12,13 @@ from apps.manufacturing.settings import MANUFACTURING_MAX_BLUEPRINT_HISTORY, MAN
 # Forms
 from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculatorForm
 
+from apps.api.models import Character
+
 # Models
 from eve_db.models import InvBlueprintType
 from apps.market_data.models import ItemRegionStat
 
+from eveigb import IGBHeaderParser
 
 def select_blueprint(request):
     """
@@ -68,7 +71,7 @@ def calculator(request, blueprint_type_id):
         return HttpResponseRedirect(reverse('manufacturing_select_blueprint'))
 
     if request.method == 'POST':
-        form = ManufacturingCalculatorForm(request.POST)
+        form = ManufacturingCalculatorForm(request.user, request.POST)
 
         if form.is_valid():
             # Put the form data in the session. If the user goes back to change the "job" information
@@ -81,16 +84,22 @@ def calculator(request, blueprint_type_id):
             return render_to_response('manufacturing/calculator/result.haml', rcontext)
     else:
         if request.session.get('form_data'):
-            form = ManufacturingCalculatorForm(request.session.get('form_data'))
+            form = ManufacturingCalculatorForm(request.user, request.session.get('form_data'))
         else:
             # find the sale price for the product
             try:
                 stat_object = ItemRegionStat.objects.get(invtype_id__exact=blueprint.product_type.id, mapregion_id__exact=10000002)
-                target_sell_price = stat_object.sellmedian
+                target_sell_price = stat_object.sell_95_percentile
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
-
-            form = ManufacturingCalculatorForm(initial={'target_sell_price': "%.2f" % target_sell_price})
+            
+            initial_data = {'target_sell_price': "%.2f" % target_sell_price}
+            
+            headers = IGBHeaderParser(request)
+            if headers.is_igb and headers.charid != 0:
+                initial_data['character'] = headers.charid
+            
+            form = ManufacturingCalculatorForm(request.user, initial=initial_data)
 
     rcontext = RequestContext(request, {'form': form, 'blueprint': blueprint})
-    return render_to_response('manufacturing/calculator/calculator.haml', rcontext)
+    return render_to_response('manufacturing/calculator/jobparameter.haml', rcontext)

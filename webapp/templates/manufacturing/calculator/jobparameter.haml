@@ -15,7 +15,16 @@
     %li
       %span.divider >
         Change Job Parameters
-        
+  
+  -# This is a bit dirty. There is at the moment only on form "error". It's not
+  -# really an error, more a note to the user. So keep that in mind if you add
+  -# another form error.
+  - if form.non_field_errors
+    %div.alert.alert-info
+      %strong Please note:
+      - for err in form.non_field_errors
+        = err
+
   %form.form-horizontal{'action':'{% url manufacturing_calculator blueprint.blueprint_type.id %}', 'method':'post'}
     - csrf_token
     
@@ -61,8 +70,6 @@
       
       %div{'class':'control-group{{ form.blueprint_price|css_error }}'}
         %label.control-label{'for':'id_blueprint_price'} Blueprint copy price
-          %a{'href':'#', 'rel':'tooltip', 'title':'Price = The Forge Sell Median'}
-            %i.icon-white.icon-question-sign
         .controls
           = form.blueprint_price
           - if form.blueprint_price.errors
@@ -81,24 +88,35 @@
     %fieldset
       %legend
         Your skills and hardwirings
+        
+      - if request.user.is_authenticated and form.has_character
+        %div{'class':'control-group{{ form.character|css_error }}'}
+          %label.control-label{'for':'id_character'} Select your character
+          .controls
+            = form.character
+            - if form.character.errors
+              %span.help-inline
+                - for error in form.character.errors
+                  = error|escape
+      - else
   
-      %div{'class':'control-group{{ form.skill_industry|css_error }}'}
-        %label.control-label{'for':'id_skill_industry'} Industry skill level
-        .controls
-          = form.skill_industry
-          - if form.skill_industry.errors
-            %span.help-inline
-              - for error in form.skill_industry.errors
-                = error|escape
-  
-      %div{'class':'control-group{{ form.skill_production_efficiency|css_error }}'}
-        %label.control-label{'for':'id_skill_production_efficiency'} Production efficiency skill level
-        .controls
-          = form.skill_production_efficiency
-          - if form.skill_production_efficiency.errors
-            %span.help-inline
-              - for error in form.skill_production_efficiency.errors
-                = error|escape
+        %div{'class':'control-group{{ form.skill_industry|css_error }}'}
+          %label.control-label{'for':'id_skill_industry'} Industry skill level
+          .controls
+            = form.skill_industry
+            - if form.skill_industry.errors
+              %span.help-inline
+                - for error in form.skill_industry.errors
+                  = error|escape
+    
+        %div{'class':'control-group{{ form.skill_production_efficiency|css_error }}'}
+          %label.control-label{'for':'id_skill_production_efficiency'} Production efficiency skill level
+          .controls
+            = form.skill_production_efficiency
+            - if form.skill_production_efficiency.errors
+              %span.help-inline
+                - for error in form.skill_production_efficiency.errors
+                  = error|escape
       
       %div{'class':'control-group{{ form.hardwiring|css_error }}'}
         %label.control-label{'for':'id_hardwiring'} Hardwiring
@@ -145,7 +163,7 @@
     
     %fieldset
       %legend
-        Per Unit Sale Information
+        Sale Information
       
       %div{'class':'control-group{{ form.target_sell_price|css_error }}'}
         %label.control-label{'for':'id_target_sell_price'} Target sell price
@@ -159,6 +177,24 @@
           - if form.target_sell_price.errors
             %span.help-inline
               - for error in form.target_sell_price.errors
+                = error|escape
+      
+      %div{'class':'control-group{{ form.brokers_fee|css_error }}'}
+        %label.control-label{'for':'id_brokers_fee'} Broker's fee (%)
+        .controls
+          = form.brokers_fee
+          - if form.brokers_fee.errors
+            %span.help-inline
+              - for error in form.brokers_fee.errors
+                = error|escape
+
+      %div{'class':'control-group{{ form.sales_tax|css_error }}'}
+        %label.control-label{'for':'id_sales_tax'} Sales tax (%)
+        .controls
+          = form.sales_tax
+          - if form.sales_tax.errors
+            %span.help-inline
+              - for error in form.sales_tax.errors
                 = error|escape
 
     .control-group

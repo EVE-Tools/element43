@@ -13,4 +13,7 @@ urlpatterns = patterns('apps.common.views',
 
     # About page
     url(r'^about/', 'about_page', name='about_page'),
+    
+    # API Docs
+    url(r'^apidocs/', 'api_docs', name='api_docs'),
 )

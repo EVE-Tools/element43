@@ -57,6 +57,8 @@
                 %ul.dropdown-menu
                   %li
                     %a{'href':'{% url about_page %}'} About Element43
+                  %li
+                    %a{'href':'{% url api_docs %}'} API Documentation
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
@@ -75,6 +77,40 @@
                       %a{'href':'{% url dashboard %}'}
                         %i.icon-white.icon-home
                         Dashboard
+                    %li.dropdown-submenu
+                      %a{'tabindex':'-1', 'href':'#'}
+                        %i.icon-white.icon-book
+                        Trading
+                      %ul.dropdown-menu
+                        %li
+                          %a{'href':'{% url wallet_orders_active %}'}
+                            %i.icon-white.icon-asterisk
+                            Active Orders
+                        %li
+                          %a{'href':'{% url wallet_orders_archived %}'}
+                            %i.icon-white.icon-calendar
+                            Archived Orders
+                        - if characters_journal
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-book
+                              Journals
+                            %ul.dropdown-menu
+                              - for char in characters_journal
+                                %li
+                                  %a{'href':'{% url wallet_journal char_id=char.id %}'}
+                                    {{char.name}}
+                        - if characters_transaction
+                          %li.dropdown-submenu
+                            %a{'tabindex':'-1', 'href':'#'}
+                              %i.icon-white.icon-share
+                              Transactions
+                            %ul.dropdown-menu
+                              - for char in characters_transaction
+                                %li
+                                  %a{'href':'{% url wallet_transactions char_id=char.id %}'}
+                                    {{char.name}}
+                    %li.divider
                     %li
                       %a{'href':'{% url settings %}'}
                         %i.icon-white.icon-wrench
@@ -105,11 +141,29 @@
                 %li#min
                 %li#point :
                 %li#sec
-    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
-    %script{'type':'text/javascript', 'src':'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
+            .container{'style':'font-size: small;'}
+              %a{'href':'/about#copyright'} Copyright 2012 element43
+              , EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of
+              %a{'href':'http://www.ccpgames.com'} CCP hf
+              and used with permission
+    %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
+    %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
     - compress js
       %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
       %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
       %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.js'}
       %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+      - if GOOGLE_ANALYTICS_ENABLED
+        - if not request.DNT
+          %script{'type':'text/javascript'}
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_TRACKING_ID}}']);
+            _gaq.push(['_setDomainName', '{{GOOGLE_ANALYTICS_DOMAIN_NAME}}']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+              var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+              ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
     - block scripts

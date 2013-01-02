@@ -1,0 +1,9 @@
+Hello {{username}},
+it seems like one of your API keys associated with your account on Element43 has been invalidated.
+Note that we now no longer fetch data with this key. Normally this occurs when your key expires or permissions were changed.
+Please check your API keys in the settings section of Element43 and on the EVE Online account management pages.
+
+Key ID: {{key_id}}
+
+Best regards,
+Element43 Team

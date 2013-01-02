@@ -1,48 +1,94 @@
 - extends "base.haml"
 - load humanize
+- load custom_filters
 - block title
   = block.super
   Dashboard
 - block content
   .row-fluid
-    #graph.span8
+    .span8
+      #history
+      %table.table.table-condensed
+        %thead
+          %tr
+            %th
+            %th
+              Profit
+            %th
+              Brokers Fee
+            %th
+              Taxes
+        %tbody
+          %tr
+            %td
+              Month
+            - if month.profit > 0
+              %td.green
+                {{month.profit|intcomma}}
+            - else
+              %td.red
+                {{month.profit|intcomma}}
+            %td.red
+              {{month.brokers_fee|intcomma}}
+            %td.red
+              {{month.taxes|intcomma}}
+          %tr
+            %td
+              Week
+            - if week.profit > 0
+              %td.green
+                {{week.profit|intcomma}}
+            - else
+              %td.red
+                {{week.profit|intcomma}}
+            %td.red
+              {{week.brokers_fee|intcomma}}
+            %td.red
+              {{week.taxes|intcomma}}
+          %tr
+            %td
+              Day
+            - if day.profit > 0
+              %td.green
+                {{day.profit|intcomma}}
+            - else
+              %td.red
+                {{day.profit|intcomma}}
+            %td.red
+              {{day.brokers_fee|intcomma}}
+            %td.red
+              {{day.taxes|intcomma}}
     .span4
       %table.table.table-condensed
-        - for point in market_data
+        - for point in sheet_data
           %tr
             %td{'width':'64px'}
-              %img{'src':'http://image.eveonline.com/Character/{{point.char.id}}_64.jpg', 'alt':'{{point.char.name}}'}
+              %img{'src':'//image.eveonline.com/Character/{{point.char.id}}_64.jpg', 'alt':'{{point.char.name}}'}
             %td
               .row-fluid
                 .span12
-                  %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/dashboard/char_sheet/{{point.char.id}}/"});'}
+                  %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/secure/dashboard/char_sheet/{{point.char.id}}/"});'}
                     {{point.char.name}}
                   .balance
                     {{point.char.balance|intcomma}}
               .row-fluid
                 .span12
                   Next Update: {{point.next_update|naturaltime}}
-  .row-fluid
-    .span8
-      %h2 Actice Orders
-      %table.table.table-condensed.table-striped
-    .span4
-      %table.table.table-condensed.table-striped
-        %tbody
+      %h5 Last 10 Sales
+      %table.table.table-condensed
+        - for sale in last_ten_sales
           %tr
-            %td Sell volume:
-            %td 10,254,561
-          %tr
-            %td Buy volume:
-            %td 3,541,985
-          %tr
-            %td Total:
-            %td 13,796,546
-  .row-fluid
-    .span12
-      %h2
-        Active Industry Jobs
-      %table.table.table-condensed.table-striped
+            %td
+              %img{'src':'{{IMAGE_SERVER}}/Type/{{sale.invtype_id}}_16.png', 'alt':'icon'}
+            %td
+              {{sale.quantity|intcomma}}
+            %td
+              %a{'href':'{% url wallet_type type_id=sale.invtype_id %}'}
+                {{sale.invtype.name}}
+            %td.text-right
+              {{sale.price|intcomma}}
+            %td.text-right.green
+              {{sale.value|intcomma}}
   #char-sheet.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
     .modal-header
       %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×

@@ -15,7 +15,7 @@ from django.utils import simplejson
 
 # Models
 from eve_db.models import InvType, StaStation
-from apps.market_data.models import Orders, OrdersWarehouse, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
+from apps.market_data.models import Orders, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
 
 """
 Those are our views. We have to use the RequestContext for CSRF protection,
@@ -49,6 +49,15 @@ def about_page(request):
     rcontext = RequestContext(request, {})
 
     return render_to_response('common/about_page.haml', rcontext)
+
+def api_docs(request):
+    """
+    Returns the about page with information about the API
+    """
+
+    rcontext = RequestContext(request, {})
+
+    return render_to_response('common/api_docs.haml', rcontext)
 
 
 def stats_json(request, region_id):

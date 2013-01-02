@@ -11,6 +11,11 @@ from apps.manufacturing.settings import MANUFACTURING_MAX_BLUEPRINT_HISTORY, MAN
 from eve_db.models import InvBlueprintType, InvTypeMaterial, RamTypeRequirement
 from apps.market_data.models import ItemRegionStat
 
+def is_producible(type_id):
+    """
+    Returns 'True' if the given type_id can be built with an Blueprint and 'False' otherwise.
+    """
+    return InvBlueprintType.objects.filter(product_type__id=type_id).exists()
 
 def is_tech1(type_id):
     """
@@ -99,6 +104,16 @@ def calculate_material_prices(materials):
 
     return materials
 
+def get_materials(form_data, blueprint):
+    """
+    Returns the amount of materials required for manufacturing the given blueprint.
+    """
+    if is_advanced_manufacturing(blueprint):
+        materials = get_tech2_materials(form_data, blueprint)
+    else:
+        materials = get_tech1_materials(form_data, blueprint)
+    
+    return materials
 
 def get_tech1_materials(form_data, blueprint):
     """
@@ -120,7 +135,8 @@ def get_tech1_materials(form_data, blueprint):
             'quantity': base_material['quantity'],
             'volume': base_material['material_type__volume'],
             'price': 0,
-            'price_total': 0
+            'price_total': 0,
+            'producible': is_producible(base_material['material_type__id'])
         }))
 
     materials = calculate_quantities(form_data, blueprint, materials)
@@ -177,7 +193,8 @@ def get_tech2_materials(form_data, blueprint):
             'quantity': build_requirement['quantity'] * blueprint_runs,
             'volume': build_requirement['required_type__volume'] * build_requirement['quantity'] * blueprint_runs,
             'price': 0,
-            'price_total': 0
+            'price_total': 0,
+            'producible':is_producible(build_requirement['required_type__id'])
         }))
 
         # If recycle is True the build_requirement is the required Tech I item.
@@ -210,7 +227,8 @@ def get_tech2_materials(form_data, blueprint):
                 'quantity': extra_material['quantity'],
                 'volume': extra_material['material_type__volume'],
                 'price': 0,
-                'price_total': 0
+                'price_total': 0,
+                'producible':is_producible(extra_material['material_type__id'])
             }
 
             mat = calculate_quantity(form_data, blueprint, mat)
@@ -218,6 +236,40 @@ def get_tech2_materials(form_data, blueprint):
 
     return materials
 
+def calculate_production_time(form_data, blueprint):
+    """ Returns the production time for the given blueprint. """
+    
+    """
+    The following data is taken into account while calculation:
+    
+    1. Players industry skill level
+    2. Players hardwirings
+    3. Installation slot production time modifier
+    4. Blueprint Production efficiency
+    """
+    # implant modifiers. (type_id, modifier)
+    IMPLANT_MODIFIER = {
+        0: 0.00,  # no hardwiring
+        27170: 0.01,  # Zainou 'Beancounter' Industry BX-801
+        27167: 0.02,  # Zainou 'Beancounter' Industry BX-802
+        27171: 0.04  # Zainou 'Beancounter' Industry BX-804
+    }
+    
+    # calculate production time modifuer
+    implant_modifier = IMPLANT_MODIFIER[int(form_data['hardwiring'])]
+    slot_productivity_modifier = form_data['slot_production_time_modifier']
+    production_time_modifier = (1 - (0.04 * float(form_data['skill_industry']))) * (1 - implant_modifier) * slot_productivity_modifier
+    
+    base_production_time = blueprint.production_time
+    production_time = base_production_time * production_time_modifier
+    blueprint_pe = form_data['blueprint_production_efficiency']
+    
+    if blueprint_pe >= 0:
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
+    else:
+        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
+    
+    return production_time
 
 def calculate_manufacturing_job(form_data):
     """
@@ -240,13 +292,7 @@ def calculate_manufacturing_job(form_data):
     # --------------------------------------------------------------------------
     # Calculate bill of materials
     # --------------------------------------------------------------------------
-    materials = []
-
-    if is_advanced_manufacturing(blueprint):
-        materials = get_tech2_materials(form_data, blueprint)
-    else:
-        materials = get_tech1_materials(form_data, blueprint)
-
+    materials = get_materials(form_data, blueprint)
     materials = calculate_material_prices(materials)
     materials_cost_total = math.fsum([material['price_total'] for material in materials])
     materials_volume_total = math.fsum([material['volume'] for material in materials])
@@ -262,28 +308,7 @@ def calculate_manufacturing_job(form_data):
     # --------------------------------------------------------------------------
     # Calculate production time
     # --------------------------------------------------------------------------
-
-    # implant modifiers. (type_id, modifier)
-    IMPLANT_MODIFIER = {
-        0: 0.00,  # no hardwiring
-        27170: 0.01,  # Zainou 'Beancounter' Industry BX-801
-        27167: 0.02,  # Zainou 'Beancounter' Industry BX-802
-        27171: 0.04  # Zainou 'Beancounter' Industry BX-804
-    }
-
-    # calculate production time modifuer
-    implant_modifier = IMPLANT_MODIFIER[int(form_data['hardwiring'])]
-    slot_productivity_modifier = form_data['slot_production_time_modifier']
-    production_time_modifier = (1 - (0.04 * float(form_data['skill_industry']))) * (1 - implant_modifier) * slot_productivity_modifier
-
-    base_production_time = blueprint.production_time
-    production_time = base_production_time * production_time_modifier
-    blueprint_pe = form_data['blueprint_production_efficiency']
-
-    if blueprint_pe >= 0:
-        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe / (1.00 + blueprint_pe)))
-    else:
-        production_time *= (1 - (float(blueprint.productivity_modifier) / base_production_time) * (blueprint_pe - 1))
+    production_time = calculate_production_time(form_data, blueprint)
 
     result['production_time_run'] = round(production_time)
     result['production_time_total'] = round(production_time * blueprint_runs)
@@ -293,13 +318,36 @@ def calculate_manufacturing_job(form_data):
     result['blueprint_cost_total'] = form_data['blueprint_price']
     result['revenue_unit'] = form_data['target_sell_price']
     result['revenue_total'] = form_data['target_sell_price'] * result['produced_units']
-    result['total_cost_unit'] = result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
-    result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
-    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
-    result['profit_total'] = result['profit_unit'] * result['produced_units']
     result['blueprint_type_id'] = blueprint_type_id
     result['blueprint_name'] = blueprint.blueprint_type.name
     result['blueprint_runs'] = blueprint_runs
+    
+    brokers_fee = form_data.get('brokers_fee', 0)
+    sales_tax = form_data.get('sales_tax', 0)
+    
+    if not brokers_fee:
+        brokers_fee = 0
+        
+    if not sales_tax:
+        sales_tax = 0
+    
+    result['brokers_fee_unit'] = result['revenue_unit'] * (brokers_fee / 100)
+    result['brokers_fee_total'] = result['brokers_fee_unit'] * result['produced_units']
+    result['sales_tax_unit'] = result['revenue_unit'] * (sales_tax / 100)
+    result['sales_tax_total'] = result['sales_tax_unit'] * result['produced_units']
+    
+    result['total_cost_unit'] = result['brokers_fee_unit'] + result['sales_tax_unit'] + result['blueprint_cost_unit'] + Decimal((materials_cost_total / result['produced_units']))
+    result['total_cost_total'] = result['total_cost_unit'] * result['produced_units']
+    
+    result['profit_unit'] = form_data['target_sell_price'] - result['total_cost_unit']
+    result['profit_total'] = result['profit_unit'] * result['produced_units']
+    result['profit_total_hour'] = result['profit_total'] / Decimal(result['production_time_total'] / 3600)
+    result['profit_total_day'] = result['profit_total_hour'] * 24
+
+    if result['profit_total'] != 0 and result['total_cost_total'] != 0:
+        result['profit_total_percent'] = (result['profit_total'] / result['total_cost_total']) * 100
+    else:
+        result['profit_total_percent'] = 0
 
     return result
 

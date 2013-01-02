@@ -1,0 +1,124 @@
+- extends "base.haml"
+- load humanize
+- block title
+  = block.super
+  Element43 API Documentation
+- block content
+  %h1 Element43 Web API
+  %p
+    Element43 provides access to it's database for market lookups via XML and JSON.  This is provided so that those people
+    creating spreadsheets or other tools that want real-time market information and statistics will have access to it.
+  %h5 Rules of the Road
+  %p
+    %ol
+      %li
+        Use proper type-id's.  Using an improper typeid for a lookup will fail.  Please make sure to look in the
+        static data dump to make sure you are requesting the right information.  Abuse of the API system will result in your IP
+        being banned.
+      %li
+        Do not overquery.  This stuff is realtime but you don't need to be refreshing every second.  Be rational about it.
+  %h3 marketstat
+  %p
+    This API is the element43 extended data API.  It provides additional data above and beyond what the Eve-Central API provides.  Most fields
+    are the same so it can probably be used as a drop-in replacement while providing more detailed information.  If you need true legacy parity
+    please see the marketstat_ec API call below.
+    %ul
+      %li Endpoint:
+        %a{'href':'http://element-43.com/market/api/marketstat'} http://element-43.com/market/api/marketstat
+      %li Purpose: To provide real-time market data on specific items in regionally aggregate form.  This data is for all active/open orders in the database.
+      %li Method: POST and GET
+      %li Return data: XML and JSON (forthcoming)
+
+    %table.table.table-striped.table-condensed
+      %thead
+        %tr
+          %th
+            Parameter
+          %th
+            Usage
+          %th
+            Required
+          %th
+            Default
+          %th
+            Multiple Submissions Permitted
+      %tbody
+        %tr
+          %td
+            regionlimit
+          %td
+            The mapregion id of the specific region you are interested in
+          %td
+            No
+          %td
+            Forge (10000002)
+          %td
+            No
+        %tr
+          %td
+            typeid
+          %td
+            The invtype ID of the item you are interested in getting data for
+          %td
+            Yes
+          %td
+            NONE
+          %td
+            Yes
+    %p
+      Example:
+        %a{'href':'http://www.element-43.com/market/api/marketstat/?typeid=34&typeid=35&typeid=36&typeid=37&typeid=38&typeid=39&typeid=40'} http://www.element-43.com/market/api/marketstat/?typeid=34&typeid=35&typeid=36&typeid=37&typeid=38&typeid=39&typeid=40
+
+  %h3 ec_marketstat
+  %p
+    This API replicates what EVE-Central does for buy and sell.  This allows you to just use our endpoint rather than theirs as a drop-in
+    replacement for existing tools.
+    %ul
+      %li Endpoint:
+        %a{'href':'http://element-43.com/market/api/ec_marketstat'} http://element-43.com/market/api/ec_marketstat
+      %li Purpose: To provide real-time market data on specific items in regionally aggregate form.  This data is for all active/open orders in the database.
+      %li Method: POST and GET
+      %li Return data: XML
+
+    %table.table.table-striped.table-condensed
+      %thead
+        %tr
+          %th
+            Parameter
+          %th
+            Usage
+          %th
+            Required
+          %th
+            Default
+          %th
+            Multiple Submissions Permitted
+      %tbody
+        %tr
+          %td
+            regionlimit
+          %td
+            The mapregion id of the specific region you are interested in
+          %td
+            No
+          %td
+            Forge (10000002)
+          %td
+            No
+        %tr
+          %td
+            typeid
+          %td
+            The invtype ID of the item you are interested in getting data for
+          %td
+            Yes
+          %td
+            NONE
+          %td
+            Yes
+    %p
+      Example:
+        %a{'href':'http://www.element-43.com/market/api/ec_marketstat/?typeid=34&typeid=35&typeid=36&typeid=37&typeid=38&typeid=39&typeid=40'} http://www.element-43.com/market/api/ec_marketstat/?typeid=34&typeid=35&typeid=36&typeid=37&typeid=38&typeid=39&typeid=40
+
+- block scripts
+  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}

@@ -1,0 +1,71 @@
+- extends "base.haml"
+- load humanize
+- load custom_filters
+- block title
+  = block.super
+  {{request.user.username}} - Journal
+- block content
+  %h1 Journal of {{char.name}}
+  %h3 Filter by Reference Type
+  %select#ref-type-select{'name':'ref-type'}
+    - for ref_type in ref_types
+      %option{'value':'{{ref_type.id}}'}
+        {{ref_type.name}}
+  %ul.pager
+    - if journal.has_previous
+      %li.previous
+        %a{'href':'?page={{journal.previous_page_number}}'}
+          &larr; Newer
+    - else
+      %li.previous.disabled
+        %a{'href':'#'}
+          &larr; Newer
+    - if journal.has_next
+        %li.next
+          %a{'href':'?page={{journal.next_page_number}}'}
+            Older &rarr;
+    - else
+        %li.next.disabled
+          %a{'href':'#'}
+            Older &rarr;
+  %table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th
+          Type
+        %th
+          From
+        %th
+          To
+        %th.text-right
+          Amount
+        %th.text-right
+          Tax
+        %th.text-right
+          Balance
+    %tbody
+      - for entry in journal
+        %tr
+          %td
+            {{entry.ref_type.name}}
+          %td
+            {{entry.owner_name_1}}
+          %td
+            {{entry.owner_name_2}}
+          - if entry.amount < 0
+            %td.red.text-right
+              {{entry.amount|intcomma}}
+          - else
+            %td.green.text-right
+              {{entry.amount|intcomma}}
+          %td.text-right
+            {{entry.tax_amount|intcomma}}
+          %td.text-right
+            {{entry.balance|intcomma}}
+- block scripts
+  %script{'type':'text/javascript'}
+    $(document).ready(function() {
+      $('#ref-type-select').bind('change', function(){
+        window.location = window.location.href.split('?')[0] + '?ref_id=' + $(this).val();
+      });
+    });

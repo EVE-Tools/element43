@@ -43,6 +43,11 @@ RAVEN_CONFIG = {
     'dsn': 'http://public:secret@example.com/1',
 }
 
+# Google Analytics
+GOOGLE_ANALYTICS_ENABLED = False
+GOOGLE_ANALYTICS_TRACKING_ID = 'YOURIDGOESHERE'
+GOOGLE_ANALYTICS_DOMAIN_NAME = 'YOURDOMAINGOESHERE'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -65,6 +70,9 @@ CACHES = {
 
 # Store flash messages in session
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Secure session cookie if not in debug mode
+SESSION_COOKIE_SECURE = False
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -263,7 +271,7 @@ LOGGING = {
     }
 }
 
-IMAGE_SERVER = 'http://images.element-43.com'
+IMAGE_SERVER = '//images.element-43.com'
 MEMCACHE_SERVER = '127.0.0.1'
 
 # This allows you to override these settings without modifying the defaults.
