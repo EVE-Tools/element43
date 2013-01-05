@@ -7,7 +7,7 @@ ujson
 django
 south
 django-devserver
-git+http://github.com/gtaylor/django-eve-db.git
+git+http://github.com/EVE-Tools/django-eve-db.git
 numpy
 python-memcached
 git+http://github.com/jenslauterbach/django-eve-igb.git
