@@ -22,10 +22,18 @@ $(document).ready(function() {
         }
     });
 
+    var regions_loaded = false;
+
     $('#region_link').click(function(e) {
         if($('#filters').is(':visible')) {
             $('#filters').slideUp();
         }
+
+        if (!regions_loaded){
+            $('#regions').load('/market/tab/regions/' + invTypeID + '/');
+        }
+        regions_loaded = true;
+
     });
 
     $('#mats_link').click(function(e) {

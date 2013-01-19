@@ -12,7 +12,6 @@ import numpy as np
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.conf import settings
 
 # Aggregation
 from django.db.models import Sum
@@ -128,7 +127,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
-        min_price = {}
+
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
                                                      mapregion_id__exact=10000002)
@@ -216,8 +215,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
     breadcrumbs = group_breadcrumbs(type_object.market_group_id)
     # Use all orders for quicklook and add the system_data to the context
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
-    rcontext = RequestContext(request, {'IMAGE_SERVER': settings.IMAGE_SERVER,
-                                        'region': region_object,
+    rcontext = RequestContext(request, {'region': region_object,
                                         'type': type_object,
                                         'materials': materials,
                                         'totalprice': totalprice,
@@ -256,7 +254,6 @@ def quicklook(request, type_id=34):
     for material in materials:
         # Get jita pricing
         stat_object = ItemRegionStat()
-        min_price = {}
 
         try:
             stat_object = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
@@ -276,7 +273,48 @@ def quicklook(request, type_id=34):
         material['price'] = stat_object.sellmedian
         totalprice += material['total']
 
-    # Fetch all buy/sell orders from DB
+    # Fetch top 50 buy/sell orders from DB
+    buy_orders = Orders.active.select_related('stastation__id',
+                                               'stastation__name',
+                                               'mapregion__id',
+                                               'mapregion__name',
+                                               'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                        is_bid=True,
+                                                                                        is_active=True).order_by('-price')[:50]
+
+    sell_orders = Orders.active.select_related('stastation__id',
+                                               'stastation__name',
+                                               'mapregion__id',
+                                               'mapregion__name',
+                                               'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                        is_bid=False,
+                                                                                        is_active=True).order_by('price')[:50]
+
+    # Force evaluation of queryset to avoid re-evaluation in the template
+    len(buy_orders)
+    len(sell_orders)
+
+    # Load bredcrubs
+    breadcrumbs = group_breadcrumbs(type_object.market_group_id)
+
+    rcontext = RequestContext(request, {'type': type_object,
+                                        'region_ids': region_ids,
+                                        'region_names': simplejson.dumps(region_names),
+                                        'materials': materials,
+                                        'totalprice': totalprice,
+                                        'buy_orders': buy_orders,
+                                        'sell_orders': sell_orders,
+                                        'breadcrumbs': breadcrumbs})
+
+    return render_to_response('market/quicklook/quicklook.haml', rcontext)
+
+
+def quicklook_tab_regions(request, type_id=34):
+
+    # Get the item type
+    type_object = InvType.objects.get(id=type_id)
+
+    # Fetch all buy/sell orders of that type from DB
     buy_orders = Orders.active.filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
     sell_orders = Orders.active.filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
 
@@ -313,8 +351,8 @@ def quicklook(request, type_id=34):
             temp_data.append(round(np.std(region_ask_prices), 2))
             temp_data.append(len(region_ask_prices))
             temp_data.append(Orders.active.filter(mapregion_id=region,
-                                                   invtype=type_id,
-                                                   is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                                                  invtype=type_id,
+                                                  is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
@@ -330,8 +368,8 @@ def quicklook(request, type_id=34):
             temp_data.append(round(np.std(region_bid_prices), 2))
             temp_data.append(len(region_bid_prices))
             temp_data.append(Orders.active.filter(mapregion_id=region,
-                                                   invtype=type_id,
-                                                   is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                                                  invtype=type_id,
+                                                  is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
             temp_data.append(region)
         else:
             # Else there are no orders in this region -> add a bunch of 0s
@@ -340,23 +378,14 @@ def quicklook(request, type_id=34):
 
         # Append temp_data to region_data
         region_data.append(temp_data)
-        # Sort alphabetically by region name
-        region_data = sorted(region_data, key=lambda region: region[0])
 
-    breadcrumbs = group_breadcrumbs(type_object.market_group_id)
-    # Use the 50 'best' orders for quicklook and add the region_data to the context
-    rcontext = RequestContext(request, {'IMAGE_SERVER': settings.IMAGE_SERVER,
-                                        'type': type_object,
-                                        'region_ids': region_ids,
-                                        'region_names': simplejson.dumps(region_names),
-                                        'materials': materials,
-                                        'totalprice': totalprice,
-                                        'buy_orders': buy_orders[:50],
-                                        'sell_orders': sell_orders[:50],
-                                        'regions': region_data,
-                                        'breadcrumbs': breadcrumbs})
+    # Sort alphabetically by region name
+    region_data = sorted(region_data, key=lambda region: region[0])
 
-    return render_to_response('market/quicklook/quicklook.haml', rcontext)
+    rcontext = RequestContext(request, {'type': type_object,
+                                        'regions': region_data})
+
+    return render_to_response('market/quicklook/_quicklook_tab_regions.haml', rcontext)
 
 
 def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
@@ -398,13 +427,13 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
 
     # Fetch all buy orders from DB
     buy_orders = Orders.active.select_related('stastation__id',
-                                               'stastation__name',
-                                               'mapregion__id',
-                                               'mapregion__name',
-                                               'mapsolarsystem__security_level').filter(invtype=type_id,
-                                                                                        is_bid=True,
-                                                                                        mapsolarsystem__security_level__gte=min_sec,
-                                                                                        generated_at__gte=filter_time).order_by('-price')[:50]
+                                              'stastation__name',
+                                              'mapregion__id',
+                                              'mapregion__name',
+                                              'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                       is_bid=True,
+                                                                                       mapsolarsystem__security_level__gte=min_sec,
+                                                                                       generated_at__gte=filter_time).order_by('-price')[:50]
 
     rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type': InvType.objects.get(id=type_id)})
 
