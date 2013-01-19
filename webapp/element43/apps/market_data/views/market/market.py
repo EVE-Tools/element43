@@ -3,6 +3,7 @@ import time
 
 # Util
 from datetime import datetime, timedelta
+from django.utils.timezone import utc
 
 # numpy processing imports
 import numpy as np
@@ -154,8 +155,8 @@ def quicklook_region(request, region_id=10000002, type_id=34):
     #
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
-    sell_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
+    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
+    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
 
     orders = []
     orders += buy_orders
@@ -276,8 +277,8 @@ def quicklook(request, type_id=34):
         totalprice += material['total']
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
-    sell_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
+    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
+    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
 
     # Make list with all orders
     orders = []
@@ -367,13 +368,17 @@ def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
     if min_sec == 0:
         min_sec = -10
 
-    filter_time = datetime.now() - timedelta(hours=int(max_age))
+    filter_time = datetime.utcnow().replace(tzinfo=utc) - timedelta(hours=int(max_age))
 
     # Fetch all sell orders from DB
-    sell_orders = Orders.active.filter(invtype=type_id,
-                                        is_bid=False,
-                                        mapsolarsystem__security_level__gte=min_sec,
-                                        generated_at__gte=filter_time).order_by('price')[:50]
+    sell_orders = Orders.active.select_related('stastation__id',
+                                               'stastation__name',
+                                               'mapregion__id',
+                                               'mapregion__name',
+                                               'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                        is_bid=False,
+                                                                                        mapsolarsystem__security_level__gte=min_sec,
+                                                                                        generated_at__gte=filter_time).order_by('price')[:50]
 
     rcontext = RequestContext(request, {'sell_orders': sell_orders, 'type': InvType.objects.get(id=type_id)})
 
@@ -389,13 +394,17 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
     if min_sec == 0:
         min_sec = -10
 
-    filter_time = datetime.now() - timedelta(hours=int(max_age))
+    filter_time = datetime.utcnow().replace(tzinfo=utc) - timedelta(hours=int(max_age))
 
     # Fetch all buy orders from DB
-    buy_orders = Orders.active.filter(invtype=type_id,
-                                       is_bid=True,
-                                       mapsolarsystem__security_level__gte=min_sec,
-                                       generated_at__gte=filter_time).order_by('-price')[:50]
+    buy_orders = Orders.active.select_related('stastation__id',
+                                               'stastation__name',
+                                               'mapregion__id',
+                                               'mapregion__name',
+                                               'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                        is_bid=True,
+                                                                                        mapsolarsystem__security_level__gte=min_sec,
+                                                                                        generated_at__gte=filter_time).order_by('-price')[:50]
 
     rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type': InvType.objects.get(id=type_id)})
 
