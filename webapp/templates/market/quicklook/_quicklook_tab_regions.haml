@@ -1,61 +1,66 @@
 - load humanize
-%table.table.table-striped.table-condensed
-  %thead
-    %tr
-      %th
-        Region
-      %th
-      %th.text-right
-        Low
-      %th.text-right
-        High
-      %th.text-right
-        Avg
-      %th.text-right
-        Median
-      %th.text-right
-        Standard Deviation
-      %th.text-right
-        Lots
-      %th.text-right
-        Volume
-  %tbody
-  - for region in regions
+#panel{'style':'display: none;'}
+  %script{'type':'text/javascript'}
+      $(document).ready(function(){
+        $('#panel').fadeIn(400);
+      });
+  %table.table.table-striped.table-condensed
+    %thead
       %tr
-        %td
-          %a{'href':'{% url quicklook_region type_id=type.id region_id=region.8 %}'}
-              = region.0
-        %td
-          Ask
-        %td.text-right
-          = region.9|floatformat:2|intcomma
-        %td.text-right
-          = region.10|floatformat:2|intcomma
-        %td.text-right
-          = region.11|floatformat:2|intcomma
-        %td.text-right
-          = region.12|floatformat:2|intcomma
-        %td.text-right
-          = region.13|floatformat:2|intcomma
-        %td.text-right
-          = region.14|intcomma
-        %td.text-right
-          = region.15|intcomma
-      %tr
-        %td
-        %td
-          Bid
-        %td.text-right
-          = region.1|floatformat:2|intcomma
-        %td.text-right
-          = region.2|floatformat:2|intcomma
-        %td.text-right
-          = region.3|floatformat:2|intcomma
-        %td.text-right
-          = region.4|floatformat:2|intcomma
-        %td.text-right
-          = region.5|floatformat:2|intcomma
-        %td.text-right
-          = region.6|intcomma
-        %td.text-right
-          = region.7|intcomma
+        %th
+          Region
+        %th
+        %th.text-right
+          Low
+        %th.text-right
+          High
+        %th.text-right
+          Avg
+        %th.text-right
+          Median
+        %th.text-right
+          Standard Deviation
+        %th.text-right
+          Lots
+        %th.text-right
+          Volume
+    %tbody
+    - for region in regions
+        %tr
+          %td
+            %a{'href':'{% url quicklook_region type_id=type.id region_id=region.8 %}'}
+                = region.0
+          %td
+            Ask
+          %td.text-right
+            = region.9|floatformat:2|intcomma
+          %td.text-right
+            = region.10|floatformat:2|intcomma
+          %td.text-right
+            = region.11|floatformat:2|intcomma
+          %td.text-right
+            = region.12|floatformat:2|intcomma
+          %td.text-right
+            = region.13|floatformat:2|intcomma
+          %td.text-right
+            = region.14|intcomma
+          %td.text-right
+            = region.15|intcomma
+        %tr
+          %td
+          %td
+            Bid
+          %td.text-right
+            = region.1|floatformat:2|intcomma
+          %td.text-right
+            = region.2|floatformat:2|intcomma
+          %td.text-right
+            = region.3|floatformat:2|intcomma
+          %td.text-right
+            = region.4|floatformat:2|intcomma
+          %td.text-right
+            = region.5|floatformat:2|intcomma
+          %td.text-right
+            = region.6|intcomma
+          %td.text-right
+            = region.7|intcomma
