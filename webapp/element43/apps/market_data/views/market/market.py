@@ -154,8 +154,8 @@ def quicklook_region(request, region_id=10000002, type_id=34):
     #
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.active.filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
-    sell_orders = Orders.active.filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
+    buy_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=True, mapregion_id=region_id).order_by('-price')
+    sell_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=False, mapregion_id=region_id).order_by('price')
 
     orders = []
     orders += buy_orders
@@ -276,8 +276,8 @@ def quicklook(request, type_id=34):
         totalprice += material['total']
 
     # Fetch all buy/sell orders from DB
-    buy_orders = Orders.objects.filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
-    sell_orders = Orders.objects.filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
+    buy_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=True, is_active=True).order_by('-price')
+    sell_orders = Orders.active.select_related().filter(invtype=type_id, is_bid=False, is_active=True).order_by('price')
 
     # Make list with all orders
     orders = []
