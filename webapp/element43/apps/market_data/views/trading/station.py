@@ -205,14 +205,12 @@ def import_system(request, station_id=60003760, system_id=30000142):
             # Get filtered local bid qty
             'bid_qty_filtered': Orders.active.filter(stastation_id=station_id,
                                                       invtype_id=point['id'], is_bid=True,
-                                                      minimum_volume=1,
                                                       price__gte=(point['local_bid'] - (point['local_bid'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum'],
 
             # Get filtered ask qty of the other system
             'ask_qty_filtered': Orders.active.filter(mapsolarsystem_id=system_id,
                                                       invtype_id=point['id'], is_bid=False,
-                                                      minimum_volume=1,
                                                       price__lte=(point['foreign_ask'] + (point['foreign_ask'] * 0.01)))
             .aggregate(Sum("volume_remaining"))['volume_remaining__sum']}
         point.update(new_values)
