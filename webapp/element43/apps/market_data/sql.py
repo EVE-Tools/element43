@@ -87,11 +87,11 @@ def import_markup(import_station_id=60008494, export_region_id=0, export_system_
     else:
         query += "WHERE stastation_id = %s "
 
-    query += """ AND is_bid = 'f' AND is_suspicious = 'f' AND is_active = 't'
+    query += """ AND is_bid = 'f' AND is_suspicious = 'f' AND is_active = 't' AND minimum_volume = 1
                 GROUP BY invtype_id ) a ON (t.id = a.invtype_id AND foreign_ask > 0)
             INNER JOIN (SELECT invtype_id, Max(price) AS local_bid
                         FROM market_data_orders
-                        WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND is_active = 't'
+                        WHERE stastation_id = %s AND is_bid = 't' AND is_suspicious = 'f' AND is_active = 't' AND minimum_volume = 1
                         GROUP BY invtype_id ) b ON (t.id = b.invtype_id AND local_bid > 0)
 
             WHERE t.id IN (SELECT DISTINCT market_data_orders.invtype_id
