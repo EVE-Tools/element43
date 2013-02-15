@@ -17,6 +17,7 @@ def is_producible(type_id):
     """
     return InvBlueprintType.objects.filter(product_type__id=type_id).exists()
 
+
 def is_tech1(type_id):
     """
     Returns 'True' if the given type_id belongs to a Tech I item and 'False' otherwise.
@@ -27,9 +28,9 @@ def is_tech1(type_id):
 def is_advanced_manufacturing(blueprint):
     """
     Returns 'True' if the given blueprints requires more advanced production calculations.
-    Normally those are all blueprints of items > Tech I
+    Normally those are all blueprints for items > Tech I.
     """
-    return RamTypeRequirement.objects.filter(type=blueprint).exists()
+    return RamTypeRequirement.objects.filter(type=blueprint, type__is_published=True).exists()
 
 
 def calculate_quantities(form_data, blueprint, materials):
