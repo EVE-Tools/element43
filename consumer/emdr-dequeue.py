@@ -355,7 +355,7 @@ def thread(message):
                         suspicious = False
                         if (order.type_id!=statTypeID) or (order.region_id!=statRegionID):
                             gevent.sleep()
-                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s" % (order.type_id, order.region_id)
+                            sql = "SELECT COUNT(id), STDDEV(price), AVG(price) FROM market_data_orders WHERE invtype_id=%s AND mapregion_id=%s AND is_active=true" % (order.type_id, order.region_id)
                             statTypeID = order.type_id
                             statRegionID = order.region_id
                             recordCount = None
