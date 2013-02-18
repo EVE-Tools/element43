@@ -89,14 +89,14 @@ def stats_json(request, region_id):
         mc.set("e43-stats-history", history, time=3600)
 
     new_orders_per_minute = EmdrStats.objects.filter(
-        status_type=1).order_by("message_timestamp")[:1][0].status_count / 5
+        status_type=1).order_by("-message_timestamp")[:1][0].status_count / 5
     updated_orders_per_minute = EmdrStats.objects.filter(
-        status_type=2).order_by("message_timestamp")[:1][0].status_count / 5
+        status_type=2).order_by("-message_timestamp")[:1][0].status_count / 5
     old_orders_per_minute = EmdrStats.objects.filter(
-        status_type=3).order_by("message_timestamp")[:1][0].status_count / 5
+        status_type=3).order_by("-message_timestamp")[:1][0].status_count / 5
 
     history_messages_per_minute = EmdrStats.objects.filter(
-        status_type=1).order_by("message_timestamp")[:1][0].status_count / 5
+        status_type=1).order_by("-message_timestamp")[:1][0].status_count / 5
 
     # 2. Minerals and PLEX
     types = request.GET.getlist('type')
