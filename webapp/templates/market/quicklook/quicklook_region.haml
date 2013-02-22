@@ -35,71 +35,80 @@
                 %p
                   = type.description|striptags
             #history
+            %h3 Ask / Sell
+            %table.table.table-striped.table-condensed
+              %thead
+                %tr
+                  %th
+                    Location
+                  %th.text-right
+                    Price
+                  %th.text-right
+                    Quantity
+                  %th.text-right
+                    Last Updated
+              %tbody
+                - for order in sell_orders|slice:":5"
+                  %tr
+                    %td
+                      %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                        • {{order.mapsolarsystem.security_level|sec0to1}}
+                      %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
+                        = order.mapregion.name
+                      \-
+                      %a{'href':'{% url station station_id=order.stastation.id %}'}
+                        = order.stastation.name
+                    %td.text-right
+                      = order.price|floatformat:"2"|intcomma
+                    %td.text-right
+                      = order.volume_remaining|intcomma
+                    %td.text-right
+                      = order.generated_at|naturaltime
+            .text-right
+              .btn.btn-primary{'onclick':'$("#ask_link").trigger("click");'}
+                %i.icon-white.icon-chevron-right
+                More
+            %h3 Bid / Buy
+            %table.table.table-striped.table-condensed
+              %thead
+                %tr
+                  %th
+                    Location
+                  %th.text-right
+                    Price
+                  %th.text-right
+                    Quantity
+                  %th.text-right
+                    Last Updated
+              %tbody
+                - for order in buy_orders|slice:":5"
+                  %tr
+                    %td
+                      %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                        • {{order.mapsolarsystem.security_level|sec0to1}}
+                      %a{'href':'{% url quicklook_region type_id=type.id region_id=order.mapregion.id %}'}
+                        = order.mapregion.name
+                      \-
+                      %a{'href':'{% url station station_id=order.stastation.id %}'}
+                        = order.stastation.name
+                    %td.text-right
+                      = order.price|floatformat:"2"|intcomma
+                    %td.text-right
+                      = order.volume_remaining|intcomma
+                    %td.text-right
+                      = order.generated_at|naturaltime
+            .text-right
+              .btn.btn-primary{'onclick':'$("#bid_link").trigger("click");'}
+                %i.icon-white.icon-chevron-right
+                More
         #ask.tab-pane.fade
           - include 'market/quicklook/_quicklook_ask.haml'
         #bid.tab-pane.fade
           - include 'market/quicklook/_quicklook_bid.haml'
         #systems.tab-pane.fade
-          %h3 Systems
-          %table.table.table-striped.table-condensed
-            %thead
-              %tr
-                %th
-                  System
-                %th
-                %th.text-right
-                  Low
-                %th.text-right
-                  High
-                %th.text-right
-                  Avg
-                %th.text-right
-                  Median
-                %th.text-right
-                  Standard Deviation
-                %th.text-right
-                  Lots
-                %th.text-right
-                  Volume
-            %tbody
-            - for system in systems
-                %tr
-                  %td
-                    = system.0
-                  %td
-                    Ask
-                  %td.text-right
-                    = system.8|floatformat:2|intcomma
-                  %td.text-right
-                    = system.9|floatformat:2|intcomma
-                  %td.text-right
-                    = system.10|floatformat:2|intcomma
-                  %td.text-right
-                    = system.11|floatformat:2|intcomma
-                  %td.text-right
-                    = system.12|floatformat:2|intcomma
-                  %td.text-right
-                    = system.13|intcomma
-                  %td.text-right
-                    = system.14|intcomma
-                %tr
-                  %td
-                  %td
-                    Bid
-                  %td.text-right
-                    = system.1|floatformat:2|intcomma
-                  %td.text-right
-                    = system.2|floatformat:2|intcomma
-                  %td.text-right
-                    = system.3|floatformat:2|intcomma
-                  %td.text-right
-                    = system.4|floatformat:2|intcomma
-                  %td.text-right
-                    = system.5|floatformat:2|intcomma
-                  %td.text-right
-                    = system.6|intcomma
-                  %td.text-right
-                    = system.7|intcomma
+          %img{'src':'/static/images/loading.gif'}
+          %i
+            Loading regional data - this can take some seconds...
         #mats.tab-pane.fade
           %table.table.table-striped.table-condensed
             %thead

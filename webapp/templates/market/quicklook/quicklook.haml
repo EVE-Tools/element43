@@ -106,7 +106,6 @@
                       Last Updated
                 %tbody
                   - for order in buy_orders|slice:":5"
-                  - for order in buy_orders|slice:":5"
                     %tr
                       %td
                         %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
@@ -122,10 +121,10 @@
                         = order.volume_remaining|intcomma
                       %td.text-right
                         = order.generated_at|naturaltime
-            .text-right
-              .btn.btn-primary{'onclick':'$("#bid_link").trigger("click");'}
-                %i.icon-white.icon-chevron-right
-                More
+              .text-right
+                .btn.btn-primary{'onclick':'$("#bid_link").trigger("click");'}
+                  %i.icon-white.icon-chevron-right
+                  More
         #regions.tab-pane.fade
           %img{'src':'/static/images/loading.gif'}
           %i

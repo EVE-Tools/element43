@@ -1,0 +1,65 @@
+- load humanize
+#panel{'style':'display: none;'}
+  %script{'type':'text/javascript'}
+      $(document).ready(function(){
+        $('#panel').fadeIn(400);
+      });
+  %table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th
+          System
+        %th
+        %th.text-right
+          Low
+        %th.text-right
+          High
+        %th.text-right
+          Avg
+        %th.text-right
+          Median
+        %th.text-right
+          Standard Deviation
+        %th.text-right
+          Lots
+        %th.text-right
+          Volume
+    %tbody
+    - for system in systems
+        %tr
+          %td
+            = system.0
+          %td
+            Ask
+          %td.text-right
+            = system.8|floatformat:2|intcomma
+          %td.text-right
+            = system.9|floatformat:2|intcomma
+          %td.text-right
+            = system.10|floatformat:2|intcomma
+          %td.text-right
+            = system.11|floatformat:2|intcomma
+          %td.text-right
+            = system.12|floatformat:2|intcomma
+          %td.text-right
+            = system.13|intcomma
+          %td.text-right
+            = system.14|intcomma
+        %tr
+          %td
+          %td
+            Bid
+          %td.text-right
+            = system.1|floatformat:2|intcomma
+          %td.text-right
+            = system.2|floatformat:2|intcomma
+          %td.text-right
+            = system.3|floatformat:2|intcomma
+          %td.text-right
+            = system.4|floatformat:2|intcomma
+          %td.text-right
+            = system.5|floatformat:2|intcomma
+          %td.text-right
+            = system.6|intcomma
+          %td.text-right
+            = system.7|intcomma

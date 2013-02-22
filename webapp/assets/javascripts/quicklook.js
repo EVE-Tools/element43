@@ -22,6 +22,7 @@ $(document).ready(function() {
         }
     });
 
+    // Region handling
     var regions_loaded = false;
 
     $('#region_link').click(function(e) {
@@ -33,6 +34,21 @@ $(document).ready(function() {
             $('#regions').load('/market/tab/regions/' + invTypeID + '/');
         }
         regions_loaded = true;
+
+    });
+
+    // System handling
+    var systems_loaded = false;
+
+    $('#system_link').click(function(e) {
+        if($('#filters').is(':visible')) {
+            $('#filters').slideUp();
+        }
+
+        if (!systems_loaded){
+            $('#systems').load('/market/tab/systems/' + mapRegionID + '/' + invTypeID + '/');
+        }
+        systems_loaded = true;
 
     });
 

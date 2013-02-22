@@ -8,6 +8,7 @@ urlpatterns = patterns('apps.market_data.views',
     # Quicklook
     url(r'^(?P<type_id>[0-9]+)/', 'market.market.quicklook', name='quicklook'),
     url(r'^tab/regions/(?P<type_id>[0-9]+)/', 'market.market.quicklook_tab_regions', name='quicklook_tab_regions'),
+    url(r'^tab/systems/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.quicklook_tab_systems', name='quicklook_tab_systems'),
     url(r'^tab/ask/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_ask_filter', name='quicklook_filter_tab_ask'),
     url(r'^tab/bid/(?P<type_id>[0-9]+)/(?P<min_sec>[0-9]+)/(?P<max_age>[0-9]+)/', 'market.market.quicklook_bid_filter', name='quicklook_filter_tab_bid'),
     url(r'^region/(?P<region_id>[0-9]+)/(?P<type_id>[0-9]+)/', 'market.market.quicklook_region', name='quicklook_region'),
