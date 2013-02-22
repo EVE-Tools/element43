@@ -42,6 +42,7 @@ def home(request):
 
 
 def about_page(request):
+
     """
     Returns the about page with information about the site and contact information
     """
@@ -50,7 +51,9 @@ def about_page(request):
 
     return render_to_response('common/about_page.haml', rcontext)
 
+
 def api_docs(request):
+
     """
     Returns the about page with information about the API
     """
@@ -62,6 +65,10 @@ def api_docs(request):
 
 def stats_json(request, region_id):
 
+    """
+    Returns stat JSON for the front page
+    """
+
     #connect to memcache
     mc = pylibmc.Client(['127.0.0.1'], binary=True, behaviors={
                         "tcp_nodelay": True, "ketama": True})
@@ -72,16 +79,19 @@ def stats_json(request, region_id):
     # 1. Platform stats
     # these is a disconnect between history and history messages/min -- history is orderhistory table which is all rows
     # message per min is based on emdr which is multiple rows in one message.
+
     if (mc.get("e43-stats-activeorders") is not None):
         active_orders = mc.get("e43-stats-activeorders")
     else:
         active_orders = Orders.active.count()
         mc.set("e43-stats-activeorders", active_orders, time=3600)
+
     if (mc.get("e43-stats-archivedorders") is not None):
         archived_orders = mc.get("e43-stats-archivedorders")
     else:
         archived_orders = Orders.archived.count()
         mc.set("e43-stats-archivedorders", archived_orders, time=3600)
+
     if (mc.get("e43-stats-history") is not None):
         history = mc.get("e43-stats-history")
     else:
@@ -117,15 +127,21 @@ def stats_json(request, region_id):
             # check to see if it's in the cache, if so use those values
             if (mc.get("e43-stats" + str(item)) is not None):
                 cache_item = ujson.loads(mc.get("e43-stats" + str(item)))
-                #print "Item: ", item, " cache: ", cache_item
                 buymedian = cache_item['buymedian']
                 sellmedian = cache_item['sellmedian']
             # otherwise go to the DB for it
             else:
-                region_stats = ItemRegionStat.objects.filter(
-                    mapregion_id=region_id, invtype_id=item)[:1][0]
-                buymedian = region_stats.buymedian
-                sellmedian = region_stats.sellmedian
+
+                # Catch error if we don't have any data for that type
+                try:
+                    region_stats = ItemRegionStat.objects.filter(
+                                        mapregion_id=region_id, invtype_id=item)[:1][0]
+                    buymedian = region_stats.buymedian
+                    sellmedian = region_stats.sellmedian
+
+                except:
+                    buymedian = 0
+                    sellmedian = 0
 
             region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id=region_id, invtype_id=item).order_by("-date")[:1][0]
 
@@ -155,6 +171,7 @@ def stats_json(request, region_id):
                                   'old_orders': old_orders_per_minute,
                                   'history_messages': history_messages_per_minute,
                                   'typestats': typestats})
+
     # Return JSON without using any template
     return HttpResponse(stat_json, mimetype='application/json')
 
