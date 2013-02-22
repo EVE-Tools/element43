@@ -2,7 +2,6 @@
 import ujson as ujson
 
 # Imports for memcache
-import pylibmc
 from apps.common.util import get_memcache_client
 
 # Template and context-related imports
@@ -122,46 +121,40 @@ def stats_json(request, region_id):
     sellmedian = 0
 
     for item in types:
+        # check to see if it's in the cache, if so use those values
+        if (mc.get("e43-stats" + str(item)) is not None):
+            cache_item = ujson.loads(mc.get("e43-stats" + str(item)))
+            buymedian = cache_item['buymedian']
+            sellmedian = cache_item['sellmedian']
+        # otherwise go to the DB for it
+        else:
 
-        # Still works if we have no data for that item
-        try:
-            # check to see if it's in the cache, if so use those values
-            if (mc.get("e43-stats" + str(item)) is not None):
-                cache_item = ujson.loads(mc.get("e43-stats" + str(item)))
-                buymedian = cache_item['buymedian']
-                sellmedian = cache_item['sellmedian']
-            # otherwise go to the DB for it
-            else:
+            # Catch error if we don't have any data for that type
+            try:
+                region_stats = ItemRegionStat.objects.filter(
+                                    mapregion_id=region_id, invtype_id=item)[:1][0]
+                buymedian = region_stats.buymedian
+                sellmedian = region_stats.sellmedian
 
-                # Catch error if we don't have any data for that type
-                try:
-                    region_stats = ItemRegionStat.objects.filter(
-                                        mapregion_id=region_id, invtype_id=item)[:1][0]
-                    buymedian = region_stats.buymedian
-                    sellmedian = region_stats.sellmedian
+            except:
+                buymedian = 0
+                sellmedian = 0
 
-                except:
-                    buymedian = 0
-                    sellmedian = 0
+        region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id=region_id, invtype_id=item).order_by("-date")[:1][0]
 
-            region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id=region_id, invtype_id=item).order_by("-date")[:1][0]
+        # Get Jita prices
+        buy = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=True).order_by("-price")[:1][0].price
+        sell = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=False).order_by("price")[:1][0].price
 
-            # Get Jita prices
-            buy = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=True).order_by("-price")[:1][0].price
-            sell = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=False).order_by("price")[:1][0].price
+        stats = {'bid_max': buy,
+                 'ask_min': sell,
+                 'bid_median': buymedian,
+                 'bid_median_move': region_stats_history.buymedian - buymedian,
+                 'ask_median': sellmedian,
+                 'ask_median_move': region_stats_history.sellmedian - sellmedian}
 
-            stats = {'bid_max': buy,
-                     'ask_min': sell,
-                     'bid_median': buymedian,
-                     'bid_median_move': region_stats_history.buymedian - buymedian,
-                     'ask_median': sellmedian,
-                     'ask_median_move': region_stats_history.sellmedian - sellmedian}
-
-            if stats:
-                typestats[item] = stats
-
-        except pylibmc.Error as e:
-            print e
+        if stats:
+            typestats[item] = stats
 
     # Create JSON
     stat_json = simplejson.dumps({'active_orders': active_orders,
