@@ -3,6 +3,10 @@ import ast
 import urllib
 import datetime
 import pytz
+import pylibmc
+
+# Import settings
+from django.conf import settings
 
 # API Models
 from apps.api.models import APIKey, Character, APITimer
@@ -38,6 +42,16 @@ CHARACTER_API_ACCESS_MASKS = {'AccountBalance': 1,
                               'AccountStatus': 33554432,
                               'Contracts': 67108864,
                               'Locations': 134217728}
+
+
+def get_memcache_client():
+    """
+    Returns a ready-to-use memcache client
+    """
+
+    return pylibmc.Client(settings.MEMCACHE_SERVER,
+                          binary=settings.MEMCACHE_BINARY,
+                          behaviors=settings.MEMCACHE_BEHAVIOUR)
 
 
 def dictfetchall(cursor):

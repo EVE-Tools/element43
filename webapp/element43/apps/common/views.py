@@ -1,6 +1,9 @@
 # Utils
 import ujson as ujson
+
+# Imports for memcache
 import pylibmc
+from apps.common.util import get_memcache_client
 
 # Template and context-related imports
 from django.core.urlresolvers import reverse
@@ -69,10 +72,8 @@ def stats_json(request, region_id):
     Returns stat JSON for the front page
     """
 
-    #connect to memcache
-    mc = pylibmc.Client(['127.0.0.1'], binary=True, behaviors={
-                        "tcp_nodelay": True, "ketama": True})
-    # need to clean that up and put that in a config file (memcache server location)
+    # Connect to memcache
+    mc = get_memcache_client()
 
     # Collect stats
 

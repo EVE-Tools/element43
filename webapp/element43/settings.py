@@ -68,6 +68,12 @@ CACHES = {
     }
 }
 
+# Memcache settings
+MEMCACHE_SERVER = ['127.0.0.1']
+MEMCACHE_BINARY = True
+MEMCACHE_BEHAVIOUR = {"tcp_nodelay": True,
+                      "ketama": True}
+
 # Store flash messages in session
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -272,7 +278,6 @@ LOGGING = {
 }
 
 IMAGE_SERVER = '//images.element-43.com'
-MEMCACHE_SERVER = '127.0.0.1'
 
 # This allows you to override these settings without modifying the defaults.
 # Create a local_settings.py file and copy/paste/modify things from here.

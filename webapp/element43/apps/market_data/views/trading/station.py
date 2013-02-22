@@ -1,3 +1,7 @@
+# Imports for memcache
+import pylibmc
+from apps.common.util import get_memcache_client
+
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -23,29 +27,41 @@ from apps.market_data.sql import bid_ask_spread, import_markup
 from apps.common.util import find_path
 from django.db.models import Sum
 
-# Caching
-from django.views.decorators.cache import cache_page
-
 
 # Caches this view 1 hour long
-@cache_page(60 * 60)
 def ranking(request, group=0):
 
     """
     This function generates the station ranks based on active orders in the DB
     """
 
-    rank_list = Orders.active.values('stastation__id').annotate(
-        ordercount=Count('id')).order_by('-ordercount')[:50]
+    # Connect to memcache
+    mc = get_memcache_client()
 
-    for rank in rank_list:
-        station = StaStation.objects.get(id=rank['stastation__id'])
-        rank.update({'system': station.solar_system, 'name':
-                    station.name, 'region': station.region, 'id': station.id})
+    # Check if we already have a stored copy
+    if (mc.get("e43-station-ranking") is not None):
 
-    generated_at = datetime.datetime.now()
-    rcontext = RequestContext(
-        request, {'rank_list': rank_list, 'generated_at': generated_at})
+        # Get values from mc if existent
+        ranking = mc.get("e43-station-ranking")
+        rank_list = ranking['rank_list']
+        generated_at = ranking['generated_at']
+
+    else:
+
+        # Generate numbers if there is no cached version present in memcache (anymore)
+        rank_list = Orders.active.values('stastation__id').annotate(ordercount=Count('id')).order_by('-ordercount')[:50]
+
+        for rank in rank_list:
+            station = StaStation.objects.get(id=rank['stastation__id'])
+            rank.update({'system': station.solar_system, 'name':
+                        station.name, 'region': station.region, 'id': station.id})
+
+        generated_at = datetime.datetime.now()
+
+        # Expire after an hour
+        mc.set("e43-station-ranking", {'rank_list': rank_list, 'generated_at': generated_at}, time=3600)
+
+    rcontext = RequestContext(request, {'rank_list': rank_list, 'generated_at': generated_at})
 
     return render_to_response('trading/station/ranking.haml', rcontext)
 
