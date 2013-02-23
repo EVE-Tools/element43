@@ -14,7 +14,7 @@ Detailed instructions for multiple platforms can be found here: [https://element
 Documentation
 -------------
 
-Documentation for developers is located at [https://element43.readthedocs.org/en/latest/](ReadTheDocs).
+Documentation for developers is located at [ReadTheDocs](https://element43.readthedocs.org/en/latest/).
 
 Applying DB schema migrations
 -----------------------------
