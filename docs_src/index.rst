@@ -20,6 +20,8 @@ Contents:
 
    Installation <installation>
 
+   Architecture <architecture>
+
    Consumer <consumer>
    license
 
