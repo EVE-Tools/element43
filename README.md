@@ -1,33 +1,20 @@
 element43
 =========
 
-Market, Trade and Industry Manager for EVE Online.
+Market, Trade and Industry Manager for EVE Online. Element43 aims to provide players of the MMORPG EVE Online with an
+all-in-one experience for managing their in-game enterprises. The application can be extended via Django's apps in a
+modular way, so that developers can easily put the massive amount of data collected by Element43 to use without conflicting
+with each other.
 
-Initial Setup Instructions
-------------------
+Initial Setup
+-------------
 
-Before you begin a word of warning: element43 was not designed to run in Windows!
+Detailed instructions for multiple platforms can be found here: [https://element43.readthedocs.org/en/latest/installation.html](https://element43.readthedocs.org/en/latest/installation.html)
 
-* Make sure you have git installed.
-* Make sure you have ``libevent`` and ``libmemcached`` installed.
-  * OSX: ``brew install libevent``, ``brew install libmemcached`` and ``brew install gfortran`` for SciPy
-  * Debian: ``aptitude install libevent-dev libmemcached-dev`` additionally install a Fortran compiler of your choice
-* Create a virtualenv.
-* ``pip install -r requirements.txt``
-* Create a ``element43`` user and DB on Postgres.
-* ``cd webapp`` then ``python manage.py syncdb`` and *do not create a superuser*
-* Run ``python manage.py migrate eve_db``
-* Run ``python manage.py migrate apps.common``
-* Run ``python manage.py migrate apps.market_data``
-* Run ``python manage.py migrate apps.api``
-* Run ``python manage.py migrate djcelery``
-* Download and extract the latest dump from [http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2](http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2)
-* Import the dump with ``python manage.py eve_import_ccp_dump <dump>``
-* You should then be ready to run the development webserver: ``python manage.py runserver``
-* Create a ``local_settings.py`` file and copy/paste/modify anything
-  from ``settings.py`` that you'd like to change. This file won't be committed
-  to git, and is safe to store passwords and dev workstation settings.
-  It is highly advised to change the SECRET_KEY variable - it is a central part of many of Django's security concepts!
+Documentation
+-------------
+
+Documentation for developers is located at [https://element43.readthedocs.org/en/latest/](ReadTheDocs).
 
 Applying DB schema migrations
 -----------------------------
