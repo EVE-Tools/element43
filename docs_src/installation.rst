@@ -70,6 +70,7 @@ Unless you already have commit rights for the `main repository <https://github.c
 
 Installing Python dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* Run ``pip install numpy``
 * Run ``pip install -r element43/requirements.txt`` to install the Python dependencies
 
 There is a high probability of this process failing (especially on Linux) mainly due to missing requirements. If you encounter any problems, have a close look at the error messages to identify the cause of the error. If cannot solve it on your own, head for the IRC.
