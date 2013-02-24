@@ -27,7 +27,7 @@ from your favorite terminal app. This installs the basic binary dependencies of 
 You should change those parameters later on.
 Finally, run
 
-    ``easy_install pip``
+    ``sudo easy_install pip``
 
 Linux
 ^^^^^
@@ -55,9 +55,9 @@ Setting up virtualenv
 To keep all of element43's dependencies cleanly separated from your local packages, we will be setting up a virtualenv for the new installation.
 
 * Create a new folder where you want to install element43 to
-* ``cd`` into that folder and run ``pip install virtualenv``
-* Followed by ``virtualenv virtualenv43`` to create a virtualenv named ``virtualenv43`` in that folder
-* Activate it by running ``source virtualenv43/bin/activate``
+* ``cd`` into that folder and run ``sudo pip install virtualenv`` and ``sudo pip install virtualenvwrapper`
+* Run ``source /usr/local/bin/virtualenvwrapper.sh`` and/or add this line to your ``.bashrc`` or ``.zshrc`` so you are able to use virtualenvwrapper without having to source it every single time
+* Followed by ``mkvirtualenv element43`` to create a virtualenv named ``element43``
 
 Forking / Cloning element43
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,17 +70,21 @@ Unless you already have commit rights for the `main repository <https://github.c
 
 Installing Python dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Run ``add2virtualenv element43/webapp`` to add element43 to your Python path
+* Run ``echo "export DJANGO_SETTINGS_MODULE=element43.settings.local" >> $VIRTUAL_ENV/bin/postactivate``
+* Run ``echo "unset DJANGO_SETTINGS_MODULE" >> $VIRTUAL_ENV/bin/postdeactivate``
+* Run ``export DJANGO_SETTINGS_MODULE=element43.settings.local``
 * Run ``pip install numpy``
-* Run ``pip install -r element43/requirements.txt`` to install the Python dependencies
+* Run ``pip install -r element43/requirements/local.txt`` to install the Python dependencies for developers
 
 There is a high probability of this process failing (especially on Linux) mainly due to missing requirements. If you encounter any problems, have a close look at the error messages to identify the cause of the error. If cannot solve it on your own, head for the IRC.
 
 Preparing the database
 ^^^^^^^^^^^^^^^^^^^^^^
-* Create a database and a user called ``element43`` using either the cli or a tool like `pgAdmin <http://www.pgadmin.org>`_ or `Navicat <http://www.navicat.com>`_
-* Create an empty file named ``local_settings.py`` at ``element43/webapp/element43/``
-* Copy, paste and adjust the login credentials for the PostgreSQL user from ``element43/webapp/element43/settings.py``
-    * This file won't be committed to git, and is safe to store passwords and dev workstation settings. It is highly advised to change the SECRET_KEY variable - it is a central part of many of Django's security concepts!
+* Create a database and a user called ``element43`` with the password ``element43`` using either the cli or a tool like `pgAdmin <http://www.pgadmin.org>`_ or `Navicat <http://www.navicat.com>`_
+	* Ensure the new user has all rights for the newly-created database!
+	* Only if you have no other choice edit the settings file at ``element43/webapp/element43/settings/local.py``
 * Navigate to ``element43/webapp/`` then ``python manage.py syncdb`` and **do not create a superuser**
 * Run ``python manage.py migrate eve_db``
 * Run ``python manage.py migrate apps.common``
@@ -89,8 +93,7 @@ Preparing the database
 * Run ``python manage.py migrate djcelery``
 * Download and extract the latest dump from `http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2 <http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2>`_
 
-* Import the dump with ``python manage.py eve_import_ccp_dump <location of dump>``
-* Navigate to ``element43/consumer/`` and run ``python load_conquerable_stations.py``
+* Import the dump with ``django-admin.py eve_import_ccp_dump <location of dump>``
 
 Running element43
 ^^^^^^^^^^^^^^^^^
@@ -105,12 +108,12 @@ Gather initial market data
 
 Additional applications
 """""""""""""""""""""""
-* Run ``python manage.py celeryd -B -E`` for EVE API polling and several other scheduled tasks
+* Run ``django-admin.py celeryd -B -E`` for EVE API polling and several other scheduled tasks
 * Run ``python pathfind.py`` at ``element43/pathfind`` for the pathfinding API
 
 Running the devserver
 """""""""""""""""""""
-* You should then be ready to run the development webserver (``element43/webapp``): ``python manage.py runserver``
+* You should then be ready to run the development webserver (``element43/webapp``): ``django-admin.py runserver``
 * Congratulations! You are ready to hack on element43 now :D
 
 Further reading
