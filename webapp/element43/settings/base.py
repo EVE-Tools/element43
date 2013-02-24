@@ -3,15 +3,27 @@ import os
 import sys
 import djcelery
 
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s env variable" % var_name
+        raise ImproperlyConfigured(error_msg)
+
+# Default configuration
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # This is the 'webapp' dir, AKA the webapp project root.
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Add the 'element43' module to the path.
 sys.path.insert(0, os.path.join(ROOT_DIR, 'element43'))
 
-# fire up celery
+# Fire up celery
 BROKER_URL = 'redis://localhost'
 djcelery.setup_loader()
 
@@ -189,8 +201,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Catch 404s with sentry
-    'raven.contrib.django.middleware.Sentry404CatchMiddleware',
+
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -220,8 +231,6 @@ INSTALLED_APPS = (
     'django.contrib.formtools',
 
     'compressor',
-
-    'raven.contrib.django',
 
     'south',
     'devserver',
@@ -278,10 +287,3 @@ LOGGING = {
 }
 
 IMAGE_SERVER = '//images.element-43.com'
-
-# This allows you to override these settings without modifying the defaults.
-# Create a local_settings.py file and copy/paste/modify things from here.
-try:
-    from local_settings import *
-except ImportError:
-    pass
