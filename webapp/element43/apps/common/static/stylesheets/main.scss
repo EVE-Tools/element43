@@ -16,9 +16,6 @@ $light-grey:        #444444;
 
 $padding:           10px;
 
-// Orbitron Font
-@import url('//fonts.googleapis.com/css?family=Orbitron:500');
-
 // Mixins
 
 @mixin panel {
@@ -82,14 +79,12 @@ input[type="color"],
 }
 
 .price {
-    font-family: 'Orbitron', sans-serif;
     color: $white;
     text-shadow: 0 0 3px $contrast-blue;
     font-size: 18px;
 }
 
 .balance {
-    font-family: 'Orbitron', sans-serif;
     color: $white;
     text-shadow: 0 0 3px $contrast-blue;
 }
