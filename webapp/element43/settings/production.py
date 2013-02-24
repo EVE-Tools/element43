@@ -27,6 +27,9 @@ GOOGLE_ANALYTICS_ENABLED = False
 GOOGLE_ANALYTICS_TRACKING_ID = 'UA-36064829-1'
 GOOGLE_ANALYTICS_DOMAIN_NAME = 'element-43.com'
 
+# Compression
+COMPRESS_ENABLED = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

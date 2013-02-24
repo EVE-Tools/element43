@@ -18,6 +18,9 @@ pygments
 hamlpy
 djaml
 
+# SCSS support
+pyScss
+
 # Asset compression
 django_compressor
 

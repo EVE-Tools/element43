@@ -137,7 +137,7 @@ STATIC_ROOT = PROJECT_ROOT.child('static')
 
 # Compression
 COMPRESS_ENABLED = False
-COMPRESS_ROOT = PROJECT_ROOT.child('assets')
+COMPRESS_ROOT = PROJECT_ROOT.child('static')
 COMPRESS_OUTPUT_DIR = 'cache'
 COMPRESS_CSS_FILTERS = [
      'compressor.filters.cssmin.CSSMinFilter'
@@ -145,6 +145,9 @@ COMPRESS_CSS_FILTERS = [
 COMPRESS_JS_FILTERS = [
      'compressor.filters.jsmin.JSMinFilter'
 ]
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'pyscss {infile}'),
+)
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"

@@ -8,7 +8,7 @@
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/ui.dynatree.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap-responsive.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/main.css'}
+      %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
       %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
@@ -153,17 +153,18 @@
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
-      - if GOOGLE_ANALYTICS_ENABLED
-        - if not request.DNT
-          %script{'type':'text/javascript'}
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_TRACKING_ID}}']);
-            _gaq.push(['_setDomainName', '{{GOOGLE_ANALYTICS_DOMAIN_NAME}}']);
-            _gaq.push(['_trackPageview']);
+    - if GOOGLE_ANALYTICS_ENABLED
+      - if not request.DNT
+        %script{'type':'text/javascript'}
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_TRACKING_ID}}']);
+          _gaq.push(['_setDomainName', '{{GOOGLE_ANALYTICS_DOMAIN_NAME}}']);
+          _gaq.push(['_trackPageview']);
 
-            (function() {
-              var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-              ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-    - block scripts
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+    - compress js
+      - block scripts
