@@ -1,25 +1,50 @@
-# Utility imports
 import datetime
 import pytz
+
+import eveapi
+
+from django.db import IntegrityError
 
 from celery.task import PeriodicTask
 from celery.task.schedules import crontab
 
 from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
+from .models import *
+from .api_exceptions import handle_api_exception
 
-# Models
-from eve_db.models import StaStation
+from eve_db.models import StaStation, MapSolarSystem
 from apps.market_data.models import Orders
-from apps.api.models import *
 
-# API
-from element43 import eveapi
 
-# API error handling
-from apps.api.api_exceptions import handle_api_exception
+class ProcessResearch(PeriodicTask):
+    """
+    Updates conquerable stations.
+    """
 
-# Additional exception handling
-from django.db import IntegrityError
+    run_every = datetime.timedelta(hours=1)
+
+    print '>>>  Updating conquerable stations...'
+
+    api = eveapi.EVEAPIConnection()
+    stations = api.eve.ConquerableStationList()
+
+    for station in stations.outposts:
+        # Try to find mapping in DB. If found -> update. If not found -> create
+        try:
+            station_object = StaStation.objects.get(id=station.stationID)
+            station_object.name = station.stationName
+            station_object.save()
+
+        except StaStation.DoesNotExist:
+            station_object = StaStation(id=station.stationID,
+                                        name=station.stationName,
+                                        solar_system_id=station.solarSystemID,
+                                        type_id=station.stationTypeID,
+                                        constellation=MapSolarSystem.objects.get(id=station.solarSystemID).constellation,
+                                        region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
+            station_object.save()
+
+    print '<<< Finished updating ' + str(len(stations.outposts)) + ' conquerable stations.'
 
 
 class ProcessResearch(PeriodicTask):
