@@ -3,6 +3,8 @@ import os
 import sys
 import djcelery
 
+from unipath import Path
+
 from django.core.exceptions import ImproperlyConfigured
 
 def get_env_variable(var_name):
@@ -18,10 +20,10 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # This is the 'webapp' dir, AKA the webapp project root.
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PROJECT_ROOT = Path(__file__).ancestor(3)
 
 # Add the 'element43' module to the path.
-sys.path.insert(0, os.path.join(ROOT_DIR, 'element43'))
+sys.path.insert(0, PROJECT_ROOT.child('element43'))
 
 # Fire up celery
 BROKER_URL = 'redis://localhost'
@@ -120,7 +122,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+MEDIA_ROOT = PROJECT_ROOT.child('media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -131,11 +133,11 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+STATIC_ROOT = PROJECT_ROOT.child('static')
 
 # Compression
 COMPRESS_ENABLED = False
-COMPRESS_ROOT = os.path.join(ROOT_DIR, 'assets')
+COMPRESS_ROOT = PROJECT_ROOT.child('assets')
 COMPRESS_OUTPUT_DIR = 'cache'
 COMPRESS_CSS_FILTERS = [
      'compressor.filters.cssmin.CSSMinFilter'
@@ -153,7 +155,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(ROOT_DIR, 'assets'),
+    PROJECT_ROOT.child('assets'),
 )
 
 # List of finder classes that know how to find static files in
@@ -215,7 +217,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(ROOT_DIR, 'templates')
+    PROJECT_ROOT.child('templates'),
 )
 
 INSTALLED_APPS = (

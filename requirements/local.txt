@@ -1,0 +1,7 @@
+-r _base.txt
+
+# Dev Server
+django-devserver
+
+# Debugging
+django-debug-toolbar
