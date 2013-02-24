@@ -72,7 +72,7 @@ def login(request):
         form = LoginForm()
 
     rcontext = RequestContext(request, {})
-    return render_to_response('auth/login.haml', {'form': form}, rcontext)
+    return render_to_response('login.haml', {'form': form}, rcontext)
 
 
 def logout(request):
@@ -136,7 +136,7 @@ def register(request):
         form = RegistrationForm()  # An unbound form
 
     rcontext = RequestContext(request, {})
-    return render_to_response('auth/register.haml', {'form': form}, rcontext)
+    return render_to_response('register.haml', {'form': form}, rcontext)
 
 
 def reset_password(request):
@@ -176,7 +176,7 @@ def reset_password(request):
         form = ResetPasswordForm()
 
     rcontext = RequestContext(request, {})
-    return render_to_response('auth/reset_password.haml', {'form': form}, rcontext)
+    return render_to_response('reset_password.haml', {'form': form}, rcontext)
 
 
 def registration_success(request):

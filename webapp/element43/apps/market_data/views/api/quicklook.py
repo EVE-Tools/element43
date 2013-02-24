@@ -1,20 +1,12 @@
-# numpy processing imports
-import numpy as np
-
 # Template and context-related imports
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from django.conf import settings
 
 # Aggregation
 from django.db.models import Min
 from django.db.models import Max
-from django.db.models import StdDev
 
 # market_data models
 from apps.market_data.models import Orders
-from apps.market_data.models import OrderHistory
 from apps.market_data.models import ItemRegionStat
 
 # utility
@@ -23,15 +15,15 @@ from django.utils import simplejson
 def quicklook(request):
     """
     This is the JSON response object for the API, not E-C safe
-    
+
     TODO: multiple regions submitted, multiple typeIDs, better error handling
     """
-    
+
     params = {}
     # parse GET parameters and put them into a dict to make life easier
     for key in request.GET.iterkeys():
         params[key]=request.GET.getlist(key)
-        
+
     stats = ItemRegionStat.objects.filter(invtype_id=params['typeid'][0],
                                           mapregion_id=params['regionlimit'][0])
     buystats = Orders.active.filter(invtype_id=params['typeid'][0],
@@ -40,11 +32,11 @@ def quicklook(request):
     sellstats = Orders.active.filter(invtype_id=params['typeid'][0],
                                      mapregion_id=params['regionlimit'][0],
                                      is_bid=False).aggregate(minprice=Min('price'), maxprice=Max('price'))
-    
+
     info = {}
     info['invtype']=int(params['typeid'][0])
     info['region']=int(params['regionlimit'][0])
-    
+
     buy = {}
     sell = {}
     for stat in stats:
@@ -60,15 +52,15 @@ def quicklook(request):
         sell['std_dev'] = stat.sell_std_dev
         sell['95percentile'] = stat.sell_95_percentile
         sell['volume'] = stat.sellvolume
-    
+
     buy['min'] = buystats['minprice']
     buy['max'] = buystats['maxprice']
 
     sell['min'] = sellstats['minprice']
     sell['max'] = sellstats['maxprice']
-    
+
     api_json = simplejson.dumps({'info':info,
                                  'buy_stats':buy,
                                  'sell_stats':sell})
-    
+
     return HttpResponse(api_json, mimetype="application/json")

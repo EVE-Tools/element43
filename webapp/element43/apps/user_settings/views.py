@@ -26,7 +26,7 @@ from apps.common.util import manage_character_api_timers
 @login_required
 def settings(request):
     rcontext = RequestContext(request, {})
-    return render_to_response('settings/settings.haml', rcontext)
+    return render_to_response('settings.haml', rcontext)
 
 
 @login_required
@@ -53,7 +53,7 @@ def profile(request):
         form = ProfileForm(request=request)
 
     rcontext = RequestContext(request, {})
-    return render_to_response('settings/settings.haml', {'form': form}, rcontext)
+    return render_to_response('settings.haml', {'form': form}, rcontext)
 
 
 @login_required
@@ -66,7 +66,7 @@ def characters(request):
         return HttpResponseRedirect(reverse('manage_api_keys'))
 
     rcontext = RequestContext(request, {'characters': characters})
-    return render_to_response('settings/characters.haml', rcontext)
+    return render_to_response('characters.haml', rcontext)
 
 
 @login_required
@@ -105,7 +105,7 @@ def api_key(request):
         form = APIKeyForm()
 
     rcontext = RequestContext(request, {})
-    return render_to_response('settings/api_key.haml', {'form': form, 'char_keys': char_keys, 'corp_keys': corp_keys}, rcontext)
+    return render_to_response('api_key.haml', {'form': form, 'char_keys': char_keys, 'corp_keys': corp_keys}, rcontext)
 
 
 @login_required
@@ -399,4 +399,4 @@ def api_character(request, api_id, api_verification_code):
         return HttpResponseRedirect(reverse('manage_api_keys'))
 
     rcontext = RequestContext(request, {'chars': characters})
-    return render_to_response('settings/api_character.haml', rcontext)
+    return render_to_response('api_character.haml', rcontext)

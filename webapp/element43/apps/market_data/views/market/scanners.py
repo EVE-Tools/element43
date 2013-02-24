@@ -21,7 +21,7 @@ def random(request):
 
         rcontext = RequestContext(request, {'types': types})
 
-        return render_to_response('market/scanners/randomscanner.haml', rcontext)
+        return render_to_response('scanners/randomscanner.haml', rcontext)
 
 
 def region(request):
@@ -37,7 +37,7 @@ def region(request):
                 types = InvType.objects.filter(id__in=list(type_ids))
 
                 rcontext = RequestContext(request, {'types': types, 'region': region})
-                return render_to_response('market/scanners/regionscanner.haml', rcontext)
+                return render_to_response('scanners/regionscanner.haml', rcontext)
             else:
                 messages.info(request, 'It seems like you did not grant trust to Element43 in the IGB.')
                 return HttpResponseRedirect(reverse('home'))

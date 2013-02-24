@@ -54,7 +54,7 @@ def dashboard(request):
                                         'day': day,
                                         'last_ten_sales': last_ten_sales})
 
-    return render_to_response('dashboard/dashboard.haml', rcontext)
+    return render_to_response('dashboard.haml', rcontext)
 
 
 @login_required
@@ -102,4 +102,4 @@ def char_sheet(request, char_id):
     skill_points = CharSkill.objects.filter(character_id=char.id).aggregate(Sum('skillpoints'))['skillpoints__sum']
 
     rcontext = RequestContext(request, {'char': char, 'skills': skills, 'skill_points': skill_points})
-    return render_to_response('dashboard/_char_sheet.haml', rcontext)
+    return render_to_response('_char_sheet.haml', rcontext)

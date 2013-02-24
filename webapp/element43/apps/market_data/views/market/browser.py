@@ -106,7 +106,7 @@ def panel(request, group=0):
                                         is_published=True),
                                         'prices': prices})
 
-    return render_to_response('market/browser/types.haml', rcontext)
+    return render_to_response('browser/types.haml', rcontext)
 
 
 def browser(request, group=0):
@@ -124,8 +124,8 @@ def browser(request, group=0):
             path = path + '/' + str(crumb)
 
         rcontext = RequestContext(request, {'path': path})
-        return render_to_response('market/browser/browse.haml', rcontext)
+        return render_to_response('browser/browse.haml', rcontext)
 
     else:
         rcontext = RequestContext(request, {})
-        return render_to_response('market/browser/browse.haml', rcontext)
+        return render_to_response('browser/browse.haml', rcontext)

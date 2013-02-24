@@ -63,7 +63,7 @@ def ranking(request, group=0):
 
     rcontext = RequestContext(request, {'rank_list': rank_list, 'generated_at': generated_at})
 
-    return render_to_response('trading/station/ranking.haml', rcontext)
+    return render_to_response('station/ranking.haml', rcontext)
 
 
 def search(request):
@@ -92,7 +92,7 @@ def search(request):
         request, {'systems': systems, 'regions': regions})
 
     # Render template
-    return render_to_response('trading/station/_import_search.haml', rcontext)
+    return render_to_response('station/_import_search.haml', rcontext)
 
 
 def live_search(request):
@@ -160,7 +160,7 @@ def station(request, station_id=60003760):
 
     rcontext = RequestContext(request, {'station': station})
 
-    return render_to_response('trading/station/station.haml', rcontext)
+    return render_to_response('station/station.haml', rcontext)
 
 
 def panel(request, station_id=60003760, group_id=1413):
@@ -183,7 +183,7 @@ def panel(request, station_id=60003760, group_id=1413):
     spread = bid_ask_spread(station_id, station.region_id, group_id)
     rcontext = RequestContext(request, {'station': station, 'spread': spread})
 
-    return render_to_response('trading/station/_panel.haml', rcontext)
+    return render_to_response('station/_panel.haml', rcontext)
 
 
 def import_system(request, station_id=60003760, system_id=30000142):
@@ -243,7 +243,7 @@ def import_system(request, station_id=60003760, system_id=30000142):
     rcontext = RequestContext(request, {'system': system, 'markup':
                               data, 'path': path, 'jumps': numjumps})
 
-    return render_to_response('trading/station/_import_system.haml', rcontext)
+    return render_to_response('station/_import_system.haml', rcontext)
 
 
 def import_region(request, station_id=60003760, region_id=10000002):
@@ -297,4 +297,4 @@ def import_region(request, station_id=60003760, region_id=10000002):
 
     rcontext = RequestContext(request, {'region': region, 'markup': data})
 
-    return render_to_response('trading/station/_import_region.haml', rcontext)
+    return render_to_response('station/_import_region.haml', rcontext)

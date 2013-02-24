@@ -188,7 +188,7 @@ def quicklook(request, type_id=34):
                                         'sell_orders': sell_orders,
                                         'breadcrumbs': breadcrumbs})
 
-    return render_to_response('market/quicklook/quicklook.haml', rcontext)
+    return render_to_response('quicklook/quicklook.haml', rcontext)
 
 
 def quicklook_tab_regions(request, type_id=34):
@@ -271,7 +271,7 @@ def quicklook_tab_regions(request, type_id=34):
     rcontext = RequestContext(request, {'type': type_object,
                                         'regions': region_data})
 
-    return render_to_response('market/quicklook/_quicklook_tab_regions.haml', rcontext)
+    return render_to_response('quicklook/_quicklook_tab_regions.haml', rcontext)
 
 
 def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
@@ -297,7 +297,7 @@ def quicklook_ask_filter(request, type_id=34, min_sec=0, max_age=8):
 
     rcontext = RequestContext(request, {'sell_orders': sell_orders, 'type': InvType.objects.get(id=type_id)})
 
-    return render_to_response('market/quicklook/_quicklook_ask.haml', rcontext)
+    return render_to_response('quicklook/_quicklook_ask.haml', rcontext)
 
 
 def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
@@ -323,7 +323,7 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
 
     rcontext = RequestContext(request, {'buy_orders': buy_orders, 'type': InvType.objects.get(id=type_id)})
 
-    return render_to_response('market/quicklook/_quicklook_bid.haml', rcontext)
+    return render_to_response('quicklook/_quicklook_bid.haml', rcontext)
 
 def quicklook_region(request, region_id=10000002, type_id=34):
     """
@@ -400,7 +400,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
                                         'sell_orders': sell_orders,
                                         'breadcrumbs': breadcrumbs})
 
-    return render_to_response('market/quicklook/quicklook_region.haml', rcontext)
+    return render_to_response('quicklook/quicklook_region.haml', rcontext)
 
 
 def quicklook_tab_systems(request, region_id=10000002, type_id=34):
@@ -483,4 +483,4 @@ def quicklook_tab_systems(request, region_id=10000002, type_id=34):
     # We shouldn't need to limit the amount of orders displayed here as they all are in the same region
     rcontext = RequestContext(request, {'systems': system_data})
 
-    return render_to_response('market/quicklook/_quicklook_tab_systems.haml', rcontext)
+    return render_to_response('quicklook/_quicklook_tab_systems.haml', rcontext)

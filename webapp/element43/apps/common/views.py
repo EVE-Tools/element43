@@ -52,7 +52,7 @@ def about_page(request):
 
     rcontext = RequestContext(request, {})
 
-    return render_to_response('common/about_page.haml', rcontext)
+    return render_to_response('about_page.haml', rcontext)
 
 
 def api_docs(request):
@@ -63,7 +63,7 @@ def api_docs(request):
 
     rcontext = RequestContext(request, {})
 
-    return render_to_response('common/api_docs.haml', rcontext)
+    return render_to_response('api_docs.haml', rcontext)
 
 
 def stats_json(request, region_id):

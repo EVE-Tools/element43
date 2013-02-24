@@ -55,7 +55,7 @@ def select_blueprint(request):
     template_vars[MANUFACTURING_BLUEPRINT_HISTORY_SESSION] = request.session.get(MANUFACTURING_BLUEPRINT_HISTORY_SESSION, None)
 
     rcontext = RequestContext(request, template_vars)
-    return render_to_response('manufacturing/calculator/select_blueprint.haml', rcontext)
+    return render_to_response('select_blueprint.haml', rcontext)
 
 
 def calculator(request, blueprint_type_id):
@@ -81,7 +81,7 @@ def calculator(request, blueprint_type_id):
             data = calculate_manufacturing_job(form.cleaned_data)
 
             rcontext = RequestContext(request, {'data': data})
-            return render_to_response('manufacturing/calculator/result.haml', rcontext)
+            return render_to_response('result.haml', rcontext)
     else:
         if request.session.get('form_data'):
             form = ManufacturingCalculatorForm(request.user, request.session.get('form_data'))
@@ -92,14 +92,14 @@ def calculator(request, blueprint_type_id):
                 target_sell_price = stat_object.sell_95_percentile
             except ItemRegionStat.DoesNotExist:
                 target_sell_price = 0
-            
+
             initial_data = {'target_sell_price': "%.2f" % target_sell_price}
-            
+
             headers = IGBHeaderParser(request)
             if headers.is_igb and headers.charid != 0:
                 initial_data['character'] = headers.charid
-            
+
             form = ManufacturingCalculatorForm(request.user, initial=initial_data)
 
     rcontext = RequestContext(request, {'form': form, 'blueprint': blueprint})
-    return render_to_response('manufacturing/calculator/jobparameter.haml', rcontext)
+    return render_to_response('jobparameter.haml', rcontext)
