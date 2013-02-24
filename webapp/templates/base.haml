@@ -4,11 +4,11 @@
 %html
   %head
     - compress css
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/jquery-ui-1.8.22.custom.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/ui.dynatree.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/bootstrap-responsive.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'/static/stylesheets/main.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/jquery-ui-1.8.22.custom.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/ui.dynatree.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap-responsive.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/main.css'}
       %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
@@ -19,7 +19,7 @@
         .navbar-inner
           .container
             %a.brand{'href':'{% url home %}'}
-              %img{'src':'/static/images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
+              %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
               %span.label.label-important{'style':'float:left;'}
                 BETA
             %ul.nav
@@ -149,10 +149,10 @@
     %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
     %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
     - compress js
-      %script{'type':'text/javascript', 'src':'/static/javascripts/highstock.js'}
-      %script{'type':'text/javascript', 'src':'/static/javascripts/bootstrap.js'}
-      %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.autocomplete.js'}
-      %script{'type':'text/javascript', 'src':'/static/javascripts/main.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/highstock.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
       - if GOOGLE_ANALYTICS_ENABLED
         - if not request.DNT
           %script{'type':'text/javascript'}

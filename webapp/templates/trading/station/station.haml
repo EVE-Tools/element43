@@ -72,6 +72,6 @@
 - block scripts
   %script{'type':'text/javascript'}
     var staStationID = {{station.id}};
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.dynatree.min.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.cookie.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/station.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.dynatree.min.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.cookie.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/station.js'}

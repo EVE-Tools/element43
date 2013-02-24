@@ -135,8 +135,8 @@
               %td#history_records.span3
                 0
 - block scripts
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
   %script{'type':'text/javascript'}
     var region = {{region}};
     var types = {{type_ids}};
-  %script{'type':'text/javascript', 'src':'/static/javascripts/home.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/home.js'}

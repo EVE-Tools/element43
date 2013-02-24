@@ -12,10 +12,9 @@
         Browse Market
       %i Select a group on the left side to display market details.
 - block scripts
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.dynatree.min.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.cookie.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/browser.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.dynatree.min.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.cookie.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/browser.js'}
   - if path
     %script{'type':'text/javascript'}
       var load_path = '{{path}}';
-  

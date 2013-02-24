@@ -184,5 +184,5 @@
     var invTypeName = "{{type.name}}";
     var mapRegionIDs = {{region_ids}};
     var mapRegions = {{region_names|safe}};
-  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/quicklook_graph.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook_graph.js'}

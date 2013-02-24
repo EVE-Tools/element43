@@ -29,5 +29,5 @@
             %td
               = type.name
 - block scripts
-  %script{'type':'text/javascript', 'src':'/static/javascripts/jquery.pulse.js'}
-  %script{'type':'text/javascript', 'src':'/static/javascripts/scanner.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/scanner.js'}
