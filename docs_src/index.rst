@@ -22,6 +22,8 @@ Contents:
 
    Architecture <architecture>
 
+   Applications <apps>
+
    Consumer <consumer>
    license
 
