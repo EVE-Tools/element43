@@ -16,7 +16,7 @@ from eve_db.models import StaStation, MapSolarSystem
 from apps.market_data.models import Orders
 
 
-class ProcessResearch(PeriodicTask):
+class ProcessConquerableStations(PeriodicTask):
     """
     Updates conquerable stations.
     """
