@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('apps.manufacturing.views',
     url(r'^calculator/$', 'calculator.select_blueprint', name='manufacturing_select_blueprint'),
