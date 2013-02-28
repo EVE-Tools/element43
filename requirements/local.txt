@@ -4,4 +4,4 @@
 django-devserver
 
 # Debugging
-django-debug-toolbar
+django-debug-toolbar>=0.9.4,<1.0
