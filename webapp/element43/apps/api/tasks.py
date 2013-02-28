@@ -23,28 +23,29 @@ class ProcessConquerableStations(PeriodicTask):
 
     run_every = datetime.timedelta(hours=1)
 
-    print '>>>  Updating conquerable stations...'
+    def run(self, **kwargs):
+        print '>>>  Updating conquerable stations...'
 
-    api = eveapi.EVEAPIConnection()
-    stations = api.eve.ConquerableStationList()
+        api = eveapi.EVEAPIConnection()
+        stations = api.eve.ConquerableStationList()
 
-    for station in stations.outposts:
-        # Try to find mapping in DB. If found -> update. If not found -> create
-        try:
-            station_object = StaStation.objects.get(id=station.stationID)
-            station_object.name = station.stationName
-            station_object.save()
+        for station in stations.outposts:
+            # Try to find mapping in DB. If found -> update. If not found -> create
+            try:
+                station_object = StaStation.objects.get(id=station.stationID)
+                station_object.name = station.stationName
+                station_object.save()
 
-        except StaStation.DoesNotExist:
-            station_object = StaStation(id=station.stationID,
-                                        name=station.stationName,
-                                        solar_system_id=station.solarSystemID,
-                                        type_id=station.stationTypeID,
-                                        constellation=MapSolarSystem.objects.get(id=station.solarSystemID).constellation,
-                                        region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
-            station_object.save()
+            except StaStation.DoesNotExist:
+                station_object = StaStation(id=station.stationID,
+                                            name=station.stationName,
+                                            solar_system_id=station.solarSystemID,
+                                            type_id=station.stationTypeID,
+                                            constellation=MapSolarSystem.objects.get(id=station.solarSystemID).constellation,
+                                            region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
+                station_object.save()
 
-    print '<<< Finished updating ' + str(len(stations.outposts)) + ' conquerable stations.'
+        print '<<< Finished updating ' + str(len(stations.outposts)) + ' conquerable stations.'
 
 
 class ProcessResearch(PeriodicTask):
