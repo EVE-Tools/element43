@@ -55,7 +55,7 @@ Setting up virtualenv
 To keep all of element43's dependencies cleanly separated from your local packages, we will be setting up a virtualenv for the new installation.
 
 * Create a new folder where you want to install element43 to
-* ``cd`` into that folder and run ``sudo pip install virtualenv`` and ``sudo pip install virtualenvwrapper`
+* ``cd`` into that folder and run ``sudo pip install virtualenv`` and ``sudo pip install virtualenvwrapper``
 * Run ``source /usr/local/bin/virtualenvwrapper.sh`` and/or add this line to your ``.bashrc`` or ``.zshrc`` so you are able to use virtualenvwrapper without having to source it every single time
 * Followed by ``mkvirtualenv element43`` to create a virtualenv named ``element43``
 
