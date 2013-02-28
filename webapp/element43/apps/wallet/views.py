@@ -27,7 +27,7 @@ def active_orders(request):
 
     # Add data to context
     rcontext = RequestContext(request, {'orders': orders})
-    return render_to_response('wallet/active_orders.haml', rcontext)
+    return render_to_response('active_orders.haml', rcontext)
 
 
 @login_required
@@ -54,7 +54,7 @@ def archived_orders(request):
 
     # Add data to context
     rcontext = RequestContext(request, {'orders': orders})
-    return render_to_response('wallet/archived_orders.haml', rcontext)
+    return render_to_response('archived_orders.haml', rcontext)
 
 
 @login_required
@@ -80,7 +80,7 @@ def transactions(request, char_id):
 
     # Add data to context
     rcontext = RequestContext(request, {'transactions': transactions, 'char': char})
-    return render_to_response('wallet/transactions.haml', rcontext)
+    return render_to_response('transactions.haml', rcontext)
 
 
 @login_required
@@ -120,7 +120,7 @@ def journal(request, char_id):
     # Add data to context
     rcontext = RequestContext(request, {'journal': journal_entries, 'char': char, 'ref_types': ref_types})
 
-    return render_to_response('wallet/journal.haml', rcontext)
+    return render_to_response('journal.haml', rcontext)
 
 
 @login_required
@@ -154,7 +154,7 @@ def wallet(request):
                                         'transactions': transactions,
                                         'journal': journal})
 
-    return render_to_response('wallet/wallet.haml', rcontext)
+    return render_to_response('wallet.haml', rcontext)
 
 
 @login_required
@@ -177,7 +177,7 @@ def station_scanner(request, station_id):
 
     rcontext = RequestContext(request, {'type_ids': type_ids})
 
-    return render_to_response('wallet/scanner.haml', rcontext)
+    return render_to_response('scanner.haml', rcontext)
 
 
 @login_required
@@ -224,4 +224,4 @@ def type(request, type_id):
                                         'profit': profit,
                                         'transactions': transactions})
 
-    return render_to_response('wallet/type.haml', rcontext)
+    return render_to_response('type.haml', rcontext)
