@@ -7,6 +7,7 @@ from unipath import Path
 
 from django.core.exceptions import ImproperlyConfigured
 
+
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
     try:
@@ -248,6 +249,7 @@ INSTALLED_APPS = (
     'apps.auth',
     'apps.user_settings',
     'apps.manufacturing',
+    'apps.dashboard',
 )
 
 DEVSERVER_MODULES = (
