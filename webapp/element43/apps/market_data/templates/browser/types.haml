@@ -1,7 +1,7 @@
 - load humanize
 #panel{'style':'display: none;'}
   %script{'type':'text/javascript'}
-    $(document).ready(function(){	
+    $(document).ready(function(){
     	$('#panel').fadeIn(400);
       $('.typeimage').hide().fadeIn(400);
     });
@@ -14,7 +14,7 @@
           {{type.name}}
     .row-fluid
       .span2
-        %a{'href':'{% url quicklook type_id=type.id %}'}
+        %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
           %img.typeimage{'src':format('{{ IMAGE_SERVER }}/Type/{{ type.id }}_64.png'), 'alt':'type image', 'width':'64px', 'height':'64px'}
       .span10
         %p
@@ -32,7 +32,7 @@
           - for key, value in prices.items
             - if key == type.id
               {{value.bid|intcomma}} ISK
-      %a{'href':'{% url quicklook type_id=type.id %}'}
+      %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
         .span4.text-right
           .btn.btn-primary
             More Info

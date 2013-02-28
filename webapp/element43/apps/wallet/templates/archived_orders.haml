@@ -23,7 +23,7 @@
               %td
                 %img{'src':'{{IMAGE_SERVER}}/Type/{{order.id.invtype.id}}_16.png'}
               %td
-                %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                %a{'href':'{% url \'wallet_type\' type_id=order.id.invtype.id %}'}
                   {{order.id.invtype.name}}
               %td
                 {{order.character.name}}

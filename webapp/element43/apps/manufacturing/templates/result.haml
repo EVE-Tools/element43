@@ -4,31 +4,31 @@
   = block.super
   Manufacturing Job Result
 - block content
-  
+
   %span#blueprint_runs{'style':'display:none;'}
     = data.blueprint_runs
-  
+
   %ul.breadcrumb
     %li
       Manufacturing
     %li
       %span.divider >
-      %a{'href':'{% url manufacturing_select_blueprint %}'}
+      %a{'href':'{% url \'manufacturing_select_blueprint\' %}'}
         Blueprint Search ({{ data.blueprint_name }})
     %li
       %span.divider >
-      %a{'href':'{% url manufacturing_calculator data.blueprint_type_id %}'}
+      %a{'href':'{% url \'manufacturing_calculator\' data.blueprint_type_id %}'}
         Change Job Parameters
     %li
       %span.divider >
       Result
-  
+
   %h3
     Bill of Materials ({{ data.blueprint_runs|intcomma }} Runs -
     %span#produced_units
       {{ data.produced_units|intcomma }}
     Unit{{ data.produced_units|pluralize }})
-  
+
   %form.form-inline
     %table#billofmaterials.table.table-striped
       %thead
@@ -78,10 +78,10 @@
               = material.price_total|floatformat:2|intcomma
           %td.text-right
             = material.volume|floatformat:2|intcomma
-    
+
   %h3
     Cost and Profit Overview
-    
+
   %table.table.table-striped
     %thead
       %tr
@@ -122,7 +122,7 @@
           %span#materials_cost_total
             = data.materials_cost_total|floatformat:2|intcomma
           ISK
-      
+
       - if data.blueprint_cost_unit
         %tr
           %td
@@ -151,7 +151,7 @@
             %span#brokers_fee_total
               = data.brokers_fee_total|floatformat:2|intcomma
             ISK
-      
+
       - if data.sales_tax_unit
         %tr
           %td
@@ -221,7 +221,7 @@
           %span#profit_total_percent
             = data.profit_total_percent|floatformat:2|intcomma
           \%
-          
+
 
 - block scripts
   %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}

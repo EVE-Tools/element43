@@ -44,7 +44,7 @@
           %tr
             %td
               %img{'src':'{{IMAGE_SERVER}}/Type/{{transaction.invtype.id}}_16.png'}
-              %a{'href':'{% url wallet_type type_id=transaction.invtype.id%}'}
+              %a{'href':'{% url \'wallet_type\' type_id=transaction.invtype.id%}'}
                 {{transaction.invtype.name}}
             %td
               {{transaction.station.name}}

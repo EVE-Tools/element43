@@ -33,7 +33,7 @@
            %tr
              %td
                %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.id}}_16.png'}
-               %a{'href':'{% url quicklook type_id=item.id %}'}
+               %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
                  {{item.name}}
              %td.text-right
                {{item.foreign_ask|floatformat:2|intcomma}}

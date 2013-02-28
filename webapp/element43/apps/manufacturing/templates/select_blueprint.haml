@@ -6,10 +6,10 @@
 - block content
 
   %h2 Blueprint Search
-  
-  %form#select_blueprint_form.form-horizontal{'action': '{% url manufacturing_select_blueprint %}', 'method':'post'}
+
+  %form#select_blueprint_form.form-horizontal{'action': '{% url \'manufacturing_select_blueprint\' %}', 'method':'post'}
     - csrf_token
-    
+
     %div{'class':'control-group{{ form.blueprint|css_error }}'}
       %label.control-label{'for':'id_blueprint'} Blueprint name
       %div.controls
@@ -22,7 +22,7 @@
       %div.controls
         %button.btn.btn-success{'type':'submit'}
           Search
-  
+
   - if manufacturing_blueprint_history and not blueprints
     %h3
       Your {{ MANUFACTURING_MAX_BLUEPRINT_HISTORY }} most recent blueprints
@@ -33,9 +33,9 @@
             %td
               - if not request|is_igb
                 %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.id }}_32.png'), 'alt':'type image'}
-              %a{'href': '{% url manufacturing_calculator blueprint.id %}'}
+              %a{'href': '{% url \'manufacturing_calculator\' blueprint.id %}'}
                 = blueprint.name
-  
+
   - if blueprints
     %h3
       Select your Blueprint
@@ -46,7 +46,7 @@
             %td
               - if not request|is_igb
                 %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ blueprint.blueprint_type.id }}_32.png'), 'alt':'type image'}
-              %a{'href': '{% url manufacturing_calculator blueprint.blueprint_type.id %}'}
+              %a{'href': '{% url \'manufacturing_calculator\' blueprint.blueprint_type.id %}'}
                 = blueprint.blueprint_type.name
 
 - block scripts

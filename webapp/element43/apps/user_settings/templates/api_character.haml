@@ -10,13 +10,13 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li
-          %a{'href':'{% url settings %}'}
+          %a{'href':'{% url \'settings\' %}'}
             Modify Profile
         %li
-          %a{'href':'{% url manage_characters %}'}
+          %a{'href':'{% url \'manage_characters\' %}'}
             Manage Characters
         %li.active
-          %a{'href':'{% url manage_api_keys %}'}
+          %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
     .span9
       %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}

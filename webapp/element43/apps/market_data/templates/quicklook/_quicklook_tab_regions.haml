@@ -28,7 +28,7 @@
     - for region in regions
         %tr
           %td
-            %a{'href':'{% url quicklook_region type_id=type.id region_id=region.8 %}'}
+            %a{'href':'{% url \'quicklook_region\' type_id=type.id region_id=region.8 %}'}
                 = region.0
           %td
             Ask

@@ -12,7 +12,7 @@
       - for order_list_item in order_list
         %h2 {{order_list_item.grouper}}
         - if request|is_igb
-          %a{'href':'#', 'onclick':'$("#station-scanner").modal({"remote":"{% url wallet_station_scanner station_id=order_list_item.grouper.id %}"});'}
+          %a{'href':'#', 'onclick':'$("#station-scanner").modal({"remote":"{% url \'wallet_station_scanner\' station_id=order_list_item.grouper.id %}"});'}
             .btn.btn-primary
               %i.icon-white.icon-search
               Open Scanner
@@ -37,7 +37,7 @@
                   %td
                     {{order.character.name}}
                   %td
-                    %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                    %a{'href':'{% url \'wallet_type\' type_id=order.id.invtype.id %}'}
                       {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
@@ -70,7 +70,7 @@
                   %td
                     {{order.character.name}}
                   %td
-                    %a{'href':'{% url wallet_type type_id=order.id.invtype.id %}'}
+                    %a{'href':'{% url \'wallet_type\' type_id=order.id.invtype.id %}'}
                       {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}

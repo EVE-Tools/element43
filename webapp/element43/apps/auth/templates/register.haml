@@ -10,7 +10,7 @@
     .alert.alert-error
       %i.icon-white.icon-warning-sign
       = form.non_field_errors
-  %form.form-horizontal.well{'action':'{% url registration %}', 'method':'post'}
+  %form.form-horizontal.well{'action':'{% url \'registration\' %}', 'method':'post'}
     %fieldset
       - csrf_token
       %legend
@@ -41,7 +41,7 @@
                 = error|escape
           %p.help-block
             %b Note:
-            %i Never ever 
+            %i Never ever
             use the same password as for EVE!
       %div{'class':'control-group{{form.password_repeat|css_error}}'}
         %label.control-label{'for':'password_repeat'} Repeat Password
@@ -57,4 +57,3 @@
         %button.btn.btn-success{'type':'submit'}
           %i.icon-white.icon-check
           Register now
-        

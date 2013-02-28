@@ -11,7 +11,7 @@
         Welcome to element43, an open-source all-in-one tool providing you with all the information
         you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
       %p
-        %a.btn.btn-primary.btn-large{'href':'{% url registration %}'}
+        %a.btn.btn-primary.btn-large{'href':'{% url \'registration\' %}'}
           Get started now »
 - block content
   .row-fluid
@@ -49,7 +49,7 @@
          - for item in types
            %tr
              %td
-               %a{'href':'{% url quicklook type_id=item.id %}'}
+               %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
                  - if item.name == "30 Day Pilot's License Extension (PLEX)"
                    PLEX
                  - else
@@ -75,7 +75,7 @@
       %p
         Element43 is an open-source project based on the Python web framework Django.
         If you have some feedback for us or want to contribute to the project, click the button below.
-      %a.btn.btn-primary{'href':'{% url about_page %}'}
+      %a.btn.btn-primary{'href':'{% url \'about_page\' %}'}
         Get involved »
   %hr
   .row-fluid

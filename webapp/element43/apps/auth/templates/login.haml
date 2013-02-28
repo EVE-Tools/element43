@@ -6,11 +6,11 @@
 - block content
   %h1
     Login
-  %form.form-horizontal.well{'action':'{% url login %}?next={{request.GET.next}}', 'method':'post'}
+  %form.form-horizontal.well{'action':'{% url \'login\' %}?next={{request.GET.next}}', 'method':'post'}
     %fieldset
       - csrf_token
       %legend
-        Log into Element43 
+        Log into Element43
       %div{'class':'control-group{{form.username|css_error}}'}
         %label.control-label{'for':'username'} Username
         .controls
@@ -32,4 +32,4 @@
           %button.btn.btn-primary{'type':'submit'}
             Login
       %hr
-    %a{'href':'{% url reset_password %}'} Forgot your password?
+    %a{'href':'{% url \'reset_password\' %}'} Forgot your password?

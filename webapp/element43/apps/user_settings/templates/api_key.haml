@@ -11,13 +11,13 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li
-          %a{'href':'{% url settings %}'}
+          %a{'href':'{% url \'settings\' %}'}
             Modify Profile
         %li
-          %a{'href':'{% url manage_characters %}'}
+          %a{'href':'{% url \'manage_characters\' %}'}
             Manage Characters
         %li.active
-          %a{'href':'{% url manage_api_keys %}'}
+          %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
     .span9
       - if char_keys or corp_keys
@@ -47,13 +47,13 @@
                       %td
                         = key.keyid
                       %td.text-right
-                        %a.btn.btn-primary{'href':'{% url refresh_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                        %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
                           %i.icon-refresh.icon-white
                           Refresh Key
-                        %a.btn.btn-primary{'href':'{% url add_characters api_id=key.keyid api_verification_code=key.vcode %}', 'rel':'tooltip', 'title':'Adds characters with this key. You can move characters to another key by simply adding them to a that key. After this you can remove the old key.'}
+                        %a.btn.btn-primary{'href':'{% url \'add_characters\' api_id=key.keyid api_verification_code=key.vcode %}', 'rel':'tooltip', 'title':'Adds characters with this key. You can move characters to another key by simply adding them to a that key. After this you can remove the old key.'}
                           %i.icon-plus.icon-white
                           Add Chars
-                        %a.btn.btn-danger{'href':'{% url remove_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                        %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
                           %i.icon-remove.icon-white
                           Remove
                   - else
@@ -67,13 +67,13 @@
                       %td
                         = key.keyid
                       %td.text-right
-                        %a.btn.btn-primary{'href':'{% url refresh_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                        %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
                           %i.icon-refresh.icon-white
                           Refresh Key
                         %a.btn.btn-inactive{'href':'#'}
                           %i.icon-plus.icon-white
                           Add Chars
-                        %a.btn.btn-danger{'href':'{% url remove_api_key apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                        %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
                           %i.icon-remove.icon-white
                           Remove
         - if corp_keys
@@ -91,13 +91,13 @@
                   %td
                     = key.keyid
                   %td.text-right
-                    %a{'href':'{% url remove_api_key apikey_id=key.keyid %}'}
+                    %a{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}'}
                       .btn.btn-danger
                         Remove
         %hr
       %h3
         Add API Key
-      %form.form-horizontal.well{'action':'{% url manage_api_keys %}', 'method':'post'}
+      %form.form-horizontal.well{'action':'{% url \'manage_api_keys\' %}', 'method':'post'}
         %fieldset
           - csrf_token
           %legend

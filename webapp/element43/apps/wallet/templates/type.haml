@@ -14,7 +14,7 @@
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description|striptags
-        %a{'href':'{% url quicklook type_id=type.id %}'}
+        %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
             [Market Details]
     .span4
       %table.table.table-striped

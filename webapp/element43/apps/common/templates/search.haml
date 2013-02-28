@@ -17,10 +17,10 @@
         - for type in types
           %tr
             %td{'width':'32px'}
-              %a{'href':'{% url quicklook type_id=type.id %}'}
+              %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
                 %img{'src':format('{{ IMAGE_SERVER }}/Type/{{ type.id }}_32.png'), 'alt':'type image'}
             %td
-              %a{'href':'{% url quicklook type_id=type.id %}'}
+              %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
                 = type.name
             %td
                 = type.description|truncatechars:128
@@ -31,7 +31,7 @@
         - for station in stations
           %tr
             %td
-              %a{'href':'{% url station station_id=station.id %}'}
+              %a{'href':'{% url \'station\' station_id=station.id %}'}
                 = station.name
             %td
                 = station.description|truncatechars:128

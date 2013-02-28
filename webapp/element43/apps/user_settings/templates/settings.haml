@@ -10,20 +10,20 @@
     .span3
       %ul.nav.nav-tabs.nav-stacked
         %li.active
-          %a{'href':'{% url settings %}'}
+          %a{'href':'{% url \'settings\' %}'}
             Modify Profile
         %li
-          %a{'href':'{% url manage_characters %}'}
-            Manage Characters  
+          %a{'href':'{% url \'manage_characters\' %}'}
+            Manage Characters
         %li
-          %a{'href':'{% url manage_api_keys %}'}
+          %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
     .span9.well
       - if form.non_field_errors
         .alert.alert-error
           %i.icon-white.icon-warning-sign
           = form.non_field_errors
-      %form.form-horizontal{'action':'{% url settings %}', 'method':'post'}
+      %form.form-horizontal{'action':'{% url \'settings\' %}', 'method':'post'}
         %fieldset
           - csrf_token
           %legend
@@ -32,7 +32,7 @@
             %label.control-label{'for':'username'} Username
             .controls
               %b
-                %div{'style':'padding-top: 4px;'} 
+                %div{'style':'padding-top: 4px;'}
                   {{user.username}}
           %div{'class':'control-group{{form.email|css_error}}'}
             %label.control-label{'for':'email'} E-Mail
@@ -52,7 +52,7 @@
                     = error|escape
               %p.help-block
                 %b Note:
-                %i Never ever 
+                %i Never ever
                 use the same password as for EVE!
           %div{'class':'control-group{{form.new_password_repeat|css_error}}'}
             %label.control-label{'for':'new_password_repeat'} Repeat New Password
@@ -76,6 +76,5 @@
           .controls
             %button.btn.btn-primary{'type':'submit'}
               Update Profile
-            
-            
-      
+
+
