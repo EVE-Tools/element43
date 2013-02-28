@@ -62,3 +62,6 @@ MEMCACHE_BEHAVIOUR = {"tcp_nodelay": True,
 # Configure sentry
 INSTALLED_APPS += ('raven.contrib.django',)
 MIDDLEWARE_CLASSES += ('raven.contrib.django.middleware.Sentry404CatchMiddleware',)
+
+# Allowed hosts
+ALLOWED_HOSTS = ['.element-43.com']
