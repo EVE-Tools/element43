@@ -239,7 +239,6 @@ INSTALLED_APPS = (
     'compressor',
 
     'south',
-    'devserver',
     'djcelery',
 
     'eve_db',

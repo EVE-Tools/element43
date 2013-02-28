@@ -6,8 +6,10 @@ TEMPLATE_DEBUG = DEBUG
 
 IMAGE_SERVER = 'http://image.eveonline.com'
 
-#MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-#INSTALLED_APPS += ('debug_toolbar',)
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+INSTALLED_APPS += ('debug_toolbar',
+                  #'devserver',
+                  )
 
 DATABASES = {
             "default": {
