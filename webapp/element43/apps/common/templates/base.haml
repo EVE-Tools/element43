@@ -1,5 +1,4 @@
-- load custom_filters
-- load compress
+- load custom_filters compress
 <!DOCTYPE html>
 %html
   %head
@@ -153,6 +152,7 @@
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
+    - block scripts
     - if GOOGLE_ANALYTICS_ENABLED
       - if not request.DNT
         %script{'type':'text/javascript'}
@@ -166,5 +166,3 @@
             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
           })();
-    - compress js
-      - block scripts

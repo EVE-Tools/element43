@@ -1,5 +1,5 @@
 - extends "base.haml"
-- load custom_filters
+- load custom_filters compress
 - block title
   = block.super
   Calculator
@@ -203,4 +203,5 @@
           Calculate
 
 - block scripts
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}

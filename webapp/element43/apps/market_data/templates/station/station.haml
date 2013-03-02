@@ -1,7 +1,5 @@
 - extends "base.haml"
-- load cache
-- load humanize
-- load custom_filters
+- load cache humanize custom_filters compress
 - block title
   = block.super
   {{station.name}}
@@ -72,6 +70,7 @@
 - block scripts
   %script{'type':'text/javascript'}
     var staStationID = {{station.id}};
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.dynatree.min.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.cookie.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/station.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.dynatree.min.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.cookie.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/station.js'}

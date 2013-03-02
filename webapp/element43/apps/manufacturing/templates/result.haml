@@ -1,5 +1,5 @@
 - extends "base.haml"
-- load custom_filters humanize element43_humanize
+- load custom_filters humanize element43_humanize compress
 - block title
   = block.super
   Manufacturing Job Result
@@ -224,5 +224,6 @@
 
 
 - block scripts
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/numberformat.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/numberformat.js'}

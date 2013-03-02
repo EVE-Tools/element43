@@ -1,5 +1,5 @@
 - extends "base.haml"
-- load humanize
+- load humanize compress
 - block title
   = block.super
   Know the Market
@@ -135,8 +135,9 @@
               %td#history_records.span3
                 0
 - block scripts
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/home.js'}
   %script{'type':'text/javascript'}
     var region = {{region}};
     var types = {{type_ids}};
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/home.js'}

@@ -1,4 +1,5 @@
 - extends "base.haml"
+- load compress
 - ifnotequal region None
   - block title
     = block.super
@@ -30,5 +31,6 @@
               %td
                 = type.name
   - block scripts
-    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
-    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/scanner.js'}
+    - compress js
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/scanner.js'}

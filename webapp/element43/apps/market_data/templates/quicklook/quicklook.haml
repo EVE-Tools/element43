@@ -1,6 +1,5 @@
 - extends "base.haml"
-- load humanize
-- load custom_filters
+- load humanize custom_filters compress
 - block title
   = block.super
   Market - {{type.name}}
@@ -184,5 +183,6 @@
     var invTypeName = "{{type.name}}";
     var mapRegionIDs = {{region_ids}};
     var mapRegions = {{region_names|safe}};
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook_graph.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/quicklook_graph.js'}

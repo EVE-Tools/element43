@@ -1,4 +1,5 @@
 - extends "base.haml"
+- load compress
 - block title
   = block.super
   Random Market Scanner
@@ -29,5 +30,6 @@
             %td
               = type.name
 - block scripts
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/scanner.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/scanner.js'}

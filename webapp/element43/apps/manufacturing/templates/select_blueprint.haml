@@ -1,5 +1,5 @@
 - extends "base.haml"
-- load custom_filters
+- load custom_filters compress
 - block title
   = block.super
   Blueprint Search
@@ -50,6 +50,7 @@
                 = blueprint.blueprint_type.name
 
 - block scripts
-  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
-  %script{'type':'text/javascript'}
-    $(document).ready(function() {$('#id_blueprint').focus(); });
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/manufacturing.js'}
+    %script{'type':'text/javascript'}
+      $(document).ready(function() {$('#id_blueprint').focus(); });
