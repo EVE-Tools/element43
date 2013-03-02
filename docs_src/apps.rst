@@ -30,7 +30,6 @@ Views
 
 .. automodule:: apps.common.views
     :members:
-    :undoc-members:
 
 dashboard
 ^^^^^^^^^

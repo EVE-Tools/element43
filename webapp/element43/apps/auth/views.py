@@ -27,6 +27,10 @@ from django.template.loader import get_template
 
 
 def login(request):
+    """
+    View for logging users in
+    """
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
 
@@ -76,6 +80,10 @@ def login(request):
 
 
 def logout(request):
+    """
+    View for logging users out
+    """
+
     if request.user.is_authenticated():
         django_logout(request)
         # Redirect
@@ -84,6 +92,10 @@ def logout(request):
 
 
 def register(request):
+    """
+    This view handles user registration
+    """
+
     if request.method == 'POST':  # If the form has been submitted...
         form = RegistrationForm(request.POST)  # A form bound to the POST data
         if form.is_valid():  # All validation rules pass
@@ -140,6 +152,10 @@ def register(request):
 
 
 def reset_password(request):
+    """
+    View for resetting a user's password
+    """
+
     if request.method == 'POST':
         form = ResetPasswordForm(request.POST)
 
@@ -180,11 +196,19 @@ def reset_password(request):
 
 
 def registration_success(request):
+    """
+    This view is called when the registration succeeded
+    """
+
     rcontext = RequestContext(request, {})
     return render_to_response('auth/registration_success.haml', rcontext)
 
 
 def activate(request, key):
+    """
+    Handles the activation by activation links which are provided by e-mail
+    """
+
     # Check if there is a user with this key
     user = User.objects.filter(profile__activation_key=key)
 
