@@ -64,7 +64,8 @@ def history_json(request, region_id=10000002, type_id=34):
 
     # Convert to Highstocks compatible timestamp first
     for point in data:
-        ohlc_data.append([int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
+        ohlc_data.append(
+            [int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
         last_mean = point.mean
 
     json = simplejson.dumps(ohlc_data)
@@ -157,12 +158,12 @@ def quicklook(request, type_id=34):
 
     # Fetch top 50 buy/sell orders from DB
     buy_orders = Orders.active.select_related('stastation__id',
-                                               'stastation__name',
-                                               'mapregion__id',
-                                               'mapregion__name',
-                                               'mapsolarsystem__security_level').filter(invtype=type_id,
-                                                                                        is_bid=True,
-                                                                                        is_active=True).order_by('-price')[:50]
+                                              'stastation__name',
+                                              'mapregion__id',
+                                              'mapregion__name',
+                                              'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                       is_bid=True,
+                                                                                       is_active=True).order_by('-price')[:50]
 
     sell_orders = Orders.active.select_related('stastation__id',
                                                'stastation__name',
@@ -325,6 +326,7 @@ def quicklook_bid_filter(request, type_id=34, min_sec=0, max_age=8):
 
     return render_to_response('quicklook/_quicklook_bid.haml', rcontext)
 
+
 def quicklook_region(request, region_id=10000002, type_id=34):
     """
     Generates system level overview for a specific type.
@@ -351,7 +353,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
             stat_object.sellmedian = 0
         try:
             stats = ItemRegionStat.objects.get(invtype_id__exact=material['material_type__id'],
-                                              mapregion_id__exact=10000002)
+                                               mapregion_id__exact=10000002)
 
             material['total'] = stats.sell_95_percentile * material['quantity']
             material['min_price'] = stats.sell_95_percentile
@@ -359,7 +361,7 @@ def quicklook_region(request, region_id=10000002, type_id=34):
             material['total'] = 0
             material['min_price'] = 0
         material['price'] = stat_object.sellmedian
-        #material['total']=min_price['min_price']*material['quantity']
+        # material['total']=min_price['min_price']*material['quantity']
         totalprice += material['total']
 
     # Get the region type
@@ -371,12 +373,12 @@ def quicklook_region(request, region_id=10000002, type_id=34):
 
     # Fetch all buy/sell orders from DB
     buy_orders = Orders.active.select_related('stastation__id',
-                                               'stastation__name',
-                                               'mapregion__id',
-                                               'mapregion__name',
-                                               'mapsolarsystem__security_level').filter(invtype=type_id,
-                                                                                        is_bid=True,
-                                                                                        mapregion_id=region_id).order_by('-price')
+                                              'stastation__name',
+                                              'mapregion__id',
+                                              'mapregion__name',
+                                              'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                       is_bid=True,
+                                                                                       mapregion_id=region_id).order_by('-price')
     sell_orders = Orders.active.select_related('stastation__id',
                                                'stastation__name',
                                                'mapregion__id',
@@ -410,12 +412,12 @@ def quicklook_tab_systems(request, region_id=10000002, type_id=34):
     """
 
     buy_orders = Orders.active.select_related('stastation__id',
-                                               'stastation__name',
-                                               'mapregion__id',
-                                               'mapregion__name',
-                                               'mapsolarsystem__security_level').filter(invtype=type_id,
-                                                                                        is_bid=True,
-                                                                                        mapregion_id=region_id).order_by('-price')
+                                              'stastation__name',
+                                              'mapregion__id',
+                                              'mapregion__name',
+                                              'mapsolarsystem__security_level').filter(invtype=type_id,
+                                                                                       is_bid=True,
+                                                                                       mapregion_id=region_id).order_by('-price')
     sell_orders = Orders.active.select_related('stastation__id',
                                                'stastation__name',
                                                'mapregion__id',
@@ -453,8 +455,8 @@ def quicklook_tab_systems(request, region_id=10000002, type_id=34):
                 temp_data.append(round(np.std(system_ask_prices), 2))
                 temp_data.append(len(system_ask_prices))
                 temp_data.append(Orders.active.filter(mapsolarsystem_id=system,
-                                                       invtype=type_id,
-                                                       is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                                                      invtype=type_id,
+                                                      is_bid=False).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
                 # Else there are no orders in this system -> add a bunch of 0s
                 temp_data.extend([0, 0, 0, 0, 0, 0, 0])
@@ -468,8 +470,8 @@ def quicklook_tab_systems(request, region_id=10000002, type_id=34):
                 temp_data.append(round(np.std(system_bid_prices), 2))
                 temp_data.append(len(system_bid_prices))
                 temp_data.append(Orders.active.filter(mapsolarsystem_id=system,
-                                                       invtype=type_id,
-                                                       is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
+                                                      invtype=type_id,
+                                                      is_bid=True).aggregate(Sum('volume_remaining'))['volume_remaining__sum'])
         else:
                 # Else there are no orders in this system -> add a bunch of 0s
                 temp_data.extend([0, 0, 0, 0, 0, 0, 0])
