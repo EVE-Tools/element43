@@ -286,6 +286,30 @@ def process_docstring(app, what, name, obj, options, lines):
     # Return the extended docstring
     return lines
 
+
 def setup(app):
     # Register the docstring processor with sphinx
     app.connect('autodoc-process-docstring', process_docstring)
+
+
+class Mock(object):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        return Mock()
+
+    @classmethod
+    def __getattr__(cls, name):
+        if name in ('__file__', '__path__'):
+            return '/dev/null'
+        elif name[0] == name[0].upper():
+            mockType = type(name, (), {})
+            mockType.__module__ = __name__
+            return mockType
+        else:
+            return Mock()
+
+MOCK_MODULES = ['pylibmc', 'djcelery']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = Mock()
