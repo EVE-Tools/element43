@@ -28,7 +28,7 @@ Installing element43 on your dev box
 
 Models
 """"""
-Element43 is all about data. It's no wonder that the models play a very important role in the project. Lickily we already have done most of the work for you, like mapping CCPs entire static data dump to the appropiate models or collecting all kinds of market data. This allows you to conveniently access all this data via Django's ORM so you can do stuff like this:
+Element43 is all about data. It's no wonder that the models play a very important role in the project. Luckily we already have done most of the work for you, like mapping CCPs entire static data dump to the appropiate models or collecting all kinds of market data. This allows you to conveniently access all this data via Django's ORM so you can do stuff like this:
 
 .. highlight:: python
 
@@ -58,13 +58,13 @@ Element43 is all about data. It's no wonder that the models play a very importan
     # Printing Jita's region's name (The Forge)
     print(jita.region.name)
 
-*Django's interactive shell which you can access via ``django-admin.py shell`` provides a handy playground for experimenting with queries.*
+Django's interactive shell which you can access via ``django-admin.py shell`` provides a handy playground for experimenting with queries.
 
 As you can see there is no raw SQL involved and relations can be traversed with ease. Note the difference between selecting Orders and a regular model. While we call ``.objects`` on regular objects, we have added ``.active`` for selecting active orders to save you from always having to filter for ``is_active`` when searching through the market.
 
 For documentation on CCP's SDE have a look at `eve-id.net <http://wiki.eve-id.net/Category:CCP_DB_Tables>`_. The ORM mapping and import is handled via `django-eve-db <https://github.com/gtaylor/django-eve-db>`_ - the code of the models should be self-explanatory.
 
-Market data is handled by the models of the app ``market_data``- documentation can be found in the :doc:`architecture document<architecture>`.
+Market data is handled by the models of the app ``market_data``- documentation can be found in the :doc:`applications document<apps>`.
 Again - if you have problems, ask for help in IRC.
 
 Templates
