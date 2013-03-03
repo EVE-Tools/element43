@@ -118,4 +118,4 @@ Running the devserver
 
 Further reading
 ^^^^^^^^^^^^^^^
-[TODO: add links to model documentation and some Django tutorials to get started]
+Consider reading our :doc:`getting started guide <gettingstarted>`.
