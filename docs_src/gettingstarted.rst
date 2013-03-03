@@ -30,7 +30,10 @@ Models
 """"""
 Element43 is all about data. It's no wonder that the models play a very important role in the project. Lickily we already have done most of the work for you, like mapping CCPs entire static data dump to the appropiate models or collecting all kinds of market data. This allows you to conveniently access all this data via Django's ORM so you can do stuff like this:
 
-.. code-block:: python
+.. highlight:: python
+
+::
+
     # Necessary Model imports
     from eve_db.models import MapSolarSystem
     from apps.market_data.models import Orders
@@ -55,7 +58,7 @@ Element43 is all about data. It's no wonder that the models play a very importan
     # Printing Jita's region's name (The Forge)
     print(jita.region.name)
 
-*Dajngo's interactive shell which you can access via ``django-admin.py shell`` provides a handy playground for experimenting with queries.*
+*Django's interactive shell which you can access via ``django-admin.py shell`` provides a handy playground for experimenting with queries.*
 
 As you can see there is no raw SQL involved and relations can be traversed with ease. Note the difference between selecting Orders and a regular model. While we call ``.objects`` on regular objects, we have added ``.active`` for selecting active orders to save you from always having to filter for ``is_active`` when searching through the market.
 
