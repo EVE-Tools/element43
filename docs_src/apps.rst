@@ -3,6 +3,8 @@ Apps
 
 This document focuses on a detailed description of each app's models and views. This should be enough to acquaint you with the basic workings of element43.
 
+*Large parts of this document are automatically generated and there are known problems with autogenerating docs for our views. Please consult the docstrings in the code if some piece of documentation is missing here.*
+
 api
 ^^^
 
