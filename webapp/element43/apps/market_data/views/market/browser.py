@@ -1,7 +1,6 @@
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponse
 
 # eve_db models
 from eve_db.models import InvType
@@ -9,73 +8,6 @@ from eve_db.models import InvMarketGroup
 
 # Models
 from apps.market_data.models import Orders
-
-# Helper functions
-from apps.market_data.util import group_ids
-
-# JSON
-from django.utils import simplejson
-
-
-def tree(request, group=0):
-    """
-    Returns groups in JSON format for tree view.
-    """
-
-    groups = []
-
-    if group == 0:
-
-        # Default to root groups
-        groups = InvMarketGroup.objects.extra(where=['"parent_id" IS NULL'])
-        group_json = []
-
-        for group in groups:
-
-            icon_name = "/static/images/icons/eve/22_32_42.png"
-            group_json.append({'title': group.name,
-                               'key': str(group.id),
-                               'icon': icon_name,
-                               'isLazy': True,
-                               'isFolder': True,
-                               'noLink': True})
-
-        group_json = sorted(group_json, key=lambda k: k['title'])
-
-        group_json = simplejson.dumps(group_json)
-        return HttpResponse(group_json, mimetype='application/json')
-
-    else:
-
-        items = []
-        no_items = []
-        groups = InvMarketGroup.objects.filter(parent=group)
-
-        for group in groups:
-
-            icon_name = "/static/images/icons/eve/22_32_42.png"
-
-            if group.has_items:
-                items.append({'title': group.name,
-                              'key': str(group.id),
-                              'icon': icon_name,
-                              'hasItems': True,
-                              'isFolder': False,
-                              'noLink': False})
-            else:
-                no_items.append({'title': group.name,
-                                 'key': str(group.id),
-                                 'isLazy': True,
-                                 'icon': icon_name,
-                                 'isFolder': True,
-                                 'noLink': True})
-
-        group_json = []
-        group_json += sorted(no_items, key=lambda k: k['title'])
-        group_json += sorted(items, key=lambda k: k['title'])
-
-        group_json = simplejson.dumps(group_json)
-        return HttpResponse(group_json, mimetype='application/json')
 
 
 def panel(request, group=0):
@@ -114,16 +46,12 @@ def browser(request, group=0):
     Market browser.
     """
 
+    print group
+
     if not group == 0:
         # If there is a group, add data to initialize tree
 
-        breadcrumbs = group_ids(group)
-        path = ""
-
-        for crumb in breadcrumbs:
-            path = path + '/' + str(crumb)
-
-        rcontext = RequestContext(request, {'path': path})
+        rcontext = RequestContext(request, {'market_group': group})
         return render_to_response('browser/browse.haml', rcontext)
 
     else:

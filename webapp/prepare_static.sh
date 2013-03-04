@@ -6,6 +6,9 @@
 
 cd "$(dirname "$0")"
 
+echo 'Generating market group tree...'
+python precompile_group_json.py
+
 echo 'Collecting static files...'
 django-admin.py collectstatic --noinput --clear
 

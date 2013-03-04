@@ -29,7 +29,7 @@ ul.dynatree-container li
 	background-attachment: scroll;
 	background-color: transparent;
 	background-repeat: repeat-y;
-	
+
 	cursor: pointer;
 
 	background-position: 0 0;
@@ -71,9 +71,8 @@ span.dynatree-drag-helper-img,
 	display: inline-block; /* Required to make a span sizeable */
 	vertical-align: top;
 	background-repeat: no-repeat;
-	background-position: left;
 	background-image: url("/static/images/glyphicons-halflings-white.png");
-	background-position: 0 0;
+	background-position: -360px -48px;
 }
 
 /** Used by 'icon' node option: */
