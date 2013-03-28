@@ -85,13 +85,13 @@ Preparing the database
 * Create a database and a user called ``element43`` with the password ``element43`` using either the cli or a tool like `pgAdmin <http://www.pgadmin.org>`_ or `Navicat <http://www.navicat.com>`_
 	* Ensure the new user has all rights for the newly-created database!
 	* Only if you have no other choice edit the settings file at ``element43/webapp/element43/settings/local.py``
-* Navigate to ``element43/webapp/`` then ``python manage.py syncdb`` and **do not create a superuser**
-* Run ``python manage.py migrate eve_db``
-* Run ``python manage.py migrate apps.common``
-* Run ``python manage.py migrate apps.market_data``
-* Run ``python manage.py migrate apps.api``
-* Run ``python manage.py migrate djcelery``
-* Download and extract the latest dump from `http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2 <http://www.fuzzwork.co.uk/dump/retribution-1.1-84566/eve.db.bz2>`_
+* Navigate to ``element43/webapp/`` then ``django-admin.py syncdb`` and **do not create a superuser**
+* Run ``django-admin.py migrate eve_db``
+* Run ``django-admin.py migrate apps.common``
+* Run ``django-admin.py migrate apps.market_data``
+* Run ``django-admin.py migrate apps.api``
+* Run ``django-admin.py migrate djcelery``
+* Download and extract the latest dump from `http://files.zweizeichen.org/retribution-1.1-84566.zip <http://files.zweizeichen.org/retribution-1.1-84566.zip>`_
 
 * Import the dump with ``django-admin.py eve_import_ccp_dump <location of dump>``
 
