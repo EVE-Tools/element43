@@ -8,10 +8,11 @@ from apps.common.util import dictfetchall
 # This script generated a JSON tree for the market browser and is automatically run with prepare_static.sh
 #
 
+
 def recadder(node):
-	"""
-	Function for recursively traversing the tree.
-	"""
+    """
+    Function for recursively traversing the tree.
+    """
 
     if not node['has_items']:
         if not 'children' in node:
@@ -41,7 +42,7 @@ def recadder(node):
     del node['icon_id']
 
     if (iconid):
-    	node['iconid'] = str(iconid) + '_32.png'
+        node['iconid'] = str(iconid) + '_32.png'
 
     key = node['id']
     del node['id']
