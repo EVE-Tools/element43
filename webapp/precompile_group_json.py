@@ -44,6 +44,8 @@ def recadder(node):
     if (iconid):
         node['iconid'] = str(iconid) + '_32.png'
 
+    node['icon'] = '/static/images/icons/eve/22_32_42.png'
+
     key = node['id']
     del node['id']
     node['key'] = key
