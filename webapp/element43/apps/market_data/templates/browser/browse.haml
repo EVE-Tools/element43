@@ -17,6 +17,6 @@
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.dynatree.min.js'}
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.cookie.js'}
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/browser.js'}
-    - if market_group
-      %script{'type':'text/javascript'}
-        var marketGroup = {{market_group}};
+  - if market_group
+    %script{'type':'text/javascript'}
+      var marketGroup = {{market_group}};
