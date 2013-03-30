@@ -51,7 +51,7 @@ $(document).ready(function() {
                 },
 
                 rangeSelector: {
-                    selected: 1,
+                    selected: 4,
                     inputEnabled: false
                 },
 
