@@ -3,34 +3,34 @@ $(document).ready(function() {
 	// Station view for element43
 	//
 
-	// Initialize tree
-	$('#tree').dynatree({
-		title: "market",
-		// Tree's name
-		autoCollapse: true,
-		// Auto-collapse other branches
-		imagePath: " ",
-		// Path to a folder containing icons.
-		initAjax: {
-			url: "/market/browse/tree/"
-		},
-		// Initial AJAX location
-		fx: {
-			height: "toggle",
-			duration: 200
-		},
-		// Animation
-		onLazyRead: function(node) {
-			node.appendAjax({
-				url: "/market/browse/tree/" + node.data.key + "/"
-			}); // AJAX URL
-		},
-		onActivate: function(node) {
-			if(node.data.hasItems) {
-				$('#group').text('Loading...');
-				$('#group').load('/market/trading/station/' + staStationID + '/import/browse/panel/' + node.data.key + '/', function(){$("[rel=tooltip]").tooltip();}); // Load right panel
+	// Get market groups and initialize tree
+	$.getJSON('/static/javascripts/groups.json', function(groups) {
+		$('#tree').dynatree({
+			title: "market",
+			// Tree's name
+			autoCollapse: true,
+			// Auto-collapse other branches
+			imagePath: "//image.eveonline.com/Type/",
+			// Initial AJAX location
+			fx: {
+				height: "toggle",
+				duration: 200
+			},
+			// Animation
+			children: groups,
+			onActivate: function(node) {
+				if(!node.data.isFolder) {
+					$('#group').html('<img src="/static/images/loading.gif"><i> Loading data...</i>');
+					$('#group').load('/market/trading/station/' + staStationID + '/import/browse/panel/' + node.data.key + '/', function(){$("[rel=tooltip]").tooltip();}); // Load right panel
+				}
+			},
+			onPostInit: function(isReloading, isError) {
+				// If marketGroup defined load path
+				if (typeof marketGroup !== 'undefined') {
+					this.activateKey(marketGroup);
+				}
 			}
-		}
+		});
 	});
 
 	// Show / Hide filters section
