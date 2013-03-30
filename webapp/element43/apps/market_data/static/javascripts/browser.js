@@ -16,7 +16,7 @@ $(document).ready(function() {
 			children: groups,
 			onActivate: function(node) {
 				if(!node.data.isFolder) {
-					$('#group').append('<img src="/static/images/loading.gif"><i> Loading data...</i>');
+					$('#group').html('<img src="/static/images/loading.gif"><i> Loading data...</i>');
 					$('#panel').fadeOut(250);
 					$('#group').load('/market/browse/panel/' + node.data.key + '/'); // Load right panel
 				}
