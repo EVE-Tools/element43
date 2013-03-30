@@ -136,7 +136,7 @@ def stats_json(request, region_id):
                 # Catch error if we don't have any data for that type
                 try:
                     region_stats = ItemRegionStat.objects.filter(
-                                        mapregion_id=region_id, invtype_id=item)[:1][0]
+                                        mapregion_id=region_id, invtype_id=item)[:2][1]
                     buymedian = region_stats.buymedian
                     sellmedian = region_stats.sellmedian
 
