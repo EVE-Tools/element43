@@ -1,5 +1,7 @@
 import json
 
+from yaml import load
+
 from django.db import connection
 
 from apps.common.util import dictfetchall
@@ -41,10 +43,23 @@ def recadder(node):
     iconid = node['icon_id']
     del node['icon_id']
 
+    # Add proper icon ids
     if (iconid):
-        node['iconid'] = str(iconid) + '_32.png'
+        string = icons[iconid]['iconFile']
 
-    node['icon'] = '/static/images/icons/eve/22_32_42.png'
+        # Handle different formats
+        if 'res:/UI/Texture/Icons/' in string:
+            node['icon'] = string.replace('res:/UI/Texture/Icons/', '')
+        elif 'res:/UI/Texture/market/' in string:
+            node['icon'] = '22_42.png'
+        else:
+            # Remove leading zeros
+            for i in range(0, 10):
+                string = string.replace('0'+str(i), str(i))
+            node['icon'] = string.replace('_16_', '').replace('_32_', '').replace('_64_', '').replace('_128_', '') + '.png'
+    else:
+        # Default icon
+        node['icon'] = '22_42.png'
 
     key = node['id']
     del node['id']
@@ -53,6 +68,10 @@ def recadder(node):
     del node['parent_id']
 
     return node
+
+icon_yaml = file('iconIDs.yaml', 'r')
+
+icons = load(icon_yaml)
 
 cursor = connection.cursor()
 

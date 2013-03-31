@@ -10,7 +10,7 @@ $(document).ready(function() {
 			// Tree's name
 			autoCollapse: true,
 			// Auto-collapse other branches
-			imagePath: "//image.eveonline.com/Type/",
+			imagePath: "/static/images/icons/eve/",
 			// Initial AJAX location
 			fx: {
 				height: "toggle",
