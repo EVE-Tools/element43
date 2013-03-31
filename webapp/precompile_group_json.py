@@ -49,14 +49,14 @@ def recadder(node):
 
         # Handle different formats
         if 'res:/UI/Texture/Icons/' in string:
-            node['icon'] = string.replace('res:/UI/Texture/Icons/', '')
+            node['icon'] = string.replace('res:/UI/Texture/Icons/', '').replace('_16_', '_').replace('_32_', '_').replace('_64_', '_').replace('_128_', '_')
         elif 'res:/UI/Texture/market/' in string:
             node['icon'] = '22_42.png'
         else:
             # Remove leading zeros
             for i in range(0, 10):
                 string = string.replace('0'+str(i), str(i))
-            node['icon'] = string.replace('_16_', '').replace('_32_', '').replace('_64_', '').replace('_128_', '') + '.png'
+            node['icon'] = string.replace('_16_', '_').replace('_32_', '_').replace('_64_', '_').replace('_128_', '_') + '.png'
     else:
         # Default icon
         node['icon'] = '22_42.png'
