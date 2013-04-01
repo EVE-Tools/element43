@@ -20,18 +20,7 @@
         %p
           = type.description|striptags
     .row-fluid.typeinfo
-      .span4
-        ASK
-        %span.price
-          - for key, value in prices.items
-            - if key == type.id
-              {{value.ask|intcomma}} ISK
-      .span4
-        BID
-        %span.price
-          - for key, value in prices.items
-            - if key == type.id
-              {{value.bid|intcomma}} ISK
+      .span8
       %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
         .span4.text-right
           .btn.btn-primary
