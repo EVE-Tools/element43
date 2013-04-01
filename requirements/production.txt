@@ -2,3 +2,4 @@
 
 # Sentry error reporting
 raven>=3.1.16,<3.2
+gunicorn
