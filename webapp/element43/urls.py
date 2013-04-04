@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     # Market data
     url(r'^market/', include('apps.market_data.urls')),
 
+    # Quicklook
+    url(r'^market/', include('apps.quicklook.urls')),
+
     # Market scanners
     url(r'^market/scanner/', include('apps.market_scanner.urls')),
 
