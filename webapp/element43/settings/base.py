@@ -247,6 +247,7 @@ INSTALLED_APPS = (
     'apps.market_scanner',
     'apps.legacy_api',
     'apps.quicklook',
+    'apps.market_browser',
     'apps.api',
     'apps.auth',
     'apps.user_settings',

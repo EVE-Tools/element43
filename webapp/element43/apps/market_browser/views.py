@@ -17,7 +17,7 @@ def panel(request, group=0):
                                         'types': InvType.objects.filter(market_group=group,
                                         is_published=True)})
 
-    return render_to_response('browser/types.haml', rcontext)
+    return render_to_response('types.haml', rcontext)
 
 
 def browser(request, group=0):
@@ -31,8 +31,8 @@ def browser(request, group=0):
         # If there is a group, add data to initialize tree
 
         rcontext = RequestContext(request, {'market_group': group})
-        return render_to_response('browser/browse.haml', rcontext)
+        return render_to_response('browse.haml', rcontext)
 
     else:
         rcontext = RequestContext(request, {})
-        return render_to_response('browser/browse.haml', rcontext)
+        return render_to_response('browse.haml', rcontext)
