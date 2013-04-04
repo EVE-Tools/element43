@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^market/', include('apps.quicklook.urls')),
 
     # Station views
-    url(r'^market/', include('apps.market_station.urls')),
+    url(r'^market/trading/', include('apps.market_station.urls')),
 
     # Market browser
     url(r'^market/browse/', include('apps.market_browser.urls')),
