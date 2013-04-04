@@ -15,7 +15,6 @@ handler500 = 'apps.common.views.handler_500'
 #
 
 urlpatterns = patterns('',
-
     # Common URLs
     url(r'', include('apps.common.urls')),
 
@@ -24,6 +23,12 @@ urlpatterns = patterns('',
 
     # Quicklook
     url(r'^market/', include('apps.quicklook.urls')),
+
+    # Station views
+    url(r'^market/', include('apps.market_station.urls')),
+
+    # Market browser
+    url(r'^market/browse/', include('apps.market_browser.urls')),
 
     # Market scanners
     url(r'^market/scanner/', include('apps.market_scanner.urls')),

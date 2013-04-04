@@ -248,6 +248,7 @@ INSTALLED_APPS = (
     'apps.legacy_api',
     'apps.quicklook',
     'apps.market_browser',
+    'apps.market_station',
     'apps.api',
     'apps.auth',
     'apps.user_settings',
