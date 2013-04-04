@@ -73,7 +73,7 @@ class ItemRegionStat(models.Model):
     Stats for items on a per region basis
     processed when new orders come in during warehousing
     """
-    
+
     mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True, help_text="FK to region table")
     invtype = models.ForeignKey('eve_db.InvType', db_index=True, help_text="FK to type table")
     buymean = models.FloatField(help_text="Mean of buy price")
@@ -157,7 +157,7 @@ class OrderHistory(models.Model):
 class ActiveOrdersManager(models.Manager):
     """
     Custom manager that only returns active orders.
-    
+
     Example: Get all active orders --> Orders.active.all()
     """
     def get_query_set(self):
@@ -166,7 +166,7 @@ class ActiveOrdersManager(models.Manager):
 class ArchivedOrdersManager(models.Manager):
     """
     Custom manager that only returns archived orders.
-    
+
     Example: Get all archived orders --> Orders.archived.all()
     """
     def get_query_set(self):
@@ -208,9 +208,9 @@ class Orders(models.Model):
         help_text="ID of the solar system the order is in.")
     is_suspicious = models.BooleanField(
         help_text="If this is True, we have reason to question this order's validity")
-    message_key = models.CharField(max_length=255,
+    message_key = models.CharField(max_length=255, blank=True, null=True,
         help_text="The unique hash that of the market message.")
-    uploader_ip_hash = models.CharField(max_length=255, 
+    uploader_ip_hash = models.CharField(max_length=255,
         help_text="The unique hash for the person who uploaded this message.")
     is_active = models.BooleanField(help_text="is this a live order or is it history", default = True)
 
@@ -218,7 +218,52 @@ class Orders(models.Model):
     objects = models.Manager()
     active = ActiveOrdersManager()
     archived = ArchivedOrdersManager()
-    
+
     class Meta(object):
         verbose_name = "Market Order"
         verbose_name_plural = "Market Orders"
+
+class ArchivedOrders(models.Model):
+    """
+    Inactive orders, which have been archived automatically.
+    """
+
+    generated_at = models.DateTimeField(blank=True, null=True,
+        help_text="When the market data was generated on the user's machine.")
+    mapregion = models.ForeignKey('eve_db.MapRegion', db_index=True,
+        help_text="Region ID the order originated from.")
+    invtype = models.ForeignKey('eve_db.InvType', db_index=True,
+        help_text="The Type ID of the item in the order.")
+    price = models.FloatField(
+        help_text="Item price, as reported in the message.")
+    volume_remaining = models.PositiveIntegerField(
+        help_text="Number of remaining items for sale.")
+    volume_entered = models.PositiveIntegerField(
+        help_text="Number of items initially put up for sale.")
+    minimum_volume = models.PositiveIntegerField(
+        help_text="Minimum volume before the order finishes.")
+    order_range = models.IntegerField(
+        help_text="How far the order is visible.  32767 = region-wide")
+    id = models.BigIntegerField(primary_key=True,
+        help_text="Unique order ID from EVE for this order.")
+    is_bid = models.BooleanField(
+        help_text="If True, this is a buy order. If False, this is a sell order.")
+    issue_date = models.DateTimeField(
+        help_text="When the order was issued.")
+    duration = models.PositiveSmallIntegerField(
+        help_text="The duration of the order, in days.")
+    stastation = models.ForeignKey('eve_db.StaStation', db_index=True,
+        help_text="The station that this order is in.")
+    mapsolarsystem = models.ForeignKey('eve_db.MapSolarSystem',
+        help_text="ID of the solar system the order is in.")
+    is_suspicious = models.BooleanField(
+        help_text="If this is True, we have reason to question this order's validity")
+    message_key = models.CharField(max_length=255, blank=True, null=True,
+        help_text="The unique hash that of the market message.")
+    uploader_ip_hash = models.CharField(max_length=255,
+        help_text="The unique hash for the person who uploaded this message.")
+    is_active = models.BooleanField(help_text="is this a live order or is it history", default = True)
+
+    class Meta(object):
+        verbose_name = "Archived Market Order"
+        verbose_name_plural = "Archived Market Orders"

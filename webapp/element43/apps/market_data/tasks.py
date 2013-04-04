@@ -1,12 +1,92 @@
 # Utility imports
 import datetime
-import pytz
-from celery.task.schedules import crontab
-from celery.task import PeriodicTask, Task
 import ast
+import pytz
+
+# Util
+from datetime import datetime, timedelta
+
+from celery.task import PeriodicTask, Task
+from celery.task.schedules import crontab
+from django.db import connection
+
+from apps.market_data.models import History, OrderHistory
 
 # Models
-from apps.market_data.models import History, OrderHistory
+
+
+class ArchiveOrders(PeriodicTask):
+
+    """
+    Archives inactive orders older than a week
+    """
+
+    # execute at downtime
+    run_every = crontab(hour=11, minute=0)
+
+    def run(self, **kwargs):
+
+        a_week_ago = datetime.now() - timedelta(days=7)
+
+        print "Moving orders to archive..."
+
+        cursor = connection.cursor()
+
+        # Move orders to the archive
+        cursor.execute("""INSERT INTO market_data_archivedorders (
+                            generated_at,
+                            price,
+                            volume_remaining,
+                            volume_entered,
+                            minimum_volume,
+                            order_range,
+                            ID,
+                            is_bid,
+                            issue_date,
+                            duration,
+                            is_suspicious,
+                            uploader_ip_hash,
+                            mapregion_id,
+                            invtype_id,
+                            stastation_id,
+                            mapsolarsystem_id,
+                            is_active
+                        ) SELECT
+                            generated_at,
+                            price,
+                            volume_remaining,
+                            volume_entered,
+                            minimum_volume,
+                            order_range,
+                            ID,
+                            is_bid,
+                            issue_date,
+                            duration,
+                            is_suspicious,
+                            uploader_ip_hash,
+                            mapregion_id,
+                            invtype_id,
+                            stastation_id,
+                            mapsolarsystem_id,
+                            is_active
+                        FROM
+                            market_data_orders
+                        WHERE
+                            is_active = 'f'
+                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC'")
+
+        print "Done moving orders."
+
+        print "Deleting old orders..."
+
+        # Delete moved orders
+        cursor.execute("""DELETE FROM
+                            market_data_orders
+                        WHERE
+                            is_active = 'f'
+                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC'")
+
+        print "Successfully removed old orders."
 
 
 class ProcessHistory(PeriodicTask):
