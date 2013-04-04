@@ -22,10 +22,6 @@ urlpatterns = patterns('apps.market_data.views',
     url(r'^browse/(?P<group>[0-9]+)/$', 'market.browser.browser', name='browser_preload'),
     url(r'^browse/panel/(?P<group>[0-9]+)/$', 'market.browser.panel', name='browser_panel'),
 
-    # Scanners
-    url(r'^scanner/random/$', 'market.scanners.random', name='scanner_random'),
-    url(r'^scanner/region/$', 'market.scanners.region', name='scanner_region'),
-
     #
     # Trading URLs
     #
@@ -52,9 +48,9 @@ urlpatterns = patterns('apps.market_data.views',
     #
 
     # legacy marketstat
-    url(r'^api/ec_marketstat/$', 'api.marketstat.legacy_marketstat', name = 'legacy_marketstat'),
+    url(r'^api/ec_marketstat/$', 'api.marketstat.legacy_marketstat', name='legacy_marketstat'),
 
     # new API
-    url(r'^api/marketstat/$', 'api.marketstat.marketstat', name = 'marketstat'),
+    url(r'^api/marketstat/$', 'api.marketstat.marketstat', name='marketstat'),
 
 )

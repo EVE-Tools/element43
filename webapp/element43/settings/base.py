@@ -244,6 +244,7 @@ INSTALLED_APPS = (
     'eve_db',
     'apps.common',
     'apps.market_data',
+    'apps.market_scanner',
     'apps.api',
     'apps.auth',
     'apps.user_settings',
