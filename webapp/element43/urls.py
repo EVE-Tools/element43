@@ -25,6 +25,9 @@ urlpatterns = patterns('',
     # Market scanners
     url(r'^market/scanner/', include('apps.market_scanner.urls')),
 
+    # Legacy API
+    url(r'^market/api/', include('apps.legacy_api.urls')),
+
     # Manufacturing
     url(r'^manufacturing/', include('apps.manufacturing.urls')),
 

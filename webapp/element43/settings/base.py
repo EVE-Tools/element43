@@ -245,6 +245,7 @@ INSTALLED_APPS = (
     'apps.common',
     'apps.market_data',
     'apps.market_scanner',
+    'apps.legacy_api',
     'apps.api',
     'apps.auth',
     'apps.user_settings',

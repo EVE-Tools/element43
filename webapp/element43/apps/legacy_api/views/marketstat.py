@@ -51,7 +51,7 @@ def legacy_marketstat(request):
     rcontext = RequestContext(request, {'params':params,
                                         'result_info':result_info})
 
-    return render_to_response('api/legacy_marketstat.haml', rcontext, mimetype="text/xml")
+    return render_to_response('legacy_marketstat.haml', rcontext, mimetype="text/xml")
 
 def marketstat(request):
     """
@@ -96,4 +96,4 @@ def marketstat(request):
     rcontext = RequestContext(request, {'params':params,
                                         'result_info':result_info})
 
-    return render_to_response('api/marketstat.haml', rcontext, mimetype="text/xml")
+    return render_to_response('marketstat.haml', rcontext, mimetype="text/xml")
