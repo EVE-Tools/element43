@@ -119,14 +119,14 @@ class ProcessRegionHistory(Task):
         bulk_list = []
 
         # Create timestamp to measure peformance
-        start = datetime.datetime.now()
+        start = datetime.now()
 
         for message in history.iterator():
             data = ast.literal_eval(message.history_data)
 
             #print "REGION: %s (i: %s / m: %s)" % (region, message.invtype_id, len(data))
             for k, v in data.iteritems():
-                date = utc.localize(datetime.datetime.strptime(k, "%Y-%m-%d %H:%M:%S"))
+                date = utc.localize(datetime.strptime(k, "%Y-%m-%d %H:%M:%S"))
                 #print "key: %s - date: %s" % (k, date)
 
                 if not OrderHistory.objects.filter(mapregion=region, invtype=message.invtype, date=date).exists():
@@ -147,7 +147,7 @@ class ProcessRegionHistory(Task):
 
         # Bulk create objects
         # TODO: with Django 1.5 add batch size to parameter so we don't create ~30k objects per request
-        diff = datetime.datetime.now() - start
+        diff = datetime.now() - start
         OrderHistory.objects.bulk_create(bulk_list)
 
         # Prevent division by 0
