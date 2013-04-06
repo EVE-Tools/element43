@@ -1,3 +1,4 @@
+import re
 from django import template
 
 register = template.Library()
@@ -86,3 +87,14 @@ def top(list_to_truncate, number):
     return list_to_truncate[0:number]
 
 register.filter('top', top)
+
+
+def truncate_station_name(name_to_truncate):
+    """
+    Trancates a station's name
+    """
+    sublist = name_to_truncate.rpartition(' - ')
+
+    return sublist[0] + ' - ' + re.sub(r'[a-z ]', '', sublist[2])
+
+register.filter('truncate_station_name', truncate_station_name)
