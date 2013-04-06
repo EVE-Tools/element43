@@ -95,11 +95,13 @@ $(document).ready(function() {
                 function() {
                     $('#filter-button').removeClass('disabled');
                     $('#filter-button').text('Filter Orders');
+                    $("[rel=tooltip]").tooltip();
                 });
             $('#bid').load('/market/tab/bid/' + invTypeID + '/' + ($("#security-slider").slider('value') * 10) + '/' + $("#age-slider").slider('value') + '/',
                 function() {
                     $('#filter-button').removeClass('disabled');
                     $('#filter-button').text('Filter Orders');
+                    $("[rel=tooltip]").tooltip();
                 });
         }
     });
