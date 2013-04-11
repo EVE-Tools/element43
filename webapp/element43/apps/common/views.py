@@ -3,9 +3,10 @@ import ujson as ujson
 
 # Imports for memcache
 import pylibmc
-from apps.common.util import get_memcache_client
+from apps.common.util import get_memcache_client, dictfetchall
 
 # Template and context-related imports
+from django.db import connection
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
@@ -75,6 +76,9 @@ def stats_json(request, region_id):
     # Connect to memcache
     mc = get_memcache_client()
 
+    # Cursor for faster counting
+    cursor = connection.cursor()
+
     # Collect stats
 
     # 1. Platform stats
@@ -90,13 +94,15 @@ def stats_json(request, region_id):
     if (mc.get("e43-stats-archivedorders") is not None):
         archived_orders = mc.get("e43-stats-archivedorders")
     else:
-        archived_orders = Orders.archived.count()
+        cursor.execute("SELECT reltuples::bigint AS estimate FROM pg_class WHERE relname='market_data_archivedorders'")
+        archived_orders = dictfetchall(cursor)[0]['estimate']
         mc.set("e43-stats-archivedorders", archived_orders, time=3600)
 
     if (mc.get("e43-stats-history") is not None):
         history = mc.get("e43-stats-history")
     else:
-        history = OrderHistory.objects.count()
+        cursor.execute("SELECT reltuples::bigint AS estimate FROM pg_class WHERE relname='market_data_orderhistory'")
+        history = dictfetchall(cursor)[0]['estimate']
         mc.set("e43-stats-history", history, time=3600)
 
     new_orders_per_minute = EmdrStats.objects.filter(
