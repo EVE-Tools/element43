@@ -19,7 +19,7 @@ from django.utils import simplejson
 
 # Models
 from eve_db.models import InvType, StaStation
-from apps.market_data.models import Orders, ItemRegionStat, ItemRegionStatHistory, EmdrStats, OrderHistory
+from apps.market_data.models import Orders, ItemRegionStat, ItemRegionStatHistory, EmdrStats
 
 """
 Those are our views. We have to use the RequestContext for CSRF protection,
@@ -141,8 +141,7 @@ def stats_json(request, region_id):
 
                 # Catch error if we don't have any data for that type
                 try:
-                    region_stats = ItemRegionStat.objects.filter(
-                                        mapregion_id=region_id, invtype_id=item)[:2][1]
+                    region_stats = ItemRegionStat.objects.filter(mapregion_id=region_id, invtype_id=item)[:1][0]
                     buymedian = region_stats.buymedian
                     sellmedian = region_stats.sellmedian
 
