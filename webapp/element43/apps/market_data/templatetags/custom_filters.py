@@ -4,6 +4,15 @@ from django import template
 register = template.Library()
 
 
+def key(d, key_name):
+    """
+    Performs a dictionary lookup.
+    """
+    return d[key_name]
+
+register.filter('key', key)
+
+
 def sec0to1(val):
     """
     Converts the system security values into values between 0 and 1

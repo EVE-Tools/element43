@@ -1,5 +1,5 @@
 - extends "base.haml"
-- load humanize compress
+- load humanize compress custom_filters
 - block title
   = block.super
   Know the Market
@@ -45,31 +45,49 @@
            %th
              %a{'href':'#', 'rel':'tooltip', 'title':'Change from yesterday&#039;s median of asks in The Forge.'}
                Move
-       %tbody
+       %tbody#live-values
          - for item in types
-           %tr
-             %td
-               %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
-                 - if item.name == "30 Day Pilot's License Extension (PLEX)"
-                   PLEX
-                 - else
-                   {{item.name}}
-             %td{'id':'bid_max_{{item.id}}', 'data-isk':'0'}
-               0.00
-             %td
-               %span{'id':'bid_median_{{item.id}}', 'data-isk':'0'}
-                 0.00
-             %td
-               %span{'id':'bid_median_move_{{item.id}}', 'data-isk':'0'}
-                 +0.00
-             %td{'id':'ask_min_{{item.id}}', 'data-isk':'0'}
-               0.00
-             %td
-               %span{'id':'ask_median_{{item.id}}', 'data-isk':'0'}
-                 0.00
-             %td
-               %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'0'}
-                 +0.00
+           - with itemid=item.id|slugify
+            - with statobject=stats.typestats|key:itemid
+                %tr
+                  %td
+                    %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
+                      - if item.name == "30 Day Pilot's License Extension (PLEX)"
+                        PLEX
+                      - else
+                        {{item.name}}
+                  %td
+                    %span{'id':'bid_max_{{item.id}}', 'data-isk':'{{statobject.bid_max}}'}
+                      = statobject.bid_max|floatformat:"2"|intcomma
+                  %td
+                    %span{'id':'bid_median_{{item.id}}', 'data-isk':'{{statobject.bid_median}}'}
+                      = statobject.bid_median|floatformat:"2"|intcomma
+                  %td
+                    - if statobject.bid_median_move == 0
+                      %span{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
+                        +0.00
+                    - elif statobject.bid_median_move > 0
+                      %span.green{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
+                        +{{statobject.bid_median_move|floatformat:"2"|intcomma}}
+                    - elif statobject.bid_median_move < 0
+                      %span.red{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
+                        {{statobject.bid_median_move|floatformat:"2"|intcomma}}
+                  %td
+                    %span{'id':'ask_min_{{item.id}}', 'data-isk':'{{statobject.ask_min}}'}
+                      = statobject.ask_min|floatformat:"2"|intcomma
+                  %td
+                    %span{'id':'ask_median_{{item.id}}', 'data-isk':'{{statobject.ask_median}}'}
+                      = statobject.ask_median|floatformat:"2"|intcomma
+                  %td
+                    - if statobject.bid_median_move == 0
+                      %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
+                        +0.00
+                    - elif statobject.ask_median_move > 0
+                      %span.green{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
+                        +{{statobject.ask_median_move|floatformat:"2"|intcomma}}
+                    - elif statobject.ask_median_move < 0
+                      %span.red{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
+                        {{statobject.ask_median_move|floatformat:"2"|intcomma}}
     .span4
       %h2 Contribute
       %p
@@ -99,22 +117,22 @@
               %td.span3
                 New Orders
               %td#new_orders.span3
-                0
+                = stats.new_orders
             %tr
               %td.span3
                 Updated Orders
               %td#updated_orders.span3
-                0
+                = stats.updated_orders
             %tr
               %td.span3
                 Old Orders
               %td#old_orders.span3
-                0
+                = stats.old_orders
             %tr
               %td.span3
                 History messages
               %td#history_messages.span3
-                0
+                = history_messages
       .span6
         %h3 Platform Stats
         %table.table.table-striped.table-condensed
@@ -123,17 +141,17 @@
               %td.span3
                 Active Orders
               %td#active_orders.span3
-                0
+                = active_orders
             %tr
               %td.span3
                 Archived Orders
               %td#archived_orders.span3
-                0
+                = archived_orders
             %tr
               %td.span3
                 History Records
               %td#history_records.span3
-                0
+                = history_messages
 - block scripts
   - compress js
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}

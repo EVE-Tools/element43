@@ -38,9 +38,46 @@ def home(request):
 
     types = InvType.objects.filter(id__in=type_ids)
 
+    #
+    # Preload cached stats
+    #
+
+    # Connect to memcache
+    mc = get_memcache_client()
+
+    typestats = {}
+
+    if (mc.get("e43-fullstats") is not None):
+
+        initial_stats = ujson.loads(mc.get("e43-fullstats"))
+
+    else:
+
+        # Load empty values
+
+        for invtype in types:
+
+            stats = {'bid_max': 0,
+                     'ask_min': 0,
+                     'bid_median': 0,
+                     'bid_median_move': 0,
+                     'ask_median': 0,
+                     'ask_median_move': 0}
+
+            if stats:
+                typestats[invtype] = stats
+
+        initial_stats = {'active_orders': 0,
+                         'archived_orders': 0,
+                         'history_records': 0,
+                         'new_orders': 0,
+                         'updated_orders': 0,
+                         'old_orders': 0,
+                         'history_messages': 0,
+                         'typestats': typestats}
+
     # Create context for CSRF protection
-    rcontext = RequestContext(
-        request, {'type_ids': type_ids, 'types': types, 'region': region})
+    rcontext = RequestContext(request, {'type_ids': type_ids, 'types': types, 'region': region, 'stats': initial_stats})
 
     return render_to_response('home.haml', rcontext)
 
@@ -177,6 +214,9 @@ def stats_json(request, region_id):
                                   'old_orders': old_orders_per_minute,
                                   'history_messages': history_messages_per_minute,
                                   'typestats': typestats})
+
+    # Save complete stats to memcached
+    mc.set("e43-fullstats", stat_json)
 
     # Return JSON without using any template
     return HttpResponse(stat_json, mimetype='application/json')
