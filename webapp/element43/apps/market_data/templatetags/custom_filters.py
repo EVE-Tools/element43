@@ -8,7 +8,11 @@ def key(d, key_name):
     """
     Performs a dictionary lookup.
     """
-    return d[key_name]
+
+    try:
+        return d[key_name]
+    except KeyError:
+        return 0
 
 register.filter('key', key)
 
