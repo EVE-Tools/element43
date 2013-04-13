@@ -132,7 +132,7 @@
               %td.span3
                 History messages
               %td#history_messages.span3
-                = history_messages
+                = stats.history_messages
       .span6
         %h3 Platform Stats
         %table.table.table-striped.table-condensed
@@ -141,17 +141,17 @@
               %td.span3
                 Active Orders
               %td#active_orders.span3
-                = active_orders
+                = stats.active_orders
             %tr
               %td.span3
                 Archived Orders
               %td#archived_orders.span3
-                = archived_orders
+                = stats.archived_orders
             %tr
               %td.span3
                 History Records
               %td#history_records.span3
-                = history_messages
+                = stats.history_messages
 - block scripts
   - compress js
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
