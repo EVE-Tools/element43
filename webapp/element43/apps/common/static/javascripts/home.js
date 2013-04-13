@@ -124,7 +124,6 @@ $(document).ready(function() {
                     // Iterate over type values
                     $.each(type_val, function(type_val_key, type_val_val) {
                         // Set values
-                        console.log('Updating #' + type_val_key + '_' + type_key);
                         var element = $('#' + type_val_key + '_' + type_key);
                         var old_val = parseFloat(element.attr('data-isk'));
                         var new_val = type_val_val.toFixed(2);
