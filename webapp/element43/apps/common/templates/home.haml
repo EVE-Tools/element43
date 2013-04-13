@@ -57,37 +57,37 @@
                       - else
                         {{item.name}}
                   %td
-                    %span{'id':'bid_max_{{item.id}}', 'data-isk':'{{statobject.bid_max}}'}
-                      = statobject.bid_max|floatformat:"2"|intcomma
+                    %span{'id':'bid_max_{{item.id}}', 'data-isk':'{{statobject.bid_max|floatformat:"2"}}'}
+                      {{statobject.bid_max|floatformat:"2"|intcomma}}
                   %td
-                    %span{'id':'bid_median_{{item.id}}', 'data-isk':'{{statobject.bid_median}}'}
-                      = statobject.bid_median|floatformat:"2"|intcomma
+                    %span{'id':'bid_median_{{item.id}}', 'data-isk':'{{statobject.bid_median|floatformat:"2"}}'}
+                      {{statobject.bid_median|floatformat:"2"|intcomma}}
                   %td
                     - if statobject.bid_median_move == 0
-                      %span{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
+                      %span{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move|floatformat:"2"}}'}
                         +0.00
                     - elif statobject.bid_median_move > 0
-                      %span.green{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
+                      %span.green{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move|floatformat:"2"}}'}
                         +{{statobject.bid_median_move|floatformat:"2"|intcomma}}
                     - elif statobject.bid_median_move < 0
-                      %span.red{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move}}'}
-                        {{statobject.bid_median_move|floatformat:"2"|intcomma}}
+                      %span.red{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move|floatformat:"2"}}'}
+                        +{{statobject.bid_median_move|floatformat:"2"|intcomma}}
                   %td
-                    %span{'id':'ask_min_{{item.id}}', 'data-isk':'{{statobject.ask_min}}'}
-                      = statobject.ask_min|floatformat:"2"|intcomma
+                    %span{'id':'ask_min_{{item.id}}', 'data-isk':'{{statobject.ask_min|floatformat:"2"}}'}
+                      {{statobject.ask_min|floatformat:"2"|intcomma}}
                   %td
-                    %span{'id':'ask_median_{{item.id}}', 'data-isk':'{{statobject.ask_median}}'}
-                      = statobject.ask_median|floatformat:"2"|intcomma
+                    %span{'id':'ask_median_{{item.id}}', 'data-isk':'{{statobject.ask_median|floatformat:"2"}}'}
+                      {{statobject.ask_median|floatformat:"2"|intcomma}}
                   %td
                     - if statobject.bid_median_move == 0
-                      %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
+                      %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
                         +0.00
                     - elif statobject.ask_median_move > 0
-                      %span.green{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
+                      %span.green{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
                         +{{statobject.ask_median_move|floatformat:"2"|intcomma}}
                     - elif statobject.ask_median_move < 0
-                      %span.red{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move}}'}
-                        {{statobject.ask_median_move|floatformat:"2"|intcomma}}
+                      %span.red{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
+                        +{{statobject.ask_median_move|floatformat:"2"|intcomma}}
     .span4
       %h2 Contribute
       %p

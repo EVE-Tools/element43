@@ -17,8 +17,13 @@ function abbreviateNumber(n) {
 $(document).ready(function() {
 
     $('#live-values span').each(function() {
-        var $span = $(this);
-        $span.text(abbreviateNumber($span.attr('data-isk')));
+        var span = $(this);
+
+        var newNum = abbreviateNumber(span.attr('data-isk'));
+
+        if(span.hasClass('green') && newNum > 0) newNum = '+' + newNum;
+
+        span.text(newNum);
     });
 
     // More JSON
