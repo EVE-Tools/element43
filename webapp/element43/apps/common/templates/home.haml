@@ -117,22 +117,22 @@
               %td.span3
                 New Orders
               %td#new_orders.span3
-                = stats.new_orders
+                = stats.new_orders|intcomma
             %tr
               %td.span3
                 Updated Orders
               %td#updated_orders.span3
-                = stats.updated_orders
+                = stats.updated_orders|intcomma
             %tr
               %td.span3
                 Old Orders
               %td#old_orders.span3
-                = stats.old_orders
+                = stats.old_orders|intcomma
             %tr
               %td.span3
                 History messages
               %td#history_messages.span3
-                = stats.history_messages
+                = stats.history_messages|intcomma
       .span6
         %h3 Platform Stats
         %table.table.table-striped.table-condensed
@@ -141,17 +141,17 @@
               %td.span3
                 Active Orders
               %td#active_orders.span3
-                = stats.active_orders
+                = stats.active_orders|intcomma
             %tr
               %td.span3
                 Archived Orders
               %td#archived_orders.span3
-                = stats.archived_orders
+                = stats.archived_orders|intcomma
             %tr
               %td.span3
                 History Records
               %td#history_records.span3
-                = stats.history_messages
+                = stats.history_messages|intcomma
 - block scripts
   - compress js
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
