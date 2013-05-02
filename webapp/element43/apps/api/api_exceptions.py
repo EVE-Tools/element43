@@ -5,7 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
 # API
-from element43 import eveapi
+from element43.eveapi import AuthenticationError, RequestError, ServerError
 
 #
 # Offers general purpose API exception handling for celery eveapi tasks
@@ -31,7 +31,7 @@ def handle_api_exception(exception, key):
     """
 
     # Handle different exceptions - currently only invalid keys are being handled
-    if isinstance(exception, eveapi.AuthenticationError):
+    if isinstance(exception, AuthenticationError):
         print("AUTHENTICATION ERROR FOR KEY " + str(key.id) + " - INVALIDATING KEY AND SENDING NOTIFICATION TO USER!")
 
         # Invalidate key
@@ -54,12 +54,10 @@ def handle_api_exception(exception, key):
         message.attach_alternative(html_content, "text/html")
         message.send()
 
+    elif isinstance(exception, RequestError):
         raise exception
 
-    elif isinstance(exception, eveapi.RequestError):
-        raise exception
-
-    elif isinstance(exception, eveapi.ServerError):
+    elif isinstance(exception, ServerError):
         raise exception
 
     else:
