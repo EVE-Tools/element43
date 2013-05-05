@@ -72,6 +72,9 @@
                     - elif statobject.bid_median_move < 0
                       %span.red{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move|floatformat:"2"}}'}
                         +{{statobject.bid_median_move|floatformat:"2"|intcomma}}
+                    - else
+                      %span{'id':'bid_median_move_{{item.id}}', 'data-isk':'{{statobject.bid_median_move|floatformat:"2"}}'}
+                        +0.00
                   %td
                     %span{'id':'ask_min_{{item.id}}', 'data-isk':'{{statobject.ask_min|floatformat:"2"}}'}
                       {{statobject.ask_min|floatformat:"2"|intcomma}}
@@ -88,6 +91,9 @@
                     - elif statobject.ask_median_move < 0
                       %span.red{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
                         +{{statobject.ask_median_move|floatformat:"2"|intcomma}}
+                    - else
+                      %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
+                        +0.00
     .span4
       %h2 Contribute
       %p
@@ -151,7 +157,7 @@
               %td.span3
                 History Records
               %td#history_records.span3
-                = stats.history_messages|intcomma
+                = stats.history_records|intcomma
 - block scripts
   - compress js
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.pulse.js'}
