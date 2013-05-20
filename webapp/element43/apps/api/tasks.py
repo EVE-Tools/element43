@@ -5,7 +5,7 @@ import eveapi
 
 from django.db import IntegrityError
 
-from celery.task import PeriodicTask
+from celery.task import Task, PeriodicTask
 from celery.task.schedules import crontab
 
 from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
@@ -58,53 +58,63 @@ class ProcessResearch(PeriodicTask):
     def run(self, **kwargs):
         print 'UPDATING RESEARCH AGENTS'
 
-        api = eveapi.EVEAPIConnection()
-
         update_timers = APITimer.objects.filter(apisheet="Research",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            print ">>> Updating research agents for %s" % character.name
+            ProcessResearchCharacter.delay(character)
 
-            # Try to fetch a valid key from DB
-            try:
-                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
-            except APIKey.DoesNotExist:
-                print('There is no valid key for %s.' % character.name)
-                # End execution for this character
-                continue
 
-            # Try to authenticate and handle exceptions properly
-            try:
-                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-                me = auth.character(character.id)
+class ProcessResearchCharacter(Task):
+    """
+    Run the actual update.
+    """
 
-                # Get newest page - use maximum row count to minimize amount of requests
-                sheet = me.Research()
+    def run(self, character):
 
-            except eveapi.Error, e:
-                handle_api_exception(e, apikey)
+        api = eveapi.EVEAPIConnection()
 
-            # Clear all existing jobs for this character and add new ones. We don't want to keep expired data.
-            Research.objects.filter(character=character).delete()
+        print ">>> Updating research agents for %s" % character.name
 
-            for job in sheet.research:
-                new_job = Research(character=character,
-                                   agent_id=job.agentID,
-                                   skill_id=job.skillTypeID,
-                                   start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.researchStartDate)),
-                                   points_per_day=job.pointsPerDay,
-                                   remainder_points=job.remainderPoints)
-                new_job.save()
+        # Try to fetch a valid key from DB
+        try:
+            apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+        except APIKey.DoesNotExist:
+            print('There is no valid key for %s.' % character.name)
+            # End execution for this character
+            return
 
-            # Update timer
-            timer = APITimer.objects.get(character=character, apisheet='Research')
-            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
-            timer.save()
+        # Try to authenticate and handle exceptions properly
+        try:
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
 
-            print "<<<  %s's research import was completed successfully." % character.name
+            # Get newest page - use maximum row count to minimize amount of requests
+            sheet = me.Research()
+
+        except eveapi.Error, e:
+            handle_api_exception(e, apikey)
+
+        # Clear all existing jobs for this character and add new ones. We don't want to keep expired data.
+        Research.objects.filter(character=character).delete()
+
+        for job in sheet.research:
+            new_job = Research(character=character,
+                               agent_id=job.agentID,
+                               skill_id=job.skillTypeID,
+                               start_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(job.researchStartDate)),
+                               points_per_day=job.pointsPerDay,
+                               remainder_points=job.remainderPoints)
+            new_job.save()
+
+        # Update timer
+        timer = APITimer.objects.get(character=character, apisheet='Research')
+        timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+        timer.save()
+
+        print "<<<  %s's research import was completed successfully." % character.name
 
 
 class ProcessWalletTransactions(PeriodicTask):
@@ -118,104 +128,114 @@ class ProcessWalletTransactions(PeriodicTask):
     def run(self, **kwargs):
         print 'UPDATING TRANSACTIONS'
 
-        api = eveapi.EVEAPIConnection()
-
         update_timers = APITimer.objects.filter(apisheet="WalletTransactions",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            print ">>> Updating transactions for %s" % character.name
+            ProcessWalletTransactionsCharacter.delay(character)
 
-            # Try to fetch a valid key from DB
-            try:
-                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
-            except APIKey.DoesNotExist:
-                print('There is no valid key for %s.' % character.name)
-                # End execution for this character
-                continue
 
-            # Try to authenticate and handle exceptions properly
-            try:
-                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-                me = auth.character(character.id)
+class ProcessWalletTransactionsCharacter(Task):
+    """
+    Run the actual update.
+    """
 
-                # Get newest page - use maximum row count to minimize amount of requests
-                sheet = me.WalletTransactions(rowCount=2560)
+    def run(self, character):
 
-            except eveapi.Error, e:
-                handle_api_exception(e, apikey)
+        api = eveapi.EVEAPIConnection()
 
-            walking = True
+        print ">>> Updating transactions for %s" % character.name
 
-            while walking:
+        # Try to fetch a valid key from DB
+        try:
+            apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+        except APIKey.DoesNotExist:
+            print('There is no valid key for %s.' % character.name)
+            # End execution for this character
+            return
 
-                # Check if new set contains any entries
-                if len(sheet.transactions):
+        # Try to authenticate and handle exceptions properly
+        try:
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
 
-                    # Process transactions
-                    for transaction in sheet.transactions:
+            # Get newest page - use maximum row count to minimize amount of requests
+            sheet = me.WalletTransactions(rowCount=2560)
 
-                        try:
-                            MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
-                            # If there already is an entry with this id, we can stop walking.
-                            # So we don't walk all the way back every single time we run this task.
-                            walking = False
+        except eveapi.Error, e:
+            handle_api_exception(e, apikey)
 
-                        except MarketTransaction.DoesNotExist:
+        walking = True
 
-                            try:
-                                # If it does not exist, create transaction
-                                entry = MarketTransaction(character=character,
-                                                          date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
-                                                          transaction_id=transaction.transactionID,
-                                                          invtype_id=transaction.typeID,
-                                                          quantity=transaction.quantity,
-                                                          price=transaction.price,
-                                                          client_id=transaction.clientID,
-                                                          client_name=transaction.clientName,
-                                                          station_id=transaction.stationID,
-                                                          is_bid=(transaction.transactionType == 'buy'),
-                                                          journal_transaction_id=transaction.journalTransactionID)
-                                entry.save()
+        while walking:
 
-                            # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
-                            except IntegrityError:
-                                print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
-                                continue
+            # Check if new set contains any entries
+            if len(sheet.transactions):
 
-                        # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
-                        except MarketTransaction.MultipleObjectsReturned:
-                            # Remove all duplicate items except for one
-                            duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
+                # Process transactions
+                for transaction in sheet.transactions:
 
-                            for duplicate in duplicates[1:]:
-                                print 'Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id)
-                                duplicate.delete()
+                    try:
+                        MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
+                        # If there already is an entry with this id, we can stop walking.
+                        # So we don't walk all the way back every single time we run this task.
+                        walking = False
 
-                    # Fetch next page if we're still walking
-                    if walking:
+                    except MarketTransaction.DoesNotExist:
 
                         try:
-                            # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
-                            oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
-                            sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+                            # If it does not exist, create transaction
+                            entry = MarketTransaction(character=character,
+                                                      date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                                      transaction_id=transaction.transactionID,
+                                                      invtype_id=transaction.typeID,
+                                                      quantity=transaction.quantity,
+                                                      price=transaction.price,
+                                                      client_id=transaction.clientID,
+                                                      client_name=transaction.clientName,
+                                                      station_id=transaction.stationID,
+                                                      is_bid=(transaction.transactionType == 'buy'),
+                                                      journal_transaction_id=transaction.journalTransactionID)
+                            entry.save()
 
-                        except IndexError:
-                            print 'IndexError: %s (%d) has no valid types in his/her transaction history.' % (character.name, character.id)
-                            walking = False
-                            pass
+                        # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
+                        except IntegrityError:
+                            print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
+                            continue
 
-                else:
-                    walking = False
+                    # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
+                    except MarketTransaction.MultipleObjectsReturned:
+                        # Remove all duplicate items except for one
+                        duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
 
-            # Update timer
-            timer = APITimer.objects.get(character=character, apisheet='WalletTransactions')
-            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
-            timer.save()
+                        for duplicate in duplicates[1:]:
+                            print 'Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id)
+                            duplicate.delete()
 
-            print "<<<  %s's transaction import was completed successfully." % character.name
+                # Fetch next page if we're still walking
+                if walking:
+
+                    try:
+                        # Get next page based on oldest id in db - use maximum row count to minimize amount of requests
+                        oldest_id = MarketTransaction.objects.filter(character=character).order_by('date')[:1][0].journal_transaction_id
+                        sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
+
+                    except IndexError:
+                        print 'IndexError: %s (%d) has no valid types in his/her transaction history.' % (character.name, character.id)
+                        walking = False
+                        pass
+
+            else:
+                walking = False
+
+        # Update timer
+        timer = APITimer.objects.get(character=character, apisheet='WalletTransactions')
+        timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+        timer.save()
+
+        print "<<<  %s's transaction import was completed successfully." % character.name
 
 
 class ProcessWalletJournal(PeriodicTask):
@@ -229,95 +249,106 @@ class ProcessWalletJournal(PeriodicTask):
     def run(self, **kwargs):
         print 'UPDATING JOURNAL ENTRIES'
 
-        api = eveapi.EVEAPIConnection()
-
         update_timers = APITimer.objects.filter(apisheet="WalletJournal",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            print ">>> Updating journal entries for %s" % character.name
 
-            # Try to fetch a valid key from DB
-            try:
-                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
-            except APIKey.DoesNotExist:
-                print('There is no valid key for %s.' % character.name)
-                # End execution for this character
-                continue
+            ProcessWalletJournalCharacter.delay(character)
 
-            # Try to authenticate and handle exceptions properly
-            try:
-                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-                me = auth.character(character.id)
 
-                # Get newest page - use maximum row count to minimize amount of requests
-                sheet = me.WalletJournal(rowCount=2560)
+class ProcessWalletJournalCharacter(Task):
+    """
+    Run the actual update.
+    """
 
-            except eveapi.Error, e:
-                handle_api_exception(e, apikey)
+    def run(self, character):
 
-            walking = True
+        api = eveapi.EVEAPIConnection()
 
-            while walking:
+        print ">>> Updating journal entries for %s" % character.name
 
-                # Check if new set contains any entries
-                if len(sheet.transactions):
+        # Try to fetch a valid key from DB
+        try:
+            apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+        except APIKey.DoesNotExist:
+            print('There is no valid key for %s.' % character.name)
+            # End execution for this character
+            return
 
-                    # Process journal entries
-                    for transaction in sheet.transactions:
+        # Try to authenticate and handle exceptions properly
+        try:
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
 
-                        try:
-                            JournalEntry.objects.get(ref_id=transaction.refID, character=character)
-                            # If there already is an entry with this id, we can stop walking.
-                            # So we don't walk all the way back every single time we run this task.
-                            walking = False
+            # Get newest page - use maximum row count to minimize amount of requests
+            sheet = me.WalletJournal(rowCount=2560)
 
-                        except JournalEntry.DoesNotExist:
+        except eveapi.Error, e:
+            handle_api_exception(e, apikey)
 
-                            # Add entry to DB
-                            entry = JournalEntry(ref_id=transaction.refID,
-                                                 character=character,
-                                                 date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
-                                                 ref_type_id=transaction.refTypeID,
-                                                 amount=transaction.amount,
-                                                 balance=transaction.balance,
-                                                 owner_name_1=transaction.ownerName1,
-                                                 owner_id_1=transaction.ownerID1,
-                                                 owner_name_2=transaction.ownerName2,
-                                                 owner_id_2=transaction.ownerID2,
-                                                 arg_name_1=transaction.argName1,
-                                                 arg_id_1=transaction.argID1,
-                                                 reason=transaction.reason,
-                                                 tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
-                                                 tax_amount=cast_empty_string_to_float(transaction.taxAmount))
-                            entry.save()
+        walking = True
 
-                        # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
-                        except JournalEntry.MultipleObjectsReturned:
-                            # Remove all duplicate items except for one
-                            duplicates = JournalEntry.objects.filter(ref_id=transaction.refID, character=character)
+        while walking:
 
-                            for duplicate in duplicates[1:]:
-                                print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id)
-                                duplicate.delete()
+            # Check if new set contains any entries
+            if len(sheet.transactions):
 
-                    # Fetch next page if we're still walking
-                    if walking:
-                        # Get next page based on oldest id in db - use maximum row count to minimize number of requests
-                        oldest_id = JournalEntry.objects.filter(character=character).order_by('date')[:1][0].ref_id
-                        sheet = me.WalletJournal(rowCount=2560, fromID=oldest_id)
+                # Process journal entries
+                for transaction in sheet.transactions:
 
-                else:
-                    walking = False
+                    try:
+                        JournalEntry.objects.get(ref_id=transaction.refID, character=character)
+                        # If there already is an entry with this id, we can stop walking.
+                        # So we don't walk all the way back every single time we run this task.
+                        walking = False
 
-            # Update timer
-            timer = APITimer.objects.get(character=character, apisheet='WalletJournal')
-            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
-            timer.save()
+                    except JournalEntry.DoesNotExist:
 
-            print "<<<  %s's journal import was completed successfully." % character.name
+                        # Add entry to DB
+                        entry = JournalEntry(ref_id=transaction.refID,
+                                             character=character,
+                                             date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
+                                             ref_type_id=transaction.refTypeID,
+                                             amount=transaction.amount,
+                                             balance=transaction.balance,
+                                             owner_name_1=transaction.ownerName1,
+                                             owner_id_1=transaction.ownerID1,
+                                             owner_name_2=transaction.ownerName2,
+                                             owner_id_2=transaction.ownerID2,
+                                             arg_name_1=transaction.argName1,
+                                             arg_id_1=transaction.argID1,
+                                             reason=transaction.reason,
+                                             tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
+                                             tax_amount=cast_empty_string_to_float(transaction.taxAmount))
+                        entry.save()
+
+                    # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
+                    except JournalEntry.MultipleObjectsReturned:
+                        # Remove all duplicate items except for one
+                        duplicates = JournalEntry.objects.filter(ref_id=transaction.refID, character=character)
+
+                        for duplicate in duplicates[1:]:
+                            print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id)
+                            duplicate.delete()
+
+                # Fetch next page if we're still walking
+                if walking:
+                    # Get next page based on oldest id in db - use maximum row count to minimize number of requests
+                    oldest_id = JournalEntry.objects.filter(character=character).order_by('date')[:1][0].ref_id
+                    sheet = me.WalletJournal(rowCount=2560, fromID=oldest_id)
+
+            else:
+                walking = False
+
+        # Update timer
+        timer = APITimer.objects.get(character=character, apisheet='WalletJournal')
+        timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+        timer.save()
+
+        print "<<<  %s's journal import was completed successfully." % character.name
 
 
 class ProcessRefTypes(PeriodicTask):
@@ -357,7 +388,6 @@ class ProcessMarketOrders(PeriodicTask):
     run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
-        api = eveapi.EVEAPIConnection()
 
         update_timers = APITimer.objects.filter(apisheet="MarketOrders",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
@@ -365,102 +395,115 @@ class ProcessMarketOrders(PeriodicTask):
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            print ">>> Market Orders: %s" % character.name
 
-            # Try to fetch a valid key from DB
+            ProcessMarketOrdersChracter.delay(character)
+
+
+class ProcessMarketOrdersChracter(Task):
+    """
+    Run the actual update.
+    """
+
+    def run(self, character):
+
+        api = eveapi.EVEAPIConnection()
+
+        print ">>> Market Orders: %s" % character.name
+
+        # Try to fetch a valid key from DB
+        try:
+            apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+        except APIKey.DoesNotExist:
+            print('There is no valid key for %s.' % character.name)
+            # End execution for this character
+            return
+
+        # Try to authenticate and handle exceptions properly
+        try:
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
+            orders = me.MarketOrders()
+
+        except eveapi.Error, e:
+            handle_api_exception(e, apikey)
+
+        for order in orders.orders:
+            #
+            # Import orders
+            #
+
+            # Look if we have this order in our DB
             try:
-                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
-            except APIKey.DoesNotExist:
-                print('There is no valid key for %s.' % character.name)
-                # End execution for this character
-                continue
+                db_order = Orders.objects.get(id=order.orderID)
 
-            # Try to authenticate and handle exceptions properly
+                # Now that we found that order - let's update it
+                db_order.generated_at = pytz.utc.localize(datetime.datetime.utcnow())
+                db_order.price = order.price
+                db_order.volume_remaining = order.volRemaining
+                db_order.volume_entered = order.volEntered
+                db_order.is_suspicious = False
+
+                if order.orderState == 0:
+                    db_order.is_active = True
+                else:
+                    db_order.is_active = False
+
+                db_order.save()
+
+            except Orders.DoesNotExist:
+
+                # Try to get the station of that order to get the region/system since it isn't provided by the API
+                station = StaStation.objects.get(id=order.stationID)
+                region = station.region
+                system = station.solar_system
+
+                try:
+                    new_order = Orders(id=order.orderID,
+                                       generated_at=pytz.utc.localize(datetime.datetime.utcnow()),
+                                       mapregion=region,
+                                       invtype_id=order.typeID,
+                                       price=order.price,
+                                       volume_remaining=order.volRemaining,
+                                       volume_entered=order.volEntered,
+                                       minimum_volume=order.minVolume,
+                                       order_range=order.range,
+                                       is_bid=order.bid,
+                                       issue_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(order.issued)),
+                                       duration=order.duration,
+                                       stastation=station,
+                                       mapsolarsystem=system,
+                                       is_suspicious=False,
+                                       message_key='eveapi',
+                                       uploader_ip_hash='eveapi',
+                                       is_active=True)
+                    new_order.save()
+                # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
+                except IntegrityError:
+                    print 'IntegrityError: Probably the SDE is outdated. typeID: %d, orderID: %d' % (order.typeID, order.orderID)
+                    continue
+
+            # Now try to get the MarketOrder
             try:
-                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-                me = auth.character(character.id)
-                orders = me.MarketOrders()
+                market_order = MarketOrder.objects.get(id=order.orderID)
 
-            except eveapi.Error, e:
-                handle_api_exception(e, apikey)
+                # If this succeeds, update market order
+                market_order.order_state = order.orderState
+                market_order.save()
 
-            for order in orders.orders:
-                #
-                # Import orders
-                #
+            except MarketOrder.DoesNotExist:
+                market_order = MarketOrder(id_id=order.orderID,
+                                           character=character,
+                                           order_state=order.orderState,
+                                           account_key=order.accountKey,
+                                           escrow=order.escrow)
+                market_order.save()
 
-                # Look if we have this order in our DB
-                try:
-                    db_order = Orders.objects.get(id=order.orderID)
+        # Update timer
+        timer = APITimer.objects.get(character=character, apisheet='MarketOrders')
+        timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(orders._meta.cachedUntil))
+        timer.save()
 
-                    # Now that we found that order - let's update it
-                    db_order.generated_at = pytz.utc.localize(datetime.datetime.utcnow())
-                    db_order.price = order.price
-                    db_order.volume_remaining = order.volRemaining
-                    db_order.volume_entered = order.volEntered
-                    db_order.is_suspicious = False
-
-                    if order.orderState == 0:
-                        db_order.is_active = True
-                    else:
-                        db_order.is_active = False
-
-                    db_order.save()
-
-                except Orders.DoesNotExist:
-
-                    # Try to get the station of that order to get the region/system since it isn't provided by the API
-                    station = StaStation.objects.get(id=order.stationID)
-                    region = station.region
-                    system = station.solar_system
-
-                    try:
-                        new_order = Orders(id=order.orderID,
-                                           generated_at=pytz.utc.localize(datetime.datetime.utcnow()),
-                                           mapregion=region,
-                                           invtype_id=order.typeID,
-                                           price=order.price,
-                                           volume_remaining=order.volRemaining,
-                                           volume_entered=order.volEntered,
-                                           minimum_volume=order.minVolume,
-                                           order_range=order.range,
-                                           is_bid=order.bid,
-                                           issue_date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(order.issued)),
-                                           duration=order.duration,
-                                           stastation=station,
-                                           mapsolarsystem=system,
-                                           is_suspicious=False,
-                                           message_key='eveapi',
-                                           uploader_ip_hash='eveapi',
-                                           is_active=True)
-                        new_order.save()
-                    # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
-                    except IntegrityError:
-                        print 'IntegrityError: Probably the SDE is outdated. typeID: %d, orderID: %d' % (order.typeID, order.orderID)
-                        continue
-
-                # Now try to get the MarketOrder
-                try:
-                    market_order = MarketOrder.objects.get(id=order.orderID)
-
-                    # If this succeeds, update market order
-                    market_order.order_state = order.orderState
-                    market_order.save()
-
-                except MarketOrder.DoesNotExist:
-                    market_order = MarketOrder(id_id=order.orderID,
-                                               character=character,
-                                               order_state=order.orderState,
-                                               account_key=order.accountKey,
-                                               escrow=order.escrow)
-                    market_order.save()
-
-            # Update timer
-            timer = APITimer.objects.get(character=character, apisheet='MarketOrders')
-            timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(orders._meta.cachedUntil))
-            timer.save()
-
-            print "<<<  %s's Market orders were completed successfully." % character.name
+        print "<<<  %s's Market orders were completed successfully." % character.name
 
 
 class ProcessCharacterSheet(PeriodicTask):
@@ -474,6 +517,23 @@ class ProcessCharacterSheet(PeriodicTask):
     def run(self, **kwargs):
         print "BEGIN CHARACTER IMPORT"
 
+        #scan to see if anyone is due for an update
+        update_timers = APITimer.objects.filter(apisheet="CharacterSheet",
+                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
+        for update in update_timers:
+
+            character = Character.objects.get(id=update.character_id)
+
+            ProcessCharacterSheetCharacter.delay(character)
+
+
+class ProcessCharacterSheetCharacter(Task):
+    """
+    Run the actual update.
+    """
+
+    def run(self, character):
+
         #define variables
         i_stats = {}
         implant = {}
@@ -482,104 +542,99 @@ class ProcessCharacterSheet(PeriodicTask):
         #grab an api object
         api = eveapi.EVEAPIConnection()
 
-        #scan to see if anyone is due for an update
-        update_timers = APITimer.objects.filter(apisheet="CharacterSheet",
-                                                nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
-        for update in update_timers:
+        print ">>> Updating: %s" % character.name
 
-            character = Character.objects.get(id=update.character_id)
-            print ">>> Updating: %s" % character.name
+        # Try to fetch a valid key from DB
+        try:
+            apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
+        except APIKey.DoesNotExist:
+            print('There is no valid key for %s.' % character.name)
+            # End execution for this character
+            return
 
-            # Try to fetch a valid key from DB
+        # Try to authenticate and handle exceptions properly
+        try:
+            auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
+            me = auth.character(character.id)
+            sheet = me.CharacterSheet()
+            i_stats['name'] = ""
+            i_stats['value'] = 0
+
+        except eveapi.Error, e:
+            handle_api_exception(e, apikey)
+
+        for attr in attributes:
+            implant[attr] = i_stats
+
+        # have to check because if you don't have an implant in you get nothing back
+        try:
+            implant['memory'] = {'name': sheet.attributeEnhancers.memoryBonus.augmentatorName,
+                                 'value': sheet.attributeEnhancers.memoryBonus.augmentatorValue}
+        except:
+            pass
+        try:
+            implant['perception'] = {'name': sheet.attributeEnhancers.perceptionBonus.augmentatorName,
+                                     'value': sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
+        except:
+            pass
+        try:
+            implant['intelligence'] = {'name': sheet.attributeEnhancers.intelligenceBonus.augmentatorName,
+                                       'value': sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
+        except:
+            pass
+        try:
+            implant['willpower'] = {'name': sheet.attributeEnhancers.willpowerBonus.augmentatorName,
+                                    'value': sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
+        except:
+            pass
+        try:
+            implant['charisma'] = {'name': sheet.attributeEnhancers.charismaBonus.augmentatorName,
+                                   'value': sheet.attributeEnhancers.charismaBonus.augmentatorValue}
+        except:
+            pass
+        try:
+            character.alliance_name = sheet.allianceName
+            character.alliance_id = sheet.allianceID
+        except:
+            character.alliance_name = ""
+            character.alliance_id = 0
+
+        character.corp_name = sheet.corporationName
+        character.corp_id = sheet.corporationID
+        character.clone_name = sheet.cloneName
+        character.clone_skill_points = sheet.cloneSkillPoints
+        character.balance = sheet.balance
+        character.implant_memory_name = implant['memory']['name']
+        character.implant_memory_bonus = implant['memory']['value']
+        character.implant_perception_name = implant['perception']['name']
+        character.implant_perception_bonus = implant['perception']['value']
+        character.implant_intelligence_name = implant['intelligence']['name']
+        character.implant_intelligence_bonus = implant['intelligence']['value']
+        character.implant_willpower_name = implant['willpower']['name']
+        character.implant_willpower_bonus = implant['willpower']['value']
+        character.implant_charisma_name = implant['charisma']['name']
+        character.implant_charisma_bonus = implant['charisma']['value']
+
+        character.save()
+
+        for skill in sheet.skills:
             try:
-                apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
-            except APIKey.DoesNotExist:
-                print('There is no valid key for %s.' % character.name)
-                # End execution for this character
-                continue
-
-            # Try to authenticate and handle exceptions properly
-            try:
-                auth = api.auth(keyID=apikey.keyid, vCode=apikey.vcode)
-                me = auth.character(character.id)
-                sheet = me.CharacterSheet()
-                i_stats['name'] = ""
-                i_stats['value'] = 0
-
-            except eveapi.Error, e:
-                handle_api_exception(e, apikey)
-
-            for attr in attributes:
-                implant[attr] = i_stats
-
-            # have to check because if you don't have an implant in you get nothing back
-            try:
-                implant['memory'] = {'name': sheet.attributeEnhancers.memoryBonus.augmentatorName,
-                                     'value': sheet.attributeEnhancers.memoryBonus.augmentatorValue}
+                c_skill = CharSkill.objects.get(character=character, skill_id=skill.typeID)
+                c_skill.skillpoints = skill.skillpoints
+                c_skill.level = skill.level
+                c_skill.save()
             except:
-                pass
-            try:
-                implant['perception'] = {'name': sheet.attributeEnhancers.perceptionBonus.augmentatorName,
-                                         'value': sheet.attributeEnhancers.perceptionBonus.augmentatorValue}
-            except:
-                pass
-            try:
-                implant['intelligence'] = {'name': sheet.attributeEnhancers.intelligenceBonus.augmentatorName,
-                                           'value': sheet.attributeEnhancers.intelligenceBonus.augmentatorValue}
-            except:
-                pass
-            try:
-                implant['willpower'] = {'name': sheet.attributeEnhancers.willpowerBonus.augmentatorName,
-                                        'value': sheet.attributeEnhancers.willpowerBonus.augmentatorValue}
-            except:
-                pass
-            try:
-                implant['charisma'] = {'name': sheet.attributeEnhancers.charismaBonus.augmentatorName,
-                                       'value': sheet.attributeEnhancers.charismaBonus.augmentatorValue}
-            except:
-                pass
-            try:
-                character.alliance_name = sheet.allianceName
-                character.alliance_id = sheet.allianceID
-            except:
-                character.alliance_name = ""
-                character.alliance_id = 0
+                new_skill = CharSkill(character=character,
+                                      skill_id=skill.typeID,
+                                      skillpoints=skill.skillpoints,
+                                      level=skill.level)
+                new_skill.save()
 
-            character.corp_name = sheet.corporationName
-            character.corp_id = sheet.corporationID
-            character.clone_name = sheet.cloneName
-            character.clone_skill_points = sheet.cloneSkillPoints
-            character.balance = sheet.balance
-            character.implant_memory_name = implant['memory']['name']
-            character.implant_memory_bonus = implant['memory']['value']
-            character.implant_perception_name = implant['perception']['name']
-            character.implant_perception_bonus = implant['perception']['value']
-            character.implant_intelligence_name = implant['intelligence']['name']
-            character.implant_intelligence_bonus = implant['intelligence']['value']
-            character.implant_willpower_name = implant['willpower']['name']
-            character.implant_willpower_bonus = implant['willpower']['value']
-            character.implant_charisma_name = implant['charisma']['name']
-            character.implant_charisma_bonus = implant['charisma']['value']
-
-            character.save()
-
-            for skill in sheet.skills:
-                try:
-                    c_skill = CharSkill.objects.get(character=character, skill_id=skill.typeID)
-                    c_skill.skillpoints = skill.skillpoints
-                    c_skill.level = skill.level
-                    c_skill.save()
-                except:
-                    new_skill = CharSkill(character=character,
-                                          skill_id=skill.typeID,
-                                          skillpoints=skill.skillpoints,
-                                          level=skill.level)
-                    new_skill.save()
-
-            # Set nextupdate to cachedUntil
-            update.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
-            update.save()
-            print "<<< %s update complete" % character.name
+        # Set nextupdate to cachedUntil
+        timer = APITimer.objects.get(character=character, apisheet='CharacterSheet')
+        timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
+        timer.save()
+        print "<<< %s update complete" % character.name
 
 
 class ProcessAPISkillTree(PeriodicTask):

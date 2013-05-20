@@ -69,10 +69,10 @@
                   %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/secure/dashboard/char_sheet/{{point.char.id}}/"});'}
                     {{point.char.name}}
                   .balance
-                    {{point.char.balance|intcomma}}
+                    {{point.char.balance|intcomma}} ISK
               .row-fluid
                 .span12
-                  Next Update: {{point.next_update|naturaltime}}
+                  Estimated Update: {{point.next_update|naturaltime}}
       %h5 Last 10 Sales
       %table.table.table-condensed
         - for sale in last_ten_sales
