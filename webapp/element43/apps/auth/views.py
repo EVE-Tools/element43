@@ -160,13 +160,10 @@ def reset_password(request):
         form = ResetPasswordForm(request.POST)
 
         if form.is_valid():
-            # Generate and save password
-            new_password = User.objects.make_random_password(length=12, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+            # Generate password
+            new_password = User.objects.make_random_password(length=16, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
             user = User.objects.get(username__exact=form.cleaned_data.get('username'),
                                     email__exact=form.cleaned_data.get('email'))
-
-            user.set_password(new_password)
-            user.save()
 
             # Send password reset mail
             text = get_template('mail/reset_password.txt')
@@ -184,8 +181,13 @@ def reset_password(request):
             message.attach_alternative(html_content, "text/html")
             message.send()
 
+            # Save new password
+            user.set_password(new_password)
+            user.save()
+
             # Add success message
             messages.info(request, 'A new password has been sent to your e-mail address.')
+
             # Redirect home
             return HttpResponseRedirect(reverse('home'))
     else:
