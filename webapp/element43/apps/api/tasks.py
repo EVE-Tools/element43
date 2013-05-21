@@ -76,15 +76,14 @@ class ProcessResearchCharacter(Task):
 
         api = eveapi.EVEAPIConnection()
 
-        print ">>> Updating research agents for %s" % character.name
-
         # Try to fetch a valid key from DB
         try:
             apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
         except APIKey.DoesNotExist:
-            print('There is no valid key for %s.' % character.name)
             # End execution for this character
             return
+
+        print ">>> Updating research agents for %s" % character.name
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -96,6 +95,7 @@ class ProcessResearchCharacter(Task):
 
         except eveapi.Error, e:
             handle_api_exception(e, apikey)
+            return
 
         # Clear all existing jobs for this character and add new ones. We don't want to keep expired data.
         Research.objects.filter(character=character).delete()
@@ -146,15 +146,14 @@ class ProcessWalletTransactionsCharacter(Task):
 
         api = eveapi.EVEAPIConnection()
 
-        print ">>> Updating transactions for %s" % character.name
-
         # Try to fetch a valid key from DB
         try:
             apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
         except APIKey.DoesNotExist:
-            print('There is no valid key for %s.' % character.name)
             # End execution for this character
             return
+
+        print ">>> Updating transactions for %s" % character.name
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -166,6 +165,7 @@ class ProcessWalletTransactionsCharacter(Task):
 
         except eveapi.Error, e:
             handle_api_exception(e, apikey)
+            return
 
         walking = True
 
@@ -268,15 +268,14 @@ class ProcessWalletJournalCharacter(Task):
 
         api = eveapi.EVEAPIConnection()
 
-        print ">>> Updating journal entries for %s" % character.name
-
         # Try to fetch a valid key from DB
         try:
             apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
         except APIKey.DoesNotExist:
-            print('There is no valid key for %s.' % character.name)
             # End execution for this character
             return
+
+        print ">>> Updating journal entries for %s" % character.name
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -288,6 +287,7 @@ class ProcessWalletJournalCharacter(Task):
 
         except eveapi.Error, e:
             handle_api_exception(e, apikey)
+            return
 
         walking = True
 
@@ -408,15 +408,14 @@ class ProcessMarketOrdersChracter(Task):
 
         api = eveapi.EVEAPIConnection()
 
-        print ">>> Market Orders: %s" % character.name
-
         # Try to fetch a valid key from DB
         try:
             apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
         except APIKey.DoesNotExist:
-            print('There is no valid key for %s.' % character.name)
             # End execution for this character
             return
+
+        print ">>> Market Orders: %s" % character.name
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -426,6 +425,7 @@ class ProcessMarketOrdersChracter(Task):
 
         except eveapi.Error, e:
             handle_api_exception(e, apikey)
+            return
 
         for order in orders.orders:
             #
@@ -542,15 +542,14 @@ class ProcessCharacterSheetCharacter(Task):
         #grab an api object
         api = eveapi.EVEAPIConnection()
 
-        print ">>> Updating: %s" % character.name
-
         # Try to fetch a valid key from DB
         try:
             apikey = APIKey.objects.get(id=character.apikey_id, is_valid=True)
         except APIKey.DoesNotExist:
-            print('There is no valid key for %s.' % character.name)
             # End execution for this character
             return
+
+        print ">>> Updating character sheet for %s" % character.name
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -562,6 +561,7 @@ class ProcessCharacterSheetCharacter(Task):
 
         except eveapi.Error, e:
             handle_api_exception(e, apikey)
+            return
 
         for attr in attributes:
             implant[attr] = i_stats
