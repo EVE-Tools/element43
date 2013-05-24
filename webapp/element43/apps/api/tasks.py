@@ -37,13 +37,18 @@ class ProcessConquerableStations(PeriodicTask):
                 station_object.save()
 
             except StaStation.DoesNotExist:
-                station_object = StaStation(id=station.stationID,
-                                            name=station.stationName,
-                                            solar_system_id=station.solarSystemID,
-                                            type_id=station.stationTypeID,
-                                            constellation=MapSolarSystem.objects.get(id=station.solarSystemID).constellation,
-                                            region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
-                station_object.save()
+
+                # Add station / catch race condition with other workers
+                try:
+                    station_object = StaStation(id=station.stationID,
+                                                name=station.stationName,
+                                                solar_system_id=station.solarSystemID,
+                                                type_id=station.stationTypeID,
+                                                constellation=MapSolarSystem.objects.get(id=station.solarSystemID).constellation,
+                                                region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
+                    station_object.save()
+                except IntegrityError:
+                    print 'Station was already processed by another concurrently running worker.'
 
         print '<<< Finished updating ' + str(len(stations.outposts)) + ' conquerable stations.'
 
