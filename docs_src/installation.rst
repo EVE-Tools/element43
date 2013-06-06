@@ -91,7 +91,7 @@ Preparing the database
 * Run ``django-admin.py migrate apps.market_data``
 * Run ``django-admin.py migrate apps.api``
 * Run ``django-admin.py migrate djcelery``
-* Download and extract the latest dump from `http://files.zweizeichen.org/retribution-1.1-84566.zip <http://files.zweizeichen.org/retribution-1.1-84566.zip>`_
+* Download and extract the latest dump from `http://files.zweizeichen.org/dump.zip <http://files.zweizeichen.org/dump.zip>`_
 
 * Import the dump with ``django-admin.py eve_import_ccp_dump <location of dump>``
 
