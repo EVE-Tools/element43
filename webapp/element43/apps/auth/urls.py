@@ -6,7 +6,7 @@ urlpatterns = patterns('apps.auth.views',
     #
 
     # Registration
-    url(r'^register/activate/(?P<key>[a-zA-Z0-9-]+)/$', 'activate', name='activate_account'),
+    url(r'^register/activate/(?P<key>[a-zA-Z0-9-\.@]+)/$', 'activate', name='activate_account'),
     url(r'^register/$', 'register', name='registration'),
 
     # Password reset
