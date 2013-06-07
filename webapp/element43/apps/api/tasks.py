@@ -69,7 +69,7 @@ class ProcessResearch(PeriodicTask):
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            ProcessResearchCharacter.delay(character)
+            ProcessResearchCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessResearchCharacter(Task):
@@ -139,7 +139,7 @@ class ProcessWalletTransactions(PeriodicTask):
         for update in update_timers:
 
             character = Character.objects.get(id=update.character_id)
-            ProcessWalletTransactionsCharacter.delay(character)
+            ProcessWalletTransactionsCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessWalletTransactionsCharacter(Task):
@@ -261,7 +261,7 @@ class ProcessWalletJournal(PeriodicTask):
 
             character = Character.objects.get(id=update.character_id)
 
-            ProcessWalletJournalCharacter.delay(character)
+            ProcessWalletJournalCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessWalletJournalCharacter(Task):
@@ -401,7 +401,7 @@ class ProcessMarketOrders(PeriodicTask):
 
             character = Character.objects.get(id=update.character_id)
 
-            ProcessMarketOrdersChracter.delay(character)
+            ProcessMarketOrdersChracter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessMarketOrdersChracter(Task):
@@ -529,7 +529,7 @@ class ProcessCharacterSheet(PeriodicTask):
 
             character = Character.objects.get(id=update.character_id)
 
-            ProcessCharacterSheetCharacter.delay(character)
+            ProcessCharacterSheetCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessCharacterSheetCharacter(Task):
