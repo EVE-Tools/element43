@@ -234,6 +234,7 @@ def search(request):
 
     # Prepare list
     types = []
+    stations = []
 
     # Only if the string is longer than 2 characters start looking in the DB
     if len(query) > 2:
