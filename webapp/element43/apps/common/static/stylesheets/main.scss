@@ -158,14 +158,7 @@ input[type="color"],
 
 
 /* Simple Animation */
-@-webkit-keyframes clktrans
-{
-0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
-50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
-}
-
-@-moz-keyframes clktrans
+@keyframes clktrans
 {
 0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
 50% {opacity:0; text-shadow:none; }
