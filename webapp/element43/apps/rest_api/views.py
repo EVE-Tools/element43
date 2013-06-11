@@ -18,6 +18,15 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
 
 # Certifications
 
+class CrtCertificateViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows CrtCertificates to be viewed.
+    """
+
+    queryset = CrtCertificate.objects.all()
+    serializer_class = CrtCertificateSerializer
+
+
 class CrtCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows CrtCategories to be viewed.

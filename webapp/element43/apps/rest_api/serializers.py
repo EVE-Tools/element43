@@ -22,6 +22,11 @@ class OrderSerializer(serializers.HyperlinkedModelSerializer):
 # Certifications
 
 
+class CrtCertificateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CrtCertificate
+
+
 class CrtCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CrtCategory

@@ -13,6 +13,7 @@ router.register(r'order', views.OrderViewSet)
 
 # Certifications
 
+router.register(r'crtCertificate', views.CrtCertificateViewSet)
 router.register(r'crtCategory', views.CrtCategoryViewSet)
 router.register(r'crtClass', views.CrtClassViewSet)
 router.register(r'crtRelationship', views.CrtRelationshipViewSet)
