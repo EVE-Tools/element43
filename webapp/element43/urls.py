@@ -54,6 +54,13 @@ urlpatterns = patterns('',
 
     # Account management
     url(r'^secure/settings/', include('apps.user_settings.urls')),
+
+
+    #
+    # REST API
+    #
+
+    url(r'^api/', include('apps.rest_api.urls')),
 )
 
 #

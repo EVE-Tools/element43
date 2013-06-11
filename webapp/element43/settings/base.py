@@ -83,6 +83,38 @@ CACHES = {
     }
 }
 
+# API settings
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.YAMLRenderer',
+        'rest_framework.renderers.XMLRenderer',
+    ),
+
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1000/day',
+        'user': '2000/day'
+    },
+
+    'PAGINATE_BY': 10
+}
+
 # Memcache settings
 MEMCACHE_SERVER = ['127.0.0.1']
 MEMCACHE_BINARY = True
@@ -187,16 +219,16 @@ TEMPLATE_LOADERS = (
 
 # Template Context processors
 TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.core.context_processors.request",
-        "django.core.context_processors.csrf",
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.core.context_processors.tz",
-        "django.contrib.messages.context_processors.messages",
-        "element43.context_processors.element43_settings",
+    "django.core.context_processors.request",
+    "django.core.context_processors.csrf",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "element43.context_processors.element43_settings",
 )
 
 
@@ -235,11 +267,14 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.humanize',
     'django.contrib.formtools',
+    'django.contrib.comments',
 
     'compressor',
 
     'south',
     'djcelery',
+
+    'rest_framework',
 
     'eve_db',
     'apps.common',
@@ -250,11 +285,13 @@ INSTALLED_APPS = (
     'apps.market_browser',
     'apps.market_station',
     'apps.api',
+    'apps.rest_api',
+    'apps.rest_framework',
     'apps.auth',
     'apps.user_settings',
     'apps.manufacturing',
     'apps.dashboard',
-    'apps.wallet',
+    'apps.wallet'
 )
 
 DEVSERVER_MODULES = (
