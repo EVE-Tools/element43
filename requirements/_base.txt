@@ -25,6 +25,11 @@ pyScss>=1.1.5,<1.2
 django_compressor>=1.2,<1.3
 pyyaml>=3.10,<4.0
 
+# API
+djangorestframework
+markdown
+django-filter
+
 # Consumer stuffs
 emds>=0.6,<0.6
 hotqueue>=0.2.7,<0.3
