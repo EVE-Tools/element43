@@ -1,5 +1,5 @@
 - load custom_filters compress
-<!DOCTYPE html>
+!!! 5
 %html
   %head
     %link{'rel':'shortcut icon', 'href':'{{ STATIC_URL }}images/favicon.ico'}
@@ -9,6 +9,7 @@
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap-responsive.css'}
       %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
+      %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/prettify.css'}
       %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
@@ -58,7 +59,9 @@
                   %li
                     %a{'href':'{% url \'about_page\' %}'} About Element43
                   %li
-                    %a{'href':'{% url \'api_docs\' %}'} API Documentation
+                    %a{'href':'{% url \'api_docs\' %}'} Legacy API Documentation
+              %li
+                %a{'href':'/api/'} API
             %ul.nav.pull-right
               - if not user.is_authenticated
                 %li
@@ -142,7 +145,7 @@
                 %li#point :
                 %li#sec
             .container{'style':'font-size: small;'}
-              %a{'href':'/about#copyright'} Copyright 2012 element43
+              %a{'href':'/about#copyright'} Copyright 2013 element43
               , EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of
               %a{'href':'http://www.ccpgames.com'} CCP hf
               and used with permission

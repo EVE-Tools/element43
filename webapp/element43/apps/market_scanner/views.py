@@ -14,6 +14,9 @@ from eve_db.models import MapRegion
 
 
 def random(request):
+    """
+    Pick 25 random types and scan them.
+    """
 
     # Get 25 random types from DB
     types = []
@@ -25,8 +28,11 @@ def random(request):
 
 
 def region(request):
+    """
+    Pick the oldest types in that region for scanning.
+    """
     if 'HTTP_EVE_REGIONID' in request.META:
-        if MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID']) != None:
+        if MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID']) is not None:
             # Pick types based on region and age
 
             region = MapRegion.objects.get(id=request.META['HTTP_EVE_REGIONID'])
