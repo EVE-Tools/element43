@@ -84,6 +84,7 @@ router.register(r'planetSchematicsTypeMap', views.PlanetSchematicsTypeMapViewSet
 
 router.register(r'ramActivity', views.RamActivityViewSet)
 router.register(r'ramAssemblyLine', views.RamAssemblyLineViewSet)
+router.register(r'ramAssemblyLineType', views.RamAssemblyLineTypeViewSet)
 router.register(r'ramAssemblyLineTypeDetailPerCategory', views.RamAssemblyLineTypeDetailPerCategoryViewSet)
 router.register(r'ramAssemblyLineTypeDetailPerGroup', views.RamAssemblyLineTypeDetailPerGroupViewSet)
 router.register(r'ramAssemblyLineStations', views.RamAssemblyLineStationsViewSet)

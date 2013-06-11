@@ -501,6 +501,15 @@ class RamAssemblyLineViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RamAssemblyLineSerializer
 
 
+class RamAssemblyLineTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows RamAssemblyLineTypes to be viewed.
+    """
+
+    queryset = RamAssemblyLineType.objects.all()
+    serializer_class = RamAssemblyLineTypeSerializer
+
+
 class RamAssemblyLineTypeDetailPerCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows RamAssemblyLineTypeDetailPerCategories to be viewed.

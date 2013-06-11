@@ -307,6 +307,11 @@ class RamAssemblyLineTypeDetailPerGroupSerializer(serializers.HyperlinkedModelSe
         model = RamAssemblyLineTypeDetailPerGroup
 
 
+class RamAssemblyLineTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = RamAssemblyLineType
+
+
 class RamAssemblyLineStationsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RamAssemblyLineStations
