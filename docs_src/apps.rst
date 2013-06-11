@@ -43,6 +43,20 @@ Views
     :members:
     :undoc-members:
 
+legacy_api
+^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.legacy_api.views.marketstat
+    :members:
+    :undoc-members:
+
+.. automodule:: apps.legacy_api.views.quicklook
+    :members:
+    :undoc-members:
+
 manufacturing
 ^^^^^^^^^^^^^
 
@@ -54,6 +68,16 @@ Views
     :undoc-members:
 
 .. automodule:: apps.manufacturing.views.calculator
+    :members:
+    :undoc-members:
+
+market_browser
+^^^^^^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.market_browser.views
     :members:
     :undoc-members:
 
@@ -69,33 +93,64 @@ Models
 Views
 """""
 
-.. automodule:: apps.market_data.views.api.marketstat
+.. automodule:: apps.market_data.views
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.api.quicklook
+market_scanner
+^^^^^^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.market_scanner.views
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.market.browser
+market_station
+^^^^^^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.market_station.views.station
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.market.market
+market_tradefinder
+^^^^^^^^^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.market_tradefinder.views.tradefind
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.market.scanners
+quicklook
+^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.quicklook.views
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.trading.station
+rest_api
+^^^^^^^^^
+
+Views
+"""""
+
+.. automodule:: apps.rest_api.views
     :members:
     :undoc-members:
 
-.. automodule:: apps.market_data.views.trading.tradefind
-    :members:
-    :undoc-members:
+rest_framework
+^^^^^^^^^^^^^
+
+*Only contains static assets and templates.*
 
 user_settings
 ^^^^^^^^^^^^^
