@@ -1,4 +1,4 @@
-from apps.market_data.models import Orders
+from apps.market_data.models import Orders, OrderHistory, ItemRegionStat
 from rest_framework import serializers
 
 from eve_db.models.certifications import *
@@ -10,10 +10,26 @@ from eve_db.models.planet import *
 from eve_db.models.station import *
 from eve_db.models.system import *
 
+
+#
+# market_data serializers
+#
+
+
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Orders
         exclude = ('uploader_ip_hash', 'message_key')
+
+
+class ItemRegionStatSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ItemRegionStat
+
+
+class OrderHistorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderHistory
 
 #
 # eve_db serializers

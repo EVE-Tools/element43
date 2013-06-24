@@ -5,7 +5,14 @@ from apps.rest_api import views
 
 router = routers.DefaultRouter()
 
+
+#
+# market_data routes
+#
+
 router.register(r'order', views.OrderViewSet)
+router.register(r'itemRegionStat', views.ItemRegionStatViewSet)
+router.register(r'orderHistory', views.OrderHistoryViewSet)
 
 #
 # eve_db routes

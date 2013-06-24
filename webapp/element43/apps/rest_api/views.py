@@ -1,15 +1,107 @@
-from apps.market_data.models import Orders
+from django.utils.datastructures import SortedDict
+
+from rest_framework.utils.formatting import get_view_name, get_view_description
 from rest_framework import viewsets
+
+from apps.market_data.models import Orders, OrderHistory, ItemRegionStat
+
 from apps.rest_api.serializers import *
+from apps.rest_api.filters import *
+
+
+#
+# market_data views
+#
 
 
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows orders to be viewed.
+    API endpoint that allows orders to be viewed and filtered.
     """
 
     queryset = Orders.active.all()
     serializer_class = OrderSerializer
+    filter_class = OrdersFilter
+
+    def metadata(self, request):
+        """
+        Return a dictionary of metadata about the view.
+        Used to return responses for OPTIONS requests.
+        """
+
+        # This is used by ViewSets to disambiguate instance vs list views
+        view_name_suffix = getattr(self, 'suffix', None)
+
+        # By default we can't provide any form-like information, however the
+        # generic views override this implementation and add additional
+        # information for POST and PUT methods, based on the serializer.
+        ret = SortedDict()
+        ret['name'] = get_view_name(self.__class__, view_name_suffix)
+        ret['description'] = get_view_description(self.__class__)
+        ret['renders'] = [renderer.media_type for renderer in self.renderer_classes]
+        ret['parses'] = [parser.media_type for parser in self.parser_classes]
+        ret['filters'] = OrdersFilter.Meta.fields
+        return ret
+
+
+class ItemRegionStatViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows the current regional stats of an item to be viewed and filtered.
+    """
+
+    queryset = ItemRegionStat.objects.all()
+    serializer_class = ItemRegionStatSerializer
+    filter_class = ItemRegionStatFilter
+
+    def metadata(self, request):
+        """
+        Return a dictionary of metadata about the view.
+        Used to return responses for OPTIONS requests.
+        """
+
+        # This is used by ViewSets to disambiguate instance vs list views
+        view_name_suffix = getattr(self, 'suffix', None)
+
+        # By default we can't provide any form-like information, however the
+        # generic views override this implementation and add additional
+        # information for POST and PUT methods, based on the serializer.
+        ret = SortedDict()
+        ret['name'] = get_view_name(self.__class__, view_name_suffix)
+        ret['description'] = get_view_description(self.__class__)
+        ret['renders'] = [renderer.media_type for renderer in self.renderer_classes]
+        ret['parses'] = [parser.media_type for parser in self.parser_classes]
+        ret['filters'] = ItemRegionStatFilter.Meta.fields
+        return ret
+
+
+class OrderHistoryViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows past regional stats of an item to be viewed and filtered.
+    """
+
+    queryset = OrderHistory.objects.all()
+    serializer_class = OrderHistorySerializer
+    filter_class = OrderHistoryFilter
+
+    def metadata(self, request):
+        """
+        Return a dictionary of metadata about the view.
+        Used to return responses for OPTIONS requests.
+        """
+
+        # This is used by ViewSets to disambiguate instance vs list views
+        view_name_suffix = getattr(self, 'suffix', None)
+
+        # By default we can't provide any form-like information, however the
+        # generic views override this implementation and add additional
+        # information for POST and PUT methods, based on the serializer.
+        ret = SortedDict()
+        ret['name'] = get_view_name(self.__class__, view_name_suffix)
+        ret['description'] = get_view_description(self.__class__)
+        ret['renders'] = [renderer.media_type for renderer in self.renderer_classes]
+        ret['parses'] = [parser.media_type for parser in self.parser_classes]
+        ret['filters'] = OrderHistoryFilter.Meta.fields
+        return ret
 
 
 #
