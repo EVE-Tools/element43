@@ -76,6 +76,12 @@ DATABASES = {
     }
 }
 
+# For cache machine
+CACHE_BACKEND = 'caching.backends.memcached://localhost:11211'
+CACHE_PREFIX = 'e43cachemachine:'
+CACHE_COUNT_TIMEOUT = 600
+
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
