@@ -4,7 +4,7 @@ from .base import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-IMAGE_SERVER = 'http://image.eveonline.com'
+IMAGE_SERVER = '/static/images/icons'
 
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 INSTALLED_APPS += ('debug_toolbar',
