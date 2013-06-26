@@ -25,8 +25,6 @@ def browser(request, group=0):
     Market browser.
     """
 
-    print group
-
     if not group == 0:
         # If there is a group, add data to initialize tree
 
