@@ -1,0 +1,42 @@
+- extends "base.haml"
+- load humanize custom_filters compress
+- block title
+  = block.super
+  Tradefinder
+- block content
+  %h1
+    Tradefinder
+  - if form.non_field_errors
+    .alert.alert-error
+      %i.icon-white.icon-warning-sign
+      = form.non_field_errors
+  %form.well.form-horizontal{'action':'{% url \'tradefinder\' %}', 'method':'post'}
+    %fieldset
+      - csrf_token
+      %legend
+        Find inter-region trades
+      %div{'class':'control-group{{form.start|css_error}}'}
+        %label.control-label{'for':'start'} Start
+        .controls
+          %input#start-typeahead.typeahead{'type':'text', 'name':'start', 'placeholder':'{{form.start.value}}', 'autocomplete': 'off'}
+          - if form.start.errors
+            %span.help-inline
+              - for error in form.start.errors
+                = error|escape
+      %div{'class':'control-group{{form.destination|css_error}}'}
+        %label.control-label{'for':'destination'} Destination
+        .controls
+          %input#destination-typeahead.typeahead{'type':'text', 'name':'destination', 'placeholder':'{{form.destination.value}}', 'autocomplete': 'off'}
+          - if form.destination.errors
+            %span.help-inline
+              - for error in form.destination.errors
+                = error|escape
+    %hr
+      .control-group
+        .controls
+          %button.btn.btn-success{'type':'submit'}
+            %i.icon-white.icon-search
+            Find Trades
+- block scripts
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/tradefinder.js'}

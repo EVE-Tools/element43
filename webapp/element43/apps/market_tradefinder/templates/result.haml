@@ -1,0 +1,112 @@
+- extends "base.haml"
+- load humanize custom_filters
+- block title
+  = block.super
+  Tradefinder
+- block content
+  %h1
+    Trading Recommendations
+  - for trade in trades
+    .row-fluid
+      .well
+        .row-fluid
+          .span1
+            %img{'src':'{{IMAGE_SERVER}}/Type/{{trade.id}}_64.png'}
+          .span11
+            .row-fluid
+              .span9
+                %h3
+                  = trade.name
+                %i
+                  Margin: {{trade.markup|floatformat:"2"|intcomma}}% - {{trade.volume|intcomma}}m&#179 per unit
+              .span3
+                - if request|is_igb
+                  .text-right
+                    %a.btn.btn-success{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{trade.id}});'}
+                      %i.icon-shopping-cart.icon-white
+                      Show Market Details
+        %hr
+        .row-fluid
+          .span6
+            .row-fluid
+              .span10
+                %h4
+                  {{start.name}} - {{trade.top_buy.0.generated_at|naturaltime}}
+              .span2.text-right
+                %a.btn.btn-mini.btn-link{'href':'{% url \'quicklook_region\' type_id=trade.id region_id=start.id%}', 'target':'_blank', 'style': 'margin-top: 10px;'}
+                  » More
+            %table.table.table-striped.table-condensed
+              %thead
+                %tr
+                  %th
+                    Location
+                  %th.text-right
+                    Price
+                  %th.text-right
+                    Quantity
+                  %th.text-right
+                    Min. Vol.
+                  - if request|is_igb
+                    %th.text-right
+                %tbody
+                  - for order in trade.top_buy
+                    %tr
+                      %td
+                        %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                          • {{order.mapsolarsystem.security_level|sec0to1}}
+                        %a{'href':'{% url \'station\' station_id=order.stastation.id %}'}
+                          = order.stastation.name|truncate_station_name
+                      %td.text-right
+                        = order.price|floatformat:"2"|intcomma
+                      %td.text-right
+                        = order.volume_remaining|intcomma
+                      %td.text-right
+                        = order.minimum_volume
+                      - if request|is_igb
+                        %td.text-right
+                          %a{'href':'#', 'onclick':'CCPEVE.setDestination({{order.mapsolarsystem.id}});'}
+                            %i.icon-map-marker.icon-white
+          .span6
+            .row-fluid
+              .span10
+                %h4
+                 {{destination.name}} - {{trade.top_sell.0.generated_at|naturaltime}}
+              .span2.text-right
+                %a.btn.btn-mini.btn-link{'href':'{% url \'quicklook_region\' type_id=trade.id region_id=destination.id%}', 'target':'_blank', 'style': 'margin-top: 10px;'}
+                  » More
+            %table.table.table-striped.table-condensed
+              %thead
+                %tr
+                  %th
+                    Location
+                  %th.text-right
+                    Price
+                  %th.text-right
+                    Quantity
+                  %th.text-right
+                    Min. Vol.
+                  - if request|is_igb
+                    %th.text-right
+                %tbody
+                  - for order in trade.top_sell
+                    %tr
+                      %td
+                        %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
+                          • {{order.mapsolarsystem.security_level|sec0to1}}
+                        %a{'href':'{% url \'station\' station_id=order.stastation.id %}'}
+                          = order.stastation.name|truncate_station_name
+                      %td.text-right
+                        = order.price|floatformat:"2"|intcomma
+                      %td.text-right
+                        = order.volume_remaining|intcomma
+                      %td.text-right
+                        = order.minimum_volume
+                      - if request|is_igb
+                        %td.text-right
+                          %a{'href':'#', 'onclick':'CCPEVE.setDestination({{order.mapsolarsystem.id}});'}
+                            %i.icon-map-marker.icon-white
+        %hr
+        .text-right
+          %a.btn.btn-primary{'href':'{% url \'quicklook\' type_id=trade.id %}', 'target':'_blank'}
+            %i.icon-white.icon-chevron-right
+            Global Quicklook

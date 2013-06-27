@@ -297,6 +297,7 @@ INSTALLED_APPS = (
     'apps.quicklook',
     'apps.market_browser',
     'apps.market_station',
+    'apps.market_tradefinder',
     'apps.api',
     'apps.rest_api',
     'apps.rest_framework',
