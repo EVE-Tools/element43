@@ -11,6 +11,15 @@ INSTALLED_APPS += ('debug_toolbar',
                   #'devserver',
                   )
 
+TEMPLATE_LOADERS = (
+    'element43.template_loaders.DjamlFilesystemLoader',
+    'element43.template_loaders.DjamlAppDirectoriesLoader',
+
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #'django.template.loaders.eggs.Loader',
+)
+
 DATABASES = {
             "default": {
                 "ENGINE": "django.db.backends.postgresql_psycopg2",
