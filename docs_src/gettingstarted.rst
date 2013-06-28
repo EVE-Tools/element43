@@ -75,6 +75,105 @@ A nice introduction into HTML and CSS can be found at `Shay Howe's <http://learn
 
 Furthermore element43 uses a customzied version of Twitter's Bootstrap (Bootswatch Cyborg theme + custom SCSS) for the easy creation of layouts and UI elements like buttons or tables: `Documentation <http://twitter.github.com/bootstrap/>`_
 
+
+Writing your first app
+^^^^^^^^^^^^^^^^^^^^^^
+Django allows us to create independent modules called ``apps``. An app often serves a single purpose like tradefinding or the management of API update tasks. Each app not only can have its own models, views, tasks and templates, but can also re-use common functions or models from other apps.
+First, you'll want to fork our repository at GitHub, so you have a nice versioned base for your new module. Getting your first app up and running is simple. We'll create an app called ``myapp`` which will serve some static content fetched from the DB.
+
+1. Create a folder named ``myapp``inside the ``apps`` directory
+2. In that newly created folder create 3 empty files:
+  - ``__init__.py`` - So Python knows that your app is a module
+  - ``urls.py``- The file containing your URL patterns
+  - ``views.py``- The file containing your views
+3. Create a folder named ``templates`` in ``myapp``
+
+Now you have to tell Django where to find your app. Just add ``apps.myapp`` to the ``INSTALLED_APPS`` tuple in ``settings/base.py`` (don't forget the comma).
+That's basically it. Let's add some functionality now:
+
+``apps/myapp/urls.py``
+.. highlight:: python
+
+::
+
+    # Necessary URL imports
+    from django.conf.urls import patterns, url
+
+    # The URL patterns for your app
+    urlpatterns = patterns('apps.myapp.views',
+        # History JSON
+        url(r'^start/$', 'start', name='myapp_start'),
+    )
+
+Here we've created an url pattern called ``myapp_start`` that calls the function ``start`` inside your ``views.py`` whenever ``start/``is matched. In order for that route to work, we have to add the new app's url patterns to the global URL list at ``/urls.py``:
+
+``apps/myapp/urls.py``
+.. highlight:: python
+
+::
+
+    [...]
+
+    #
+    # URLs for Element43
+    #
+
+    urlpatterns = patterns('',
+
+        [...]
+        # Add myapp's URLs to /myapp
+        url(r'^myapp/, include('apps.myapp.urls')),
+        [...]
+    )
+
+This will mount myapp's URLs under ``[root]/myapp``. Now that your routes have been added to the main application's router - we can add a view and a template.
+
+``apps/myapp/views.py``
+.. highlight:: python
+
+::
+    # Imports
+    from django.shortcuts import render_to_response
+    from django.template import RequestContext
+
+    # Models
+    from eve_db.models import MapSolarSystem
+
+
+    def start(request):
+
+        """
+        Returns information about Jita
+        """
+
+        # Get the object from DB
+        jita = MapSolarSystem.objects.get(name='Jita')
+
+        # Add that object to our context, so we can use it in our template
+        rcontext = RequestContext(request, {'system_object': jita})
+
+        # Render our template
+        return render_to_response('myapp_start.haml', rcontext)
+
+Create a file called ``myapp_start.haml`` inside ``apps/myapp/templates``.
+
+``apps/myapp/templates/myapp_start.haml``
+::
+    - extends "base.haml"
+    - block title
+      = block.super
+      This is my new app's title :D
+    - block content
+      %h1
+        = system_object.name
+      %p
+        Region: {{system_object.region.name}}
+
+Once you have done all that, run ``django-admin.py runserver``, open ``http://localhost:8000/myapp/start/`` and admire your first app.
+I recommend you to play around with all kinds of models, parameters in the URL (just look at the existing apps to see how that works) and the layout - especially Bootstrap's built-in classes. Try to change small things at first and then work your way up to the bigger ones - that way you'll quickly learn how to do stuff with Element43.
+
+Once you're done with creating something useful, just send us a pull request and we'll review your code then and merge it into the main repository.
+
 Miscellaneous
 ^^^^^^^^^^^^^
 
