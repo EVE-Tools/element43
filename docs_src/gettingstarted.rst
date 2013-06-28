@@ -92,6 +92,7 @@ Now you have to tell Django where to find your app. Just add ``apps.myapp`` to t
 That's basically it. Let's add some functionality now:
 
 ``apps/myapp/urls.py``
+
 .. highlight:: python
 
 ::
@@ -105,9 +106,10 @@ That's basically it. Let's add some functionality now:
         url(r'^start/$', 'start', name='myapp_start'),
     )
 
-Here we've created an url pattern called ``myapp_start`` that calls the function ``start`` inside your ``views.py`` whenever ``start/``is matched. In order for that route to work, we have to add the new app's url patterns to the global URL list at ``/urls.py``:
+Here we've created an url pattern called ``myapp_start`` that calls the function ``start`` inside your ``views.py`` whenever ``start/`` is matched. In order for that route to work, we have to add the new app's url patterns to the global URL list at ``/urls.py``:
 
 ``apps/myapp/urls.py``
+
 .. highlight:: python
 
 ::
@@ -129,6 +131,7 @@ Here we've created an url pattern called ``myapp_start`` that calls the function
 This will mount myapp's URLs under ``[root]/myapp``. Now that your routes have been added to the main application's router - we can add a view and a template.
 
 ``apps/myapp/views.py``
+
 .. highlight:: python
 
 ::
@@ -158,7 +161,9 @@ This will mount myapp's URLs under ``[root]/myapp``. Now that your routes have b
 Create a file called ``myapp_start.haml`` inside ``apps/myapp/templates``.
 
 ``apps/myapp/templates/myapp_start.haml``
+
 ::
+
     - extends "base.haml"
     - block title
       = block.super
