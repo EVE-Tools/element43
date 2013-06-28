@@ -44,7 +44,7 @@ Views
     :undoc-members:
 
 legacy_api
-^^^^^^^^^
+^^^^^^^^^^
 
 Views
 """""
@@ -118,7 +118,7 @@ Views
     :undoc-members:
 
 market_tradefinder
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 Views
 """""
@@ -148,7 +148,7 @@ Views
     :undoc-members:
 
 rest_framework
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 *Only contains static assets and templates.*
 
