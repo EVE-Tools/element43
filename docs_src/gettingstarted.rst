@@ -135,6 +135,7 @@ This will mount myapp's URLs under ``[root]/myapp``. Now that your routes have b
 .. highlight:: python
 
 ::
+
     # Imports
     from django.shortcuts import render_to_response
     from django.template import RequestContext
