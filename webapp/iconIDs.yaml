@@ -21,7 +21,7 @@
   iconFile: '06_11'
 28:
   description: Commodity - Antibiotics
-  iconFile: '06_09'
+  iconFile: 06_09
 29:
   description: Commodity - DepletedUranium
   iconFile: '06_06'
@@ -2185,7 +2185,7 @@
   iconFile: '51_16'
 2703:
   description: BluePrintBackdrop - Unknown
-  iconFile: '09_15'
+  iconFile: 09_15
 2705:
   description: Red Cross Medal - Unknown
   iconFile: '50_16'
@@ -5288,11 +5288,44 @@
   description: Male_Accessories_Glasses_Monocle_M_T02_Types_Monocle_M_T02_black_right.png
   iconFile: res:/UI/Asset/mannequin/Male_Accessories_Glasses_Monocle_M_T02_Types_Monocle_M_T02_black_right.png
 21012:
-  description: Female_Accessories_Glasses_Monocle_F_T02_Types_Monocle_F_T02_black_right.png
+  description: Female_Accessories_Glasses_Monocle_F_T02_Types_Monocle_F_T02_black_right
   iconFile: res:/UI/Asset/mannequin/Female_Accessories_Glasses_Monocle_F_T02_Types_Monocle_F_T02_black_right.png
 21013:
-  description: Male_TopMiddle_ShirtQM01_Types_shirtqm03.png
+  description: Male_TopMiddle_ShirtQM01_Types_shirtqm03
   iconFile: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_shirtqm03.png
 21014:
-  description: Female_TopMiddle_ShirtQF01_Types_shirtqf03.png
+  description: Female_TopMiddle_ShirtQF01_Types_shirtqf03
   iconFile: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_shirtqf03.png
+21021:
+  iconFile: res:/UI/Texture/Icons/110_128_01.png
+21022:
+  iconFile: res:/UI/Texture/Icons/110_128_02.png
+21023:
+  iconFile: res:/UI/Texture/Icons/110_128_03.png
+21025:
+  description: Scan Acquisition Module Icon
+  iconFile: '107_10'
+21026:
+  description: Scan Pinpointing Module Icon
+  iconFile: '107_11'
+21027:
+  description: Scan Rangefinding Module Icon
+  iconFile: '107_12'
+21028:
+  description: Pirate Tag Bronze
+  iconFile: res:/UI/Texture/Icons/icons111_02.png
+21029:
+  description: Pirate Tag Gold
+  iconFile: res:/UI/Texture/Icons/icons111_03.png
+21030:
+  description: Pirate Tag Green
+  iconFile: res:/UI/Texture/Icons/icons111_04.png
+21031:
+  description: Pirate Tag Silver
+  iconFile: res:/UI/Texture/Icons/icons111_05.png
+21032:
+  description: Pirate Tag Crystal
+  iconFile: res:/UI/Texture/Icons/icons111_06.png
+21047:
+  description: Genolution Auroral Icon
+  iconFile: res:/UI/Texture/Icons/107_64_4.png

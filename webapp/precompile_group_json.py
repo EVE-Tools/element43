@@ -86,6 +86,6 @@ for node in result:
     tree.append(recadder(node))
 
 # Write file into appropiate asset folder
-json_file = open("element43/apps/market_data/static/javascripts/groups.json", "w")
+json_file = open("element43/apps/market_browser/static/javascripts/groups.json", "w")
 json_file.write(json.dumps(tree))
 json_file.close()
