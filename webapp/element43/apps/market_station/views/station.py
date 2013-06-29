@@ -1,5 +1,4 @@
 # Imports for memcache
-import pylibmc
 from apps.common.util import get_memcache_client
 
 # Template and context-related imports
@@ -10,9 +9,7 @@ from django.http import HttpResponse
 
 # eve_db models
 from apps.market_data.models import Orders, OrderHistory
-from eve_db.models import StaStation
-from eve_db.models import MapRegion
-from eve_db.models import MapSolarSystem
+from eve_db.models import StaStation, MapRegion, MapSolarSystem, InvType
 
 # JSON for the live search
 from django.utils import simplejson
@@ -23,9 +20,9 @@ import pytz
 from operator import itemgetter
 
 # Helper functions
-from apps.market_data.sql import bid_ask_spread, import_markup
+from apps.market_data.sql import import_markup
 from apps.common.util import find_path
-from django.db.models import Sum
+from django.db.models import Sum, Min, Max
 
 
 # Caches this view 1 hour long
@@ -179,9 +176,41 @@ def panel(request, station_id=60003760, group_id=1413):
         station_id = jita_cnap_id
         station = StaStation.objects.get(id=station_id)
 
-    # Get Bid/Ask Spread
-    spread = bid_ask_spread(station_id, station.region_id, group_id)
-    rcontext = RequestContext(request, {'station': station, 'spread': spread})
+    types = InvType.objects.filter(market_group_id=group_id)
+
+    spreads = []
+
+    for invtype in types:
+
+        ask = Orders.active.filter(stastation_id=station_id,
+                                   minimum_volume=1,
+                                   invtype_id=invtype.id,
+                                   is_bid=False).aggregate(Min('price'))['price__min']
+
+        bid = Orders.active.filter(stastation_id=station_id,
+                                   minimum_volume=1,
+                                   invtype_id=invtype.id,
+                                   is_bid=True).aggregate(Max('price'))['price__max']
+
+        if ask is None or bid is None:
+            spread = None
+        else:
+            spread = (ask / bid) * 100
+
+        spread = {
+            'type': invtype,
+            'ask': ask,
+            'bid': bid,
+            'spread': spread
+        }
+
+        spreads.append(spread)
+
+    sorted_spreads = sorted(spreads, key=lambda k: k['spread'])
+    sorted_spreads.reverse()
+    spreads = sorted_spreads
+
+    rcontext = RequestContext(request, {'station': station, 'spreads': spreads})
 
     return render_to_response('station/_panel.haml', rcontext)
 

@@ -1,54 +1,30 @@
 - load humanize
 - load custom_filters
-- if spread
-  %table.table.table-striped.table-condensed
-    %thead
-      %tr
-        %th
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Lowest ask price in this station.'}
-            Min Ask
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Highest bid price in this station.'}
-            Max Bid
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Absolute spread.'}
-            Spread
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Spread as a percentage of max bid.'}
-            %
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Weekly Volume in this <b><i>region</i></b>.'}
-            Volume
-        %th.text-right
-          %a{'href':'#', 'rel':'tooltip', 'title':'Potential daily profit based on daily volume and spread - assumes you control the entire <b><i>region&rsquo;s</i></b> market for this item.'}
-            Potential Daily Profit
-        - if request|is_igb
-          %th.text-right
-            %a{'href':'#', 'rel':'tooltip', 'title':'Open market info for this item.'}
-              %i.icon-info-sign.icon-white
-    %tbody
-      - for item in spread
-         %tr
-           %td
-             %img{'src':'{{ IMAGE_SERVER }}/Type/{{item.id}}_16.png'}
-             %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
-               {{item.name}}
-           %td.text-right
-             {{item.min_ask|floatformat:2|intcomma}}
-           %td.text-right
-             {{item.max_bid|floatformat:2|intcomma}}
-           %td.text-right
-             {{item.spread|floatformat:2|intcomma}}
-           %td.text-right
-             {{item.spread_percent|floatformat:2|intcomma}} %
-           %td.text-right
-             {{item.weekly_volume|floatformat:0|intcomma}}
-           %td.text-right
-             {{item.potential_daily_profit|floatformat:2|intcomma}}
-           - if request|is_igb
-            %th.text-right
-              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{item.id}});'}
-                %i.icon-shopping-cart.icon-white
-- else
-  %i Sorry - we don't have enough data for this group to generate this view.
+- for item in spreads
+  .row-fluid
+    .well
+      .row-fluid
+        .span1
+          %img{'src':'{{IMAGE_SERVER}}/Type/{{item.type.id}}_64.png'}
+        .span11
+          .row-fluid
+            .span9
+              %h3
+                = item.type.name
+              %span.price
+                Bid: {{item.bid|floatformat:"2"|intcomma}}
+              %span.price
+                Ask: {{item.ask|floatformat:"2"|intcomma}}
+              %span.price
+                Spread: {{item.spread|floatformat:"2"|intcomma}} %
+            .span3
+              - if request|is_igb
+                .text-right
+                  %a.btn.btn-success{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{item.type.id}});'}
+                    %i.icon-shopping-cart.icon-white
+                    Show Market Details
+      %hr
+      .text-right
+        %a.btn.btn-primary{'href':'{% url \'quicklook_region\' type_id=item.type.id region_id=station.region_id %}', 'target':'_blank'}
+          %i.icon-white.icon-chevron-right
+          Regional Quicklook
