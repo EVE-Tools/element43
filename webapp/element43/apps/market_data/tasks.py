@@ -87,7 +87,7 @@ class ArchiveOrders(PeriodicTask):
                             market_data_orders
                         WHERE
                             is_active = 'f'
-                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC'")
+                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
         print "Done moving orders."
 
@@ -98,7 +98,7 @@ class ArchiveOrders(PeriodicTask):
                             market_data_orders
                         WHERE
                             is_active = 'f'
-                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC'")
+                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
         print "Successfully removed old orders."
 
