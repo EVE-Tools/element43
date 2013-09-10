@@ -277,7 +277,7 @@ class Research(models.Model):
     """
 
     character = models.ForeignKey('api.Character', help_text="Character who owns this job.")
-    agent = models.ForeignKey('eve_db.agtAgent', help_text="The agent.")
+    agent = models.ForeignKey('eve_db.AgtAgent', help_text="The agent.")
     skill = models.ForeignKey('api.Skill', help_text="The skill used for the research.")
     start_date = models.DateTimeField(help_text="The date the character began the current research with the agent at the current points per day.")
     points_per_day = models.FloatField(help_text="The number of points generated per day.")
