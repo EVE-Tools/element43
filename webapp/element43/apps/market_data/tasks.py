@@ -28,9 +28,23 @@ class ArchiveOrders(PeriodicTask):
 
         a_week_ago = datetime.now() - timedelta(days=7)
 
-        print "Moving orders to archive..."
-
         cursor = connection.cursor()
+
+        print "Cleaning DB..."
+
+        # Remove duplicate rows which might be a result of an incomplete priror attept
+        cursor.execute("""DELETE FROM
+                            market_data_archivedorders
+                          WHERE
+                            ID IN (
+                                SELECT
+                                    market_data_orders.id
+                                FROM
+                                    market_data_orders
+                                INNER JOIN market_data_archivedorders ON market_data_orders.id = market_data_archivedorders.id
+                            );""")
+
+        print "Moving orders to archive..."
 
         # Move orders to the archive
         cursor.execute("""INSERT INTO market_data_archivedorders (
