@@ -94,6 +94,7 @@ Preparing the database
 * Download and extract the latest dump from `http://files.zweizeichen.org/dump.zip <http://files.zweizeichen.org/dump.zip>`_
 
 * Import the dump with ``django-admin.py eve_import_ccp_dump <location of dump>``
+* Seed your DB with the latest API info available from CCP via ``django-admin.py initapi``
 
 Running element43
 ^^^^^^^^^^^^^^^^^
