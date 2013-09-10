@@ -24,7 +24,7 @@ echo 'Generating market group tree...'
 python precompile_group_json.py
 
 echo 'Collecting static files...'
-django-admin.py collectstatic --noinput --clear
+django-admin.py collectstatic --noinput --clear --link
 
 echo 'Converting HAML files to HTML...'
 find . -name '*.haml' -print0 | xargs -0 -I% hamlpy % %.html
