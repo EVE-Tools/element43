@@ -5329,3 +5329,54 @@
 21047:
   description: Genolution Auroral Icon
   iconFile: res:/UI/Texture/Icons/107_64_4.png
+21048:
+  description: res:/UI/Asset/mannequin/tattoo_armleft_sleeve04.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armleft_sleeve04.png
+21050:
+  description: res:/UI/Asset/mannequin/tattoo_armleft_sleeve05.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armleft_sleeve05.png
+21051:
+  description: res:/UI/Asset/mannequin/tattoo_armleft_sleeve14.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armleft_sleeve14.png
+21052:
+  description: res:/UI/Asset/mannequin/tattoo_armleft_sleeve08.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armleft_sleeve08.png
+21053:
+  description: res:/UI/Asset/mannequin/tattoo_armright_sleeve04.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armright_sleeve04.png
+21054:
+  description: res:/UI/Asset/mannequin/tattoo_armright_sleeve05.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armright_sleeve05.png
+21055:
+  description: res:/UI/Asset/mannequin/tattoo_armright_sleeve14.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armright_sleeve14.png
+21056:
+  description: res:/UI/Asset/mannequin/tattoo_armright_sleeve08.png
+  iconFile: res:/UI/Asset/mannequin/tattoo_armright_sleeve08.png
+21057:
+  iconFile: res:/UI/Texture/Icons/113_64_1.png
+21058:
+  iconFile: res:/UI/Texture/Icons/113_64_2.png
+21059:
+  iconFile: res:/UI/Texture/Icons/113_64_3.png
+21060:
+  description: Lost reminder to pay sov bill
+  iconFile: '115_1'
+21061:
+  description: Press pass to Prometheus Station opening
+  iconFile: '115_2'
+21062:
+  description: A piece of Steve
+  iconFile: '115_3'
+21063:
+  description: Band of Brothers Director Access Key
+  iconFile: '115_4'
+21064:
+  description: Premier ticket
+  iconFile: '115_5'
+21065:
+  description: Alliance Tournament All Stars
+  iconFile: '114_1'
+21066:
+  description: Assassination Contract
+  iconFile: '114_2'
