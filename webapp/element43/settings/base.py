@@ -349,4 +349,4 @@ LOGGING = {
     }
 }
 
-IMAGE_SERVER = '//images.element-43.com'
+IMAGE_SERVER = '/static/images/icons'
