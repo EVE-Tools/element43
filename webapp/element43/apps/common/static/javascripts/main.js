@@ -141,13 +141,7 @@ $(document).ready(function() {
             }
         },
         tooltip: {
-            backgroundColor: {
-                linearGradient: [0, 0, 0, 50],
-                stops: [
-                    [0, 'rgba(96, 96, 96, .8)'],
-                    [1, 'rgba(16, 16, 16, .8)']
-                ]
-            },
+            backgroundColor: 'rgba(16, 16, 16, .9)',
             borderWidth: 0,
             style: {
                 color: '#FFF'
@@ -187,13 +181,7 @@ $(document).ready(function() {
 
         navigation: {
             buttonOptions: {
-                backgroundColor: {
-                    linearGradient: [0, 0, 0, 20],
-                    stops: [
-                        [0.4, '#606060'],
-                        [0.6, '#333333']
-                    ]
-                },
+                backgroundColor: '#606060',
                 borderColor: '#000000',
                 symbolStroke: '#C0C0C0',
                 hoverSymbolStroke: '#FFFFFF'
@@ -214,13 +202,7 @@ $(document).ready(function() {
         // scroll charts
         rangeSelector: {
             buttonTheme: {
-                fill: {
-                    linearGradient: [0, 0, 0, 20],
-                    stops: [
-                        [0.4, '#888'],
-                        [0.6, '#555']
-                    ]
-                },
+                fill: '#606060',
                 stroke: '#000000',
                 style: {
                     color: '#CCC',
@@ -228,26 +210,14 @@ $(document).ready(function() {
                 },
                 states: {
                     hover: {
-                        fill: {
-                            linearGradient: [0, 0, 0, 20],
-                            stops: [
-                                [0.4, '#BBB'],
-                                [0.6, '#888']
-                            ]
-                        },
+                        fill: '#333',
                         stroke: '#000000',
                         style: {
                             color: 'white'
                         }
                     },
                     select: {
-                        fill: {
-                            linearGradient: [0, 0, 0, 20],
-                            stops: [
-                                [0.1, '#000'],
-                                [0.3, '#333']
-                            ]
-                        },
+                        fill: '#444',
                         stroke: '#000000',
                         style: {
                             color: "#6EA8E5"
@@ -256,7 +226,7 @@ $(document).ready(function() {
                 }
             },
             inputStyle: {
-                backgroundColor: '#333',
+                backgroundColor: '#606060',
                 color: 'silver'
             },
             labelStyle: {
@@ -281,8 +251,8 @@ $(document).ready(function() {
             barBackgroundColor: {
                 linearGradient: [0, 0, 0, 20],
                 stops: [
-                    [0.4, '#888'],
-                    [0.6, '#555']
+                    [0.4, '#555'],
+                    [0.6, '#060606']
                 ]
             },
             barBorderColor: '#CCC',
@@ -290,8 +260,8 @@ $(document).ready(function() {
             buttonBackgroundColor: {
                 linearGradient: [0, 0, 0, 20],
                 stops: [
-                    [0.4, '#888'],
-                    [0.6, '#555']
+                    [0.4, '#555'],
+                    [0.6, '#060606']
                 ]
             },
             buttonBorderColor: '#CCC',

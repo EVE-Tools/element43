@@ -35,8 +35,8 @@ $(document).ready(function() {
             }
 
             var groupingUnits = [
-                ['week', [1]],
-                ['month', [1, 2, 3, 4, 6]]
+                ['day', [1, 2, 3, 4, 5, 6]],
+                ['week', [1, 2, 3, 4]],
             ];
 
             // Create the chart
