@@ -1,6 +1,6 @@
 from django.utils.datastructures import SortedDict
 
-from rest_framework.utils.formatting import get_view_name, get_view_description
+from rest_framework.views import get_view_name, get_view_description
 from rest_framework import viewsets
 
 from apps.market_data.models import Orders, OrderHistory, ItemRegionStat
