@@ -12,7 +12,7 @@ from eve_db.models import MapRegion
 # on them with CSS or JavaScript if they have a class of "required"
 # in the HTML. Your mileage may vary. If/when Django ticket #3515
 # lands in trunk, this will no longer be necessary.
-attrs_dict = {'class': 'input-xlarge required'}
+attrs_dict = {'class': 'required form-control'}
 
 
 class TradefinderForm(forms.Form):

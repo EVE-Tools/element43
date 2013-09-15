@@ -5,17 +5,17 @@
   {{request.user.username}} - {{type.name}}
 - block content
   %h1 {{type.name}}
-  .row-fluid
-    .span1
+  .row
+    .col-md-1
       %img{'src':'{{IMAGE_SERVER}}/Type/{{type.id}}_64.png', 'alt':'type image'}
-    .span7
+    .col-md-7
       %p
         Volume: {{type.volume|intcomma}}m&#179;
       %p
         = type.description|striptags
         %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
             [Market Details]
-    .span4
+    .col-md-4
       %table.table.table-striped
         %tbody
           %tr
@@ -40,7 +40,7 @@
               - else
                 %span.price.red
                   {{profit|intcomma}}
-  .row-fluid
+  .row
     %ul.pager
       - if transactions.has_previous
         %li.previous

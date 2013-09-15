@@ -81,7 +81,7 @@ def calculator(request, blueprint_type_id):
             data = calculate_manufacturing_job(form.cleaned_data)
 
             rcontext = RequestContext(request, {'data': data})
-            return render_to_response('result.haml', rcontext)
+            return render_to_response('manufacture_result.haml', rcontext)
     else:
         if request.session.get('form_data'):
             form = ManufacturingCalculatorForm(request.user, request.session.get('form_data'))

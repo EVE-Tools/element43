@@ -6,9 +6,9 @@
 - block content
   %h1
     {{user.username}}
-  .row-fluid
-    .span3
-      %ul.nav.nav-tabs.nav-stacked
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
         %li
           %a{'href':'{% url \'settings\' %}'}
             Modify Profile
@@ -18,7 +18,7 @@
         %li.active
           %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
-    .span9
+    .col-md-9
       - if char_keys or corp_keys
         %h3
           Your API Keys
@@ -97,39 +97,36 @@
       %h3
         Add API Key
       %form.form-horizontal.well{'action':'{% url \'manage_api_keys\' %}', 'method':'post'}
-        %fieldset
-          - csrf_token
-          %legend
-            API Key
-          %div{'class':'control-group{{form.api_id|css_error}}'}
-            %label.control-label{'for':'api_id'} ID
-            .controls
-              = form.api_id
-              - if form.api_id.errors
-                %span.help-inline
-                  - for error in form.api_id.errors
-                    = error|escape
-          %div{'class':'control-group{{form.api_verification_code|css_error}}'}
-            %label.control-label{'for':'api_verification_code'} Verification Code
-            .controls
-              = form.api_verification_code
-              - if form.api_verification_code.errors
-                %span.help-inline
-                  - for error in form.api_verification_code.errors
-                    = error|escape
-        %hr
-        .control-group
-          .controls
+        - csrf_token
+        %legend
+          API Key
+        %div{'class':'form-group{{form.api_id|css_error}}'}
+          %label.col-lg-2{'for':'api_id'} ID
+          .col-lg-2
+            = form.api_id
+            - if form.api_id.errors
+              %span.help-block
+                - for error in form.api_id.errors
+                  = error|escape
+        %div{'class':'form-group{{form.api_verification_code|css_error}}'}
+          %label.col-lg-2{'for':'api_verification_code'} Verification Code
+          .col-lg-6
+            = form.api_verification_code
+            - if form.api_verification_code.errors
+              %span.help-block
+                - for error in form.api_verification_code.errors
+                  = error|escape
+        .form-group
+          .col-lg-4.col-lg-offset-2
             %button.btn.btn-success{'type':'submit'}
-              %i.icon-white.icon-check
+              %i.glyphicon.glyphicon-check
               Add API Key
       %hr
       %h3
         How to
       %p
         To generate a predefined API key for Element43 visit
-        %code
-          %a{'href':'https://support.eveonline.com/api/Key/CreatePredefined/23531659', 'target':'_blank'} support.eveonline.com
+        %a.text-success{'href':'https://support.eveonline.com/api/Key/CreatePredefined/23531659', 'target':'_blank'} support.eveonline.com
       %p
         You can also use an already existing key with sufficient permissions. At a minmum Element43 requires "CharacterSheet".  For full functionality Element43 needs the following permissions:
       .well
@@ -152,5 +149,5 @@
           %li IndustryJobs
       %p
         Your access mask should read
-        %code 23531659
+        %span.text-success 23531659
         now.

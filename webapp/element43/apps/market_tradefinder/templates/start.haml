@@ -8,34 +8,33 @@
     Tradefinder
   - if form.non_field_errors
     .alert.alert-error
-      %i.icon-white.icon-warning-sign
+      %i.glyphicon.glyphicon-warning-sign
       = form.non_field_errors
   %form.well.form-horizontal{'action':'{% url \'tradefinder\' %}', 'method':'post'}
-    %fieldset
-      - csrf_token
-      %legend
-        Find inter-region trades
-      %div{'class':'control-group{{form.start|css_error}}'}
-        %label.control-label{'for':'start'} Start
-        .controls
-          %input#start-typeahead.typeahead{'type':'text', 'name':'start', 'placeholder':'{{form.start.value}}', 'autocomplete': 'off'}
-          - if form.start.errors
-            %span.help-inline
-              - for error in form.start.errors
-                = error|escape
-      %div{'class':'control-group{{form.destination|css_error}}'}
-        %label.control-label{'for':'destination'} Destination
-        .controls
-          %input#destination-typeahead.typeahead{'type':'text', 'name':'destination', 'placeholder':'{{form.destination.value}}', 'autocomplete': 'off'}
-          - if form.destination.errors
-            %span.help-inline
-              - for error in form.destination.errors
-                = error|escape
+    - csrf_token
+    %legend
+      Find inter-region trades
+    %div{'class':'form-group{{form.start|css_error}}'}
+      %label.col-lg-2{'for':'start'} Start
+      .col-lg-2
+        %input#start-typeahead.form-control{'type':'text', 'name':'start', 'autocomplete': 'off'}
+        - if form.start.errors
+          %span.help-block
+            - for error in form.start.errors
+              = error|escape
+    %div{'class':'form-group{{form.destination|css_error}}'}
+      %label.col-lg-2{'for':'destination'} Destination
+      .col-lg-2
+        %input#destination-typeahead.form-control{'type':'text', 'name':'destination', 'autocomplete': 'off'}
+        - if form.destination.errors
+          %span.help-block
+            - for error in form.destination.errors
+              = error|escape
     %hr
-      .control-group
-        .controls
+      .form-group
+        .col-lg-4.col-lg-offset-2
           %button.btn.btn-success{'type':'submit'}
-            %i.icon-white.icon-search
+            %i.glyphicon.glyphicon-search
             Find Trades
 - block scripts
   - compress js

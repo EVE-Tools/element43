@@ -5,25 +5,25 @@
   Know the Market
 - block top
   - if not request.user.is_authenticated
-    .hero-unit
+    .jumbotron
       %h1 More bang for the buck!
       %p
         Welcome to element43, an open-source all-in-one tool providing you with all the information
         you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
       %p
-        %a.btn.btn-primary.btn-large{'href':'{% url \'registration\' %}'}
+        %a.btn.btn-primary.btn-lg{'href':'{% url \'registration\' %}'}
           Get started now »
 - block content
-  .row-fluid
-    .span8
+  .row
+    .col-md-8
       %h2 Live Mineral Index and PLEX - Jita / The Forge
      %table.table.table-striped.table-condensed{'style':'table-layout: fixed;'}
        %thead
          %tr
-           %th
-           %th{'colspan':'3', 'text-align':'center'}
+           %th{'style':'border: none;'}
+           %th{'colspan':'3', 'text-align':'center', 'style':'border: none;'}
              Bid
-           %th{'colspan':'3', 'text-align':'center'}
+           %th{'colspan':'3', 'text-align':'center', 'style':'border: none;'}
              Ask
          %tr
            %th
@@ -94,7 +94,7 @@
                     - else
                       %span{'id':'ask_median_move_{{item.id}}', 'data-isk':'{{statobject.ask_median_move|floatformat:"2"}}'}
                         +0.00
-    .span4
+    .col-md-4
       %h2 Contribute
       %p
         Element43 is an open-source project based on the Python web framework Django.
@@ -102,8 +102,8 @@
       %a.btn.btn-primary{'href':'{% url \'about_page\' %}'}
         Get involved »
   %hr
-  .row-fluid
-    .span4
+  .row
+    .col-md-4
       %h2 Market Data
       %p
         Trading sounds simple. Buy low, sell high. But where to find the best deals?
@@ -111,52 +111,52 @@
         Help us to improve our database by using an EMDR compatible uploader.
       %a.btn.btn-primary{'href':'http://eve-market-data-relay.readthedocs.org/en/latest/uploading.html', 'target':'_blank'}
         Download Client »
-    #history.span8
+    #history.col-md-8
 
   %hr
-    .row-fluid
-      .span6
+    .row
+      .col-md-6
         %h3 EMDR Stats (per minute)
         %table.table.table-striped.table-condensed
           %tbody
             %tr
-              %td.span3
+              %td.col-md-3
                 New Orders
-              %td#new_orders.span3
+              %td#new_orders.col-md-3
                 = stats.new_orders|intcomma
             %tr
-              %td.span3
+              %td.col-md-3
                 Updated Orders
-              %td#updated_orders.span3
+              %td#updated_orders.col-md-3
                 = stats.updated_orders|intcomma
             %tr
-              %td.span3
+              %td.col-md-3
                 Old Orders
-              %td#old_orders.span3
+              %td#old_orders.col-md-3
                 = stats.old_orders|intcomma
             %tr
-              %td.span3
+              %td.col-md-3
                 History messages
-              %td#history_messages.span3
+              %td#history_messages.col-md-3
                 = stats.history_messages|intcomma
-      .span6
+      .col-md-6
         %h3 Platform Stats
         %table.table.table-striped.table-condensed
           %tbody
             %tr
-              %td.span3
+              %td.col-md-3
                 Active Orders
-              %td#active_orders.span3
+              %td#active_orders.col-md-3
                 = stats.active_orders|intcomma
             %tr
-              %td.span3
+              %td.col-md-3
                 Archived Orders
-              %td#archived_orders.span3
+              %td#archived_orders.col-md-3
                 = stats.archived_orders|intcomma
             %tr
-              %td.span3
+              %td.col-md-3
                 History Records
-              %td#history_records.span3
+              %td#history_records.col-md-3
                 = stats.history_records|intcomma
 - block scripts
   - compress js

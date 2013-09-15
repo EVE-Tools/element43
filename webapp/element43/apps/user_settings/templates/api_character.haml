@@ -6,9 +6,9 @@
 - block content
   %h1
     {{user.username}}
-  .row-fluid
-    .span3
-      %ul.nav.nav-tabs.nav-stacked
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
         %li
           %a{'href':'{% url \'settings\' %}'}
             Modify Profile
@@ -18,33 +18,32 @@
         %li.active
           %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
-    .span9
+    .col-md-9
       %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}
-        %fieldset
-          - csrf_token
-          %table.table.table-striped
-            %thead
+        - csrf_token
+        %table.table.table-striped
+          %thead
+            %tr
+              %th
+              %th
+                Name
+              %th
+                Corporation
+              %td
+                Add
+          %tbody
+            - for char in chars
               %tr
-                %th
-                %th
-                  Name
-                %th
-                  Corporation
                 %td
-                  Add
-            %tbody
-              - for char in chars
-                %tr
-                  %td
-                    %img{'src':'//image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
-                  %td
-                    = char.name
-                  %td
-                    = char.corporationName
-                  %td
-                    %input{'type':'checkbox', 'name':'characters', 'value':'{{char.characterID}}'}
-          .control-group
-            .controls
+                  %img{'src':'//image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
+                %td
+                  = char.name
+                %td
+                  = char.corporationName
+                %td
+                  %input{'type':'checkbox', 'name':'characters', 'value':'{{char.characterID}}'}
+          .form-group
+            .col-lg-4.col-lg-offset-2
               %button.btn.btn-primary{'type':'submit'}
                 Add Characters
 

@@ -4,28 +4,28 @@
   = block.super
   {{station.name}}
 - block content
-  .row-fluid
-    #menu-left.span2
-      %ul#tabs.nav.nav-tabs.nav-stacked
+  .row
+    #menu-left.col-md-2
+      %ul#tabs.nav.nav-pills.nav-stacked
           %li.active
-            %a#overview_link{'href':'#overview', 'data_toggle':'tab'} Overview
+            %a#overview_link{'href':'#overview', 'data_toggle':'pill'} Overview
           %li
-            %a#spread_link{'href':'#spread', 'data_toggle':'tab'} Bid/Ask Spread
+            %a#spread_link{'href':'#spread', 'data_toggle':'pill'} Bid/Ask Spread
           %li
-            %a#import_link{'href':'#import', 'data_toggle':'tab'} Import
+            %a#import_link{'href':'#import', 'data_toggle':'pill'} Import
       #spread-controls{'style':'display: none;'}
         #button-back.btn.btn-primary
           << Back
         #tree
-    #panel-right.span10
+    #panel-right.col-md-10
       %h1
         {{station.name}}
       .tab-content
         #overview.tab-pane.fade.active.in
-          .row-fluid
-            .span2
+          .row
+            .col-md-2
               %img{'src':'//image.eveonline.com/Render/{{station.type.id}}_128.png', 'alt':'station render'}
-            .span5
+            .col-md-5
               %table.table.table-striped
                 %tbody
                   %tr
@@ -45,7 +45,7 @@
                       %span{'class':'sec{{station.solar_system.security_level|sec0to10}}'}
                         • {{station.solar_system.security_level|sec0to1}}
                       {{station.solar_system.name}}
-            .span5
+            .col-md-5
               %table.table.table-striped
                 %tbody
                   %tr
@@ -67,11 +67,11 @@
           #group
             %i Please select a group on the left side to display spread details.
         #import.tab-pane.fade
-          #import-field.row-fluid{'style':'margin-bottom: 1em;'}
-            .span4
-            .span4{'style':'margin-top: 2em; text-align:center;'}
+          #import-field.row{'style':'margin-bottom: 1em;'}
+            .col-md-4
+            .col-md-4{'style':'margin-top: 2em; text-align:center;'}
               %input#import-search{'type':'text', 'placeholder':'Region / System...', 'name':'query'}
-            .span4
+            .col-md-4
           %i Choose a region or system to import from with the text field above.
 - block scripts
   %script{'type':'text/javascript'}

@@ -14,10 +14,10 @@
         Last Seen
       %th.text-center
         %a{'href':'#', 'rel':'tooltip', 'title':'Indicates if order looks suspicious'}
-          %i.icon-white.icon-question-sign
+          %i.glyphicon.glyphicon-question-sign
       %th.text-center
         %a{'href':'#', 'rel':'tooltip', 'title':'Indicates an order is selling below the median cost of its components'}
-          %i.icon-white.icon-question-sign
+          %i.glyphicon.glyphicon-question-sign
   %tbody
     - for order in sell_orders
       %tr
@@ -46,5 +46,5 @@
               •
         %td.text-center
           - if order.price < totalprice
-            %i.icon-white.icon-shopping-cart
+            %i.glyphicon.glyphicon-shopping-cart
         // ID: {{order.id}}

@@ -6,9 +6,9 @@
 - block content
   %h1
     {{user.username}}
-  .row-fluid
-    .span3
-      %ul.nav.nav-tabs.nav-stacked
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
         %li
           %a{'href':'{% url \'settings\' %}'}
             Modify Profile
@@ -18,7 +18,7 @@
         %li
           %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
-    .span9
+    .col-md-9
       %table.table.table-striped
         %tbody
           - for char in characters

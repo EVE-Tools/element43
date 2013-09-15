@@ -10,8 +10,6 @@
       %li
         %a{'href':'{{ breadcrumb_url }}', 'class':"{% if forloop.last %}active{% endif %}"}
           = breadcrumb_name
-        - if not forloop.last
-          %span.divider ›
   #content
     - if 'GET' in allowed_methods
       %form#get-form.pull-right
@@ -70,14 +68,14 @@
                   %form.form-horizontal{'action':"{{ request.get_full_path }}", 'method':"POST", 'enctype': "{% if form.is_multipart %}multipart/form-data{%else%}application/x-www-form-urlencoded{% endif %}"}
                     %fieldset
                       - include "rest_framework/form.html"
-                      .form-actions
+
                         %button.btn.btn-primary{'title':"Make a POST request on the {{ name }} resource"} POST
           %div#generic-content-form{'class':"{% if post_form %}tab-pane{% endif %}"}
             - with form=raw_data_post_form
               %form.form-horizontal{'action':"{{ request.get_full_path }}", 'method':"POST"}
                 %fieldset
                   - include "rest_framework/form.html"
-                  .form-actions
+
                     %button.btn.btn-primary{'title':"Make a POST request on the {{ name }} resource"} POST
 
       - if put_form or raw_data_put_form or raw_data_patch_form
@@ -95,14 +93,14 @@
                   %form.form-horizontal{'action':"{{ request.get_full_path }}", 'enctype': "{% if form.is_multipart %}multipart/form-data{%else%}application/x-www-form-urlencoded{% endif %}"}
                     %fieldset
                       - include "rest_framework/form.html"
-                      .form-actions
+
                         %button.btn.btn-primary.js-tooltip{'name':"{{ api_settings.FORM_METHOD_OVERRIDE }}", 'title':"Make a PUT request on the {{ name }} resource", 'value':"PUT"} PUT
             %div#generic-content-form{'class':"{% if put_form %}tab-pane{% endif %}"}
               - with form=raw_data_put_or_patch_form
                 %form.form-horizontal{'action':"{{ request.get_full_path }}", 'method':"POST"}
                   %fieldset
                     - include "rest_framework/form.html"
-                    .form-actions
+
                       - if raw_data_put_form
                         %button.btn.btn-primary.js-tooltip{'name':"{{ api_settings.FORM_METHOD_OVERRIDE }}", 'title':"Make a PUT request on the {{ name }} resource", 'value':"PUT"} PUT
                       - if raw_data_patch_form

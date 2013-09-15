@@ -4,8 +4,8 @@
   = block.super
   Dashboard
 - block content
-  .row-fluid
-    .span8
+  .row
+    .col-md-8
       #history
       %table.table.table-condensed
         %thead
@@ -57,21 +57,21 @@
               {{day.brokers_fee|intcomma}}
             %td.red
               {{day.taxes|intcomma}}
-    .span4
+    .col-md-4
       %table.table.table-condensed
         - for point in sheet_data
           %tr
             %td{'width':'64px'}
               %img{'src':'//image.eveonline.com/Character/{{point.char.id}}_64.jpg', 'alt':'{{point.char.name}}'}
             %td
-              .row-fluid
-                .span12
+              .row
+                .col-md-12
                   %a{'href':'#', 'onclick':'$("#char-sheet").modal({"remote":"/secure/dashboard/char_sheet/{{point.char.id}}/"});'}
                     {{point.char.name}}
                   .balance
                     {{point.char.balance|intcomma}} ISK
-              .row-fluid
-                .span12
+              .row
+                .col-md-12
                   Estimated Update: {{point.next_update|naturaltime}}
       %h5 Last 10 Sales
       %table.table.table-condensed

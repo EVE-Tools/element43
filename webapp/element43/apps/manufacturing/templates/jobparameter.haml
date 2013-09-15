@@ -9,12 +9,10 @@
     %li
       Manufacturing
     %li
-      %span.divider >
       %a{'href':'{% url \'manufacturing_select_blueprint\' %}'}
         Blueprint Search ({{ blueprint.blueprint_type.name }})
-    %li
-      %span.divider >
-        Change Job Parameters
+    %li.active
+      Change Job Parameters
 
   -# This is a bit dirty. There is at the moment only on form "error". It's not
   -# really an error, more a note to the user. So keep that in mind if you add
@@ -37,45 +35,44 @@
     -# - Price (optional)
     -#
 
-    %fieldset
-      %legend
-        Blueprint information
+    %legend
+      Blueprint information
 
-      %div{'class':'control-group{{ form.blueprint_material_efficiency|css_error }}'}
-        %label.control-label{'for':'id_blueprint_material_efficiency'} Material level (ME)
-        .controls
-          = form.blueprint_material_efficiency
-          - if form.blueprint_material_efficiency.errors
-            %span.help-inline
-              - for error in form.blueprint_material_efficiency.errors
-                = error|escape
+    %div{'class':'form-group{{ form.blueprint_material_efficiency|css_error }}'}
+      %label.col-lg-2{'for':'id_blueprint_material_efficiency'} Material level (ME)
+      .col-lg-1
+        = form.blueprint_material_efficiency
+        - if form.blueprint_material_efficiency.errors
+          %span.help-block
+            - for error in form.blueprint_material_efficiency.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.blueprint_production_efficiency|css_error }}'}
-        %label.control-label{'for':'id_blueprint_production_efficiency'} Productivity Level (PE)
-        .controls
-          = form.blueprint_production_efficiency
-          - if form.blueprint_production_efficiency.errors
-            %span.help-inline
-              - for error in form.blueprint_production_efficiency.errors
-                = error|escape
+    %div{'class':'form-group{{ form.blueprint_production_efficiency|css_error }}'}
+      %label.col-lg-2{'for':'id_blueprint_production_efficiency'} Productivity Level (PE)
+      .col-lg-1
+        = form.blueprint_production_efficiency
+        - if form.blueprint_production_efficiency.errors
+          %span.help-block
+            - for error in form.blueprint_production_efficiency.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.blueprint_runs|css_error }}'}
-        %label.control-label{'for':'id_blueprint_runs'} Number of runs
-        .controls
-          = form.blueprint_runs
-          - if form.blueprint_runs.errors
-            %span.help-inline
-              - for error in form.blueprint_runs.errors
-                = error|escape
+    %div{'class':'form-group{{ form.blueprint_runs|css_error }}'}
+      %label.col-lg-2{'for':'id_blueprint_runs'} Number of runs
+      .col-lg-1
+        = form.blueprint_runs
+        - if form.blueprint_runs.errors
+          %span.help-block
+            - for error in form.blueprint_runs.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.blueprint_price|css_error }}'}
-        %label.control-label{'for':'id_blueprint_price'} Blueprint copy price
-        .controls
-          = form.blueprint_price
-          - if form.blueprint_price.errors
-            %span.help-inline
-              - for error in form.blueprint_price.errors
-                = error|escape
+    %div{'class':'form-group{{ form.blueprint_price|css_error }}'}
+      %label.col-lg-2{'for':'id_blueprint_price'} Blueprint copy price
+      .col-lg-2
+        = form.blueprint_price
+        - if form.blueprint_price.errors
+          %span.help-block
+            - for error in form.blueprint_price.errors
+              = error|escape
 
     -#
     -# Fieldset for the players skills and hardwirings:
@@ -85,47 +82,46 @@
     -# - Hardwiring
     -#
 
-    %fieldset
-      %legend
-        Your skills and hardwirings
+    %legend
+      Your skills and hardwirings
 
-      - if request.user.is_authenticated and form.has_character
-        %div{'class':'control-group{{ form.character|css_error }}'}
-          %label.control-label{'for':'id_character'} Select your character
-          .controls
-            = form.character
-            - if form.character.errors
-              %span.help-inline
-                - for error in form.character.errors
-                  = error|escape
-      - else
-
-        %div{'class':'control-group{{ form.skill_industry|css_error }}'}
-          %label.control-label{'for':'id_skill_industry'} Industry skill level
-          .controls
-            = form.skill_industry
-            - if form.skill_industry.errors
-              %span.help-inline
-                - for error in form.skill_industry.errors
-                  = error|escape
-
-        %div{'class':'control-group{{ form.skill_production_efficiency|css_error }}'}
-          %label.control-label{'for':'id_skill_production_efficiency'} Production efficiency skill level
-          .controls
-            = form.skill_production_efficiency
-            - if form.skill_production_efficiency.errors
-              %span.help-inline
-                - for error in form.skill_production_efficiency.errors
-                  = error|escape
-
-      %div{'class':'control-group{{ form.hardwiring|css_error }}'}
-        %label.control-label{'for':'id_hardwiring'} Hardwiring
-        .controls
-          = form.hardwiring
-          - if form.hardwiring.errors
-            %span.help-inline
-              - for error in wizard.hardwiring.errors
+    - if request.user.is_authenticated and form.has_character
+      %div{'class':'form-group{{ form.character|css_error }}'}
+        %label.col-lg-2{'for':'id_character'} Select your character
+        .col-lg-4
+          = form.character
+          - if form.character.errors
+            %span.help-block
+              - for error in form.character.errors
                 = error|escape
+    - else
+
+      %div{'class':'form-group{{ form.skill_industry|css_error }}'}
+        %label.col-lg-2{'for':'id_skill_industry'} Industry skill level
+        .col-lg-4
+          = form.skill_industry
+          - if form.skill_industry.errors
+            %span.help-block
+              - for error in form.skill_industry.errors
+                = error|escape
+
+      %div{'class':'form-group{{ form.skill_production_efficiency|css_error }}'}
+        %label.col-lg-2{'for':'id_skill_production_efficiency'} Production efficiency skill level
+        .col-lg-4
+          = form.skill_production_efficiency
+          - if form.skill_production_efficiency.errors
+            %span.help-block
+              - for error in form.skill_production_efficiency.errors
+                = error|escape
+
+    %div{'class':'form-group{{ form.hardwiring|css_error }}'}
+      %label.col-lg-2{'for':'id_hardwiring'} Hardwiring
+      .col-lg-4
+        = form.hardwiring
+        - if form.hardwiring.errors
+          %span.help-block
+            - for error in wizard.hardwiring.errors
+              = error|escape
 
     -#
     -# Fieldset for all information about the players manufacturing installation:
@@ -133,27 +129,26 @@
     -# - Production slot time modifier
     -#
 
-    %fieldset
-      %legend
-        Manufacturing installation information
+    %legend
+      Manufacturing installation information
 
-      %div{'class':'control-group{{ form.slot_production_time_modifier|css_error }}'}
-        %label.control-label{'for':'id_slot_production_time_modifier'} Production slot time modifier
-        .controls
-          = form.slot_production_time_modifier
-          - if form.slot_production_time_modifier.errors
-            %span.help-inline
-              - for error in form.slot_production_time_modifier.errors
-                = error|escape
+    %div{'class':'form-group{{ form.slot_production_time_modifier|css_error }}'}
+      %label.col-lg-2{'for':'id_slot_production_time_modifier'} Production slot time modifier
+      .col-lg-1
+        = form.slot_production_time_modifier
+        - if form.slot_production_time_modifier.errors
+          %span.help-block
+            - for error in form.slot_production_time_modifier.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.slot_material_modifier|css_error }}'}
-        %label.control-label{'for':'id_slot_material_modifier'} Production slot material modifier
-        .controls
-          = form.slot_material_modifier
-          - if form.slot_material_modifier.errors
-            %span.help-inline
-              - for error in form.slot_material_modifier.errors
-                = error|escape
+    %div{'class':'form-group{{ form.slot_material_modifier|css_error }}'}
+      %label.col-lg-2{'for':'id_slot_material_modifier'} Production slot material modifier
+      .col-lg-1
+        = form.slot_material_modifier
+        - if form.slot_material_modifier.errors
+          %span.help-block
+            - for error in form.slot_material_modifier.errors
+              = error|escape
 
     -#
     -# Fieldset for additional information that influence the profitability calculation
@@ -161,44 +156,44 @@
     -# - Target sell price
     -#
 
-    %fieldset
-      %legend
-        Sale Information
+    %legend
+      Sale Information
 
-      %div{'class':'control-group{{ form.target_sell_price|css_error }}'}
-        %label.control-label{'for':'id_target_sell_price'} Target sell price
-          %a{'href':'#', 'rel':'tooltip', 'title':'Price = The Forge Sell Median'}
-            %i.icon-white.icon-question-sign
-          - if request|is_igb
-            %a{'href':'#', 'rel':'tooltip', 'onclick':'CCPEVE.showMarketDetails({{ blueprint.product_type.id }})', 'title':'Press to open Market for this item.'}
-              %i.icon-white.icon-shopping-cart
-        .controls
-          = form.target_sell_price
-          - if form.target_sell_price.errors
-            %span.help-inline
-              - for error in form.target_sell_price.errors
-                = error|escape
+    %div{'class':'form-group{{ form.target_sell_price|css_error }}'}
+      %label.col-lg-2{'for':'id_target_sell_price'} Target sell price
+        %a{'href':'#', 'rel':'tooltip', 'title':'Price = The Forge Sell Median'}
+          %i.glyphicon.glyphicon-question-sign
+        - if request|is_igb
+          %a{'href':'#', 'rel':'tooltip', 'onclick':'CCPEVE.showMarketDetails({{ blueprint.product_type.id }})', 'title':'Press to open Market for this item.'}
+            %i.glyphicon.glyphicon-shopping-cart
+      .col-lg-2
+        = form.target_sell_price
+        - if form.target_sell_price.errors
+          %span.help-block
+            - for error in form.target_sell_price.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.brokers_fee|css_error }}'}
-        %label.control-label{'for':'id_brokers_fee'} Broker's fee (%)
-        .controls
-          = form.brokers_fee
-          - if form.brokers_fee.errors
-            %span.help-inline
-              - for error in form.brokers_fee.errors
-                = error|escape
+    %div{'class':'form-group{{ form.brokers_fee|css_error }}'}
+      %label.col-lg-2{'for':'id_brokers_fee'} Broker's fee (%)
+      .col-lg-2
+        = form.brokers_fee
+        - if form.brokers_fee.errors
+          %span.help-block
+            - for error in form.brokers_fee.errors
+              = error|escape
 
-      %div{'class':'control-group{{ form.sales_tax|css_error }}'}
-        %label.control-label{'for':'id_sales_tax'} Sales tax (%)
-        .controls
-          = form.sales_tax
-          - if form.sales_tax.errors
-            %span.help-inline
-              - for error in form.sales_tax.errors
-                = error|escape
+    %div{'class':'form-group{{ form.sales_tax|css_error }}'}
+      %label.col-lg-2{'for':'id_sales_tax'} Sales tax (%)
+      .col-lg-2
+        = form.sales_tax
+        - if form.sales_tax.errors
+          %span.help-block
+            - for error in form.sales_tax.errors
+              = error|escape
 
-    .control-group
-      .controls
+    %hr
+    .form-group
+      .col-lg-4.col-lg-offset-2
         %button.btn.btn-success{'type':'submit'}
           Calculate
 

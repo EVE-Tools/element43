@@ -7,29 +7,27 @@
   %h1
     Login
   %form.form-horizontal.well{'action':'{% url \'login\' %}?next={{request.GET.next}}', 'method':'post'}
-    %fieldset
-      - csrf_token
-      %legend
-        Log into Element43
-      %div{'class':'control-group{{form.username|css_error}}'}
-        %label.control-label{'for':'username'} Username
-        .controls
-          = form.username
-          - if form.username.errors
-            %span.help-inline
-              - for error in form.username.errors
-                = error|escape
-      %div{'class':'control-group{{form.password|css_error}}'}
-        %label.control-label{'for':'password'} Password
-        .controls
-          = form.password
-          - if form.password.errors
-            %span.help-inline
-              - for error in form.password.errors
-                = error|escape
-      .control-group
-        .controls
-          %button.btn.btn-primary{'type':'submit'}
-            Login
-      %hr
+    - csrf_token
+    %legend
+      Log into Element43
+    %div{'class':'form-group{{form.username|css_error}}'}
+      %label.col-lg-2.col-lg-2{'for':'username'} Username
+      .col-lg-4
+        = form.username
+        - if form.username.errors
+          %span.help-block
+            - for error in form.username.errors
+              = error|escape
+    %div{'class':'form-group{{form.password|css_error}}'}
+      %label.col-lg-2.col-lg-2{'for':'password'} Password
+      .col-lg-4
+        = form.password
+        - if form.password.errors
+          %span.help-block
+            - for error in form.password.errors
+              = error|escape
+    .form-group
+      .col-lg-10.col-lg-offset-2
+        %button.btn.btn-primary{'type':'submit'}
+          Login
     %a{'href':'{% url \'reset_password\' %}'} Forgot your password?

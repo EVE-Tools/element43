@@ -1,12 +1,10 @@
 $(document).ready(function() {
-	$.getJSON('/market/tradefinder/regions/', function(regions) {
+	var typeaheadOptions = {
+		name: 'regionnames',
+		prefetch: "/market/tradefinder/regions/"
+	};
 
-		var typeaheadOptions = {
-			source: regions,
-			items: 8
-		};
+	$('#start-typeahead').typeahead(typeaheadOptions);
+	$('#destination-typeahead').typeahead(typeaheadOptions);
 
-		$('#start-typeahead').typeahead(typeaheadOptions);
-		$('#destination-typeahead').typeahead(typeaheadOptions);
-	});
 });

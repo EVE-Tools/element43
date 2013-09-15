@@ -5,30 +5,30 @@
   Market - {{region.name}} - {{type.name}}
 - block content
   - include '_group_breadcrumbs.haml'
-  .row-fluid
-    .span2
+  .row
+    .col-md-2
         -# Tabs
-        %ul#tabs.nav.nav-tabs.nav-stacked
+        %ul#tabs.nav.nav-pills.nav-stacked
           %li.active
-            %a#overview_link{'href':'#overview', 'data_toggle':'tab'} Overview
+            %a#overview_link{'href':'#overview', 'data_toggle':'pill'} Overview
           %li
-            %a#system_link{'href':'#systems', 'data_toggle':'tab'} Systems
+            %a#system_link{'href':'#systems', 'data_toggle':'pill'} Systems
           %li
-            %a#ask_link{'href':'#ask', 'data_toggle':'tab'} Ask / Sell
+            %a#ask_link{'href':'#ask', 'data_toggle':'pill'} Ask / Sell
           %li
-            %a#bid_link{'href':'#bid', 'data_toggle':'tab'} Bid / Buy
+            %a#bid_link{'href':'#bid', 'data_toggle':'pill'} Bid / Buy
           - if materials
             %li
-              %a#mats_link{'href':'#mats', 'data_toggle':'tab'} Materials
-    .span10
+              %a#mats_link{'href':'#mats', 'data_toggle':'pill'} Materials
+    .col-md-10
       .tab-content
         #overview.tab-pane.fade.active.in
             %h1
               {{region.name}} - {{type.name}}
-            .row-fluid
-              .span1
+            .row
+              .col-md-1
                 %img{'src':'{{IMAGE_SERVER}}/Type/{{type.id}}_64.png', 'alt':'type image'}
-              .span11
+              .col-md-11
                 %p
                   Volume: {{type.volume|intcomma}}m&#179;
                 %p
@@ -65,7 +65,7 @@
                       = order.generated_at|naturaltime
             .text-right
               .btn.btn-primary{'onclick':'$("#ask_link").trigger("click");'}
-                %i.icon-white.icon-chevron-right
+                %i.glyphicon.glyphicon-chevron-right
                 More
             %h3 Bid / Buy
             %table.table.table-striped.table-condensed
@@ -98,7 +98,7 @@
                       = order.generated_at|naturaltime
             .text-right
               .btn.btn-primary{'onclick':'$("#bid_link").trigger("click");'}
-                %i.icon-white.icon-chevron-right
+                %i.glyphicon.glyphicon-chevron-right
                 More
         #ask.tab-pane.fade
           - include '_quicklook_ask.haml'

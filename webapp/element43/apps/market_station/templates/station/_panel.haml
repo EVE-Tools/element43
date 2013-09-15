@@ -1,14 +1,14 @@
 - load humanize
 - load custom_filters
 - for item in spreads
-  .row-fluid
+  .row
     .well
-      .row-fluid
-        .span1
+      .row
+        .col-md-1
           %img{'src':'{{IMAGE_SERVER}}/Type/{{item.type.id}}_64.png'}
-        .span11
-          .row-fluid
-            .span9
+        .col-md-11
+          .row
+            .col-md-9
               %h3
                 = item.type.name
               %span.price
@@ -17,7 +17,7 @@
                 Ask: {{item.ask|floatformat:"2"|intcomma}}
               %span.price
                 Spread: {{item.spread|floatformat:"2"|intcomma}} %
-            .span3
+            .col-md-3
               - if request|is_igb
                 .text-right
                   %a.btn.btn-success{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{item.type.id}});'}
@@ -26,5 +26,5 @@
       %hr
       .text-right
         %a.btn.btn-primary{'href':'{% url \'quicklook_region\' type_id=item.type.id region_id=station.region_id %}', 'target':'_blank'}
-          %i.icon-white.icon-chevron-right
+          %i.glyphicon.glyphicon-chevron-right
           Regional Quicklook

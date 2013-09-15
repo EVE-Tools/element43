@@ -6,17 +6,17 @@
   {{request.user.username}} - Active Orders
 - block content
   %h1 Active Orders
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       - regroup orders by id.stastation as order_list
       - for order_list_item in order_list
         %h2 {{order_list_item.grouper}}
         - if request|is_igb
           %a{'href':'#', 'onclick':'$("#station-scanner").modal({"remote":"{% url \'wallet_station_scanner\' station_id=order_list_item.grouper.id %}"});'}
             .btn.btn-primary
-              %i.icon-white.icon-search
+              %i.glyphicon.glyphicon-search
               Open Scanner
-        .row-fluid
+        .row
           %h3 Bid
           %table.table
             %thead
@@ -41,7 +41,7 @@
                       {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
-                  %td.span3
+                  %td.col-md-3
                     .progress
                       .bar{'style':'width:{{order.volume_percent}}%;'}
                   %td.text-right
@@ -74,7 +74,7 @@
                       {{order.id.invtype.name}}
                   %td
                     {{order.id.volume_remaining|intcomma}} / {{order.id.volume_entered|intcomma}}
-                  %td.span3
+                  %td.col-md-3
                     .progress
                       - if order.volume_percent < 10
                         .bar.bar-danger{'style':'width:{{order.volume_percent}}%;'}

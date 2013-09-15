@@ -85,7 +85,7 @@ def css_error(field):
     """
 
     if field.errors:
-            return " error"
+            return " has-error"
 
     return ""
 

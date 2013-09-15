@@ -13,23 +13,23 @@
     - if message.tags == "success"
         .alert{'class':'alert-success'}
           .button.close{'type':'button', 'data-dismiss':'alert'} &times;
-          %i.icon-white.icon-ok-sign
+          %i.glyphicon.glyphicon-ok-sign
           %strong Success!
           {{message}}
     - if message.tags == "warning"
       .alert{'class':'alert-warning'}
         .button.close{'type':'button', 'data-dismiss':'alert'} &times;
-        %i.icon-white.icon-warning-sign
+        %i.glyphicon.glyphicon-warning-sign
         %strong Hey there!
         {{message}}
     - if message.tags == "error"
-      .alert{'class':'alert-error'}
+      .alert{'class':'alert-danger'}
         .button.close{'type':'button', 'data-dismiss':'alert'} &times;
-        %i.icon-white.icon-exclamation-sign
+        %i.glyphicon.glyphicon-exclamation-sign
         %strong Oops!
         {{message}}
     - if message.tags == "info"
       .alert{'class':'alert-info'}
         .button.close{'type':'button', 'data-dismiss':'alert'} &times;
-        %i.icon-white.icon-info-sign
+        %i.glyphicon.glyphicon-info-sign
         {{message}}

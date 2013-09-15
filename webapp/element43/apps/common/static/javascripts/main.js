@@ -69,7 +69,7 @@ $(document).ready(function() {
     Highcharts.theme = {
         colors: ["#33b5e5", "#50C878", "#FF0000", "#E68A17", "#333333"],
         chart: {
-            backgroundColor: "#121417",
+            backgroundColor: "transparent",
             borderWidth: 0,
             borderRadius: 15,
             plotBackgroundColor: null,

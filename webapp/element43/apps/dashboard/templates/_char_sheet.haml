@@ -1,9 +1,9 @@
 - load humanize
 %h3 {{char.name}}
-.row-fluid
-	.span4
+.row
+	.col-md-4
 		%img{'src':'http://image.eveonline.com/Character/{{char.id}}_128.jpg', 'alt':'{{char.name}}'}
-	.span8
+	.col-md-8
 		%i {{char.race}} - {{char.bloodline}} - {{char.ancestry}}
 		%table.table.table-condensed
 			%tbody
@@ -31,7 +31,7 @@
 						Clone
 					%td
 						{{char.clone_name}} / {{char.clone_skill_points|intcomma}} SP
-.row-fluid
+.row
 	%h4 Implants
 	%table.table.table-condensed
 		%tbody
@@ -65,7 +65,7 @@
 						= char.implant_perception_name
 					%td
 						= char.implant_perception_bonus
-.row-fluid
+.row
 	%h4 Skills
 	- regroup skills by skill.group as group_list
 		- for group in group_list
@@ -81,10 +81,10 @@
 					%tbody
 					- for skill in group.list
 						%tr
-							%td.span4
+							%td.col-md-4
 								{{skill.skill.name}}
-							%td.span4.text-right
+							%td.col-md-4.text-right
 								{{skill.level}}
-							%td.span4.text-right
+							%td.col-md-4.text-right
 								{{skill.skillpoints|intcomma}}
 

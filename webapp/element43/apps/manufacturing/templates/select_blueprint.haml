@@ -10,16 +10,16 @@
   %form#select_blueprint_form.form-horizontal{'action': '{% url \'manufacturing_select_blueprint\' %}', 'method':'post'}
     - csrf_token
 
-    %div{'class':'control-group{{ form.blueprint|css_error }}'}
-      %label.control-label{'for':'id_blueprint'} Blueprint name
-      %div.controls
+    %div{'class':'form-group{{ form.blueprint|css_error }}'}
+      %label.col-lg-2{'for':'id_blueprint'} Blueprint name
+      %div.col-lg-4
         = form.blueprint
         - if form.blueprint.errors
-          %span.help-inline
+          %span.help-block
             - for error in form.blueprint.errors
               = error|escape
-    %div.control-group
-      %div.controls
+    %div.form-group
+      %div.col-lg-4.col-lg-offset-2
         %button.btn.btn-success{'type':'submit'}
           Search
 

@@ -6,9 +6,9 @@
 - block content
   %h1
     {{user.username}}
-  .row-fluid
-    .span3
-      %ul.nav.nav-tabs.nav-stacked
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
         %li.active
           %a{'href':'{% url \'settings\' %}'}
             Modify Profile
@@ -18,63 +18,62 @@
         %li
           %a{'href':'{% url \'manage_api_keys\' %}'}
             Manage API Keys
-    .span9.well
+    .col-md-9.well
       - if form.non_field_errors
         .alert.alert-error
-          %i.icon-white.icon-warning-sign
+          %i.glyphicon.glyphicon-warning-sign
           = form.non_field_errors
       %form.form-horizontal{'action':'{% url \'settings\' %}', 'method':'post'}
-        %fieldset
           - csrf_token
           %legend
             Modify Profile
-          %div{'class':'control-group'}
-            %label.control-label{'for':'username'} Username
-            .controls
+          %div{'class':'form-group'}
+            %label.col-lg-2{'for':'username'} Username
+            .col-lg-4
               %b
                 %div{'style':'padding-top: 4px;'}
                   {{user.username}}
-          %div{'class':'control-group{{form.email|css_error}}'}
-            %label.control-label{'for':'email'} E-Mail
-            .controls
+          %div{'class':'form-group{{form.email|css_error}}'}
+            %label.col-lg-2{'for':'email'} E-Mail
+            .col-lg-4
               = form.email
               - if form.email.errors
-                %span.help-inline
+                %span.help-block
                   - for error in form.email.errors
                     = error|escape
-          %div{'class':'control-group{{form.new_password|css_error}}'}
-            %label.control-label{'for':'new_password'} New Password
-            .controls
+          %div{'class':'form-group{{form.new_password|css_error}}'}
+            %label.col-lg-2{'for':'new_password'} New Password
+            .col-lg-4
               = form.new_password
               - if form.new_password.errors
-                %span.help-inline
+                %span.help-block
                   - for error in form.new_password.errors
                     = error|escape
               %p.help-block
                 %b Note:
                 %i Never ever
                 use the same password as for EVE!
-          %div{'class':'control-group{{form.new_password_repeat|css_error}}'}
-            %label.control-label{'for':'new_password_repeat'} Repeat New Password
-            .controls
+          %div{'class':'form-group{{form.new_password_repeat|css_error}}'}
+            %label.col-lg-2{'for':'new_password_repeat'} Repeat New Password
+            .col-lg-4
               = form.new_password_repeat
               - if form.new_password_repeat.errors
-                %span.help-inline
+                %span.help-block
                   - for error in form.new_password_repeat.errors
                     = error|escape
           %hr
-          %div{'class':'control-group{{form.password|css_error}}'}
-            %label.control-label{'for':'password'} Current Password
-            .controls
+          %div{'class':'form-group{{form.password|css_error}}'}
+            %label.col-lg-2{'for':'password'} Current Password
+            .col-lg-4
               = form.password
               - if form.password.errors
-                %span.help-inline
+                %span.help-block
                   - for error in form.password.errors
                     = error|escape
-        %hr
-        .control-group
-          .controls
-            %button.btn.btn-primary{'type':'submit'}
-              Update Profile
+          %hr
+          .form-group
+            .col-lg-4.col-lg-offset-2
+              %button.btn.btn-primary{'type':'submit'}
+                Update Profile
 
 

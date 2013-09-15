@@ -42,7 +42,7 @@ def tradefinder(request):
                 annotated_trades.append(trade)
 
             rcontext = RequestContext(request, {'trades': annotated_trades, 'start': start, 'destination': destination})
-            return render_to_response('result.haml', rcontext)
+            return render_to_response('tradefind_result.haml', rcontext)
     else:
         form = TradefinderForm()
 

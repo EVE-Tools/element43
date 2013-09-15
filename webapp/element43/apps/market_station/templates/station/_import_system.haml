@@ -2,14 +2,14 @@
 - load custom_filters
 %h2
   Import from {{system.name}}
-.row-fluid
-  .span12
+.row
+  .col-md-12
     %p
       Jumps: {{jumps}} -
       - if request|is_igb
         - if request|igb_is_trusted
           %a{'href':'#', 'onclick':'CCPEVE.setDestination({{system.id}});'}
-            %i.icon-white.icon-map-marker
+            %i.glyphicon.glyphicon-map-marker
             Set {{system.name}} as destination
       %span
         %a#more{'href':'#', 'onclick':'$("#more").toggle(400); $("#route").toggle(400);'} [more]

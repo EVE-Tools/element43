@@ -12,15 +12,12 @@
     %li
       Manufacturing
     %li
-      %span.divider >
       %a{'href':'{% url \'manufacturing_select_blueprint\' %}'}
         Blueprint Search ({{ data.blueprint_name }})
     %li
-      %span.divider >
       %a{'href':'{% url \'manufacturing_calculator\' data.blueprint_type_id %}'}
         Change Job Parameters
-    %li
-      %span.divider >
+    %li.active
       Result
 
   %h3
@@ -38,7 +35,7 @@
           %th
             Price (ISK)
             %a{'href':'#', 'rel':'tooltip', 'title':'All prices are The Forge Sell Median'}
-              %i.icon-white.icon-question-sign
+              %i.glyphicon.glyphicon-question-sign
           %th.text-right
             Quantity
           %th.text-right
@@ -69,7 +66,7 @@
               %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.id }})'}
                 = material.name
           %td
-            %input.input-normal.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.id }}' }
+            %input.form-control.input-sm.editable{'type': 'text', 'value': '{{material.price|floatformat:2|intcomma}}', 'id': 'material_{{ material.id }}' }
           %td.text-right
             %span{'id': 'material_quantity_{{ material.id }}'}
               = material.quantity|intcomma

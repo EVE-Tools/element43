@@ -8,21 +8,21 @@
   %h1
     = parent_name
   - for type in types
-    .row-fluid
-      .span12
+    .row
+      .col-md-12
         %h3
           {{type.name}}
-    .row-fluid
-      .span2
+    .row
+      .col-md-2
         %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
           %img.typeimage{'src':format('{{ IMAGE_SERVER }}/Type/{{ type.id }}_64.png'), 'alt':'type image', 'width':'64px', 'height':'64px'}
-      .span10
+      .col-md-10
         %p
           = type.description|striptags
-    .row-fluid.typeinfo
-      .span8
+    .row.typeinfo
+      .col-md-8
       %a{'href':'{% url \'quicklook\' type_id=type.id %}'}
-        .span4.text-right
+        .col-md-4.text-right
           .btn.btn-primary
             More Info
     %hr

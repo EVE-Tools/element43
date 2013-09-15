@@ -4,6 +4,7 @@
       Market
   - for group in breadcrumbs
     %li
-      %span.divider >
       %a{'href':'{% url \'browser_preload\' group=group.id %}'}
         = group.name
+  %li.active
+    {{type.name}}

@@ -7,7 +7,6 @@
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/jquery-ui-1.8.22.custom.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/ui.dynatree.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
-      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap-responsive.css'}
       %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
       %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/prettify.css'}
       %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
@@ -16,14 +15,19 @@
       element43 -
   %body
     %header
-      .navbar.navbar-top
-        .navbar-inner
-          .container
-            %a.brand{'href':'{% url \'home\' %}'}
+      .navbar.navbar-default.navbar-static-top
+        .container
+          .navbar-header
+            %a.navbar-brand{'href':'{% url \'home\' %}'}
               %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
-              %span.label.label-important{'style':'float:left;'}
+              %span.label.label-danger{'style':'float:left;'}
                 BETA
-            %ul.nav
+            %button.navbar-toggle.collapsed{'type':'button', 'data-toggle':'collapse', 'data-target':'.nav-header-collapse'}
+              .icon-bar
+              .icon-bar
+              .icon-bar
+          .collapse.navbar-collapse.nav-header-collapse
+            %ul.nav.navbar-nav.navbar-left
               %li.dropdown
                 %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
                   Market
@@ -64,7 +68,7 @@
                     %a{'href':'{% url \'api_docs\' %}'} Legacy API Documentation
               %li
                 %a{'href':'/api/'} API
-            %ul.nav.pull-right
+            %ul.nav.navbar-nav.navbar-right
               - if not user.is_authenticated
                 %li
                   %a{'href':'{% url \'login\' %}?next={{request.path}}'}
@@ -80,53 +84,47 @@
                   %ul.dropdown-menu
                     %li
                       %a{'href':'{% url \'dashboard\' %}'}
-                        %i.icon-white.icon-home
+                        %i.glyphicon.glyphicon-home
                         Dashboard
-                    %li.dropdown-submenu
-                      %a{'tabindex':'-1', 'href':'#'}
-                        %i.icon-white.icon-book
-                        Trading
-                      %ul.dropdown-menu
-                        %li
-                          %a{'href':'{% url \'wallet_orders_active\' %}'}
-                            %i.icon-white.icon-asterisk
-                            Active Orders
-                        %li
-                          %a{'href':'{% url \'wallet_orders_archived\' %}'}
-                            %i.icon-white.icon-calendar
-                            Archived Orders
-                        - if characters_journal
-                          %li.dropdown-submenu
-                            %a{'tabindex':'-1', 'href':'#'}
-                              %i.icon-white.icon-book
-                              Journals
-                            %ul.dropdown-menu
-                              - for char in characters_journal
-                                %li
-                                  %a{'href':'{% url \'wallet_journal\' char_id=char.id %}'}
-                                    {{char.name}}
-                        - if characters_transaction
-                          %li.dropdown-submenu
-                            %a{'tabindex':'-1', 'href':'#'}
-                              %i.icon-white.icon-share
-                              Transactions
-                            %ul.dropdown-menu
-                              - for char in characters_transaction
-                                %li
-                                  %a{'href':'{% url \'wallet_transactions\' char_id=char.id %}'}
-                                    {{char.name}}
+                    %li
+                      %li
+                        %a{'href':'{% url \'wallet_orders_active\' %}'}
+                          %i.glyphicon.glyphicon-asterisk
+                          Active Orders
+                      %li
+                        %a{'href':'{% url \'wallet_orders_archived\' %}'}
+                          %i.glyphicon.glyphicon-calendar
+                          Archived Orders
+                      - if characters_journal
+                        %li.divider
+                        %li.dropdown-header
+                          %i.glyphicon.glyphicon-book
+                          Journals
+                        - for char in characters_journal
+                          %li
+                            %a{'href':'{% url \'wallet_journal\' char_id=char.id %}'}
+                              {{char.name}}
+                      - if characters_transaction
+                        %li.divider
+                        %li.dropdown-header
+                          %i.glyphicon.glyphicon-share
+                          Transactions
+                        - for char in characters_transaction
+                          %li
+                            %a{'href':'{% url \'wallet_transactions\' char_id=char.id %}'}
+                              {{char.name}}
                     %li.divider
                     %li
                       %a{'href':'{% url \'settings\' %}'}
-                        %i.icon-white.icon-wrench
+                        %i.glyphicon.glyphicon-wrench
                         Settings
                     %li
                       %a{'href':'{% url \'logout\' %}'}
-                        %i.icon-white.icon-off
+                        %i.glyphicon.glyphicon-off
                         Logout
-              %form.navbar-search{'id':'search','method':'post','action':'{% url \'search\' %}'}
+              %form.navbar-form.navbar-right{'id':'search','method':'post','action':'{% url \'search\' %}'}
                 - csrf_token
-                %input#main-search.search-query{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
+                %input#main-search.form-control{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
     .container
         - include '_base_messages.haml'
         - block top
@@ -135,8 +133,8 @@
         .content
           - block content
     .container{'style':'padding-top: 2em;'}
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           %footer
             .clock
               #date
@@ -157,6 +155,7 @@
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/highstock.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/typeahead.js'}
       %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
     - block scripts
     - if GOOGLE_ANALYTICS_ENABLED

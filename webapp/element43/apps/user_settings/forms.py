@@ -15,7 +15,7 @@ from element43 import eveapi
 # on them with CSS or JavaScript if they have a class of "required"
 # in the HTML. Your mileage may vary. If/when Django ticket #3515
 # lands in trunk, this will no longer be necessary.
-attrs_dict = {'class': 'input-xlarge required'}
+attrs_dict = {'class': 'required form-control'}
 
 
 class ProfileForm(forms.Form):
@@ -80,7 +80,7 @@ class APIKeyForm(forms.Form):
     """
 
     # API Key
-    api_id = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'span2 input-xlarge required'}))
+    api_id = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'span2 required form-control'}))
     api_verification_code = forms.CharField(widget=forms.TextInput(attrs=attrs_dict))
 
     def clean(self):

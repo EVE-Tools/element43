@@ -8,52 +8,51 @@
     Get started now
   - if form.non_field_errors
     .alert.alert-error
-      %i.icon-white.icon-warning-sign
+      %i.glyphicon.glyphicon-warning-sign
       = form.non_field_errors
   %form.form-horizontal.well{'action':'{% url \'registration\' %}', 'method':'post'}
-    %fieldset
-      - csrf_token
-      %legend
-        Registration
-      %div{'class':'control-group{{form.username|css_error}}'}
-        %label.control-label{'for':'username'} Username
-        .controls
-          = form.username
-          - if form.username.errors
-            %span.help-inline
-              - for error in form.username.errors
-                = error|escape
-      %div{'class':'control-group{{form.email|css_error}}'}
-        %label.control-label{'for':'email'} E-Mail
-        .controls
-          = form.email
-          - if form.email.errors
-            %span.help-inline
-              - for error in form.email.errors
-                = error|escape
-      %div{'class':'control-group{{form.password|css_error}}'}
-        %label.control-label{'for':'password'} Password
-        .controls
-          = form.password
-          - if form.password.errors
-            %span.help-inline
-              - for error in form.password.errors
-                = error|escape
-          %p.help-block
-            %b Note:
-            %i Never ever
-            use the same password as for EVE!
-      %div{'class':'control-group{{form.password_repeat|css_error}}'}
-        %label.control-label{'for':'password_repeat'} Repeat Password
-        .controls
-          = form.password_repeat
-          - if form.password_repeat.errors
-            %span.help-inline
-              - for error in form.password_repeat.errors
-                = error|escape
+    - csrf_token
+    %legend
+      Registration
+    %div{'class':'form-group{{form.username|css_error}}'}
+      %label.col-lg-2{'for':'username'} Username
+      .col-lg-4
+        = form.username
+        - if form.username.errors
+          %span.help-block
+            - for error in form.username.errors
+              = error|escape
+    %div{'class':'form-group{{form.email|css_error}}'}
+      %label.col-lg-2{'for':'email'} E-Mail
+      .col-lg-4
+        = form.email
+        - if form.email.errors
+          %span.help-block
+            - for error in form.email.errors
+              = error|escape
+    %div{'class':'form-group{{form.password|css_error}}'}
+      %label.col-lg-2{'for':'password'} Password
+      .col-lg-4
+        = form.password
+        - if form.password.errors
+          %span.help-block
+            - for error in form.password.errors
+              = error|escape
+        %p.help-block
+          %b Note:
+          %i Never ever
+          use the same password as for EVE!
+    %div{'class':'form-group{{form.password_repeat|css_error}}'}
+      %label.col-lg-2{'for':'password_repeat'} Repeat Password
+      .col-lg-4
+        = form.password_repeat
+        - if form.password_repeat.errors
+          %span.help-block
+            - for error in form.password_repeat.errors
+              = error|escape
     %hr
-    .control-group
-      .controls
+    .form-group
+      .col-lg-4.col-lg-offset-2
         %button.btn.btn-success{'type':'submit'}
-          %i.icon-white.icon-check
+          %i.glyphicon.glyphicon-check
           Register now
