@@ -75,7 +75,7 @@ def journal_json(request):
         # If there aren't any journal entries, catch the resulting AssertionError and return empty list
         try:
             # Add current balance in the end for a more consistent look
-            series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 1000), journal[len(journal) - 1].balance])
+            series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 999), journal[len(journal) - 1].balance])
         except AssertionError:
             series = []
 
