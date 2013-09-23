@@ -23,8 +23,21 @@ $padding:           10px;
     padding: $padding;
 }
 
-body {
-    background: url("/static/images/background.jpg") no-repeat scroll center top $background;
+@media only screen and (min-device-width: 480px) {
+    body {
+        background: url("/static/images/background.jpg") no-repeat scroll center top $background;
+    }
+
+    // Content wrappers
+
+    .panel-wrapper {
+        @include panel;
+    }
+
+    .content {
+        background-color: $jetblack;
+        padding: $padding;
+    }
 }
 
 footer {
@@ -169,17 +182,6 @@ thead {
 
 .tt-suggestion p {
     margin: 0;
-}
-
-// Content wrappers
-
-.panel-wrapper {
-    @include panel;
-}
-
-.content {
-    background-color: $jetblack;
-    padding: $padding;
 }
 
 // Rarely Used Clases
