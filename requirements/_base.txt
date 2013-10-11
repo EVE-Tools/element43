@@ -32,11 +32,8 @@ django-filter
 django-cache-machine
 
 # Consumer stuffs
-emds>=0.6,<0.6
-
-# Temporary workaround for https://github.com/pypa/pip/issues/974
 pytz>=2013b
-
+emds>=0.6,<0.6
 hotqueue>=0.2.7,<0.3
 pylibmc>=1.2.3,<1.3
 
