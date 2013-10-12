@@ -1,90 +1,97 @@
 - load humanize
-%h3 {{char.name}}
-.row
-	.col-md-4
-		%img{'src':'http://image.eveonline.com/Character/{{char.id}}_128.jpg', 'alt':'{{char.name}}'}
-	.col-md-8
-		%i {{char.race}} - {{char.bloodline}} - {{char.ancestry}}
-		%table.table.table-condensed
-			%tbody
-				%tr
-					%td
-						Account Balance
-					- if char.balance > 0
-						%td.balance.green
-							{{char.balance|intcomma}} ISK
-					- else
-						%td.balance.red
-							{{char.balance|intcomma}} ISK
-				%tr
-					%td
-						Date of Birth
-					%td
-						{{char.dob}} - {{char.dob|naturaltime}}
-				%tr
-					%td
-						Skill Points
-					%td
-						{{skill_points|intcomma}}
-				%tr
-					%td
-						Clone
-					%td
-						{{char.clone_name}} / {{char.clone_skill_points|intcomma}} SP
-.row
-	%h4 Implants
-	%table.table.table-condensed
-		%tbody
-			- if char.implant_memory_name
-				%tr
-					%td
-						= char.implant_memory_name
-					%td
-						= char.implant_memory_bonus
-			- if char.implant_intelligence_name
-				%tr
-					%td
-						= char.implant_intelligence_name
-					%td
-						= char.implant_intelligence_bonus
-			- if char.implant_charisma_name
-				%tr
-					%td
-						= char.implant_charisma_name
-					%td
-						= char.implant_charisma_bonus
-			- if char.implant_willpower_name
-				%tr
-					%td
-						= char.implant_willpower_name
-					%td
-						= char.implant_willpower_bonus
-			- if char.implant_perception_name
-				%tr
-					%td
-						= char.implant_perception_name
-					%td
-						= char.implant_perception_bonus
-.row
-	%h4 Skills
-	- regroup skills by skill.group as group_list
-		- for group in group_list
-			%h5 {{ group.grouper.name }}
-			%table.table.table-condensed
-					%thead
-						%tr
-							%th
-							%th.text-right
-								Level
-							%th.text-right
-								Skill Points
-					%tbody
-					- for skill in group.list
-						%tr
-							%td.col-md-4
-								{{skill.skill.name}}
-							%td.col-md-4.text-right
-								{{skill.level}}
-							%td.col-md-4.text-right
-								{{skill.skillpoints|intcomma}}
-
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
+      %h3#sheet-label Character Sheet
+    .modal-body
+      %h3 {{char.name}}
+      .row
+        .col-md-4
+          %img{'src':'http://image.eveonline.com/Character/{{char.id}}_128.jpg', 'alt':'{{char.name}}'}
+        .col-md-8
+          %i {{char.race}} - {{char.bloodline}} - {{char.ancestry}}
+          %table.table.table-condensed
+            %tbody
+              %tr
+                %td
+                  Account Balance
+                - if char.balance > 0
+                  %td.balance.green
+                    {{char.balance|intcomma}} ISK
+                - else
+                  %td.balance.red
+                    {{char.balance|intcomma}} ISK
+              %tr
+                %td
+                  Date of Birth
+                %td
+                  {{char.dob}} - {{char.dob|naturaltime}}
+              %tr
+                %td
+                  Skill Points
+                %td
+                  {{skill_points|intcomma}}
+              %tr
+                %td
+                  Clone
+                %td
+                  {{char.clone_name}} / {{char.clone_skill_points|intcomma}} SP
+      .row
+        %h4 Implants
+        %table.table.table-condensed
+          %tbody
+            - if char.implant_memory_name
+              %tr
+                %td
+                  = char.implant_memory_name
+                %td
+                  = char.implant_memory_bonus
+            - if char.implant_intelligence_name
+              %tr
+                %td
+                  = char.implant_intelligence_name
+                %td
+                  = char.implant_intelligence_bonus
+            - if char.implant_charisma_name
+              %tr
+                %td
+                  = char.implant_charisma_name
+                %td
+                  = char.implant_charisma_bonus
+            - if char.implant_willpower_name
+              %tr
+                %td
+                  = char.implant_willpower_name
+                %td
+                  = char.implant_willpower_bonus
+            - if char.implant_perception_name
+              %tr
+                %td
+                  = char.implant_perception_name
+                %td
+                  = char.implant_perception_bonus
+      .row
+        %h4 Skills
+        - regroup skills by skill.group as group_list
+          - for group in group_list
+            %h5 {{ group.grouper.name }}
+            %table.table.table-condensed
+                %thead
+                  %tr
+                    %th
+                    %th.text-right
+                      Level
+                    %th.text-right
+                      Skill Points
+                %tbody
+                - for skill in group.list
+                  %tr
+                    %td.col-md-4
+                      {{skill.skill.name}}
+                    %td.col-md-4.text-right
+                      {{skill.level}}
+                    %td.col-md-4.text-right
+                      {{skill.skillpoints|intcomma}}
+    .modal-footer
+      %button.btn{'data-dismiss':'modal', 'aria-hidden':'true'} Close

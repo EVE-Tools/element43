@@ -88,13 +88,17 @@
               {{sale.price|intcomma}}
             %td.text-right.green
               {{sale.value|intcomma}}
-  #char-sheet.modal.hide.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
-    .modal-header
-      %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
-      %h3#sheet-label Character Sheet
-    .modal-body
-    .modal-footer
-      %button.btn{'data-dismiss':'modal', 'aria-hidden':'true'} Close
+  #char-sheet.modal.fade{'tabindex':'-1', 'role':'dialog', 'aria-labelledby':'sheet-label', 'aria-hidden':'true'}
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{'type':'button', 'data-dismiss':'modal', 'aria-hidden':'true'} ×
+          %h3#sheet-label Character Sheet
+        .modal-body
+          .progress.progress-striped.active
+            .progress-bar{'role':'progressbar', 'aria-valuenow':'100', 'aria-valuemin':'0', 'aria-valuemax':'100', 'style':'width: 100%'}
+        .modal-footer
+          %button.btn{'data-dismiss':'modal', 'aria-hidden':'true'} Close
 - block scripts
   - compress js
     %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/dashboard.js'}

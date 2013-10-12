@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // Destroy modal when hidden to allow loading of new data
-    $('body').on('hidden', '.modal', function () {
-        $(this).removeData('modal');
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
     });
 
     $.getJSON('/secure/dashboard/journal/', function(data) {
