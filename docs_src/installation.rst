@@ -37,6 +37,7 @@ For running element43 on Linux you need several packages installed:
 * ``memcached``
 * ``libmemcached-dev``
 * ``gfortran``
+* ``libatlas-base-dev``
 * ``libzmq``
 * ``postgresql-server``
 * ``postgresql-client``
@@ -75,7 +76,6 @@ Installing Python dependencies
 * Run ``echo "export DJANGO_SETTINGS_MODULE=element43.settings.local" >> $VIRTUAL_ENV/bin/postactivate``
 * Run ``echo "unset DJANGO_SETTINGS_MODULE" >> $VIRTUAL_ENV/bin/postdeactivate``
 * Run ``export DJANGO_SETTINGS_MODULE=element43.settings.local``
-* Run ``pip install numpy``
 * Run ``pip install -r element43/requirements/local.txt`` to install the Python dependencies for developers
 
 There is a high probability of this process failing (especially on Linux) mainly due to missing requirements. If you encounter any problems, have a close look at the error messages to identify the cause of the error. If cannot solve it on your own, head for the IRC.
@@ -83,14 +83,23 @@ There is a high probability of this process failing (especially on Linux) mainly
 Preparing the database
 ^^^^^^^^^^^^^^^^^^^^^^
 * Create a database and a user called ``element43`` with the password ``element43`` using either the cli or a tool like `pgAdmin <http://www.pgadmin.org>`_ or `Navicat <http://www.navicat.com>`_
+	::
+
+	 CREATE DATABASE "element43"
+	 WITH OWNER "element43"
+	 ENCODING 'UTF8'
+	 LC_COLLATE = 'en_US.UTF-8'
+	 LC_CTYPE = 'en_US.UTF-8'
+	 TEMPLATE template0;
+
 	* Ensure the new user has all rights for the newly-created database!
 	* Only if you have no other choice edit the settings file at ``element43/webapp/element43/settings/local.py``
-* Navigate to ``element43/webapp/`` then ``django-admin.py syncdb`` and **do not create a superuser**
-* Run ``django-admin.py migrate eve_db``
-* Run ``django-admin.py migrate apps.common``
-* Run ``django-admin.py migrate apps.market_data``
-* Run ``django-admin.py migrate apps.api``
-* Run ``django-admin.py migrate djcelery``
+* Navigate to ``element43/webapp/`` then ``./manage.py syncdb`` and **do not create a superuser**
+* Run ``./manage.py migrate eve_db``
+* Run ``./manage.py migrate apps.common``
+* Run ``./manage.py migrate apps.market_data``
+* Run ``./manage.py migrate apps.api``
+* Run ``./manage.py migrate djcelery``
 * Download and extract the latest dump from `http://files.zweizeichen.org/dump.zip <http://files.zweizeichen.org/dump.zip>`_
 
 * Import the dump with ``django-admin.py eve_import_ccp_dump <location of dump>``
