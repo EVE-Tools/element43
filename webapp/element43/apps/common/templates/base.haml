@@ -23,10 +23,6 @@
               %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
               %span.label.label-danger{'style':'float:left;'}
                 BETA
-            %button.navbar-toggle.collapsed{'type':'button', 'data-toggle':'collapse', 'data-target':'.nav-header-collapse'}
-              .icon-bar
-              .icon-bar
-              .icon-bar
           .collapse.navbar-collapse.nav-header-collapse
             %ul.nav.navbar-nav.navbar-left
               %li.dropdown
@@ -67,6 +63,8 @@
                     %a{'href':'{% url \'about_page\' %}'} About Element43
                   %li
                     %a{'href':'{% url \'api_docs\' %}'} Legacy API Documentation
+              %li
+                %a{'href':'//news.element-43.com'} News
               %li
                 %a{'href':'/api/'} API
             %ul.nav.navbar-nav.navbar-right
@@ -128,7 +126,7 @@
                 %input#main-search.form-control{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
     .container
         - include '_base_messages.haml'
-        - block top
+    - block top
     .container
       .panel-wrapper.clearfix
         .content

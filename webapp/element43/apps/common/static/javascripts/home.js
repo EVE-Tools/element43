@@ -16,6 +16,12 @@ function abbreviateNumber(n) {
 
 $(document).ready(function() {
 
+    $(function(){
+        $('.carousel').carousel({
+            interval: 5000
+        });
+    });
+
     $('#live-values span').each(function() {
         var span = $(this);
 

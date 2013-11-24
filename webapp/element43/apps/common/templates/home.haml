@@ -4,15 +4,45 @@
   = block.super
   Know the Market
 - block top
-  - if not request.user.is_authenticated
-    .jumbotron
-      %h1 More bang for the buck!
-      %p
-        Welcome to element43, an open-source all-in-one tool providing you with all the information
-        you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
-      %p
-        %a.btn.btn-primary.btn-lg{'href':'{% url \'registration\' %}'}
-          Get started now »
+ #mainCarousel.carousel.slide
+  %ol.carousel-indicators
+    %li.active{'data-target':'#mainCarousel', 'data-slide-to':'0'}
+    %li{'data-target':'#mainCarousel', 'data-slide-to':'1'}
+    %li{'data-target':'#mainCarousel', 'data-slide-to':'2'}
+  .carousel-inner
+    .item.active
+      .container
+        .jumbotron
+          %h1 More bang for the buck!
+          %p
+            Welcome to element43, an open-source all-in-one tool providing you with all the information
+            you need to get the most out of your hard-earned ISK. Best of all: it's completely free!
+          %p
+            %a.btn.btn-primary.btn-lg{'href':'{% url \'registration\' %}'}
+              Get started now »
+    .item
+      .container
+        .jumbotron
+          %h1 Visit our brand new news section!
+          %p
+            Latest quality EVE market discussion and Element43 development news
+          %p
+            %a.btn.btn-primary.btn-lg{'href':'/news'}
+              Discuss the latest news »
+    .item
+      .container
+        .jumbotron
+          %h1 Want to give back?
+          %p
+            We're always looking for talented web developers, traders, industrialists, diplomats and feedback!
+            Donations for covering our hosting costs are also greatly appreciated. Don't hesistate to contact us.
+          %p
+            %a.btn.btn-primary.btn-lg{'href':'{% url \'about_page\' %}'}
+              Get in touch »
+  %a.left.carousel-control{'href':'#mainCarousel', 'data-slide':'prev'}
+    %span.icon-prev
+  %a.right.carousel-control{'href':'#mainCarousel', 'data-slide':'next'}
+    %span.icon-next
 - block content
   .row
     .col-md-8
