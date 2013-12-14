@@ -1,7 +1,6 @@
 from apps.market_data.models import Orders, OrderHistory, ItemRegionStat
 from rest_framework import serializers
 
-from eve_db.models.certifications import *
 from eve_db.models.chr import *
 from eve_db.models.inventory import *
 from eve_db.models.map import *
@@ -34,33 +33,6 @@ class OrderHistorySerializer(serializers.HyperlinkedModelSerializer):
 #
 # eve_db serializers
 #
-
-# Certifications
-
-
-class CrtCertificateSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = CrtCertificate
-
-
-class CrtCategorySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = CrtCategory
-
-
-class CrtClassSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = CrtClass
-
-
-class CrtRelationshipSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = CrtRelationship
-
-
-class CrtRecommendationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = CrtRecommendation
 
 
 # Character
@@ -182,6 +154,22 @@ class InvContrabandTypeSerializer(serializers.HyperlinkedModelSerializer):
         model = InvContrabandType
 
 
+class InvItemSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = InvItem
+
+
+class InvPositionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = InvPosition
+
+
+class InvUniqueNameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = InvUniqueName
+
+
+
 # Map
 
 
@@ -240,6 +228,26 @@ class MapLandmarkSerializer(serializers.HyperlinkedModelSerializer):
         model = MapLandmark
 
 
+class MapLocationSceneSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MapLocationScene
+
+
+class MapLocationWormholeClassSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = MapLocationWormholeClass
+
+
+class WarCombatZoneSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = WarCombatZone
+
+
+class WarCombatZoneSystemSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = WarCombatZoneSystem
+
+
 # NPC
 
 
@@ -281,6 +289,12 @@ class AgtAgentSerializer(serializers.HyperlinkedModelSerializer):
 class AgtAgentTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AgtAgentType
+
+
+class AgtResearchAgentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AgtResearchAgent
+
 
 # Planet
 
@@ -361,6 +375,11 @@ class StaStationSerializer(serializers.HyperlinkedModelSerializer):
 class StaOperationServicesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = StaOperationServices
+
+
+class RamInstallationTypeContentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = RamInstallationTypeContent
 
 
 # System

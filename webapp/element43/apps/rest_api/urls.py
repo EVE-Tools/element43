@@ -18,14 +18,6 @@ router.register(r'orderHistory', views.OrderHistoryViewSet)
 # eve_db routes
 #
 
-# Certifications
-
-router.register(r'crtCertificate', views.CrtCertificateViewSet)
-router.register(r'crtCategory', views.CrtCategoryViewSet)
-router.register(r'crtClass', views.CrtClassViewSet)
-router.register(r'crtRelationship', views.CrtRelationshipViewSet)
-router.register(r'crtRecommendation', views.CrtRecommendationViewSet)
-
 # Character
 
 router.register(r'chrRace', views.ChrRaceViewSet)
@@ -54,6 +46,9 @@ router.register(r'invPOSResourcePurpose', views.InvPOSResourcePurposeViewSet)
 router.register(r'invPOSResource', views.InvPOSResourceViewSet)
 router.register(r'invTypeReaction', views.InvTypeReactionViewSet)
 router.register(r'invContrabandType', views.InvContrabandTypeViewSet)
+router.register(r'invItem', views.InvItemViewSet)
+router.register(r'invPosition', views.InvPositionViewSet)
+router.register(r'invUniqueName', views.InvUniqueNameViewSet)
 
 # Map
 
@@ -68,6 +63,10 @@ router.register(r'mapJump', views.MapJumpViewSet)
 router.register(r'mapCelestialStatistic', views.MapCelestialStatisticViewSet)
 router.register(r'mapDenormalize', views.MapDenormalizeViewSet)
 router.register(r'mapLandmark', views.MapLandmarkViewSet)
+router.register(r'mapLocationScene', views.MapLocationSceneViewSet)
+router.register(r'mapLocationWormholeClass', views.MapLocationWormholeClassViewSet)
+router.register(r'warCombatZone', views.WarCombatZoneViewSet)
+router.register(r'warCombatZoneSystem', views.WarCombatZoneSystemViewSet)
 
 # NPC
 
@@ -79,6 +78,7 @@ router.register(r'crpNPCCorporationTrade', views.CrpNPCCorporationTradeViewSet)
 router.register(r'crpNPCCorporationResearchField', views.CrpNPCCorporationResearchFieldViewSet)
 router.register(r'agtAgent', views.AgtAgentViewSet)
 router.register(r'agtAgentType', views.AgtAgentTypeViewSet)
+router.register(r'agtResearchAgent', views.AgtResearchAgentViewSet)
 
 # Planet
 
@@ -102,6 +102,7 @@ router.register(r'staStationType', views.StaStationTypeViewSet)
 router.register(r'staOperation', views.StaOperationViewSet)
 router.register(r'staStation', views.StaStationViewSet)
 router.register(r'staOperationServices', views.StaOperationServicesViewSet)
+router.register(r'ramInstallationTypeContent', views.RamInstallationTypeContentViewSet)
 
 # System
 

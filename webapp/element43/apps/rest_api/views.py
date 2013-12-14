@@ -108,52 +108,6 @@ class OrderHistoryViewSet(viewsets.ReadOnlyModelViewSet):
 # eve_db views
 #
 
-# Certifications
-
-class CrtCertificateViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows CrtCertificates to be viewed.
-    """
-
-    queryset = CrtCertificate.objects.all()
-    serializer_class = CrtCertificateSerializer
-
-
-class CrtCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows CrtCategories to be viewed.
-    """
-
-    queryset = CrtCategory.objects.all()
-    serializer_class = CrtCategorySerializer
-
-
-class CrtClassViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows CrtClasss to be viewed.
-    """
-
-    queryset = CrtClass.objects.all()
-    serializer_class = CrtClassSerializer
-
-
-class CrtRelationshipViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows CrtRelationships to be viewed.
-    """
-
-    queryset = CrtRelationship.objects.all()
-    serializer_class = CrtRelationshipSerializer
-
-
-class CrtRecommendationViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows CrtRecommendations to be viewed.
-    """
-
-    queryset = CrtRecommendation.objects.all()
-    serializer_class = CrtRecommendationSerializer
-
 # Character
 
 
@@ -365,6 +319,34 @@ class InvContrabandTypeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = InvContrabandType.objects.all()
     serializer_class = InvContrabandTypeSerializer
 
+
+class InvItemViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows InvItems to be viewed.
+    """
+
+    queryset = InvItem.objects.all()
+    serializer_class = InvItemSerializer
+
+
+class InvPositionViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows InvPositions to be viewed.
+    """
+
+    queryset = InvPosition.objects.all()
+    serializer_class = InvPositionSerializer
+
+
+class InvUniqueNameViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows InvUniqueNames to be viewed.
+    """
+
+    queryset = InvUniqueName.objects.all()
+    serializer_class = InvUniqueNameSerializer
+
+
 # Map
 
 
@@ -467,6 +449,42 @@ class MapLandmarkViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MapLandmarkSerializer
 
 
+class MapLocationSceneViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows MapLocationScenes to be viewed.
+    """
+
+    queryset = MapLocationScene.objects.all()
+    serializer_class = MapLocationSceneSerializer
+
+
+class MapLocationWormholeClassViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows MapLocationWormholeClasses to be viewed.
+    """
+
+    queryset = MapLocationWormholeClass.objects.all()
+    serializer_class = MapLocationWormholeClassSerializer
+
+
+class WarCombatZoneViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows WarCombatZones to be viewed.
+    """
+
+    queryset = WarCombatZone.objects.all()
+    serializer_class = WarCombatZoneSerializer
+
+
+class WarCombatZoneSystemViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows WarCombatZoneSystems to be viewed.
+    """
+
+    queryset = WarCombatZoneSystem.objects.all()
+    serializer_class = WarCombatZoneSystemSerializer
+
+
 # NPC
 
 
@@ -540,6 +558,15 @@ class AgtAgentTypeViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = AgtAgentType.objects.all()
     serializer_class = AgtAgentTypeSerializer
+
+
+class AgtResearchAgentViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows AgtResearchAgents to be viewed.
+    """
+
+    queryset = AgtResearchAgent.objects.all()
+    serializer_class = AgtResearchAgentSerializer
 
 
 # Planet
@@ -676,11 +703,20 @@ class StaStationTypeViewSet(viewsets.ReadOnlyModelViewSet):
 
 class StaOperationServicesViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows StaOperationServicess to be viewed.
+    API endpoint that allows StaOperationServices to be viewed.
     """
 
     queryset = StaOperationServices.objects.all()
     serializer_class = StaOperationServicesSerializer
+
+
+class RamInstallationTypeContentViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows RamInstallationTypeContents to be viewed.
+    """
+
+    queryset = RamInstallationTypeContent.objects.all()
+    serializer_class = RamInstallationTypeContentSerializer
 
 
 # System
