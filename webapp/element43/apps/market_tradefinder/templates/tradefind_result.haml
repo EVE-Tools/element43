@@ -31,7 +31,7 @@
             .row
               .col-md-10
                 %h4
-                  {{start.name}} - {{trade.top_buy.0.generated_at|naturaltime}}
+                  {{start.name}} - {{trade.top_sell.0.generated_at|naturaltime}}
               .col-md-2.text-right
                 %a.btn.btn-xs.btn-link{'href':'{% url \'quicklook_region\' type_id=trade.id region_id=start.id%}', 'target':'_blank', 'style': 'margin-top: 10px;'}
                   » More
@@ -49,7 +49,7 @@
                   - if request|is_igb
                     %th.text-right
                 %tbody
-                  - for order in trade.top_buy
+                  - for order in trade.top_sell
                     %tr
                       %td
                         %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}
@@ -70,7 +70,7 @@
             .row
               .col-md-10
                 %h4
-                 {{destination.name}} - {{trade.top_sell.0.generated_at|naturaltime}}
+                 {{destination.name}} - {{trade.top_buy.0.generated_at|naturaltime}}
               .col-md-2.text-right
                 %a.btn.btn-xs.btn-link{'href':'{% url \'quicklook_region\' type_id=trade.id region_id=destination.id%}', 'target':'_blank', 'style': 'margin-top: 10px;'}
                   » More
@@ -88,7 +88,7 @@
                   - if request|is_igb
                     %th.text-right
                 %tbody
-                  - for order in trade.top_sell
+                  - for order in trade.top_buy
                     %tr
                       %td
                         %span{'class':'sec{{order.mapsolarsystem.security_level|sec0to10}}'}

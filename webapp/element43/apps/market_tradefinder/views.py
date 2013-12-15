@@ -36,8 +36,8 @@ def tradefinder(request):
             # Load additional data like top 5 orders
             for trade in trades:
 
-                trade['top_buy'] = Orders.active.filter(mapregion=start, invtype_id=trade['id'], is_bid=True).order_by('price')[:5]
-                trade['top_sell'] = Orders.active.filter(mapregion=destination, invtype_id=trade['id'], is_bid=False).order_by('-price')[:5]
+                trade['top_sell'] = Orders.active.filter(mapregion=start, invtype_id=trade['id'], is_bid=False).order_by('price')[:5]
+                trade['top_buy'] = Orders.active.filter(mapregion=destination, invtype_id=trade['id'], is_bid=True).order_by('-price')[:5]
 
                 annotated_trades.append(trade)
 
