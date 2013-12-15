@@ -39,7 +39,9 @@ def tradefinder(request):
                 trade['top_sell'] = Orders.active.filter(mapregion=start, invtype_id=trade['id'], is_bid=False).order_by('price')[:5]
                 trade['top_buy'] = Orders.active.filter(mapregion=destination, invtype_id=trade['id'], is_bid=True).order_by('-price')[:5]
 
-                annotated_trades.append(trade)
+                # Filter bad orders
+                if len(trade['top_sell']) > 0 and len(trade['top_buy']) > 0:
+                    annotated_trades.append(trade)
 
             rcontext = RequestContext(request, {'trades': annotated_trades, 'start': start, 'destination': destination})
             return render_to_response('tradefind_result.haml', rcontext)

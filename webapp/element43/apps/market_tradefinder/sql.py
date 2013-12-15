@@ -31,7 +31,7 @@ def find_trades(start_id=60008694, destination_id=10000002):
                 ) q
                 WHERE q.markup > 0
                 ORDER BY q.markup DESC
-                LIMIT 30;"""
+                LIMIT 50;"""
 
     # Data retrieval operation - no commit required
     cursor.execute(query, params)
