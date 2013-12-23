@@ -28,6 +28,10 @@ sys.path.insert(0, PROJECT_ROOT.child('element43'))
 
 # Fire up celery
 BROKER_URL = 'redis://localhost'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_RESULT_EXPIRES = 300
+CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 djcelery.setup_loader()
 
 # Our User profile class

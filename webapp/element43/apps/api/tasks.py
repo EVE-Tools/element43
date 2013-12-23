@@ -67,9 +67,7 @@ class ProcessResearch(PeriodicTask):
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
-
-            character = Character.objects.get(id=update.character_id)
-            ProcessResearchCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessResearchCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessResearchCharacter(Task):
@@ -77,9 +75,10 @@ class ProcessResearchCharacter(Task):
     Run the actual update.
     """
 
-    def run(self, character):
+    def run(self, character_id):
 
         api = eveapi.EVEAPIConnection()
+        character = Character.objects.get(id=character_id)
 
         # Try to fetch a valid key from DB
         try:
@@ -138,8 +137,7 @@ class ProcessWalletTransactions(PeriodicTask):
 
         for update in update_timers:
 
-            character = Character.objects.get(id=update.character_id)
-            ProcessWalletTransactionsCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessWalletTransactionsCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessWalletTransactionsCharacter(Task):
@@ -147,9 +145,10 @@ class ProcessWalletTransactionsCharacter(Task):
     Run the actual update.
     """
 
-    def run(self, character):
+    def run(self, character_id):
 
         api = eveapi.EVEAPIConnection()
+        character = Character.objects.get(id=character_id)
 
         # Try to fetch a valid key from DB
         try:
@@ -259,9 +258,7 @@ class ProcessWalletJournal(PeriodicTask):
 
         for update in update_timers:
 
-            character = Character.objects.get(id=update.character_id)
-
-            ProcessWalletJournalCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessWalletJournalCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessWalletJournalCharacter(Task):
@@ -269,9 +266,10 @@ class ProcessWalletJournalCharacter(Task):
     Run the actual update.
     """
 
-    def run(self, character):
+    def run(self, character_id):
 
         api = eveapi.EVEAPIConnection()
+        character = Character.objects.get(id=character_id)
 
         # Try to fetch a valid key from DB
         try:
@@ -399,9 +397,7 @@ class ProcessMarketOrders(PeriodicTask):
 
         for update in update_timers:
 
-            character = Character.objects.get(id=update.character_id)
-
-            ProcessMarketOrdersChracter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessMarketOrdersChracter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessMarketOrdersChracter(Task):
@@ -409,9 +405,10 @@ class ProcessMarketOrdersChracter(Task):
     Run the actual update.
     """
 
-    def run(self, character):
+    def run(self, character_id):
 
         api = eveapi.EVEAPIConnection()
+        character = Character.objects.get(id=character_id)
 
         # Try to fetch a valid key from DB
         try:
@@ -527,9 +524,7 @@ class ProcessCharacterSheet(PeriodicTask):
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
         for update in update_timers:
 
-            character = Character.objects.get(id=update.character_id)
-
-            ProcessCharacterSheetCharacter.apply_async(args=[character], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessCharacterSheetCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
 
 class ProcessCharacterSheetCharacter(Task):
@@ -537,7 +532,7 @@ class ProcessCharacterSheetCharacter(Task):
     Run the actual update.
     """
 
-    def run(self, character):
+    def run(self, character_id):
 
         #define variables
         i_stats = {}
@@ -546,6 +541,7 @@ class ProcessCharacterSheetCharacter(Task):
 
         #grab an api object
         api = eveapi.EVEAPIConnection()
+        character = Character.objects.get(id=character_id)
 
         # Try to fetch a valid key from DB
         try:
