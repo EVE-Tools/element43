@@ -1,7 +1,7 @@
 -r _base.txt
 
 # Dev Server
-django-devserver
+django-devserver>=0.7,<0.8
 
 # Debugging
-django-debug-toolbar>=0.9.4,<1.0
+django-debug-toolbar>=1.0,<1.1

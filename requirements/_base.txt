@@ -1,15 +1,16 @@
 # Low-level mumbo jumbo
-psycopg2>=2.4.6,<2.5
-gevent>=0.13.8,<0.13
-ujson>=1.3,<0.3
+psycopg2>=2.5.1,<2.6
+gevent>=1.0,<1.1
+eventlet>=0.14.0,<0.15
+ujson>=1.33,<1.34
 
 # Things required by the web application
-django>=1.5,<1.6
-Unipath>=0.2.1,<0.3
-south>=0.7.6,<0.8
+django>=1.6.1,<1.7
+Unipath>=1.0,<1.1
+south>=0.8.4,<0.9
 git+http://github.com/EVE-Tools/django-eve-db.git
-numpy>=1.7.0,<1.8
-python-memcached>=1.48,<1.49
+numpy>=1.8.0,<1.9
+python-memcached>=1.53,<1.54
 git+http://github.com/jenslauterbach/django-eve-igb.git
 django-dnt>=0.1,<0.2
 
@@ -19,21 +20,21 @@ hamlpy>=0.82.2,<0.83
 djaml>=1.1,<1.2
 
 # SCSS support
-pyScss>=1.1.5,<1.2
+pyScss>=1.2,<1.3
 
 # Asset compression
-django_compressor>=1.2,<1.3
-pyyaml>=3.10,<4.0
+django_compressor>=1.3,<1.4
+pyyaml>=3.10,<3.11
 
 # API
-djangorestframework>=2.3.8,<2.4
-markdown
-django-filter
-django-cache-machine
+djangorestframework>=2.3.10,<2.4
+markdown>=2.3,<2.4
+django-filter>=0.7,<0.8
+django-cache-machine>=0.8,<0.9
 
 # Consumer stuffs
-pytz>=2013b
-emds>=0.6,<0.6
+pytz>=2013.8
+emds>=0.6
 hotqueue>=0.2.7,<0.3
 pylibmc>=1.2.3,<1.3
 
@@ -41,12 +42,13 @@ pylibmc>=1.2.3,<1.3
 # scipy>=0.11.0,<0.12
 
 # Cython is a dependency of pyzmq's development branch
-cython>=0.18,<0.19
+cython>=0.19.2,<0.20
 git+http://github.com/zeromq/pyzmq.git
 
 # celery stuff
-django-celery-with-redis>=3.0,<3.1
+celery>=3.1.7,<3.2
+django-celery>=3.1.1,<3.2
 
 # Pathfinder
-networkx>=1.7,<1.8
-flask>=0.9,<1.0
+networkx>=1.8.1,<1.9
+flask>=0.10.1,<0.11

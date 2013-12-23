@@ -118,7 +118,8 @@ Gather initial market data
 
 Additional applications
 """""""""""""""""""""""
-* Run ``django-admin.py celeryd -B -E`` for EVE API polling and several other scheduled tasks
+* Run ``celery worker -P eventlet -c 10 -A element43`` for parallel EVE API polling and several other scheduled tasks
+* Run ``celery -A element43 beat`` for task scheduling
 * Run ``python pathfind.py`` at ``element43/pathfind`` for the pathfinding API
 
 Running the devserver
