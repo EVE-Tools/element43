@@ -7,6 +7,7 @@ from django.db import IntegrityError
 
 from celery.task import Task, PeriodicTask
 from celery.task.schedules import crontab
+from celery.utils.log import get_task_logger
 
 from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
 from .models import *
@@ -15,6 +16,7 @@ from .api_exceptions import handle_api_exception
 from eve_db.models import StaStation, MapSolarSystem
 from apps.market_data.models import Orders
 
+logger = get_task_logger(__name__)
 
 class ProcessConquerableStations(PeriodicTask):
     """
@@ -24,7 +26,7 @@ class ProcessConquerableStations(PeriodicTask):
     run_every = datetime.timedelta(hours=1)
 
     def run(self, **kwargs):
-        print '>>>  Updating conquerable stations...'
+        logger.debug('Updating conquerable stations...')
 
         api = eveapi.EVEAPIConnection()
         stations = api.eve.ConquerableStationList()
@@ -48,9 +50,9 @@ class ProcessConquerableStations(PeriodicTask):
                                                 region=MapSolarSystem.objects.get(id=station.solarSystemID).region)
                     station_object.save()
                 except IntegrityError:
-                    print 'Station was already processed by another concurrently running worker.'
+                    logger.warning('Station was already processed by another concurrently running worker.')
 
-        print '<<< Finished updating ' + str(len(stations.outposts)) + ' conquerable stations.'
+        logger.info('Updated %d conquerable stations.' % len(stations.outposts))
 
 
 class ProcessResearch(PeriodicTask):
@@ -61,13 +63,13 @@ class ProcessResearch(PeriodicTask):
     run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
-        print 'UPDATING RESEARCH AGENTS'
-
         update_timers = APITimer.objects.filter(apisheet="Research",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
             ProcessResearchCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+
+        logger.info('Scheduled %d research agent updates.' % len(update_timers))
 
 
 class ProcessResearchCharacter(Task):
@@ -87,7 +89,7 @@ class ProcessResearchCharacter(Task):
             # End execution for this character
             return
 
-        print ">>> Updating research agents for %s" % character.name
+        logger.debug("Updating research agents for %s..." % character.name)
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -118,7 +120,7 @@ class ProcessResearchCharacter(Task):
         timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
         timer.save()
 
-        print "<<<  %s's research import was completed successfully." % character.name
+        logger.debug(" %s's research import was completed successfully." % character.name)
 
 
 class ProcessWalletTransactions(PeriodicTask):
@@ -130,7 +132,6 @@ class ProcessWalletTransactions(PeriodicTask):
     run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
-        print 'UPDATING TRANSACTIONS'
 
         update_timers = APITimer.objects.filter(apisheet="WalletTransactions",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
@@ -138,6 +139,8 @@ class ProcessWalletTransactions(PeriodicTask):
         for update in update_timers:
 
             ProcessWalletTransactionsCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+
+        logger.info('Scheduled %d transaction updates.' % len(update_timers))
 
 
 class ProcessWalletTransactionsCharacter(Task):
@@ -157,7 +160,7 @@ class ProcessWalletTransactionsCharacter(Task):
             # End execution for this character
             return
 
-        print ">>> Updating transactions for %s" % character.name
+        logger.debug("Updating transactions for %s..." % character.name)
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -207,7 +210,7 @@ class ProcessWalletTransactionsCharacter(Task):
 
                         # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
                         except IntegrityError:
-                            print 'IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID)
+                            logger.warning('IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID))
                             continue
 
                     # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
@@ -216,7 +219,7 @@ class ProcessWalletTransactionsCharacter(Task):
                         duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
 
                         for duplicate in duplicates[1:]:
-                            print 'Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id)
+                            logger.warning('Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id))
                             duplicate.delete()
 
                 # Fetch next page if we're still walking
@@ -228,7 +231,7 @@ class ProcessWalletTransactionsCharacter(Task):
                         sheet = me.WalletTransactions(rowCount=2560, fromID=oldest_id)
 
                     except IndexError:
-                        print 'IndexError: %s (%d) has no valid types in his/her transaction history.' % (character.name, character.id)
+                        logger.error('IndexError: %s (%d) has no valid types in his/her transaction history.' % (character.name, character.id))
                         walking = False
                         pass
 
@@ -240,7 +243,7 @@ class ProcessWalletTransactionsCharacter(Task):
         timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
         timer.save()
 
-        print "<<<  %s's transaction import was completed successfully." % character.name
+        logger.debug("%s's transaction import was completed successfully." % character.name)
 
 
 class ProcessWalletJournal(PeriodicTask):
@@ -252,14 +255,14 @@ class ProcessWalletJournal(PeriodicTask):
     run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
-        print 'UPDATING JOURNAL ENTRIES'
-
         update_timers = APITimer.objects.filter(apisheet="WalletJournal",
                                                 nextupdate__lte=pytz.utc.localize(datetime.datetime.utcnow()))
 
         for update in update_timers:
 
             ProcessWalletJournalCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+
+        logger.info('Scheduled %d journal updates.' % len(update_timers))
 
 
 class ProcessWalletJournalCharacter(Task):
@@ -279,7 +282,7 @@ class ProcessWalletJournalCharacter(Task):
             # End execution for this character
             return
 
-        print ">>> Updating journal entries for %s" % character.name
+        logger.debug("Updating journal entries for %s..." % character.name)
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -335,7 +338,7 @@ class ProcessWalletJournalCharacter(Task):
                         duplicates = JournalEntry.objects.filter(ref_id=transaction.refID, character=character)
 
                         for duplicate in duplicates[1:]:
-                            print 'Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id)
+                            logger.warning('Removing duplicate JournalEntry with ID: %d (refID: %d)' % (duplicate.id, duplicate.ref_id))
                             duplicate.delete()
 
                 # Fetch next page if we're still walking
@@ -352,7 +355,7 @@ class ProcessWalletJournalCharacter(Task):
         timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
         timer.save()
 
-        print "<<<  %s's journal import was completed successfully." % character.name
+        logger.debug("%s's journal import was completed successfully." % character.name)
 
 
 class ProcessRefTypes(PeriodicTask):
@@ -364,7 +367,7 @@ class ProcessRefTypes(PeriodicTask):
 
     def run(self, **kwargs):
 
-        print '>>>  Updating refTypeIDs...'
+        logger.debug('Updating refTypeIDs...')
 
         api = eveapi.EVEAPIConnection()
         ref_types = api.eve.RefTypes()
@@ -380,7 +383,7 @@ class ProcessRefTypes(PeriodicTask):
                 type_object = RefType(id=ref_type.refTypeID, name=ref_type.refTypeName)
                 type_object.save()
 
-        print '<<< Finished updating refTypeIDs.'
+        logger.info('Imported %d refTypeIDs from API.' % len(ref_types.refTypes))
 
 
 class ProcessMarketOrders(PeriodicTask):
@@ -400,6 +403,8 @@ class ProcessMarketOrders(PeriodicTask):
 
             ProcessMarketOrdersChracter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
+        logger.info('Scheduled %d order updates.' % len(update_timers))
+
 
 class ProcessMarketOrdersChracter(Task):
     """
@@ -418,7 +423,7 @@ class ProcessMarketOrdersChracter(Task):
             # End execution for this character
             return
 
-        print ">>> Market Orders: %s" % character.name
+        logger.debug("Updating %s's market orders..." % character.name)
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -482,7 +487,7 @@ class ProcessMarketOrdersChracter(Task):
                     new_order.save()
                 # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
                 except IntegrityError:
-                    print 'IntegrityError: Probably the SDE is outdated. typeID: %d, orderID: %d' % (order.typeID, order.orderID)
+                    logger.error('IntegrityError: Probably the SDE is outdated. typeID: %d, orderID: %d' % (order.typeID, order.orderID))
                     continue
 
             # Now try to get the MarketOrder
@@ -506,7 +511,7 @@ class ProcessMarketOrdersChracter(Task):
         timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(orders._meta.cachedUntil))
         timer.save()
 
-        print "<<<  %s's Market orders were completed successfully." % character.name
+        logger.debug("%s's market order import was completed successfully." % character.name)
 
 
 class ProcessCharacterSheet(PeriodicTask):
@@ -518,7 +523,6 @@ class ProcessCharacterSheet(PeriodicTask):
     run_every = datetime.timedelta(minutes=5)
 
     def run(self, **kwargs):
-        print "BEGIN CHARACTER IMPORT"
 
         #scan to see if anyone is due for an update
         update_timers = APITimer.objects.filter(apisheet="CharacterSheet",
@@ -526,6 +530,8 @@ class ProcessCharacterSheet(PeriodicTask):
         for update in update_timers:
 
             ProcessCharacterSheetCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+
+        logger.info('Scheduled %d character sheet updates.' % len(update_timers))
 
 
 class ProcessCharacterSheetCharacter(Task):
@@ -551,7 +557,7 @@ class ProcessCharacterSheetCharacter(Task):
             # End execution for this character
             return
 
-        print ">>> Updating character sheet for %s" % character.name
+        logger.debug("Updating character sheet for %s" % character.name)
 
         # Try to authenticate and handle exceptions properly
         try:
@@ -636,7 +642,7 @@ class ProcessCharacterSheetCharacter(Task):
         timer = APITimer.objects.get(character=character, apisheet='CharacterSheet')
         timer.nextupdate = pytz.utc.localize(datetime.datetime.utcfromtimestamp(sheet._meta.cachedUntil))
         timer.save()
-        print "<<< %s update complete" % character.name
+        logger.debug("Finished %s's character sheet update." % character.name)
 
 
 class ProcessAPISkillTree(PeriodicTask):
@@ -647,8 +653,8 @@ class ProcessAPISkillTree(PeriodicTask):
     run_every = datetime.timedelta(hours=24)
 
     def run(self, **kwargs):
+        logger.debug("Importing skilltree...")
 
-        print "BEGIN SKILL IMPORT"
         #create our api object
         api = eveapi.EVEAPIConnection()
 
@@ -681,4 +687,5 @@ class ProcessAPISkillTree(PeriodicTask):
                                   primary_attribute=s_primary,
                                   secondary_attribute=s_secondary)
                 new_skill.save()
-        print "COMPLETED SKILL IMPORT"
+
+        logger.info("Imported %d skill groups from API." % len(skilltree.skillGroups))

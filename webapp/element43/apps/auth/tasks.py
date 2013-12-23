@@ -4,10 +4,12 @@ import pytz
 
 # Celery
 from celery.task import PeriodicTask
+from celery.utils.log import get_task_logger
 
 # User model
 from django.contrib.auth.models import User
 
+logger = get_task_logger(__name__)
 
 class RemoveInactiveAccounts(PeriodicTask):
     """
@@ -21,12 +23,12 @@ class RemoveInactiveAccounts(PeriodicTask):
         Runs the task
         """
 
-        print('REMOVING EXPIRED ACCOUNTS')
+        logger.debug('Removing expired accounts.')
 
         expiration_time = pytz.utc.localize(datetime.datetime.utcnow() - datetime.timedelta(hours=48))
 
         accounts_to_delete = User.objects.filter(is_active=False, date_joined__lte=expiration_time)
 
         for account in accounts_to_delete:
-            print("Removed " + account.username)
+            logger.info("Removed " + account.username)
             account.delete()

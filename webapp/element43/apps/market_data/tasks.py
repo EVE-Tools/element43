@@ -6,13 +6,19 @@ import pytz
 # Util
 from datetime import datetime, timedelta
 
+# Celery
 from celery.task import PeriodicTask, Task
 from celery.task.schedules import crontab
+from celery.utils.log import get_task_logger
+
+# Raw SQL
 from django.db import connection
 
+# Models
 from apps.market_data.models import History, OrderHistory
 
-# Models
+
+logger = get_task_logger(__name__)
 
 
 class ArchiveOrders(PeriodicTask):
@@ -30,7 +36,7 @@ class ArchiveOrders(PeriodicTask):
 
         cursor = connection.cursor()
 
-        print "Cleaning DB..."
+        logger.warning("Cleaning DB...")
 
         # Remove duplicate rows which might be a result of an incomplete priror attept
         cursor.execute("""DELETE FROM
@@ -44,7 +50,7 @@ class ArchiveOrders(PeriodicTask):
                                 INNER JOIN market_data_archivedorders ON market_data_orders.id = market_data_archivedorders.id
                             );""")
 
-        print "Moving orders to archive..."
+        logger.warning("Moving orders to archive...")
 
         # Move orders to the archive
         cursor.execute("""INSERT INTO market_data_archivedorders (
@@ -89,9 +95,9 @@ class ArchiveOrders(PeriodicTask):
                             is_active = 'f'
                         AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
-        print "Done moving orders."
+        logger.warning("Done moving orders.")
 
-        print "Deleting old orders..."
+        logger.warning("Deleting old orders...")
 
         # Delete moved orders
         cursor.execute("""DELETE FROM
@@ -100,7 +106,7 @@ class ArchiveOrders(PeriodicTask):
                             is_active = 'f'
                         AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
-        print "Successfully removed old orders."
+        logger.warning("Successfully removed old orders.")
 
 
 class ProcessHistory(PeriodicTask):
@@ -114,10 +120,11 @@ class ProcessHistory(PeriodicTask):
     #run_every = datetime.timedelta(minutes=2)
 
     def run(self, **kwargs):
-        print "BEGIN HISTORY PROCESSING"
         regions = History.objects.order_by('mapregion__id').distinct('mapregion')
         for region in regions.iterator():
             ProcessRegionHistory.delay(region.mapregion)
+
+        logger.warning("Scheduled %d history updates." % len(regions))
 
 
 class ProcessRegionHistory(Task):
@@ -127,7 +134,7 @@ class ProcessRegionHistory(Task):
         added = 0
         duplicated = 0
         history = History.objects.filter(mapregion=region).order_by('invtype__id')
-        print "Starting: %s (r: %s)" % (region, len(history))
+        logger.debug("Starting: %s (r: %s)" % (region, len(history)))
 
         # Create list of items and bluk create them for performance
         bulk_list = []
@@ -166,6 +173,6 @@ class ProcessRegionHistory(Task):
 
         # Prevent division by 0
         if not diff.seconds == 0:
-            print "Completed: %s (a: %s / d: %s) at %d items per second." % (region, added, duplicated, ((added + duplicated) / diff.seconds))
+            logger.warning("Completed: %s (a: %s / d: %s) at %d items per second." % (region, added, duplicated, ((added + duplicated) / diff.seconds)))
         else:
-            print "Completed: %s (a: %s / d: %s)" % (region, added, duplicated)
+            logger.warning("Completed: %s (a: %s / d: %s)" % (region, added, duplicated))
