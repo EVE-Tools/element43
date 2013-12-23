@@ -201,7 +201,8 @@ class ProcessWalletTransactionsCharacter(Task):
                                                       client_name=transaction.clientName,
                                                       station_id=transaction.stationID,
                                                       is_bid=(transaction.transactionType == 'buy'),
-                                                      journal_transaction_id=transaction.journalTransactionID)
+                                                      journal_transaction_id=transaction.journalTransactionID,
+                                                      is_corporate_transaction=(transaction.transactionFor == 'corporation'))
                             entry.save()
 
                         # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
