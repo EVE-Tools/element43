@@ -65,7 +65,7 @@ Forking / Cloning element43
 Unless you already have commit rights for the `main repository <https://github.com/EVE-Tools/element43>`_
 , fork it into your own GitHub account so you can actually write to the repo.
 
-* Run ``git clone <your repository url here>``
+* Run ``git clone --recursive <your repository url here>``
 
 *From now on we will assume that your repo's root directory is called ``element43``.*
 
