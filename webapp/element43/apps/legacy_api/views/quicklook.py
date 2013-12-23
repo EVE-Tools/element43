@@ -10,7 +10,7 @@ from apps.market_data.models import Orders
 from apps.market_data.models import ItemRegionStat
 
 # utility
-from django.utils import simplejson
+import json
 
 def quicklook(request):
     """
@@ -59,8 +59,8 @@ def quicklook(request):
     sell['min'] = sellstats['minprice']
     sell['max'] = sellstats['maxprice']
 
-    api_json = simplejson.dumps({'info':info,
-                                 'buy_stats':buy,
-                                 'sell_stats':sell})
+    api_json = json.dumps({'info':info,
+                           'buy_stats':buy,
+                           'sell_stats':sell})
 
     return HttpResponse(api_json, mimetype="application/json")

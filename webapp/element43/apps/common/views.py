@@ -15,7 +15,7 @@ from django.template import RequestContext
 from django.contrib import messages
 
 # JSON for the live search
-from django.utils import simplejson
+import json
 
 # Models
 from eve_db.models import InvType, StaStation
@@ -206,14 +206,14 @@ def stats_json(request, region_id):
             print e
 
     # Create JSON
-    stat_json = simplejson.dumps({'active_orders': active_orders,
-                                  'archived_orders': archived_orders,
-                                  'history_records': history,
-                                  'new_orders': new_orders_per_minute,
-                                  'updated_orders': updated_orders_per_minute,
-                                  'old_orders': old_orders_per_minute,
-                                  'history_messages': history_messages_per_minute,
-                                  'typestats': typestats})
+    stat_json = json.dumps({'active_orders': active_orders,
+                            'archived_orders': archived_orders,
+                            'history_records': history,
+                            'new_orders': new_orders_per_minute,
+                            'updated_orders': updated_orders_per_minute,
+                            'old_orders': old_orders_per_minute,
+                            'history_messages': history_messages_per_minute,
+                            'typestats': typestats})
 
     # Save complete stats to memcached
     mc.set("e43-fullstats", stat_json)
@@ -279,7 +279,7 @@ def live_search(request):
     ids = []
 
     # Default to empty array
-    json = "{query:'" + query + "', suggestions:[], data:[]}"
+    search_json = "{query:'" + query + "', suggestions:[], data:[]}"
 
     # Only if the string is longer than 2 characters start looking in the DB
     if len(query) > 2:
@@ -299,13 +299,13 @@ def live_search(request):
             ids.append('station_' + str(station.id))
 
         # Add additional data for Ajax AutoComplete
-        json = {'query': query, 'suggestions': names, 'data': ids}
+        search_json = {'query': query, 'suggestions': names, 'data': ids}
 
         # Turn names into JSON
-        json = simplejson.dumps(json)
+        search_json = json.dumps(search_json)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(search_json, mimetype='application/json')
 
 
 def handler_403(request):

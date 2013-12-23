@@ -11,8 +11,7 @@ from django.http import HttpResponse
 from apps.market_data.models import Orders, OrderHistory
 from eve_db.models import StaStation, MapRegion, MapSolarSystem, InvType
 
-# JSON for the live search
-from django.utils import simplejson
+import json
 
 # Util
 import datetime
@@ -109,7 +108,7 @@ def live_search(request):
     ids = []
 
     # Default to empty array
-    json = "{query:'" + query + "', suggestions:[], data:[]}"
+    search_json = "{query:'" + query + "', suggestions:[], data:[]}"
 
     # Only if the string is longer than 2 characters start looking in the DB
     if len(query) > 2:
@@ -129,13 +128,13 @@ def live_search(request):
             ids.append('region_' + str(region.id))
 
         # Add additional data for Ajax AutoComplete
-        json = {'query': query, 'suggestions': names, 'data': ids}
+        search_json = {'query': query, 'suggestions': names, 'data': ids}
 
         # Turn names into JSON
-        json = simplejson.dumps(json)
+        search_json = json.dumps(search_json)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(search_json, mimetype='application/json')
 
 
 def station(request, station_id=60003760):

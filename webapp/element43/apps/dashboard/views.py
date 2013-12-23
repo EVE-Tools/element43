@@ -1,7 +1,7 @@
 # Utility
 import time
 import datetime
-from django.utils import simplejson
+import json
 
 # Template and context-related imports
 from django.shortcuts import render_to_response
@@ -81,10 +81,10 @@ def journal_json(request):
 
         wallet_series[char.name] = series
 
-    json = simplejson.dumps(wallet_series)
+    serialized = json.dumps(wallet_series)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(serialized, mimetype='application/json')
 
 
 @login_required

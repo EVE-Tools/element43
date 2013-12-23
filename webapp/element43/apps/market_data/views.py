@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 
 # JSON for the history API
-from django.utils import simplejson
+import json
 
 # market_data models
 from apps.market_data.models import OrderHistory
@@ -46,10 +46,10 @@ def history_json(request, region_id=10000002, type_id=34):
             [int(time.mktime(point.date.timetuple())) * 1000, last_mean, point.high, point.low, point.mean, point.quantity])
         last_mean = point.mean
 
-    json = simplejson.dumps(ohlc_data)
+    serialized = json.dumps(ohlc_data)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(serialized, mimetype='application/json')
 
 
 @cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3,
@@ -82,7 +82,7 @@ def history_compare_json(request, type_id=34):
     if not data_dict:
         data_dict = []
 
-    json = simplejson.dumps(data_dict)
+    serialized = json.dumps(data_dict)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(serialized, mimetype='application/json')

@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from django.utils import simplejson
+import json
 
 from forms import TradefinderForm
 
@@ -67,8 +67,8 @@ def region_json(request):
     for region in regions:
         data.append(region.name)
 
-    json = simplejson.dumps(data)
+    serialized = json.dumps(data)
 
     # Return JSON without using any template
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(serialized, mimetype='application/json')
 

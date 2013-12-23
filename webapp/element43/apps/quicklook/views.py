@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import numpy as np
 
 # JSON
-from django.utils import simplejson
+import json
 
 # Template and context-related imports
 from django.shortcuts import render_to_response
@@ -101,7 +101,7 @@ def quicklook(request, type_id=34):
 
     rcontext = RequestContext(request, {'type': type_object,
                                         'region_ids': region_ids,
-                                        'region_names': simplejson.dumps(region_names),
+                                        'region_names': json.dumps(region_names),
                                         'materials': materials,
                                         'totalprice': totalprice,
                                         'buy_orders': buy_orders,

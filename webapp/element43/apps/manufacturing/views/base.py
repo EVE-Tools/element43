@@ -2,7 +2,7 @@
 from django.http import HttpResponse
 
 # JSON for the live search
-from django.utils import simplejson
+import json
 
 # Models
 from eve_db.models import InvBlueprintType
@@ -16,7 +16,6 @@ def blueprint_search(request):
     query = request.GET.get('query', '')
 
     # Prepare lists
-    types = []
     type_names = []
     type_ids = []
 
@@ -42,7 +41,7 @@ def blueprint_search(request):
         types_json = {'query': query, 'suggestions': type_names, 'data': type_ids}
 
         # Turn names into JSON
-        types_json = simplejson.dumps(types_json)
+        types_json = json.dumps(types_json)
 
     # Return JSON without using any template
     return HttpResponse(types_json, mimetype='application/json')
