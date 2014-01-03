@@ -20,7 +20,7 @@
             Manage API Keys
     .col-md-9.well
       - if form.non_field_errors
-        .alert.alert-error
+        .alert.alert-danger
           %i.glyphicon.glyphicon-warning-sign
           = form.non_field_errors
       %form.form-horizontal{'action':'{% url \'settings\' %}', 'method':'post'}

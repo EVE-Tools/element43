@@ -7,7 +7,7 @@
   %h1
     Get started now
   - if form.non_field_errors
-    .alert.alert-error
+    .alert.alert-danger
       %i.glyphicon.glyphicon-warning-sign
       = form.non_field_errors
   %form.form-horizontal.well{'action':'{% url \'registration\' %}', 'method':'post'}
