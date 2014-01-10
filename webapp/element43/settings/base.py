@@ -50,7 +50,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'no_reply@element-43.com'
+DEFAULT_FROM_EMAIL = 'Element43 <no_reply@element-43.com>'
 
 # Login
 LOGIN_URL = '/login/'
