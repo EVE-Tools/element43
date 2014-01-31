@@ -1,14 +1,22 @@
-import json
-
-from yaml import load
-
-from django.db import connection
-
-from apps.common.util import dictfetchall
-
 #
 # This script generated a JSON tree for the market browser and is automatically run with prepare_static.sh
 #
+
+# Import JSON module
+import json
+
+# Import YAML module
+from yaml import load
+
+# Add element43 to path
+import sys
+sys.path.append('element43')
+
+# Load DB connection
+from django.db import connection
+
+# Import helpers
+from apps.common.util import dictfetchall
 
 
 def recadder(node):
@@ -32,14 +40,17 @@ def recadder(node):
     node['isFolder'] = isFolder
     node['noLink'] = isFolder
 
+    # Set title
     title = node['name']
     del node['name']
     node['title'] = title
 
+    # Add tooltip
     tooltip = node['description']
     del node['description']
     node['tooltip'] = tooltip
 
+    # Set icon
     iconid = node['icon_id']
     del node['icon_id']
 
@@ -61,6 +72,7 @@ def recadder(node):
         # Default icon
         node['icon'] = '22_42.png'
 
+    # Set ID
     key = node['id']
     del node['id']
     node['key'] = key
@@ -69,16 +81,20 @@ def recadder(node):
 
     return node
 
+# Load file contents
 icon_yaml = file('iconIDs.yaml', 'r')
 
+# Parse YAML
 icons = load(icon_yaml)
 
+# Initialize database connection
 cursor = connection.cursor()
 
 # Select Root Groups
 cursor.execute("SELECT * FROM eve_db_invmarketgroup WHERE parent_id IS NULL ORDER BY name")
 result = dictfetchall(cursor)
 
+# Initialize tree structure
 tree = []
 
 # Start traversing

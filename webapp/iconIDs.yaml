@@ -5380,3 +5380,59 @@
 21066:
   description: Assassination Contract
   iconFile: '114_2'
+21070:
+  description: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_lvf01.png
+  iconFile: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_lvf01.png
+21071:
+  description: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_lvm01.png
+  iconFile: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_lvm01.png
+21074:
+  description: Rapid Heavy Missile Launcher
+  iconFile: res:/ui/texture/icons/109_64_1.png
+21075:
+  description: Marauder Bastion Module
+  iconFile: res:/ui/texture/icons/109_64_2.png
+21078:
+  description: res:/UI/Asset/mannequin/Male_Makeup_ArmLeft_CyborgArmM01_L_Types_CyborgArmM01_L_White.png
+  iconFile: res:/UI/Asset/mannequin/Male_Makeup_ArmLeft_CyborgArmM01_L_Types_CyborgArmM01_L_White.png
+21080:
+  description: res:/UI/Asset/mannequin/Female_Makeup_ArmLeft_CyborgArmF01_L_Types_CyborgArmF01_L_WhiteGray.png
+  iconFile: res:/UI/Asset/mannequin/Female_Makeup_ArmLeft_CyborgArmF01_L_Types_CyborgArmF01_L_WhiteGray.png
+21081:
+  description: res:/UI/Asset/mannequin/Female_Makeup_ArmRight_CyborgArmF01_R_Types_CyborgArmF01_R_WhiteGray.png
+  iconFile: res:/UI/Asset/mannequin/Female_Makeup_ArmRight_CyborgArmF01_R_Types_CyborgArmF01_R_WhiteGray.png
+21082:
+  description: res:/UI/Asset/mannequin/Male_Makeup_ArmRight_CyborgArmM01_R_Types_CyborgArmM01_R_White.png
+  iconFile: res:/UI/Asset/mannequin/Male_Makeup_ArmRight_CyborgArmM01_R_Types_CyborgArmM01_R_White.png
+21084:
+  description: Fedo
+  iconFile: res:/UI/Texture/Icons/icons111_07.png
+21085:
+  description: Villard Wheel
+  iconFile: res:/UI/Texture/Icons/icons111_08.png
+21086:
+  description: Shattered Villard Wheel
+  iconFile: res:/UI/Texture/Icons/icons111_09.png
+21089:
+  description: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_soerff01.png
+  iconFile: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_soerff01.png
+21090:
+  description: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_soerfm01.png
+  iconFile: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_soerfm01.png
+21092:
+  description: Corp Logo - State Peacekeepers
+  iconFile: res:/UI/Texture/Corps/state_peacekeepers.png
+21093:
+  description: Corp Logo - Federal Marines
+  iconFile: res:/UI/Texture/Corps/federal_marines.png
+21094:
+  description: Corp Logo - Republic Command
+  iconFile: res:/UI/Texture/Corps/republic_command.png
+21095:
+  iconFile: '107_14'
+21096:
+  iconFile: '107_13'
+21097:
+  iconFile: '107_16'
+21098:
+  iconFile: '107_15'
