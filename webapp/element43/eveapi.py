@@ -379,9 +379,9 @@ class _RootContext(_Context):
                     conn = httplib.HTTPConnection(*self._proxy)
 
             if kw:
-                conn.request("POST", req, urllib.urlencode(kw), {"Content-type": "application/x-www-form-urlencoded"})
+                conn.request("POST", req, urllib.urlencode(kw), {"Content-type": "application/x-www-form-urlencoded", "User-Agent": "Element43 API Client/git (Git)"})
             else:
-                conn.request("GET", req)
+                conn.request("GET", req, headers={"User-Agent": "Element43 API Client/git (Git)"})
 
             response = conn.getresponse()
             if response.status != 200:
