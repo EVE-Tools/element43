@@ -5691,3 +5691,9 @@
 21186:
   description: res:/UI/Texture/Icons/sourceBook.png
   iconFile: res:/UI/Texture/Icons/sourceBook.png
+21192:
+  description: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_shirtqf04.png
+  iconFile: res:/UI/Asset/mannequin/Female_TopMiddle_ShirtQF01_Types_shirtqf04.png
+21193:
+  description: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_shirtqm04.png
+  iconFile: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_shirtqm04.png
