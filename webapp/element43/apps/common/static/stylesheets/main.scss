@@ -91,6 +91,13 @@ thead {
   height: 500px;
 }
 
+.carousel-control.left, .carousel-control.right {
+  background-image: none;
+}
+
+.carousel-control:hover, .carousel-control:focus {
+  background-image: none;
+}
 
 // Market Browser
 
@@ -301,4 +308,49 @@ thead {
 
 .sec0 {
     color: #F00000;
+}
+
+.ticker_footer {
+    padding-left: 0px;
+    padding-top: 3px;
+
+    position: fixed;
+    width: 100%;
+
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
+    height: 2em;
+
+    background: $jetblack;
+
+    font-size: 16px;
+
+    z-index: 5;
+
+    border-top-color: $grey;
+    border-top-style: solid;
+    border-top-width: 1px;
+
+    .info {
+        position: fixed;
+        padding-left: 5px;
+        padding-right: 5px;
+        color: $blue;
+        background-color: $jetblack;
+        height: 100%;
+        z-index: 10;
+    }
+
+    ul {
+        li {
+            padding-left: 10px;
+            float: left;
+
+            .spacer {
+                color: $grey;
+            }
+        }
+    }
 }

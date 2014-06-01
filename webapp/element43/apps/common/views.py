@@ -67,14 +67,7 @@ def home(request):
             if stats:
                 typestats[invtype] = stats
 
-        initial_stats = {'active_orders': 0,
-                         'archived_orders': 0,
-                         'history_records': 0,
-                         'new_orders': 0,
-                         'updated_orders': 0,
-                         'old_orders': 0,
-                         'history_messages': 0,
-                         'typestats': typestats}
+        initial_stats = {'typestats': typestats}
 
     # Create context for CSRF protection
     rcontext = RequestContext(request, {'type_ids': type_ids, 'types': types, 'region': region, 'stats': initial_stats})
@@ -113,45 +106,7 @@ def stats_json(request, region_id):
     # Connect to memcache
     mc = get_memcache_client()
 
-    # Cursor for faster counting
-    cursor = connection.cursor()
-
-    # Collect stats
-
-    # 1. Platform stats
-    # these is a disconnect between history and history messages/min -- history is orderhistory table which is all rows
-    # message per min is based on emdr which is multiple rows in one message.
-
-    if (mc.get("e43-stats-activeorders") is not None):
-        active_orders = mc.get("e43-stats-activeorders")
-    else:
-        active_orders = Orders.active.count()
-        mc.set("e43-stats-activeorders", active_orders, time=3600)
-
-    if (mc.get("e43-stats-archivedorders") is not None):
-        archived_orders = mc.get("e43-stats-archivedorders")
-    else:
-        cursor.execute("SELECT reltuples::bigint AS estimate FROM pg_class WHERE relname='market_data_archivedorders'")
-        archived_orders = dictfetchall(cursor)[0]['estimate']
-        mc.set("e43-stats-archivedorders", archived_orders, time=3600)
-
-    if (mc.get("e43-stats-history") is not None):
-        history = mc.get("e43-stats-history")
-    else:
-        cursor.execute("SELECT reltuples::bigint AS estimate FROM pg_class WHERE relname='market_data_orderhistory'")
-        history = dictfetchall(cursor)[0]['estimate']
-        mc.set("e43-stats-history", history, time=3600)
-
-    new_orders_per_minute = EmdrStats.objects.filter(
-        status_type=1).order_by("-message_timestamp")[:1][0].status_count / 5
-    updated_orders_per_minute = EmdrStats.objects.filter(
-        status_type=2).order_by("-message_timestamp")[:1][0].status_count / 5
-    old_orders_per_minute = EmdrStats.objects.filter(
-        status_type=3).order_by("-message_timestamp")[:1][0].status_count / 5
-    history_messages_per_minute = EmdrStats.objects.filter(
-        status_type=4).order_by("-message_timestamp")[:1][0].status_count / 5
-
-    # 2. Minerals and PLEX
+    # Minerals and PLEX
     types = request.GET.getlist('type')
     new_types = []
 
@@ -166,7 +121,7 @@ def stats_json(request, region_id):
 
     for item in types:
 
-        # Still works if we have no data for that item
+        # Still works in case we have no data for that item
         try:
             # check to see if it's in the cache, if so use those values
             if (mc.get("e43-stats" + str(item)) is not None):
@@ -206,14 +161,7 @@ def stats_json(request, region_id):
             print e
 
     # Create JSON
-    stat_json = json.dumps({'active_orders': active_orders,
-                            'archived_orders': archived_orders,
-                            'history_records': history,
-                            'new_orders': new_orders_per_minute,
-                            'updated_orders': updated_orders_per_minute,
-                            'old_orders': old_orders_per_minute,
-                            'history_messages': history_messages_per_minute,
-                            'typestats': typestats})
+    stat_json = json.dumps({'typestats': typestats})
 
     # Save complete stats to memcached
     mc.set("e43-fullstats", stat_json)

@@ -12,8 +12,6 @@
       = form.non_field_errors
   %form.form-horizontal.well{'action':'{% url \'registration\' %}', 'method':'post'}
     - csrf_token
-    %legend
-      Registration
     %div{'class':'form-group{{form.username|css_error}}'}
       %label.col-lg-2{'for':'username'} Username
       .col-lg-4
@@ -40,8 +38,7 @@
               = error|escape
         %p.help-block
           %b Note:
-          %i Never ever
-          use the same password as for EVE!
+          %i Please do not use your EVE password.
     %div{'class':'form-group{{form.password_repeat|css_error}}'}
       %label.col-lg-2{'for':'password_repeat'} Repeat Password
       .col-lg-4

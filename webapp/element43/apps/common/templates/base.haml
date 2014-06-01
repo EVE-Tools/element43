@@ -71,10 +71,10 @@
               - if not user.is_authenticated
                 %li
                   %a{'href':'{% url \'login\' %}?next={{request.path}}'}
-                    Login
+                    Log In
                 %li
                   %a{'href':'{% url \'registration\' %}'}
-                    Register
+                    Sign Up
               - else
                 %li.dropdown
                   %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}

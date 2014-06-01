@@ -5,11 +5,9 @@
   Login
 - block content
   %h1
-    Login
+    Log In
   %form.form-horizontal.well{'action':'{% url \'login\' %}?next={{request.GET.next}}', 'method':'post'}
     - csrf_token
-    %legend
-      Log into Element43
     %div{'class':'form-group{{form.username|css_error}}'}
       %label.col-lg-2.col-lg-2{'for':'username'} Username
       .col-lg-4
