@@ -57,9 +57,7 @@ def home(request):
 
         for invtype in types:
 
-            stats = {'bid_max': 0,
-                     'ask_min': 0,
-                     'bid_median': 0,
+            stats = {'bid_median': 0,
                      'bid_median_move': 0,
                      'ask_median': 0,
                      'ask_median_move': 0}
@@ -143,13 +141,8 @@ def stats_json(request, region_id):
 
             region_stats_history = ItemRegionStatHistory.objects.filter(mapregion_id=region_id, invtype_id=item).order_by("-date")[:1][0]
 
-            # Get Jita prices
-            buy = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=True).order_by("-price")[:1][0].price
-            sell = Orders.active.filter(mapsolarsystem=30000142, invtype=item, is_bid=False).order_by("price")[:1][0].price
 
-            stats = {'bid_max': buy,
-                     'ask_min': sell,
-                     'bid_median': buymedian,
+            stats = {'bid_median': buymedian,
                      'bid_median_move': region_stats_history.buymedian - buymedian,
                      'ask_median': sellmedian,
                      'ask_median_move': region_stats_history.sellmedian - sellmedian}
