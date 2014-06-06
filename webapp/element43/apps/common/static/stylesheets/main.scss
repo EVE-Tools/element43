@@ -61,8 +61,21 @@ footer {
     }
 }
 
+//
+// Table fixes
+//
+
+table, .table {
+    color: #888;
+}
+
 thead {
     background: $jetblack;
+}
+
+table a, .table a{
+    text-decoration: none;
+    color: #2a9fd6;
 }
 
 .breadcrumb {
