@@ -286,6 +286,31 @@ $(document).ready(function() {
 });
 
 //
+// UserVoice Integration
+//
+
+(function() {
+        var uv = document.createElement('script');
+        uv.type = 'text/javascript';
+        uv.async = true;
+        uv.src = '//widget.uservoice.com/jYRFQJNTwasFv2JGocGVA.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(uv, s);
+    })();
+
+UserVoice = window.UserVoice || [];
+
+function showClassicWidget() {
+    UserVoice.push(['showLightbox', 'classic_widget', {
+        mode: 'full',
+        primary_color: '#000000',
+        link_color: '#02a9fd',
+        default_mode: 'feedback',
+        forum_id: 210291
+    }]);
+}
+
+//
 // Dashboard
 //
 
