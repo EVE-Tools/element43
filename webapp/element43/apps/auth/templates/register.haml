@@ -1,55 +1,40 @@
-- extends "base.haml"
+- extends "base_auth.haml"
 - load custom_filters
 - block title
   = block.super
-  Register
-- block content
-  %h1
-    Get started now
+  Sign Up
+- block heading
+  %h3.panel-title Get Started Now
+- block body
   - if form.non_field_errors
     .alert.alert-danger
       %i.glyphicon.glyphicon-warning-sign
       = form.non_field_errors
-  %form.form-horizontal.well{'action':'{% url \'registration\' %}', 'method':'post'}
+  %form{'action':'{% url \'registration\' %}', 'method':'post'}
     - csrf_token
-    %div{'class':'form-group{{form.username|css_error}}'}
-      %label.col-lg-2{'for':'username'} Username
-      .col-lg-4
+    %fieldset
+      %div{'class':'form-group{{form.username|css_error}}'}
         = form.username
         - if form.username.errors
           %span.help-block
             - for error in form.username.errors
               = error|escape
-    %div{'class':'form-group{{form.email|css_error}}'}
-      %label.col-lg-2{'for':'email'} E-Mail
-      .col-lg-4
+      %div{'class':'form-group{{form.email|css_error}}'}l
         = form.email
         - if form.email.errors
           %span.help-block
             - for error in form.email.errors
               = error|escape
-    %div{'class':'form-group{{form.password|css_error}}'}
-      %label.col-lg-2{'for':'password'} Password
-      .col-lg-4
+      %div{'class':'form-group{{form.password|css_error}}'}
         = form.password
         - if form.password.errors
           %span.help-block
             - for error in form.password.errors
               = error|escape
-        %p.help-block
-          %b Note:
-          %i Please do not use your EVE password.
-    %div{'class':'form-group{{form.password_repeat|css_error}}'}
-      %label.col-lg-2{'for':'password_repeat'} Repeat Password
-      .col-lg-4
+      %div{'class':'form-group{{form.password_repeat|css_error}}'}
         = form.password_repeat
         - if form.password_repeat.errors
           %span.help-block
             - for error in form.password_repeat.errors
               = error|escape
-    %hr
-    .form-group
-      .col-lg-4.col-lg-offset-2
-        %button.btn.btn-success{'type':'submit'}
-          %i.glyphicon.glyphicon-check
-          Register now
+    %button.btn.btn-lg.btn-success.btn-block{'type':'submit'} Sign Up

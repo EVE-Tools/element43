@@ -6,12 +6,14 @@
 $background:        #000000;
 $blue:              #019CFF;
 $contrast-blue:     #33b5e5;
+$link:              #2a9fd6;
 $white:             #FFFFFF;
 $red:               #FF0000;
 $green:             #50C878;
 $orange:            #E68A17;
 $grey:              #333333;
 $light-grey:        #444444;
+$text-grey:         #888888;
 $jetblack:          #060606;
 
 $padding:           10px;
@@ -40,6 +42,7 @@ $padding:           10px;
     }
 }
 
+
 footer {
     text-align: center;
 }
@@ -61,12 +64,38 @@ footer {
     }
 }
 
+// Fancy clock
+
+#clock {
+    margin: 0 auto;
+    padding: 0;
+
+    span {
+        display: inline-block;
+        margin:0 auto;
+        padding:0;
+    }
+}
+
+/* Simple Animation */
+@keyframes clktrans {
+    0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
+    50% {opacity:0; text-shadow:none; }
+    100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
+}
+
+.colon {
+    position: relative;
+    animation: clktrans 1s ease infinite;
+    padding: 0;
+}
+
 //
 // Table fixes
 //
 
 table, .table {
-    color: #888;
+    color: ;
 }
 
 thead {
@@ -75,7 +104,11 @@ thead {
 
 table a, .table a{
     text-decoration: none;
-    color: #2a9fd6;
+    color: $link;
+}
+
+table .btn {
+    color: $white;
 }
 
 .breadcrumb {
@@ -191,8 +224,8 @@ table a, .table a{
     margin: 2px 0 0;
     font-size: 14px;
     list-style: none;
-    background-color: #222222;
-    border: 1px solid #444444;
+    background-color: $grey;
+    border: 1px solid $light-grey;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -206,13 +239,13 @@ table a, .table a{
 }
 
 .tt-suggestion.tt-is-under-cursor {
-    color: #ffffff;
+    color: $white;
     text-decoration: none;
-    background-color: #2a9fd6;
+    background-color: $link;
 }
 
 .tt-suggestion.tt-is-under-cursor a {
-    color: #fff;
+    color: $white;
 }
 
 .tt-suggestion p {
@@ -225,47 +258,6 @@ table a, .table a{
     background: $green;
 }
 
-// Fancy clock
-
-.clock {
-    color: #fff;
-    margin: 0 auto;
-    padding: 0;
-
-    ul {
-        display: inline-block;
-        list-style:none;
-        margin:0 auto;
-        padding:0;
-    }
-
-    ul li {
-        display: inline;
-        text-shadow: 0 0 3px $contrast-blue;
-        padding: 0;
-    }
-}
-
-#date {
-    display: inline-block;
-    text-shadow: 0 0 2px $contrast-blue;
-}
-
-#point {
-    position:relative;
-    -moz-animation:clktrans 1s ease infinite;
-    -webkit-animation:clktrans 1s ease infinite;
-    padding: 0;
-}
-
-
-/* Simple Animation */
-@keyframes clktrans
-{
-0% {opacity:1.0; text-shadow:0 0 20px $contrast-blue;}
-50% {opacity:0; text-shadow:none; }
-100% {opacity:1.0; text-shadow:0 0 20px $contrast-blue; }
-}
 
 // Color classes
 

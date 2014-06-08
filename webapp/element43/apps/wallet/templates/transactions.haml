@@ -1,60 +1,65 @@
-- extends "base.haml"
-- load humanize custom_filters
+- extends "base_dashboard.haml"
+- load custom_filters humanize
 - block title
   = block.super
-  {{request.user.username}} - Transactions
+  Transactions
 - block content
-  %h1 Transactions of {{char.name}}
-  %ul.pager
-    - if transactions.has_previous
-      %li.previous
-        %a{'href':'?page={{transactions.previous_page_number}}'}
-          &larr; Newer
-    - else
-      %li.previous.disabled
-        %a{'href':'#'}
-          &larr; Newer
-    - if transactions.has_next
-        %li.next
-          %a{'href':'?page={{transactions.next_page_number}}'}
-            Older &rarr;
-    - else
-        %li.next.disabled
-          %a{'href':'#'}
-            Older &rarr;
-  %table.table.table-striped.table-condensed
-    %thead
-      %tr
-        %th
-        	Type
-        %th
-          Station
-        %th.text-right
-          Quantity
-        %th.text-right
-          Price
-        %th.text-right
-          Revenue
-        %th
-          Date
-    %tbody
-      - for transaction in transactions
-        %tr
-          %td
-            %img{'src':'{{IMAGE_SERVER}}/Type/{{transaction.invtype.id}}_16.png'}
-            %a{'href':'{% url \'wallet_type\' type_id=transaction.invtype.id%}'}
-              {{transaction.invtype.name}}
-          %td
-            {{transaction.station.name}}
-          %td.text-right
-            {{transaction.quantity|intcomma}}
-          %td.text-right
-            {{transaction.price|intcomma}}
-          - if transaction.is_bid
-            %td.text-right.red
-              \-{{transaction.revenue|intcomma}}
-          - else
-            %td.text-right.green
-              {{transaction.revenue|intcomma}}
-          %td
-            {{transaction.date|naturaltime}}
+  .row
+    %h1.page-header Transactions of {{char.name}}
+    .col-lg-12
+      .panel.panel-default
+        .panel-body
+          %ul.pager
+            - if transactions.has_previous
+              %li.previous
+                %a{'href':'?page={{transactions.previous_page_number}}'}
+                  &larr; Newer
+            - else
+              %li.previous.disabled
+                %a{'href':'#'}
+                  &larr; Newer
+            - if transactions.has_next
+                %li.next
+                  %a{'href':'?page={{transactions.next_page_number}}'}
+                    Older &rarr;
+            - else
+                %li.next.disabled
+                  %a{'href':'#'}
+                    Older &rarr;
+          .table-responsive
+            %table.table.table-hover.table-striped
+              %thead
+                %tr
+                  %th
+                  	Type
+                  %th
+                    Station
+                  %th.text-right
+                    Quantity
+                  %th.text-right
+                    Price
+                  %th.text-right
+                    Revenue
+                  %th
+                    Date
+              %tbody
+                - for transaction in transactions
+                  %tr
+                    %td
+                      %img{'src':'{{IMAGE_SERVER}}/Type/{{transaction.invtype.id}}_16.png'}
+                      %a{'href':'{% url \'wallet_type\' type_id=transaction.invtype.id%}'}
+                        {{transaction.invtype.name}}
+                    %td
+                      {{transaction.station.name}}
+                    %td.text-right
+                      {{transaction.quantity|intcomma}}
+                    %td.text-right
+                      {{transaction.price|intcomma}}
+                    - if transaction.is_bid
+                      %td.text-right.red
+                        \-{{transaction.revenue|intcomma}}
+                    - else
+                      %td.text-right.green
+                        {{transaction.revenue|intcomma}}
+                    %td
+                      {{transaction.date|naturaltime}}

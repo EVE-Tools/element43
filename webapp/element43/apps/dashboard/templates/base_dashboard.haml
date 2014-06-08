@@ -1,0 +1,199 @@
+- load custom_filters compress
+!!! 5
+%html
+  %head
+    %link{'rel':'shortcut icon', 'href':'{{ STATIC_URL }}images/favicon.ico'}
+    %meta{'charset': 'utf-8'}
+    %meta{'content': 'width=device-width, initial-scale=1.0', 'name': 'viewport'}
+    - compress css
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/bootstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/font-awesome.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/timeline.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/sb-admin.css'}
+      %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
+    %title
+      - block title
+        element43 -
+  %body
+    #wrapper
+      %nav.navbar.navbar-default.navbar-fixed-top{'role': 'navigation', 'style': 'margin-bottom: 0'}
+        .navbar-header
+          %button.navbar-toggle{'data-target': '.sidebar-collapse', 'data-toggle': 'collapse', 'type': 'button'}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{'href':'{% url \'home\' %}'}
+            %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
+            %span.label.label-danger{'style':'float:left;'}
+              BETA
+        %ul.nav.navbar-top-links.navbar-right
+          %li.dropdown
+            %a.dropdown-toggle{'data-toggle': 'dropdown', 'href': '#'}
+              %i.fa.fa-tasks.fa-fw
+              %i.fa.fa-caret-down
+            %ul.dropdown-menu.dropdown-tasks
+              %li
+                %a{'href': '#'}
+                  %div
+                    %p
+                      %strong Industry demo Task 1
+                      %span.pull-right.text-muted 40% Complete
+                    .progress.progress-striped.active
+                      .progress-bar.progress-bar-success{'aria-valuemax': '100', 'aria-valuemin': '0', 'aria-valuenow': '40', 'role': 'progressbar', 'style': 'width: 40%'}
+                        %span.sr-only 40% Complete (success)
+              %li.divider
+              %li
+                %a{'href': '#'}
+                  %div
+                    %p
+                      %strong Industry demo Task 2
+                      %span.pull-right.text-muted 20% Complete
+                    .progress.progress-striped.active
+                      .progress-bar.progress-bar-info{'aria-valuemax': '100', 'aria-valuemin': '0', 'aria-valuenow': '20', 'role': 'progressbar', 'style': 'width: 20%'}
+                        %span.sr-only 20% Complete
+              %li.divider
+              %li
+                %a{'href': '#'}
+                  %div
+                    %p
+                      %strong Industry demo Task 3
+                      %span.pull-right.text-muted 60% Complete
+                    .progress.progress-striped.active
+                      .progress-bar.progress-bar-warning{'aria-valuemax': '100', 'aria-valuemin': '0', 'aria-valuenow': '60', 'role': 'progressbar', 'style': 'width: 60%'}
+                        %span.sr-only 60% Complete (warning)
+              %li.divider
+              %li
+                %a{'href': '#'}
+                  %div
+                    %p
+                      %strong Industry demo Task 4
+                      %span.pull-right.text-muted 80% Complete
+                    .progress.progress-striped.active
+                      .progress-bar.progress-bar-danger{'aria-valuemax': '100', 'aria-valuemin': '0', 'aria-valuenow': '80', 'role': 'progressbar', 'style': 'width: 80%'}
+                        %span.sr-only 80% Complete (danger)
+              %li.divider
+              %li
+                %a.text-center{'href': '#'}
+                  %strong See All Tasks
+                  %i.fa.fa-angle-right
+          %li.dropdown
+            %a.dropdown-toggle{'data-toggle': 'dropdown', 'href': '#'}
+              %i.fa.fa-bell.fa-fw
+              %i.fa.fa-caret-down
+            %ul.dropdown-menu.dropdown-alerts
+              %li
+                %a{'href': '#'}
+                  %div
+                    %i.fa.fa-comment.fa-fw
+                    Notifications not yet available
+                    %span.pull-right.text-muted.small now
+              %li.divider
+              %li
+                %a.text-center{'href': '#'}
+                  %strong See All Alerts
+                  %i.fa.fa-angle-right
+          %li
+            %a{'href':'{% url \'logout\' %}'}
+              %i.fa.fa-sign-out.fa-fw
+        .navbar-default.navbar-static-side{'role': 'navigation'}
+          .sidebar-collapse
+            %ul#side-menu.nav
+              %li.sidebar-search
+                %form
+                  - csrf_token
+                  .input-group.custom-search-form{'id':'search','method':'post','action':'{% url \'search\' %}'}
+                    %input#main-search.form-control{'placeholder': 'Search...', 'type': 'text', 'name': 'query'}
+                    %span.input-group-btn
+                      %button.btn.btn-primary{'type': 'button', 'role': 'submit'}
+                        %i.fa.fa-search
+              %li
+                %a{'href':'{% url \'dashboard\' %}'}
+                  %i.fa.fa-dashboard.fa-fw
+                  Dashboard
+              %li
+                %a{'href': '#'}
+                  %i.fa.fa-bar-chart-o.fa-fw
+                  Wallet
+                  %span.fa.arrow
+                %ul.nav.nav-second-level
+                  %li
+                    %a{'href':'{% url \'wallet_orders_active\' %}'}
+                      Active Orders
+                  %li
+                    %a{'href':'{% url \'wallet_orders_archived\' %}'}
+                      Archived Orders
+                  - if characters_journal
+                    %li.dropdown-header
+                      %i.fa.fa-book.fa-fw
+                      Journals
+                    - for char in characters_journal
+                      %li
+                        %a{'href':'{% url \'wallet_journal\' char_id=char.id %}'}
+                          {{char.name}}
+                  - if characters_transaction
+                    %li.dropdown-header
+                      %i.fa.fa-exchange.fa-fw
+                      Transactions
+                    - for char in characters_transaction
+                      %li
+                        %a{'href':'{% url \'wallet_transactions\' char_id=char.id %}'}
+                          {{char.name}}
+              %li
+                %a{'href': '#'}
+                  %i.fa.fa-cog.fa-fw
+                  Settings
+                  %span.fa.arrow
+                %ul.nav.nav-second-level
+                  %li
+                    %a{'href': '{% url \'settings\' %}'} Profile
+                  %li
+                    %a{'href': '{% url \'manage_api_keys\' %}'} API Keys
+                  %li
+                    %a{'href': '{% url \'manage_characters\' %}'} Characters
+              %li
+                %a{'href': '{% url \'about_page\' %}'}
+                  %i.fa.fa-heart-o.fa-fw
+                  Donate
+      #page-wrapper
+        .container
+          - include '_base_messages.haml'
+        - block content
+    .container{'style':'padding-top: 2em;'}
+      .row
+        .col-md-12
+          %footer
+            #clock
+              %span#hours
+              %span.colon :
+              %span#min
+              %span.colon :
+              %span#sec
+            .container{'style':'font-size: small;'}
+              %a{'href':'{% url \'about_page\' %}'} Copyright 2014 element43
+              , EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of
+              %a{'href':'http://www.ccpgames.com'} CCP hf
+              and used with permission
+    %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
+    %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
+    - compress js
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/highstock.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.metisMenu.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/typeahead.js'}
+      %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
+    - block scripts
+    - if GOOGLE_ANALYTICS_ENABLED
+      - if not request.DNT
+        %script{'type':'text/javascript'}
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_TRACKING_ID}}']);
+          _gaq.push(['_setDomainName', '{{GOOGLE_ANALYTICS_DOMAIN_NAME}}']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();

@@ -1,36 +1,26 @@
-- extends "base.haml"
+- extends "base_dashboard.haml"
 - load custom_filters
 - block title
   = block.super
-  {{user.username}} - Settings
+  Characters
 - block content
-  %h1
-    {{user.username}}
-  .row
-    .col-md-3
-      %ul.nav.nav-pills.nav-stacked
-        %li
-          %a{'href':'{% url \'settings\' %}'}
-            Modify Profile
-        %li.active
-          %a{'href':'{% url \'manage_characters\' %}'}
-            Manage Characters
-        %li
-          %a{'href':'{% url \'manage_api_keys\' %}'}
-            Manage API Keys
-    .col-md-9
-      %table.table.table-striped
-        %tbody
-          - for char in characters
-            %tr
-              %td
-                %img{'src':'//image.eveonline.com/Character/{{char.id}}_32.jpg'}
-              %td
-                = char.name
-              %td.text-right
-                %a{'href':'{% url \'remove_character\' char_id=char.id %}'}
-                  .btn.btn-danger
-                    Remove
+  .col-lg-12
+    %h1.page-header Characters
+    .row
+      .panel.panel-default
+        .panel-body
+          %table.table.table-striped
+            %tbody
+              - for char in characters
+                %tr
+                  %td
+                    %img{'src':'//image.eveonline.com/Character/{{char.id}}_32.jpg'}
+                  %td
+                    = char.name
+                  %td.text-right
+                    %a{'href':'{% url \'remove_character\' char_id=char.id %}'}
+                      .btn.btn-danger
+                        Remove
 
 
 

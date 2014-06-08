@@ -1,153 +1,148 @@
-- extends "base.haml"
+- extends "base_dashboard.haml"
 - load custom_filters humanize
 - block title
   = block.super
-  {{user.username}} - Settings
+  API Keys
 - block content
-  %h1
-    {{user.username}}
-  .row
-    .col-md-3
-      %ul.nav.nav-pills.nav-stacked
-        %li
-          %a{'href':'{% url \'settings\' %}'}
-            Modify Profile
-        %li
-          %a{'href':'{% url \'manage_characters\' %}'}
-            Manage Characters
-        %li.active
-          %a{'href':'{% url \'manage_api_keys\' %}'}
-            Manage API Keys
-    .col-md-9
-      - if char_keys or corp_keys
-        %h3
-          Your API Keys
-        - if char_keys
-            %h4
-              Character Keys
-            %table.table.table-striped
-              %thead
-                %tr
-                  %td
-                    Characters
-                  %td
-                    ID
-                  %td
-              %tbody
-                - for key in char_keys
-                  - if key.is_valid
+  .col-lg-12
+    %h1.page-header API Keys
+    .row
+      .col-lg-9
+        .panel.panel-default
+          .panel-heading
+            %i.fa.fa-plus.fa-fw
+            Add API Key
+          .panel-body
+            %form.form-horizontal{'action':'{% url \'manage_api_keys\' %}', 'method':'post'}
+              - csrf_token
+              %div{'class':'form-group{{form.api_id|css_error}}'}
+                %label.col-lg-2{'for':'api_id'} ID
+                .col-lg-2
+                  = form.api_id
+                  - if form.api_id.errors
+                    %span.help-block
+                      - for error in form.api_id.errors
+                        = error|escape
+              %div{'class':'form-group{{form.api_verification_code|css_error}}'}
+                %label.col-lg-2{'for':'api_verification_code'} Verification Code
+                .col-lg-6
+                  = form.api_verification_code
+                  - if form.api_verification_code.errors
+                    %span.help-block
+                      - for error in form.api_verification_code.errors
+                        = error|escape
+              .form-group
+                .col-lg-4.col-lg-offset-2
+                  %button.btn.btn-success{'type':'submit'}
+                    %i.glyphicon.glyphicon-check
+                    Add API Key
+        .panel.panel-default
+          .panel-heading
+            %i.fa.fa-key.fa-fw
+            Your API Keys
+          .panel-body
+            - if char_keys or corp_keys
+              - if char_keys
+                  %h4
+                    Character Keys
+                  %table.table.table-striped
+                    %thead
+                      %tr
+                        %td
+                          Characters
+                        %td
+                          ID
+                        %td
+                    %tbody
+                      - for key in char_keys
+                        - if key.is_valid
+                          %tr
+                            %td
+                              - for char in key.character_set.all
+                                - if forloop.last
+                                  {{char.name}}
+                                - else
+                                  {{char.name}},
+                            %td
+                              = key.keyid
+                            %td.text-right
+                              %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                                %i.icon-refresh.icon-white
+                                Refresh Key
+                              %a.btn.btn-primary{'href':'{% url \'add_characters\' api_id=key.keyid api_verification_code=key.vcode %}', 'rel':'tooltip', 'title':'Adds characters with this key. You can move characters to another key by simply adding them to a that key. After this you can remove the old key.'}
+                                %i.icon-plus.icon-white
+                                Add Chars
+                              %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                                %i.icon-remove.icon-white
+                                Remove
+                        - else
+                          %tr.error
+                            %td
+                              - for char in key.character_set.all
+                                - if forloop.last
+                                  {{char.name}}
+                                - else
+                                  {{char.name}},
+                            %td
+                              = key.keyid
+                            %td.text-right
+                              %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
+                                %i.icon-refresh.icon-white
+                                Refresh Key
+                              %a.btn.btn-inactive{'href':'#'}
+                                %i.icon-plus.icon-white
+                                Add Chars
+                              %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
+                                %i.icon-remove.icon-white
+                                Remove
+              - if corp_keys
+                %h4
+                  Corporate Keys
+                %table.table.table-striped
+                  %thead
                     %tr
                       %td
-                        - for char in key.character_set.all
-                          - if forloop.last
-                            {{char.name}}
-                          - else
-                            {{char.name}},
+                        ID
                       %td
-                        = key.keyid
-                      %td.text-right
-                        %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
-                          %i.icon-refresh.icon-white
-                          Refresh Key
-                        %a.btn.btn-primary{'href':'{% url \'add_characters\' api_id=key.keyid api_verification_code=key.vcode %}', 'rel':'tooltip', 'title':'Adds characters with this key. You can move characters to another key by simply adding them to a that key. After this you can remove the old key.'}
-                          %i.icon-plus.icon-white
-                          Add Chars
-                        %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
-                          %i.icon-remove.icon-white
-                          Remove
-                  - else
-                    %tr.error
-                      %td
-                        - for char in key.character_set.all
-                          - if forloop.last
-                            {{char.name}}
-                          - else
-                            {{char.name}},
-                      %td
-                        = key.keyid
-                      %td.text-right
-                        %a.btn.btn-primary{'href':'{% url \'refresh_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Run this when you changed permissions of your key.'}
-                          %i.icon-refresh.icon-white
-                          Refresh Key
-                        %a.btn.btn-inactive{'href':'#'}
-                          %i.icon-plus.icon-white
-                          Add Chars
-                        %a.btn.btn-danger{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}', 'rel':'tooltip', 'title':'Removes this key and all associated characters.'}
-                          %i.icon-remove.icon-white
-                          Remove
-        - if corp_keys
-          %h4
-            Corporate Keys
-          %table.table.table-striped
-            %thead
-              %tr
-                %td
-                  ID
-                %td
-            %tbody
-              - for key in corp_keys
-                %tr
-                  %td
-                    = key.keyid
-                  %td.text-right
-                    %a{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}'}
-                      .btn.btn-danger
-                        Remove
-        %hr
-      %h3
-        Add API Key
-      %form.form-horizontal.well{'action':'{% url \'manage_api_keys\' %}', 'method':'post'}
-        - csrf_token
-        %legend
-          API Key
-        %div{'class':'form-group{{form.api_id|css_error}}'}
-          %label.col-lg-2{'for':'api_id'} ID
-          .col-lg-2
-            = form.api_id
-            - if form.api_id.errors
-              %span.help-block
-                - for error in form.api_id.errors
-                  = error|escape
-        %div{'class':'form-group{{form.api_verification_code|css_error}}'}
-          %label.col-lg-2{'for':'api_verification_code'} Verification Code
-          .col-lg-6
-            = form.api_verification_code
-            - if form.api_verification_code.errors
-              %span.help-block
-                - for error in form.api_verification_code.errors
-                  = error|escape
-        .form-group
-          .col-lg-4.col-lg-offset-2
-            %button.btn.btn-success{'type':'submit'}
-              %i.glyphicon.glyphicon-check
-              Add API Key
-      %hr
-      %h3
-        How to
-      %p
-        To generate a predefined API key for Element43 visit
-        %a.text-success{'href':'https://support.eveonline.com/api/Key/CreatePredefined/23531659', 'target':'_blank'} support.eveonline.com
-      %p
-        You can also use an already existing key with sufficient permissions. At a minmum Element43 requires "CharacterSheet".  For full functionality Element43 needs the following permissions:
-      .well
-        %b Account and Market
-        %ul
-          %li WalletTransactions
-          %li WalletJournal
-          %li MarketOrders
-          %li AccountBalance
-        %b Private Information
-        %ul
-          %li CharacterSheet
-          %li CharacterInfo
-          %li SkillQueue
-          %li SkillInTraining
-          %li AssetList
-        %b Science and Industry
-        %ul
-          %li Research
-          %li IndustryJobs
-      %p
-        Your access mask should read
-        %span.text-success 23531659
-        now.
+                  %tbody
+                    - for key in corp_keys
+                      %tr
+                        %td
+                          = key.keyid
+                        %td.text-right
+                          %a{'href':'{% url \'remove_api_key\' apikey_id=key.keyid %}'}
+                            .btn.btn-danger
+                              Remove
+      .col-lg-3
+        .panel.panel-default
+          .panel-heading
+            %i.fa.fa-question-circle.fa-fw
+            How To
+          .panel-body
+            %p
+              To generate a predefined API key for Element43 visit
+              %a.text-success{'href':'https://support.eveonline.com/api/Key/CreatePredefined/23531659', 'target':'_blank'} support.eveonline.com
+            %p
+              You can also use an already existing key with sufficient permissions. At a minmum Element43 requires "CharacterSheet".  For full functionality Element43 needs the following permissions:
+            .well
+              %b Account and Market
+              %ul
+                %li WalletTransactions
+                %li WalletJournal
+                %li MarketOrders
+                %li AccountBalance
+              %b Private Information
+              %ul
+                %li CharacterSheet
+                %li CharacterInfo
+                %li SkillQueue
+                %li SkillInTraining
+                %li AssetList
+              %b Science and Industry
+              %ul
+                %li Research
+                %li IndustryJobs
+            %p
+              Your access mask should read
+              %span.text-success 23531659
+              now.

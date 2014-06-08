@@ -3,132 +3,101 @@
 %html
   %head
     %link{'rel':'shortcut icon', 'href':'{{ STATIC_URL }}images/favicon.ico'}
+    %meta{'charset': "utf-8"}
     %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     - compress css
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/jquery-ui-1.8.22.custom.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/font-awesome.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/ui.dynatree.css'}
       %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
       %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
       %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/prettify.css'}
-      %meta{'name':'viewport', 'content':'width=device-width, initial-scale=1.0'}
     %title
      - block title
       element43 -
   %body
     %header
-      .navbar.navbar-default.navbar-static-top
-        .container
-          .navbar-header
-            %button{'type':'button', 'class':'navbar-toggle', 'data-toggle':'collapse', 'data-target':'#e43-navbar'}
-              %span.sr-only Toggle navigation
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            %a.navbar-brand{'href':'{% url \'home\' %}'}
-              %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
-              %span.label.label-danger{'style':'float:left;'}
-                BETA
-          #e43-navbar.collapse.navbar-collapse.nav-header-collapse
-            %ul.nav.navbar-nav.navbar-left
-              %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
-                  Market
-                  %b.caret
-                %ul.dropdown-menu
-                  %li
-                    %a{'href':'{% url \'browser\' %}'} Browse Market
-                  - if request|is_igb
-                    %li
-                      %a{'href':'{% url \'scanner_random\' %}'} Market Scanner - Random
-                    - if request|igb_is_trusted
-                      %li
-                        %a{'href':'{% url \'scanner_region\' %}'} Market Scanner - Region
-              %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
-                  Trading
-                  %b.caret
-                %ul.dropdown-menu
-                  %li
-                    %a{'href':'{% url \'station_ranking\' %}'} Top Stations
-                  %li
-                    %a{'href':'{% url \'tradefinder\' %}'} Tradefinder
-              %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
-                  Manufacturing
-                  %b.caret
-                %ul.dropdown-menu
-                  %li
-                    %a{'href':'{% url \'manufacturing_select_blueprint\' %}'} Calculator
-              %li.dropdown
-                %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
-                  Help
-                  %b.caret
-                %ul.dropdown-menu
-                  %li
-                    %a{'href':'{% url \'about_page\' %}'} About Element43
-                  %li
-                    %a{'href':'{% url \'api_docs\' %}'} Legacy API Documentation
-              %li
-                %a{'href':'http://news.element-43.com'} News
-              %li
-                %a{'href':'/api/'} API
-            %ul.nav.navbar-nav.navbar-right
-              - if not user.is_authenticated
-                %li
-                  %a{'href':'{% url \'login\' %}?next={{request.path}}'}
-                    Log In
-                %li
-                  %a{'href':'{% url \'registration\' %}'}
-                    Sign Up
-              - else
+        .navbar.navbar-default.navbar-static-top
+          .container
+            .navbar-header
+              %button{'type':'button', 'class':'navbar-toggle', 'data-toggle':'collapse', 'data-target':'#e43-navbar'}
+                %span.sr-only Toggle navigation
+                %span.icon-bar
+                %span.icon-bar
+                %span.icon-bar
+              %a.navbar-brand{'href':'{% url \'home\' %}'}
+                %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43','width':'100px','height':'20px','style':'float:left;'}
+                %span.label.label-danger{'style':'float:left;'}
+                  BETA
+            #e43-navbar.collapse.navbar-collapse.nav-header-collapse
+              %ul.nav.navbar-nav.navbar-left
                 %li.dropdown
                   %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
-                    %b {{user.username}}
+                    Market
                     %b.caret
                   %ul.dropdown-menu
                     %li
-                      %a{'href':'{% url \'dashboard\' %}'}
-                        %i.glyphicon.glyphicon-home
-                        Dashboard
-                    %li
+                      %a{'href':'{% url \'browser\' %}'} Browse Market
+                    - if request|is_igb
                       %li
-                        %a{'href':'{% url \'wallet_orders_active\' %}'}
-                          %i.glyphicon.glyphicon-asterisk
-                          Active Orders
+                        %a{'href':'{% url \'scanner_random\' %}'} Market Scanner - Random
+                      - if request|igb_is_trusted
+                        %li
+                          %a{'href':'{% url \'scanner_region\' %}'} Market Scanner - Region
+                %li.dropdown
+                  %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                    Trading
+                    %b.caret
+                  %ul.dropdown-menu
+                    %li
+                      %a{'href':'{% url \'station_ranking\' %}'} Top Stations
+                    %li
+                      %a{'href':'{% url \'tradefinder\' %}'} Tradefinder
+                %li.dropdown
+                  %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                    Manufacturing
+                    %b.caret
+                  %ul.dropdown-menu
+                    %li
+                      %a{'href':'{% url \'manufacturing_select_blueprint\' %}'} Calculator
+                %li.dropdown
+                  %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                    Help
+                    %b.caret
+                  %ul.dropdown-menu
+                    %li
+                      %a{'href':'{% url \'about_page\' %}'} About Element43
+                    %li
+                      %a{'href':'{% url \'api_docs\' %}'} Legacy API Documentation
+                %li
+                  %a{'href':'http://news.element-43.com'} News
+                %li
+                  %a{'href':'/api/'} API
+              %ul.nav.navbar-nav.navbar-right
+                - if not user.is_authenticated
+                  %li
+                    %a{'href':'{% url \'login\' %}?next={{request.path}}'}
+                      Log In
+                  %li
+                    %a{'href':'{% url \'registration\' %}'}
+                      Sign Up
+                - else
+                  %li.dropdown
+                    %a.dropdown-toggle{'href':'#', 'data-toggle':'dropdown'}
+                      %b {{user.username}}
+                      %b.caret
+                    %ul.dropdown-menu
                       %li
-                        %a{'href':'{% url \'wallet_orders_archived\' %}'}
-                          %i.glyphicon.glyphicon-calendar
-                          Archived Orders
-                      - if characters_journal
-                        %li.divider
-                        %li.dropdown-header
-                          %i.glyphicon.glyphicon-book
-                          Journals
-                        - for char in characters_journal
-                          %li
-                            %a{'href':'{% url \'wallet_journal\' char_id=char.id %}'}
-                              {{char.name}}
-                      - if characters_transaction
-                        %li.divider
-                        %li.dropdown-header
-                          %i.glyphicon.glyphicon-share
-                          Transactions
-                        - for char in characters_transaction
-                          %li
-                            %a{'href':'{% url \'wallet_transactions\' char_id=char.id %}'}
-                              {{char.name}}
-                    %li.divider
-                    %li
-                      %a{'href':'{% url \'settings\' %}'}
-                        %i.glyphicon.glyphicon-wrench
-                        Settings
-                    %li
-                      %a{'href':'{% url \'logout\' %}'}
-                        %i.glyphicon.glyphicon-off
-                        Logout
-              %form.navbar-form.navbar-right{'id':'search','method':'post','action':'{% url \'search\' %}'}
-                - csrf_token
-                %input#main-search.form-control{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
+                        %a{'href':'{% url \'dashboard\' %}'}
+                          %i.fa.fa-arrow-right.fa-fw
+                          Go To Dashboard
+                      %li
+                        %a{'href':'{% url \'logout\' %}'}
+                          %i.fa.fa-sign-out.fa-fw
+                          Logout
+                %form.navbar-form.navbar-right{'id':'search','method':'post','action':'{% url \'search\' %}'}
+                  - csrf_token
+                  %input#main-search.form-control{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
     .container
         - include '_base_messages.haml'
     - block top
@@ -140,16 +109,14 @@
       .row
         .col-md-12
           %footer
-            .clock
-              #date
-              %ul
-                %li#hours
-                %li#point :
-                %li#min
-                %li#point :
-                %li#sec
+            #clock
+              %span#hours
+              %span.colon :
+              %span#min
+              %span.colon :
+              %span#sec
             .container{'style':'font-size: small;'}
-              %a{'href':'/about#copyright'} Copyright 2014 element43
+              %a{'href':'{% url \'about_page\' %}'} Copyright 2014 element43
               , EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of
               %a{'href':'http://www.ccpgames.com'} CCP hf
               and used with permission

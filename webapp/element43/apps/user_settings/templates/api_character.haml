@@ -1,49 +1,40 @@
-- extends "base.haml"
+- extends "base_dashboard.haml"
 - load custom_filters
 - block title
   = block.super
-  {{user.username}} - Settings
+  Add Characters
 - block content
-  %h1
-    {{user.username}}
-  .row
-    .col-md-3
-      %ul.nav.nav-pills.nav-stacked
-        %li
-          %a{'href':'{% url \'settings\' %}'}
-            Modify Profile
-        %li
-          %a{'href':'{% url \'manage_characters\' %}'}
-            Manage Characters
-        %li.active
-          %a{'href':'{% url \'manage_api_keys\' %}'}
-            Manage API Keys
-    .col-md-9
-      %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}
-        - csrf_token
-        %table.table.table-striped
-          %thead
-            %tr
-              %th
-              %th
-                Name
-              %th
-                Corporation
-              %td
-                Add
-          %tbody
-            - for char in chars
-              %tr
-                %td
-                  %img{'src':'//image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
-                %td
-                  = char.name
-                %td
-                  = char.corporationName
-                %td
-                  %input{'type':'checkbox', 'name':'characters', 'value':'{{char.characterID}}'}
-          .form-group
-            .col-lg-4.col-lg-offset-2
-              %button.btn.btn-primary{'type':'submit'}
-                Add Characters
+  .col-lg-12
+    %h1.page-header Add Characters
+    .row
+      .panel.panel-default
+        .panel-body
+          %form.form-horizontal{'action':'{{request.get_full_path}}', 'method':'post'}
+            - csrf_token
+            %table.table.table-striped
+              %thead
+                %tr
+                  %th
+                  %th
+                    Name
+                  %th
+                    Corporation
+                  %td
+                    Add
+              %tbody
+                - for char in chars
+                  %tr
+                    %td
+                      %img{'src':'//image.eveonline.com/Character/{{char.characterID}}_32.jpg'}
+                    %td
+                      = char.name
+                    %td
+                      = char.corporationName
+                    %td
+                      %input{'type':'checkbox', 'name':'characters', 'value':'{{char.characterID}}'}
+            .row
+              .col-lg-2.col-lg-offset-1
+                .form-group
+                  %button.btn.btn-primary{'type':'submit'}
+                    Add Characters
 

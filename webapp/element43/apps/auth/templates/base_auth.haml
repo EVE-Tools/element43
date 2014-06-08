@@ -1,0 +1,49 @@
+- load compress
+!!! 5
+%html
+  %head
+    %title
+     - block title
+      element43 -
+    %meta{charset: "utf-8"}/
+    %meta{content: "width=device-width, initial-scale=1.0", name: "viewport"}
+    - compress css
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/font-awesome.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href':'{{ STATIC_URL }}stylesheets/bootstrap.css'}
+      %link{'rel':'stylesheet', 'type':'text/css', 'href': '{{ STATIC_URL }}stylesheets/sb-admin.css'}
+      %link{'rel':'stylesheet', 'type':'text/x-scss', 'href':'{{ STATIC_URL }}stylesheets/main.scss'}
+  %body
+    .container
+      .row
+        .col-md-4.col-md-offset-4
+          .login-panel.panel.panel-default
+            .panel-heading
+              %a{'href':'{% url \'home\' %}'}
+                %img{'src':'{{ STATIC_URL }}images/logo.png','alt':'element43', 'height':'17px','style':'float:right;'}
+              - block heading
+            .panel-body
+              - include '_base_messages.haml'
+              - block body
+  %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'}
+  %script{'type':'text/javascript', 'src':'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js'}
+  - compress js
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/highstock.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/bootstrap.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.autocomplete.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/jquery.metisMenu.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/typeahead.js'}
+    %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/main.js'}
+  - block scripts
+  - if GOOGLE_ANALYTICS_ENABLED
+    - if not request.DNT
+      %script{'type':'text/javascript'}
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{GOOGLE_ANALYTICS_TRACKING_ID}}']);
+        _gaq.push(['_setDomainName', '{{GOOGLE_ANALYTICS_DOMAIN_NAME}}']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();

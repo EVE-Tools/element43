@@ -28,9 +28,6 @@ $(document).ready(function() {
 	var now = new Date();
 	var min = 60 * 1000;
 
-	// Output the day, date, month and year
-	$('#date').html("EVE Time - ");
-
 	setInterval(function() {
 		now = new Date();
 		// Create a newDate() object and extract the seconds of the current time on the visitor's
@@ -286,4 +283,26 @@ $(document).ready(function() {
 
     // Apply the theme
     var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+});
+
+//
+// Dashboard
+//
+
+// Inititalize Sidebar
+$(function() {
+    $('#side-menu').metisMenu();
+});
+
+//Loads the correct sidebar on window load,
+//collapses the sidebar on window resize.
+$(function() {
+    $(window).bind("load resize", function() {
+        width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
+        if (width < 768) {
+            $('div.sidebar-collapse').addClass('collapse');
+        } else {
+            $('div.sidebar-collapse').removeClass('collapse');
+        }
+    });
 });

@@ -17,9 +17,11 @@ class LoginForm(forms.Form):
     """
     Login form.
     """
+    attrs_dict['placeholder'] = "Username"
     username = forms.RegexField(regex=r'^[\w.@+-]+$', max_length=30, widget=forms.TextInput(attrs=attrs_dict),
                                 error_messages={'invalid': "Your username may contain only letters, numbers and @/./+/-/_ characters."})
 
+    attrs_dict['placeholder'] = "Password"
     password = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
 
     def clean(self):
@@ -34,11 +36,17 @@ class RegistrationForm(forms.Form):
     requires the password to be entered twice to catch typos.
     """
     # Registration
+    attrs_dict['placeholder'] = "Username"
     username = forms.RegexField(regex=r'^[\w.@+-]+$', max_length=30, widget=forms.TextInput(attrs=attrs_dict),
                                 error_messages={'invalid': "Your username may contain only letters, numbers and @/./+/-/_ characters."})
 
+    attrs_dict['placeholder'] = "E-Mail"
     email = forms.EmailField(widget=forms.TextInput(attrs=attrs_dict))
+
+    attrs_dict['placeholder'] = "Password"
     password = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
+
+    attrs_dict['placeholder'] = "Repeat Password"
     password_repeat = forms.CharField(min_length=8, widget=forms.PasswordInput(attrs=attrs_dict, render_value=False))
 
     def clean_username(self):
@@ -81,10 +89,13 @@ class ResetPasswordForm(forms.Form):
     Form for resetting a given user's password.
     TODO: Add API ID field associated with this user/email combination to prevent unauthorized resets
     """
+
     # Reset data
+    attrs_dict['placeholder'] = "Username"
     username = forms.RegexField(regex=r'^[\w.@+-]+$', max_length=30, widget=forms.TextInput(attrs=attrs_dict),
                                 error_messages={'invalid': "The username may contain only letters, numbers and @/./+/-/_ characters."})
 
+    attrs_dict['placeholder'] = "E-Mail"
     email = forms.EmailField(widget=forms.TextInput(attrs=attrs_dict))
 
     def clean(self):

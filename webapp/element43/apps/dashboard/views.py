@@ -56,37 +56,6 @@ def dashboard(request):
 
     return render_to_response('dashboard.haml', rcontext)
 
-
-@login_required
-def journal_json(request):
-    # Get all chars with journal permissions
-    chars = validate_characters(request.user, calculate_character_access_mask(['WalletJournal']))
-
-    wallet_series = {}
-
-    # Append wallet history of all characters to dict
-    for char in chars:
-        series = []
-        journal = JournalEntry.objects.filter(character=char).order_by('date')
-
-        for point in journal:
-            series.append([int(time.mktime(point.date.timetuple())) * 1000, point.balance])
-
-        # If there aren't any journal entries, catch the resulting AssertionError and return empty list
-        try:
-            # Add current balance in the end for a more consistent look
-            series.append([(int(time.mktime(datetime.datetime.utcnow().timetuple())) * 999), journal[len(journal) - 1].balance])
-        except AssertionError:
-            series = []
-
-        wallet_series[char.name] = series
-
-    serialized = json.dumps(wallet_series)
-
-    # Return JSON without using any template
-    return HttpResponse(serialized, mimetype='application/json')
-
-
 @login_required
 def char_sheet(request, char_id):
 
