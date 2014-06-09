@@ -1,0 +1,50 @@
+[{
+   "pk":1,
+   "model":"feedreader.feed",
+   "fields":{
+      "url":"https://news.element-43.com/rss/",
+      "next_update":"2014-01-01T00:00:00Z",
+      "name":"Journal43",
+      "icon_file":"journal43.svg"
+   }
+},
+{
+   "pk":2,
+   "model":"feedreader.feed",
+   "fields":{
+      "url":"http://newsfeed.eveonline.com/en-US/2/articles/page/1/20",
+      "next_update":"2014-01-01T00:00:00Z",
+      "name":"EVE Dev Blogs",
+      "icon_file":"eve.svg"
+   }
+},
+{
+   "pk":3,
+   "model":"feedreader.feed",
+   "fields":{
+      "url":"http://newsfeed.eveonline.com/en-US/44/articles/page/1/20",
+      "next_update":"2014-01-01T00:00:00Z",
+      "name":"EVE Online News",
+      "icon_file":"eve.svg"
+   }
+},
+{
+   "pk":4,
+   "model":"feedreader.feed",
+   "fields":{
+      "url":"http://themittani.com/feeds/all/rss.xml",
+      "next_update":"2014-01-01T00:00:00Z",
+      "name":"TheMittani",
+      "icon_file":"mittani.svg"
+   }
+},
+{
+   "pk":5,
+   "model":"feedreader.feed",
+   "fields":{
+      "url":"http://evenews24.com/feed/",
+      "next_update":"2014-01-01T00:00:00Z",
+      "name":"EVE News24",
+      "icon_file":"en24.svg"
+   }
+}]

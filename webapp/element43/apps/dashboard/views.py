@@ -1,23 +1,17 @@
-# Utility
-import time
-import datetime
-import json
-
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.http import HttpResponse
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 # Django Aggregation
 from django.db.models import Sum
 
-# API Models
-from element43.apps.api.models import JournalEntry
+# Models
 from apps.api.models import Character, APITimer, CharSkill, MarketTransaction
+from apps.feedreader.models import FeedItem
 
 # Util
 from apps.common.util import validate_characters, calculate_character_access_mask
@@ -29,6 +23,9 @@ def dashboard(request):
     """
     Shows basic information about you account so you can quickly get an overview.
     """
+
+    # Get 10 latest news items
+    news_items = FeedItem.objects.order_by('-published')[:10]
 
     # Sheet based data
     chars_sheet = validate_characters(request.user, calculate_character_access_mask(['CharacterSheet']))
@@ -48,7 +45,8 @@ def dashboard(request):
 
     last_ten_sales = MarketTransaction.objects.filter(character__in=market_chars, is_bid=False).extra(select={'value': "price * quantity"}).order_by('-date')[:10]
 
-    rcontext = RequestContext(request, {'sheet_data': sheet_data,
+    rcontext = RequestContext(request, {'news_items': news_items,
+                                        'sheet_data': sheet_data,
                                         'month': month,
                                         'week': week,
                                         'day': day,

@@ -171,3 +171,12 @@ Views
 .. automodule:: apps.wallet.views
     :members:
     :undoc-members:
+
+feedreader
+^^^^^^^^^^
+
+Models
+""""""
+
+.. automodule:: apps.feedreader.models
+    :members:

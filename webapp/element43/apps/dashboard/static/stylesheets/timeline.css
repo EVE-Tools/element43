@@ -130,6 +130,26 @@
     background-color: #5bc0de !important;
 }
 
+/*
+ *  Icon badge colors
+ */
+
+.timeline-badge.eve {
+    background-color: #5bc0de !important;
+}
+
+.timeline-badge.journal43 {
+    background-color: #f0ad4e !important;
+}
+
+.timeline-badge.mittani {
+    background-color: #888888 !important;
+}
+
+.timeline-badge.en24 {
+    background-color: #3f903f !important;
+}
+
 .timeline-title {
     margin-top: 0;
     color: inherit;

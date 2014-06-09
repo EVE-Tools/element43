@@ -308,7 +308,8 @@ INSTALLED_APPS = (
     'apps.user_settings',
     'apps.manufacturing',
     'apps.dashboard',
-    'apps.wallet'
+    'apps.wallet',
+    'apps.feedreader'
 )
 
 DEVSERVER_MODULES = (

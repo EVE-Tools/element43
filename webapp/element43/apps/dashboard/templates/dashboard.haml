@@ -15,68 +15,24 @@
               News Timeline
             .panel-body
               %ul.timeline
-                %li
-                  .timeline-badge.success
-                    %i
-                      %img{'src':'{{ STATIC_URL }}images/en24.svg', 'width': '30 px'}
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                      %p
-                        %small.text-muted
-                          %i.fa.fa-time
-                          11 hours ago via Twitter
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                        %a{'href':'http://news.element-43.com'}
-                          read on »
-                %li.timeline-inverted
-                  .timeline-badge.warning
-                    %img{'src':'{{ STATIC_URL }}images/journal43.svg', 'width': '30 px'}
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                        %a{'href':'http://news.element-43.com'}
-                          read on »
-                %li
-                  .timeline-badge
-                    %i
-                      %img{'src':'{{ STATIC_URL }}images/mittani.svg', 'width': '30 px'}
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                        %a{'href':'http://news.element-43.com'}
-                          read on »
-                %li.timeline-inverted
-                  .timeline-badge.info
-                    %i
-                      %img{'src':'{{ STATIC_URL }}images/eve.svg', 'width': '30 px'}
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                        %a{'href':'http://news.element-43.com'}
-                          read on »
-                %li
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
-                %li.timeline-inverted
-                  .timeline-badge.success
-                    %i.fa.fa-thumbs-up
-                  .timeline-panel
-                    .timeline-heading
-                      %h4.timeline-title Timeline Event
-                    .timeline-body
-                      %p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel justo eu mi scelerisque vulputate. Aliquam in metus eu lectus aliquet egestas.
+                - for item in news_items
+                  %li{'class':'{% cycle \'\' \'timeline-inverted\' %}'}
+                    .timeline-badge{'class': '{{ item.feed.icon_file|slice:":-4" }}'}
+                      %i
+                        %img{'src':'{{ STATIC_URL }}images/{{ item.feed.icon_file }}', 'width': '30 px'}
+                    .timeline-panel
+                      .timeline-heading
+                        - autoescape off
+                          %h4.timeline-title {{ item.title|striptags }}
+                        %p
+                          %small.text-muted
+                            %i.fa.fa-time
+                            {{ item.published|naturaltime }}
+                      .timeline-body
+                        - autoescape off
+                          %p {{ item.description|striptags|truncatewords:30 }}
+                            %a{'href':'{{ item.link }}', 'target': '_blank'}
+                              read on »
         .col-lg-4
           .panel.panel-default
             .panel-heading
