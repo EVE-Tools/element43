@@ -140,10 +140,10 @@
                           %td.text-right
                             = invtype.total_ask|intword
                           %td.text-right
-                            = invtype.total_ask|intword
+                            = invtype.total_bid|intword
                           %td.text-right
                             = invtype.total|intword
                           - if request|is_igb
                             %td.text-right
                               %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{invtype.type.id}});'}
-                                %i.fa.fa-shopping-cart    }
+                                %i.fa.fa-shopping-cart
