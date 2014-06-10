@@ -1,6 +1,12 @@
 # Imports for memcache
 from apps.common.util import get_memcache_client
 
+# Util
+import datetime
+import pytz
+import json
+from operator import itemgetter
+
 # Template and context-related imports
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -8,18 +14,14 @@ from django.db.models import Count
 from django.http import HttpResponse
 
 # eve_db models
+from eve_db.models import StaStation, MapRegion, MapSolarSystem, InvType, InvMarketGroup
+
+# Models
 from apps.market_data.models import Orders, OrderHistory
-from eve_db.models import StaStation, MapRegion, MapSolarSystem, InvType
-
-import json
-
-# Util
-import datetime
-import pytz
-from operator import itemgetter
 
 # Helper functions
 from apps.market_data.sql import import_markup
+from apps.market_station.sql import group_volume, type_volume
 from apps.common.util import find_path
 from django.db.models import Sum, Min, Max
 
@@ -43,16 +45,61 @@ def ranking(request, group=0):
         generated_at = ranking['generated_at']
 
     else:
-
+        #
         # Generate numbers if there is no cached version present in memcache (anymore)
+        #
+
+        # Get top stations by number of orders
         rank_list = Orders.active.values('stastation__id').annotate(ordercount=Count('id')).order_by('-ordercount')[:50]
 
         for rank in rank_list:
-            station = StaStation.objects.get(id=rank['stastation__id'])
-            rank.update({'system': station.solar_system, 'name':
-                        station.name, 'region': station.region, 'id': station.id})
 
-        generated_at = datetime.datetime.now()
+            # Get station
+            station = StaStation.objects.get(id=rank['stastation__id'])
+
+            #
+            # Get group values
+            #
+
+            # Get ask/bid ISK volumes in that station by marketgroup in descending order
+            volumes_by_group = group_volume(station.id)[:10]
+
+            # Total volume in ISK
+            total_volume = 0
+
+            # Get group objects from DB and calculate total volume
+            for group in volumes_by_group:
+
+                try:
+                    # Get market group
+                    group['group'] = InvMarketGroup.objects.get(id=group['market_group_id'])
+                except InvMarketGroup.DoesNotExist:
+                    # Sometimes invTypes do not have a valid group - add pseudo-group
+                    group['group'] = {}
+                    group['group']['id'] = 0
+                    group['group']['name'] = "No group"
+
+                total_volume += group['group_total']
+
+            #
+            # Get type values
+            #
+
+            # Get ask/bid ISK volumes in that station by marketgroup in descending order
+            volumes_by_type = type_volume(station.id)[:10]
+
+            # Get gtype objects from DB
+            for invType in volumes_by_type:
+                # Get market group
+                invType['type'] = InvType.objects.get(id=invType['invtype_id'])
+
+            rank.update({'station': station,
+                         'volume': total_volume,
+                         'volumes_by_group': volumes_by_group,
+                         'volumes_by_type': volumes_by_type})
+
+
+        generated_at = pytz.utc.localize(datetime.datetime.utcnow())
 
         # Expire after an hour
         mc.set("e43-station-ranking", {'rank_list': rank_list, 'generated_at': generated_at}, time=3600)

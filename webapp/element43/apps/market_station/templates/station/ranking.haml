@@ -1,33 +1,96 @@
 - extends "base.haml"
-- load custom_filters
-- load humanize
+- load compress custom_filters humanize
 - block title
   = block.super
   Market - Stations by Number of Active Orders
 - block content
   %h1
-    Top Stations by Active Orders
-	%table.table.table-striped.table-condensed
-	  %thead
-	    %tr
-        %th
-	      %th
-	        Station
-	      %th.text-right
-	        Active Orders
-	  %tbody
-	    - for station in rank_list
-	      %tr
-          %td
-            = forloop.counter
-	        %td
-            %span{'class':'sec{{station.system.security_level|sec0to10}}'}
-              • {{station.system.security_level|sec0to1}}
-            {{station.region.name}} -
-            %a{'href':'{% url \'station\' station_id=station.id %}'}
-              {{station.name}}
-	        %td.text-right
-	          = station.ordercount|intcomma
-	%p
-	  %i
-	    Generated at {{generated_at}} UTC
+    Top Stations by Active Orderss
+  %p
+    %i
+      Generated at {{generated_at}} UTC - calculations do not include orders with minimum volume other than 1 to reduce impact of scam orders.
+  - for station_data in rank_list
+    .row
+      .col-lg-12
+        .well
+          .row
+            .col-md-1
+              %img{'style':'margin-top: 10px;', 'src':'//image.eveonline.com/Render/{{station_data.station.type.id}}_64.png', 'alt':'station render'}
+            .col-md-11
+              .row
+                .col-md-12
+                  %h3
+                    = station_data.station.name
+                  %i
+                    %span{'class':'sec{{station_data.station.system.security_level|sec0to10}}'}
+                      • {{station_data.station.system.security_level|sec0to1}}
+                    %span
+                      {{station_data.station.region.name}} - {{station_data.station.solar_system.name}} - {{station_data.ordercount|intcomma}} Orders - {{station_data.volume|intword}} ISK
+          %hr
+          .row
+            .col-md-6
+              .row
+                .col-md-12
+                  %h4
+                    Top Market Groups by Volume in ISK
+              .table-responsive
+                %table.table.table-striped.table-condensed
+                  %thead
+                    %tr
+                      %th
+                        Group
+                      %th.text-right
+                        Ask Volume
+                      %th.text-right
+                        Bid Volume
+                      %th.text-right
+                        Total Volume
+                    %tbody
+                      - for group in station_data.volumes_by_group
+                        %tr
+                          %td
+                            %a{'href':'{% url \'browser_preload\' group=group.group.id %}', 'rel':'tooltip', 'title': '{{group.group.name}}'}
+                              = group.group.name|truncatechars:20
+                          %td.text-right
+                            = group.group_total_ask|intword
+                          %td.text-right
+                            = group.group_total_bid|intword
+                          %td.text-right
+                            = group.group_total|intword
+            .col-md-6
+              .row
+                .col-md-12
+                  %h4
+                   Top Types by Volume in ISK
+              .table-responsive
+                %table.table.table-striped.table-condensed
+                  %thead
+                    %tr
+                      %th
+                        Group
+                      %th.text-right
+                        Ask Volume
+                      %th.text-right
+                        Bid Volume
+                      %th.text-right
+                        Total Volume
+                      - if request|is_igb
+                        %th.text-right
+                          IGB
+                    %tbody
+                      - for invtype in station_data.volumes_by_type
+                        %tr
+                          %td
+                            %a{'href':'{% url \'quicklook_region\' type_id=invtype.type.id region_id=station_data.station.region.id %}', 'rel':'tooltip', 'title': '{{invtype.type.name}}'}
+                              %img{'src':'{{IMAGE_SERVER}}/Type/{{invtype.type.id}}_16.png'}
+                              = invtype.type.name|truncatechars:20
+                          %td.text-right
+                            = invtype.total_ask|intword
+                          %td.text-right
+                            = invtype.total_ask|intword
+                          %td.text-right
+                            = invtype.total|intword
+                          - if request|is_igb
+                            %td.text-right
+                              %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{invtype.type.id}});'}
+                                %i.fa.fa-shopping-cart
