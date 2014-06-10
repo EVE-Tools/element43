@@ -24,7 +24,7 @@
                 Details
           %tbody
             - for station_data in rank_list|slice:":25"
-              %tr
+              %tr.top-tr{'data-station': '{{station_data.station.id}}', 'style':'cursor: pointer;'}
                 %td
                   = forloop.counter
                 %td
@@ -34,7 +34,7 @@
                 %td.text-right
                   = station_data.ordercount|intcomma
                 %td.text-right
-                  %a{'href':'#{{station_data.station.id}}'}
+                  %a{'id':'link-{{station_data.station.id}}', 'href':'#{{station_data.station.id}}'}
                     %i.fa.fa-angle-double-down
     .col-lg-6
       .table-responsive
@@ -50,7 +50,7 @@
                 Details
           %tbody
             - for station_data in rank_list|slice:"25:"
-              %tr
+              %tr.top-tr{'data-station': '{{station_data.station.id}}', 'style':'cursor: pointer;'}
                 %td
                   = forloop.counter|add:25
                 %td
@@ -60,7 +60,7 @@
                 %td.text-right
                   = station_data.ordercount|intcomma
                 %td.text-right
-                  %a{'href':'#{{station_data.station.id}}'}
+                  %a{'id':'link-{{station_data.station.id}}', 'href':'#{{station_data.station.id}}'}
                     %i.fa.fa-angle-double-down
   - for station_data in rank_list
     .row{'id':'{{station_data.station.id}}'}
@@ -152,3 +152,5 @@
                             %td.text-right
                               %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{invtype.type.id}});'}
                                 %i.fa.fa-shopping-cart
+- block scripts
+  %script{'type':'text/javascript', 'src':'{{ STATIC_URL }}javascripts/ranking.js'}
