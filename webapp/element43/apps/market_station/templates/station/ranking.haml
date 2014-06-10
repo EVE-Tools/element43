@@ -9,8 +9,61 @@
   %p
     %i
       Generated at {{generated_at}} UTC - calculations do not include orders with minimum volume other than 1 to reduce impact of scam orders.
+  .row
+    .col-lg-6
+      .table-responsive
+        %table.table.table-striped.table-condensed.table-hover
+          %thead
+            %tr
+              %th
+              %th
+                Station
+              %th.text-right
+                Active Orders
+              %th.text-right
+                Details
+          %tbody
+            - for station_data in rank_list|slice:":25"
+              %tr
+                %td
+                  = forloop.counter
+                %td
+                  %span{'class':'sec{{station_data.station.solar_system.security_level|sec0to10}}'}
+                    • {{station_data.station.solar_system.security_level|sec0to1}}
+                  {{station_data.station.name|truncate_station_name}}
+                %td.text-right
+                  = station_data.ordercount|intcomma
+                %td.text-right
+                  %a{'href':'#{{station_data.station.id}}'}
+                    %i.fa.fa-angle-double-down
+    .col-lg-6
+      .table-responsive
+        %table.table.table-striped.table-condensed.table-hover
+          %thead
+            %tr
+              %th
+              %th
+                Station
+              %th.text-right
+                Active Orders
+              %th.text-right
+                Details
+          %tbody
+            - for station_data in rank_list|slice:"25:"
+              %tr
+                %td
+                  = forloop.counter|add:25
+                %td
+                  %span{'class':'sec{{station_data.station.solar_system.security_level|sec0to10}}'}
+                    • {{station_data.station.solar_system.security_level|sec0to1}}
+                  {{station_data.station.name|truncate_station_name}}
+                %td.text-right
+                  = station_data.ordercount|intcomma
+                %td.text-right
+                  %a{'href':'#{{station_data.station.id}}'}
+                    %i.fa.fa-angle-double-down
   - for station_data in rank_list
-    .row
+    .row{'id':'{{station_data.station.id}}'}
       .col-lg-12
         .well
           .row
@@ -22,8 +75,8 @@
                   %h3
                     = station_data.station.name
                   %i
-                    %span{'class':'sec{{station_data.station.system.security_level|sec0to10}}'}
-                      • {{station_data.station.system.security_level|sec0to1}}
+                    %span{'class':'sec{{station_data.station.solar_system.security_level|sec0to10}}'}
+                      • {{station_data.station.solar_system.security_level|sec0to1}}
                     %span
                       {{station_data.station.region.name}} - {{station_data.station.solar_system.name}} - {{station_data.ordercount|intcomma}} Orders - {{station_data.volume|intword}} ISK
           %hr
@@ -93,4 +146,4 @@
                           - if request|is_igb
                             %td.text-right
                               %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{invtype.type.id}});'}
-                                %i.fa.fa-shopping-cart
+                                %i.fa.fa-shopping-cart    }
