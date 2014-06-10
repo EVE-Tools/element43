@@ -4,7 +4,7 @@
   = block.super
   Market - Stations by Number of Active Orders
 - block content
-  %h1
+  %h1{'id':'top'}
     Top Stations by Active Orders
   %p
     %i
@@ -66,6 +66,11 @@
     .row{'id':'{{station_data.station.id}}'}
       .col-lg-12
         .well
+          .row
+            .col-lg-12
+              %a.pull-right{'href': '#top'}
+                Back Up
+                %i.fa.fa-angle-double-up
           .row
             .col-md-1
               %img{'style':'margin-top: 10px;', 'src':'//image.eveonline.com/Render/{{station_data.station.type.id}}_64.png', 'alt':'station render'}
