@@ -257,15 +257,6 @@ class DgmTypeAttributeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DgmTypeAttributeSerializer
 
 
-class InvBlueprintTypeViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows InvBlueprintTypes to be viewed.
-    """
-
-    queryset = InvBlueprintType.objects.all()
-    serializer_class = InvBlueprintTypeSerializer
-
-
 class DgmEffectViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows DgmEffects to be viewed.
@@ -611,15 +602,6 @@ class RamActivityViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RamActivitySerializer
 
 
-class RamAssemblyLineViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows RamAssemblyLines to be viewed.
-    """
-
-    queryset = RamAssemblyLine.objects.all()
-    serializer_class = RamAssemblyLineSerializer
-
-
 class RamAssemblyLineTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows RamAssemblyLineTypes to be viewed.
@@ -654,15 +636,6 @@ class RamAssemblyLineStationsViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = RamAssemblyLineStations.objects.all()
     serializer_class = RamAssemblyLineStationsSerializer
-
-
-class RamTypeRequirementViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows RamTypeRequirements to be viewed.
-    """
-
-    queryset = RamTypeRequirement.objects.all()
-    serializer_class = RamTypeRequirementSerializer
 
 
 class StaServiceViewSet(viewsets.ReadOnlyModelViewSet):

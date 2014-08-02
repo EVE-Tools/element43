@@ -119,11 +119,6 @@ class DgmTypeAttributeSerializer(serializers.HyperlinkedModelSerializer):
         model = DgmTypeAttribute
 
 
-class InvBlueprintTypeSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = InvBlueprintType
-
-
 class DgmEffectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DgmEffect
@@ -321,12 +316,6 @@ class RamActivitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RamActivity
 
-
-class RamAssemblyLineSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = RamAssemblyLine
-
-
 class RamAssemblyLineTypeDetailPerCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RamAssemblyLineTypeDetailPerCategory
@@ -345,11 +334,6 @@ class RamAssemblyLineTypeSerializer(serializers.HyperlinkedModelSerializer):
 class RamAssemblyLineStationsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RamAssemblyLineStations
-
-
-class RamTypeRequirementSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = RamTypeRequirement
 
 
 class StaServiceSerializer(serializers.HyperlinkedModelSerializer):
