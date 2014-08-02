@@ -1,5 +1,5 @@
 from django import forms
-from eve_db.models import InvBlueprintType
+#from eve_db.models import InvBlueprintType
 
 from apps.api.models import Character, CharSkill, Skill
 

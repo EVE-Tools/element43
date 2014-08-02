@@ -5,7 +5,7 @@ from django.http import HttpResponse
 import json
 
 # Models
-from eve_db.models import InvBlueprintType
+#from eve_db.models import InvBlueprintType
 
 
 def blueprint_search(request):

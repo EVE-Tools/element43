@@ -15,7 +15,7 @@ from apps.manufacturing.forms import SelectBlueprintForm, ManufacturingCalculato
 from apps.api.models import Character
 
 # Models
-from eve_db.models import InvBlueprintType
+#from eve_db.models import InvBlueprintType
 from apps.market_data.models import ItemRegionStat
 
 from eveigb import IGBHeaderParser

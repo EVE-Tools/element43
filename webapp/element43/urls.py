@@ -40,7 +40,7 @@ urlpatterns = patterns('',
     url(r'^market/api/', include('apps.legacy_api.urls')),
 
     # Manufacturing
-    url(r'^manufacturing/', include('apps.manufacturing.urls')),
+    #url(r'^manufacturing/', include('apps.manufacturing.urls')),
 
     #
     # SSL URLs

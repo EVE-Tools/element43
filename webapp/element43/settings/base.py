@@ -306,7 +306,7 @@ INSTALLED_APPS = (
     'apps.rest_framework',
     'apps.auth',
     'apps.user_settings',
-    'apps.manufacturing',
+    #'apps.manufacturing',
     'apps.dashboard',
     'apps.wallet',
     'apps.feedreader'
