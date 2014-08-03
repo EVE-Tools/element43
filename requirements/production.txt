@@ -2,4 +2,4 @@
 
 # Sentry error reporting
 raven>=5.0,<5.1
-gunicorn>=18.0,<19.0
+gunicorn>=19.1,<20.0
