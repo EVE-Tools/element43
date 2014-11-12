@@ -55,7 +55,7 @@ def recadder(node):
     del node['icon_id']
 
     # Add proper icon ids
-    if (iconid):
+    if (iconid and iconid in icons):
         string = icons[iconid]['iconFile']
 
         # Handle different formats
