@@ -353,4 +353,4 @@ LOGGING = {
     }
 }
 
-IMAGE_SERVER = '/static/images/icons'
+IMAGE_SERVER = 'https://cdn.zweizeichen.org'

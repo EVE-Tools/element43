@@ -76,7 +76,7 @@
          - with itemid=item.id|slugify
           - with statobject=stats.typestats|key:itemid
               %li
-                %img.icon16{'src':'https://element-43.com/static/images/icons/Type/{{ item.id }}_32.png'}
+                %img.icon16{'src':'{{ IMAGE_SERVER }}/Type/{{ item.id }}_32.png'}
                 %a{'href':'{% url \'quicklook\' type_id=item.id %}'}
                   - if item.name == "30 Day Pilot's License Extension (PLEX)"
                     PLEX
