@@ -60,7 +60,7 @@
         %tr
           %td
             - if not request|is_igb
-              %img{'src': '{{ IMAGE_SERVER }}/Type/{{ material.id }}_16.png' }
+              %img.icon16{'src': '{{ IMAGE_SERVER }}/Type/{{ material.id }}_32.png' }
               = material.name
             - else
               %a{'href':'#', 'onclick':'CCPEVE.showMarketDetails({{ material.id }})'}

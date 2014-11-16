@@ -140,7 +140,7 @@
                         %tr
                           %td
                             %a{'href':'{% url \'quicklook_region\' type_id=invtype.type.id region_id=station_data.station.region.id %}', 'rel':'tooltip', 'title': '{{invtype.type.name}}'}
-                              %img{'src':'{{IMAGE_SERVER}}/Type/{{invtype.type.id}}_16.png'}
+                              %img.icon16{'src':'{{IMAGE_SERVER}}/Type/{{invtype.type.id}}_32.png'}
                               = invtype.type.name|truncatechars:20
                           %td.text-right
                             = invtype.total_ask|intword

@@ -4,7 +4,7 @@ from .base import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-IMAGE_SERVER = '/static/images/icons'
+IMAGE_SERVER = 'https://cdn.zweizeichen.org'
 
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 INSTALLED_APPS += ('debug_toolbar',
