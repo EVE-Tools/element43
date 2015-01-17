@@ -63,7 +63,7 @@ class UpdateFeed(Task):
             for item in document.entries:
                 # Create item
                 feed_item = FeedItem(feed=feed,
-                                     title=item.title,
+                                     title=(item.title[:97] + '...') if len(item.title) > 100 else item.title,
                                      description=item.summary,
                                      link=item.link,
                                      published=pytz.utc.localize(datetime.fromtimestamp(mktime(item.published_parsed))))
