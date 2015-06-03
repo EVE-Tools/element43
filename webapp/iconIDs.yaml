@@ -6247,9 +6247,24 @@
 21415:
   description: 34825_female_TopMiddle_ShirtQF01_Types_ff2015f01.png
   iconFile: res:/UI/Asset/mannequin/topmiddle/34825_female_TopMiddle_ShirtQF01_Types_ff2015f01.png
+21417:
+  description: Sequence Icon
+  iconFile: '99_10'
+21418:
+  description: Index Icon
+  iconFile: '99_11'
+21419:
+  description: Element Icon
+  iconFile: '99_12'
 21420:
   description: SKIN market icon
   iconFile: res:/UI/Texture/Icons/skin-icon-16.png
 21421:
   description: Entosis Link Icon
   iconFile: res:/UI/Texture/Icons/118_64_6.png
+21424:
+  description: 35681_male_topMiddle_ShirtQM01_Types_soerfm02
+  iconFile: res:/UI/Asset/mannequin/topmiddle/35681_male_topMiddle_ShirtQM01_Types_soerfm02.png
+21425:
+  description: 35682_female_TopMiddle_ShirtQF01_Types_soerff02
+  iconFile: res:/UI/Asset/mannequin/topmiddle/35682_female_TopMiddle_ShirtQF01_Types_soerff02.png
