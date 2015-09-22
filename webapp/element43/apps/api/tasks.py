@@ -181,46 +181,50 @@ class ProcessWalletTransactionsCharacter(Task):
             # Check if new set contains any entries
             if len(sheet.transactions):
 
-                # Process transactions
-                for transaction in sheet.transactions:
+                # Get existing entries in DB in one run
+                existing_entries = MarketTransaction.objects.filter(character=character).values_list('journal_transaction_id', flat=True)
 
-                    try:
-                        MarketTransaction.objects.get(journal_transaction_id=transaction.journalTransactionID, character=character)
-                        # If there already is an entry with this id, we can stop walking.
-                        # So we don't walk all the way back every single time we run this task.
-                        walking = False
+                try:
 
-                    except MarketTransaction.DoesNotExist:
+                    # Process transactions
+                    for transaction in sheet.transactions:
 
-                        try:
-                            # If it does not exist, create transaction
-                            entry = MarketTransaction(character=character,
-                                                      date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
-                                                      transaction_id=transaction.transactionID,
-                                                      invtype_id=transaction.typeID,
-                                                      quantity=transaction.quantity,
-                                                      price=transaction.price,
-                                                      client_id=transaction.clientID,
-                                                      client_name=transaction.clientName,
-                                                      station_id=transaction.stationID,
-                                                      is_bid=(transaction.transactionType == 'buy'),
-                                                      journal_transaction_id=transaction.journalTransactionID,
-                                                      is_corporate_transaction=(transaction.transactionFor == 'corporation'))
-                            entry.save()
+                        if transaction.journalTransactionID in existing_entries:
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
 
-                        # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
-                        except IntegrityError:
-                            logger.warning('IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID))
-                            continue
+                        else:
 
-                    # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
-                    except MarketTransaction.MultipleObjectsReturned:
-                        # Remove all duplicate items except for one
-                        duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
+                            try:
+                                # If it does not exist, create transaction
+                                entry = MarketTransaction(character=character,
+                                                          date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.transactionDateTime)),
+                                                          transaction_id=transaction.transactionID,
+                                                          invtype_id=transaction.typeID,
+                                                          quantity=transaction.quantity,
+                                                          price=transaction.price,
+                                                          client_id=transaction.clientID,
+                                                          client_name=transaction.clientName,
+                                                          station_id=transaction.stationID,
+                                                          is_bid=(transaction.transactionType == 'buy'),
+                                                          journal_transaction_id=transaction.journalTransactionID,
+                                                          is_corporate_transaction=(transaction.transactionFor == 'corporation'))
+                                entry.save()
 
-                        for duplicate in duplicates[1:]:
-                            logger.warning('Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id))
-                            duplicate.delete()
+                            # Catch integrity errors for example when the SDE is outdated and we're getting unknown typeIDs
+                            except IntegrityError:
+                                logger.warning('IntegrityError: Probably the SDE is outdated. typeID: %d, transactionID: %d' % (transaction.typeID, transaction.journalTransactionID))
+                                continue
+
+                # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
+                except MarketTransaction.MultipleObjectsReturned:
+                    # Remove all duplicate items except for one
+                    duplicates = MarketTransaction.objects.filter(journal_transaction_id=transaction.journalTransactionID, character=character)
+
+                    for duplicate in duplicates[1:]:
+                        logger.warning('Removing duplicate MarketTransaction with ID: %d (journalTransactionID: %d)' % (duplicate.id, duplicate.transaction_id))
+                        duplicate.delete()
 
                 # Fetch next page if we're still walking
                 if walking:
@@ -303,34 +307,37 @@ class ProcessWalletJournalCharacter(Task):
             # Check if new set contains any entries
             if len(sheet.transactions):
 
+                # Get existing entries in DB in one run
+                existing_entries = JournalEntry.objects.filter(character=character).values_list('ref_id', flat=True)
+
                 # Process journal entries
                 for transaction in sheet.transactions:
 
                     try:
-                        JournalEntry.objects.get(ref_id=transaction.refID, character=character)
-                        # If there already is an entry with this id, we can stop walking.
-                        # So we don't walk all the way back every single time we run this task.
-                        walking = False
 
-                    except JournalEntry.DoesNotExist:
+                        if transaction.refID in existing_entries:
+                            # If there already is an entry with this id, we can stop walking.
+                            # So we don't walk all the way back every single time we run this task.
+                            walking = False
 
-                        # Add entry to DB
-                        entry = JournalEntry(ref_id=transaction.refID,
-                                             character=character,
-                                             date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
-                                             ref_type_id=transaction.refTypeID,
-                                             amount=transaction.amount,
-                                             balance=transaction.balance,
-                                             owner_name_1=transaction.ownerName1,
-                                             owner_id_1=transaction.ownerID1,
-                                             owner_name_2=transaction.ownerName2,
-                                             owner_id_2=transaction.ownerID2,
-                                             arg_name_1=transaction.argName1,
-                                             arg_id_1=transaction.argID1,
-                                             reason=transaction.reason,
-                                             tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
-                                             tax_amount=cast_empty_string_to_float(transaction.taxAmount))
-                        entry.save()
+                        else:
+                            # Add entry to DB
+                            entry = JournalEntry(ref_id=transaction.refID,
+                                                 character=character,
+                                                 date=pytz.utc.localize(datetime.datetime.utcfromtimestamp(transaction.date)),
+                                                 ref_type_id=transaction.refTypeID,
+                                                 amount=transaction.amount,
+                                                 balance=transaction.balance,
+                                                 owner_name_1=transaction.ownerName1,
+                                                 owner_id_1=transaction.ownerID1,
+                                                 owner_name_2=transaction.ownerName2,
+                                                 owner_id_2=transaction.ownerID2,
+                                                 arg_name_1=transaction.argName1,
+                                                 arg_id_1=transaction.argID1,
+                                                 reason=transaction.reason,
+                                                 tax_receiver_id=cast_empty_string_to_int(transaction.taxReceiverID),
+                                                 tax_amount=cast_empty_string_to_float(transaction.taxAmount))
+                            entry.save()
 
                     # If we somehow got the same transaction multiple times in our DB, remove the redundant ones
                     except JournalEntry.MultipleObjectsReturned:
