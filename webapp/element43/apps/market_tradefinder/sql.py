@@ -17,11 +17,11 @@ def find_trades(start_id=60008694, destination_id=10000002):
                     SELECT t.id, t.name, t.volume, b.local_ask, a.foreign_bid,
                            ((a.foreign_bid / b.local_ask) - 1) * 100 AS markup
                     FROM eve_db_invtype t
-                        INNER JOIN (SELECT invtype_id, buy_95_percentile AS foreign_bid
+                        INNER JOIN (SELECT invtype_id, buyavg AS foreign_bid
                                     FROM market_data_itemregionstat
                                     WHERE mapregion_id = %s AND lastupdate > current_date - interval '3 days'
                                     ) a ON (t.id = a.invtype_id AND foreign_bid > 0)
-                        INNER JOIN (SELECT invtype_id, sell_95_percentile AS local_ask
+                        INNER JOIN (SELECT invtype_id, sellavg AS local_ask
                                     FROM market_data_itemregionstat
                                     WHERE mapregion_id = %s AND lastupdate > current_date - interval '3 days'
                                     ) b ON (t.id = b.invtype_id AND local_ask > 0)
