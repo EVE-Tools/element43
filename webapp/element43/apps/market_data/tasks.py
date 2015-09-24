@@ -24,7 +24,7 @@ logger = get_task_logger(__name__)
 class ArchiveOrders(PeriodicTask):
 
     """
-    Archives inactive orders older than a week
+    Archives inactive orders older than a day
     """
 
     # execute at downtime
@@ -32,7 +32,7 @@ class ArchiveOrders(PeriodicTask):
 
     def run(self, **kwargs):
 
-        a_week_ago = datetime.now() - timedelta(days=7)
+        a_day_ago = datetime.now() - timedelta(days=1)
 
         cursor = connection.cursor()
 
@@ -93,7 +93,7 @@ class ArchiveOrders(PeriodicTask):
                             market_data_orders
                         WHERE
                             is_active = 'f'
-                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
+                        AND generated_at <= \'""" + str(a_day_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
         logger.warning("Done moving orders.")
 
@@ -104,7 +104,7 @@ class ArchiveOrders(PeriodicTask):
                             market_data_orders
                         WHERE
                             is_active = 'f'
-                        AND generated_at <= \'""" + str(a_week_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
+                        AND generated_at <= \'""" + str(a_day_ago) + "'::TIMESTAMP AT TIME ZONE 'UTC';")
 
         logger.warning("Successfully removed old orders.")
 
