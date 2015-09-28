@@ -49,7 +49,7 @@ def history_json(request, region_id=10000002, type_id=34):
     serialized = json.dumps(ohlc_data)
 
     # Return JSON without using any template
-    return HttpResponse(serialized, mimetype='application/json')
+    return HttpResponse(serialized, content_type='application/json')
 
 
 @cache_page(((datetime.utcnow() + timedelta(days=1)).replace(hour=3,
@@ -85,4 +85,4 @@ def history_compare_json(request, type_id=34):
     serialized = json.dumps(data_dict)
 
     # Return JSON without using any template
-    return HttpResponse(serialized, mimetype='application/json')
+    return HttpResponse(serialized, content_type='application/json')

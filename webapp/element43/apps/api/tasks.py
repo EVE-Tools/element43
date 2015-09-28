@@ -10,8 +10,8 @@ from celery.task.schedules import crontab
 from celery.utils.log import get_task_logger
 
 from apps.common.util import cast_empty_string_to_int, cast_empty_string_to_float
-from .models import *
-from .api_exceptions import handle_api_exception
+from apps.api.models import *
+from api_exceptions import handle_api_exception
 
 from eve_db.models import StaStation, MapSolarSystem
 from apps.market_data.models import Orders

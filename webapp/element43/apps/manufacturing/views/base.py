@@ -44,4 +44,4 @@ def blueprint_search(request):
         types_json = json.dumps(types_json)
 
     # Return JSON without using any template
-    return HttpResponse(types_json, mimetype='application/json')
+    return HttpResponse(types_json, content_type='application/json')

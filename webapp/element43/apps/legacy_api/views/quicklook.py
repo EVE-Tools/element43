@@ -63,4 +63,4 @@ def quicklook(request):
                            'buy_stats':buy,
                            'sell_stats':sell})
 
-    return HttpResponse(api_json, mimetype="application/json")
+    return HttpResponse(api_json, content_type="application/json")

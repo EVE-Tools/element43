@@ -17,7 +17,8 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 
 # Registration-related imports
-from apps.auth.forms import RegistrationForm, ResetPasswordForm, LoginForm
+from forms import RegistrationForm, ResetPasswordForm, LoginForm
+from ..common.models import Profile
 from django.contrib.auth.models import User
 
 # Settings and e-mail
@@ -112,7 +113,7 @@ def register(request):
             user.save()
 
             # Fill profile
-            profile = user.get_profile()
+            profile = Profile.objects.get(user=user)
 
             # Generate activation key
             email_key = user.username + uuid.uuid4().hex

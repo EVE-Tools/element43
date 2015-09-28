@@ -32,7 +32,7 @@
    "pk":4,
    "model":"feedreader.feed",
    "fields":{
-      "url":"http://themittani.com/feeds/all/rss.xml",
+      "url":"https://www.themittani.com/taxonomy/term/787/feed",
       "next_update":"2014-01-01T00:00:00Z",
       "name":"TheMittani",
       "icon_file":"mittani.svg"

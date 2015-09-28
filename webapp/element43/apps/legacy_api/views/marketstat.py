@@ -55,7 +55,7 @@ def legacy_marketstat(request):
                                         'result_info': result_info})
 
     response = render_to_response(
-        'legacy_marketstat.haml', rcontext, mimetype="text/xml; charset=UTF-8")
+        'legacy_marketstat.haml', rcontext, content_type="text/xml; charset=UTF-8")
 
     response['Access-Control-Allow-Origin'] = '*'
 
@@ -108,7 +108,7 @@ def marketstat(request):
     rcontext = RequestContext(request, {'params': params,
                                         'result_info': result_info})
 
-    response = render_to_response('marketstat.haml', rcontext, mimetype="text/xml; charset=UTF-8")
+    response = render_to_response('marketstat.haml', rcontext, content_type="text/xml; charset=UTF-8")
 
     response['Access-Control-Allow-Origin'] = '*'
 

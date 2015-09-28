@@ -181,7 +181,7 @@ def live_search(request):
         search_json = json.dumps(search_json)
 
     # Return JSON without using any template
-    return HttpResponse(search_json, mimetype='application/json')
+    return HttpResponse(search_json, content_type='application/json')
 
 
 def station(request, station_id=60003760):

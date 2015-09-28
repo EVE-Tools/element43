@@ -24,7 +24,7 @@ TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = Path(__file__).ancestor(3)
 
 # Add the 'element43' module to the path.
-sys.path.insert(0, PROJECT_ROOT.child('element43'))
+sys.path.insert(0, str(PROJECT_ROOT.child('element43')))
 
 # Fire up celery
 BROKER_URL = 'redis://localhost'
@@ -33,9 +33,6 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_RESULT_EXPIRES = 300
 CELERY_ACCEPT_CONTENT = ['json']
 djcelery.setup_loader()
-
-# Our User profile class
-AUTH_PROFILE_MODULE = 'common.Profile'
 
 # Admin site is disabled by default
 ADMIN_ENABLED = False
@@ -283,13 +280,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    'django.contrib.formtools',
 
     'compressor',
-
-    'south',
     'djcelery',
-
     'rest_framework',
 
     'eve_db',
@@ -304,7 +297,7 @@ INSTALLED_APPS = (
     'apps.api',
     'apps.rest_api',
     'apps.rest_framework',
-    'apps.auth',
+    'apps.authentication',
     'apps.user_settings',
     #'apps.manufacturing',
     'apps.dashboard',

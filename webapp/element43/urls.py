@@ -47,7 +47,7 @@ urlpatterns = patterns('',
     #
 
     # Authentication and registration
-    url(r'^secure/', include('apps.auth.urls')),
+    url(r'^secure/', include('apps.authentication.urls')),
 
     # Dashboard
     url(r'^secure/dashboard/', include('apps.dashboard.urls')),

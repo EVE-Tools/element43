@@ -14,7 +14,6 @@ from django.db.models.signals import post_save
 class Profile(models.Model):
     """
     Holds additional profile fields of every User like the API keys.
-    Can be retrieved by the method get_profile() of the User class.
     """
     # Link to User
     user = models.OneToOneField(User)

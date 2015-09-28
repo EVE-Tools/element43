@@ -160,7 +160,7 @@ def stats_json(request, region_id):
     mc.set("e43-fullstats", stat_json)
 
     # Return JSON without using any template
-    return HttpResponse(stat_json, mimetype='application/json')
+    return HttpResponse(stat_json, content_type='application/json')
 
 
 def search(request):
@@ -246,7 +246,7 @@ def live_search(request):
         search_json = json.dumps(search_json)
 
     # Return JSON without using any template
-    return HttpResponse(search_json, mimetype='application/json')
+    return HttpResponse(search_json, content_type='application/json')
 
 
 def handler_403(request):

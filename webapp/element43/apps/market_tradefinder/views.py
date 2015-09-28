@@ -70,5 +70,5 @@ def region_json(request):
     serialized = json.dumps(data)
 
     # Return JSON without using any template
-    return HttpResponse(serialized, mimetype='application/json')
+    return HttpResponse(serialized, content_type='application/json')
 

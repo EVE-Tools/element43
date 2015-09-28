@@ -7,9 +7,8 @@ from django.contrib.auth.decorators import login_required
 # Type Model
 from eve_db.models import InvType
 
-from element43.apps.api.models import Character
 # API Models
-from apps.api.models import MarketOrder, JournalEntry, MarketTransaction, RefType
+from apps.api.models import Character, MarketOrder, JournalEntry, MarketTransaction, RefType
 
 # Utils
 from apps.common.util import validate_characters, calculate_character_access_mask

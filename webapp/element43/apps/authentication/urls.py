@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('apps.auth.views',
+urlpatterns = patterns('apps.authentication.views',
     #
     # Authentication and Registration URLs
     #

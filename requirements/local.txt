@@ -4,4 +4,4 @@
 django-devserver>=0.8,<0.9
 
 # Debugging
-django-debug-toolbar>=1.2,<1.3
+django-debug-toolbar>=1.3.2,<1.4

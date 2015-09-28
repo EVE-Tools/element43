@@ -6,7 +6,7 @@ from django.template.loader import get_template
 
 import eveapi
 
-from element43.apps.api.models import APIKey
+from apps.api.models import APIKey
 
 #
 # Offers general purpose API exception handling for celery eveapi tasks

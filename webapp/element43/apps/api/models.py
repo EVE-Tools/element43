@@ -1,4 +1,4 @@
-import datetime
+import django.utils.timezone
 from django.db import models
 
 #
@@ -20,6 +20,7 @@ class APIKey(models.Model):
     user = models.ForeignKey('auth.User', help_text="Fkey relationship to user table")
 
     class Meta(object):
+        app_label = "api"
         verbose_name = "API Key"
         verbose_name_plural = "API Keys"
 
@@ -36,7 +37,7 @@ class Character(models.Model):
     user = models.ForeignKey('auth.User', help_text="FKey relationship to user table")
     apikey = models.ForeignKey('api.APIKey', help_text='FKey relationship to api key table')
     name = models.TextField(help_text="Name of character")
-    dob = models.DateTimeField(help_text="DoB of character", default=datetime.datetime.now())
+    dob = models.DateTimeField(help_text="DoB of character", default=django.utils.timezone.now)
     race = models.TextField(help_text="Race of character", default="")
     bloodline = models.TextField(help_text="Bloodline of character", default="")
     ancestry = models.TextField(help_text="Ancestry of character", default="")
@@ -58,7 +59,7 @@ class Character(models.Model):
     implant_willpower_bonus = models.PositiveIntegerField(help_text="willpower bonus", default=0)
     implant_perception_name = models.TextField(help_text="name of perception implant", default="")
     implant_perception_bonus = models.PositiveIntegerField(help_text="perception bonus", default=0)
-    cached_until = models.DateTimeField(help_text="data cached until", default=datetime.datetime.now())
+    cached_until = models.DateTimeField(help_text="data cached until", default=django.utils.timezone.now)
 
     class Meta(object):
         verbose_name = "Character"
@@ -191,7 +192,7 @@ class MarketOrder(models.Model):
     This is the market order table off the CCP API
     """
 
-    id = models.ForeignKey('market_data.Orders', primary_key=True, help_text="Unique key for this order, uses CCP order ID")
+    id = models.OneToOneField('market_data.Orders', primary_key=True, help_text="Unique key for this order, uses CCP order ID")
     character = models.ForeignKey('api.Character', help_text="FK relationship to character table", null=True, default=None)
     corporation = models.ForeignKey('api.Corp', help_text="FK relationship to corporation table", null=True, default=None)
     order_state = models.PositiveIntegerField(help_text="Valid states: 0 = open/active, 1 = closed, 2 = expired (or fulfilled), 3 = cancelled, 4 = pending, 5 = character deleted")

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from element43.apps.api.tasks import ProcessAPISkillTree, ProcessRefTypes, ProcessConquerableStations
+from apps.api.tasks import ProcessAPISkillTree, ProcessRefTypes, ProcessConquerableStations
 
 class Command(BaseCommand):
     help = 'Loads basic values from CCP\'s API into the database'
