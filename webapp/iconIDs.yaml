@@ -77,7 +77,7 @@
   description: Module - ArmoredPlates
   iconFile: '01_10'
 80:
-  description: Module - AutoRepairUnit
+  description: Module - Armor Repair
   iconFile: '01_11'
 81:
   description: Module - ShieldEnhancer
@@ -6149,7 +6149,7 @@
   description: 34211_female_TopMiddle_ShirtQF01_Types_lvf02.png
   iconFile: res:/UI/Asset/mannequin/topmiddle/34211_female_TopMiddle_ShirtQF01_Types_lvf02.png
 21378:
-  description: Hull repair module
+  description: Module - Hull Repair
   iconFile: '1337_22'
 21379:
   description: Cynosural field generators
@@ -6261,10 +6261,157 @@
   iconFile: res:/UI/Texture/Icons/skin-icon-16.png
 21421:
   description: Entosis Link Icon
-  iconFile: res:/UI/Texture/Icons/118_64_6.png
+  iconFile: res:/UI/Texture/Icons/118_64_7.png
 21424:
   description: 35681_male_topMiddle_ShirtQM01_Types_soerfm02
   iconFile: res:/UI/Asset/mannequin/topmiddle/35681_male_topMiddle_ShirtQM01_Types_soerfm02.png
 21425:
   description: 35682_female_TopMiddle_ShirtQF01_Types_soerff02
   iconFile: res:/UI/Asset/mannequin/topmiddle/35682_female_TopMiddle_ShirtQF01_Types_soerff02.png
+21426:
+  description: Module - Remote Armor Repair
+  iconFile: res:/UI/Texture/Icons/remote_armor_repair.png
+21428:
+  description: Module - Remote Hull Repair
+  iconFile: res:/UI/Texture/Icons/remote_hull_repairer.png
+21430:
+  description: stationServiceResearch
+  iconFile: res:/UI/Texture/classes/Sov/stationServiceResearch.png
+21431:
+  description: fitting
+  iconFile: res:/UI/Texture/WindowIcons/fitting.png
+21432:
+  description: Reprocess
+  iconFile: res:/UI/Texture/WindowIcons/Reprocess.png
+21433:
+  description: Industry
+  iconFile: res:/UI/Texture/WindowIcons/Industry.png
+21434:
+  description: cloneBay
+  iconFile: res:/UI/Texture/WindowIcons/cloneBay.png
+21435:
+  description: repairshop
+  iconFile: res:/UI/Texture/WindowIcons/repairshop.png
+21437:
+  description: Missile Guidance Computer
+  iconFile: res:/UI/Texture/Icons/5_64_17.png
+21439:
+  description: Missile Guidance Enhancer
+  iconFile: res:/UI/Texture/Icons/5_64_18.png
+21440:
+  description: Ballistic Control System (new)
+  iconFile: res:/UI/Texture/Icons/5_64_19.png
+21441:
+  description: Missile Guidance Computer Range Script
+  iconFile: res:/UI/Texture/Icons/5_64_20.png
+21442:
+  description: Missile Guidance Computer Precision Script
+  iconFile: res:/UI/Texture/Icons/5_64_21.png
+21445:
+  description: 36480_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_blueorange.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36480_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_blueorange.png
+21446:
+  description: 36481_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_redwhite.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36481_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_redwhite.png
+21447:
+  description: 36482_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_camo.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36482_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_camo.png
+21448:
+  description: 36483_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_cyan.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36483_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_cyan.png
+21449:
+  description: 36484_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_oregreen.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36484_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_oregreen.png
+21450:
+  description: 36485_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_oreorange.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36485_male_topMiddle_ShirtEngM01_Types_ShirtEngM01_oreorange.png
+21451:
+  description: 36486_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_BlueOrange.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36486_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_BlueOrange.png
+21452:
+  description: 36487_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_RedWhite.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36487_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_RedWhite.png
+21453:
+  description: 36488_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_Camo.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36488_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_Camo.png
+21454:
+  description: 36489_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_Cyan.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36489_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_Cyan.png
+21455:
+  description: 36490_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_OreGreen.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36490_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_OreGreen.png
+21456:
+  description: 36491_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_OreOrange.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/36491_female_TopMiddle_ShirtEngF01_Types_ShirtEngF01_OreOrange.png
+21457:
+  description: 36493_male_bottomOuter_PantsEngM01_Types_PantsEngM01_blueorange.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36493_male_bottomOuter_PantsEngM01_Types_PantsEngM01_blueorange.png
+21458:
+  description: 36494_male_bottomOuter_PantsEngM01_Types_PantsEngM01_redwhite.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36494_male_bottomOuter_PantsEngM01_Types_PantsEngM01_redwhite.png
+21459:
+  description: 36495_male_bottomOuter_PantsEngM01_Types_PantsEngM01_camo.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36495_male_bottomOuter_PantsEngM01_Types_PantsEngM01_camo.png
+21460:
+  description: 36496_male_bottomOuter_PantsEngM01_Types_PantsEngM01_cyan.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36496_male_bottomOuter_PantsEngM01_Types_PantsEngM01_cyan.png
+21461:
+  description: 36497_male_bottomOuter_PantsEngM01_Types_PantsEngM01_oregreen.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36497_male_bottomOuter_PantsEngM01_Types_PantsEngM01_oregreen.png
+21462:
+  description: 36498_male_bottomOuter_PantsEngM01_Types_PantsEngM01_oreorange.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36498_male_bottomOuter_PantsEngM01_Types_PantsEngM01_oreorange.png
+21463:
+  description: 36499_female_bottomOuter_PantsEngF01_Types_PantsEngF01_BlueOrange.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36499_female_bottomOuter_PantsEngF01_Types_PantsEngF01_BlueOrange.png
+21464:
+  description: 36500_female_bottomOuter_PantsEngF01_Types_PantsEngF01_RedWhite.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36500_female_bottomOuter_PantsEngF01_Types_PantsEngF01_RedWhite.png
+21465:
+  description: 36501_female_bottomOuter_PantsEngF01_Types_PantsEngF01_Camo.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36501_female_bottomOuter_PantsEngF01_Types_PantsEngF01_Camo.png
+21466:
+  description: 36502_female_bottomOuter_PantsEngF01_Types_PantsEngF01_Cyan.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36502_female_bottomOuter_PantsEngF01_Types_PantsEngF01_Cyan.png
+21467:
+  description: 36503_female_bottomOuter_PantsEngF01_Types_PantsEngF01_OreGreen.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36503_female_bottomOuter_PantsEngF01_Types_PantsEngF01_OreGreen.png
+21468:
+  description: 36504_female_bottomOuter_PantsEngF01_Types_PantsEngF01_OreOrange.png
+  iconFile: res:/UI/Asset/mannequin/bottomouter/36504_female_bottomOuter_PantsEngF01_Types_PantsEngF01_OreOrange.png
+21469:
+  description: 36505_male_Feet_ShoesEngM01_Types_ShoesEngM01_blueorange.png
+  iconFile: res:/UI/Asset/mannequin/feet/36505_male_Feet_ShoesEngM01_Types_ShoesEngM01_blueorange.png
+21470:
+  description: 36506_male_Feet_ShoesEngM01_Types_ShoesEngM01_redwhite.png
+  iconFile: res:/UI/Asset/mannequin/feet/36506_male_Feet_ShoesEngM01_Types_ShoesEngM01_redwhite.png
+21471:
+  description: 36507_male_Feet_ShoesEngM01_Types_ShoesEngM01_camo.png
+  iconFile: res:/UI/Asset/mannequin/feet/36507_male_Feet_ShoesEngM01_Types_ShoesEngM01_camo.png
+21472:
+  description: 36508_male_Feet_ShoesEngM01_Types_ShoesEngM01_cyan.png
+  iconFile: res:/UI/Asset/mannequin/feet/36508_male_Feet_ShoesEngM01_Types_ShoesEngM01_cyan.png
+21473:
+  description: 36509_male_Feet_ShoesEngM01_Types_ShoesEngM01_oregreen.png
+  iconFile: res:/UI/Asset/mannequin/feet/36509_male_Feet_ShoesEngM01_Types_ShoesEngM01_oregreen.png
+21474:
+  description: 36510_male_Feet_ShoesEngM01_Types_ShoesEngM01_oreorange.png
+  iconFile: res:/UI/Asset/mannequin/feet/36510_male_Feet_ShoesEngM01_Types_ShoesEngM01_oreorange.png
+21475:
+  description: 36511_female_Feet_ShoesEngF01_Types_ShoesEngF01_BlueOrange.png
+  iconFile: res:/UI/Asset/mannequin/feet/36511_female_Feet_ShoesEngF01_Types_ShoesEngF01_BlueOrange.png
+21476:
+  description: 36512_female_Feet_ShoesEngF01_Types_ShoesEngF01_RedWhite.png
+  iconFile: res:/UI/Asset/mannequin/feet/36512_female_Feet_ShoesEngF01_Types_ShoesEngF01_RedWhite.png
+21477:
+  description: 36513_female_Feet_ShoesEngF01_Types_ShoesEngF01_Camo.png
+  iconFile: res:/UI/Asset/mannequin/feet/36513_female_Feet_ShoesEngF01_Types_ShoesEngF01_Camo.png
+21478:
+  description: 36514_female_Feet_ShoesEngF01_Types_ShoesEngF01_Cyan.png
+  iconFile: res:/UI/Asset/mannequin/feet/36514_female_Feet_ShoesEngF01_Types_ShoesEngF01_Cyan.png
+21479:
+  description: 36515_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreGreen.png
+  iconFile: res:/UI/Asset/mannequin/feet/36515_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreGreen.png
+21480:
+  description: 36516_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreOrange.png
+  iconFile: res:/UI/Asset/mannequin/feet/36516_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreOrange.png
