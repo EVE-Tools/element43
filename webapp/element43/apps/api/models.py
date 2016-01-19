@@ -23,6 +23,7 @@ class APIKey(models.Model):
         app_label = "api"
         verbose_name = "API Key"
         verbose_name_plural = "API Keys"
+        unique_together = ("user", "keyid")
 
 
 class Character(models.Model):
@@ -75,6 +76,11 @@ class CharSkill(models.Model):
     skillpoints = models.PositiveIntegerField(help_text="SP trained")
     level = models.PositiveIntegerField(help_text="level trained")
 
+    class Meta(object):
+        verbose_name = "Character Skill"
+        verbose_name_plural = "Character Skills"
+        unique_together = ("character", "skill")
+
 #
 # API table
 #
@@ -92,6 +98,7 @@ class APITimer(models.Model):
     class Meta(object):
         verbose_name = "API Timer"
         verbose_name_plural = "API Timers"
+        unique_together = ("character", "corporation", "apisheet")
 
 #
 # Skill tree
@@ -136,7 +143,7 @@ class Corp(models.Model):
     Table for CorporationSheet information
     """
 
-    corp_id = models.BigIntegerField(help_text="Corporation ID", db_index=True)
+    corp_id = models.BigIntegerField(help_text="Corporation ID", primary_key=True)
     name = models.TextField(help_text="Corporation name")
     ticker = models.TextField(help_text="Corp ticker")
     ceo_id = models.BigIntegerField(help_text="character ID of CEO")
@@ -162,6 +169,10 @@ class CorpDivision(models.Model):
     corporation = models.ForeignKey('api.Corp', help_text="FK to corporation table")
     account_key = models.PositiveIntegerField(help_text="account key of corporation division")
     description = models.TextField(help_text="Name of division")
+
+    class Meta(object):
+        verbose_name = "Corporation Division"
+        verbose_name_plural = "Corporation Divisions"
 
 
 class CorpWalletDivision(models.Model):
@@ -244,6 +255,7 @@ class JournalEntry(models.Model):
     class Meta(object):
         verbose_name = "Journal Entry"
         verbose_name_plural = "Journal Entries"
+        unique_together = ("ref_id", "character")
 
 
 # MarketTransaction
@@ -269,6 +281,7 @@ class MarketTransaction(models.Model):
     class Meta(object):
             verbose_name = "Market Transaction"
             verbose_name_plural = "Market Transactions"
+            unique_together = ("journal_transaction_id", "character", "corporation")
 
 
 # Character Research

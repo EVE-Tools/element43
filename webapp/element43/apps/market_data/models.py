@@ -93,6 +93,7 @@ class ItemRegionStat(models.Model):
     class Meta(object):
         verbose_name = "Stat Data"
         verbose_name_plural = "Stats Data"
+        unique_together = ("mapregion", "invtype")
 
 class ItemRegionStatHistory(models.Model):
     """
@@ -119,6 +120,7 @@ class ItemRegionStatHistory(models.Model):
     class Meta(object):
         verbose_name = "Stat History Data"
         verbose_name_plural = "Stat History Data"
+        unique_together = ("mapregion", "invtype", "date")
 
 class History(models.Model):
     """
@@ -153,6 +155,11 @@ class OrderHistory(models.Model):
     high = models.FloatField(help_text="high price of orders for this item/region")
     mean = models.FloatField(help_text="mean price of orders for this item/region")
     quantity = models.BigIntegerField(help_text="quantity of item sold for this item/region")
+
+    class Meta(object):
+        verbose_name = "Uncompressed History Data"
+        verbose_name_plural = "Uncompressed History Data"
+        unique_together = ("mapregion", "invtype", "date")
 
 class ActiveOrdersManager(models.Manager):
     """
@@ -222,6 +229,7 @@ class Orders(models.Model):
     class Meta(object):
         verbose_name = "Market Order"
         verbose_name_plural = "Market Orders"
+        index_together = ["mapregion", "invtype", "is_active"]
 
 class ArchivedOrders(models.Model):
     """
