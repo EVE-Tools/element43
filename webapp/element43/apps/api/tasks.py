@@ -408,12 +408,12 @@ class ProcessMarketOrders(PeriodicTask):
 
         for update in update_timers:
 
-            ProcessMarketOrdersChracter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
+            ProcessMarketOrdersCharacter.apply_async(args=[update.character_id], expires=datetime.datetime.now() + datetime.timedelta(hours=1))
 
         logger.info('Scheduled %d order updates.' % len(update_timers))
 
 
-class ProcessMarketOrdersChracter(Task):
+class ProcessMarketOrdersCharacter(Task):
     """
     Run the actual update.
     """
