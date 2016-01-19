@@ -6415,3 +6415,87 @@
 21480:
   description: 36516_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreOrange.png
   iconFile: res:/UI/Asset/mannequin/feet/36516_female_Feet_ShoesEngF01_Types_ShoesEngF01_OreOrange.png
+21481:
+  description: Pilot's License Extensio (PLEX)
+  iconFile: res:/UI/Texture/Icons/plex.png
+21482:
+  description: Icon for the Coalesced Element
+  iconFile: '118_5'
+21483:
+  description: Icon for Antipharmakon Toxot
+  iconFile: '118_9'
+21484:
+  description: Icon for Antipharmakon Kosybo
+  iconFile: '118_10'
+21485:
+  description: Icon for Antipharmakon Aeolis
+  iconFile: '118_11'
+21486:
+  description: Icon for Antipharmakon Thureo
+  iconFile: '118_13'
+21487:
+  description: Icon for Antipharmakon Iokira
+  iconFile: '118_14'
+21489:
+  description: Module - WarpDisruptionFieldGenerator
+  iconFile: '118_2'
+21493:
+  description: 37600_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Black.png
+  iconFile: res:/UI/Asset/mannequin/outer/37600_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Black.png
+21494:
+  description: 37601_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Blue.png
+  iconFile: res:/UI/Asset/mannequin/outer/37601_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Blue.png
+21495:
+  description: 37602_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Copper.png
+  iconFile: res:/UI/Asset/mannequin/outer/37602_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_Copper.png
+21496:
+  description: 37603_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_SOERed.png
+  iconFile: res:/UI/Asset/mannequin/outer/37603_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_SOERed.png
+21497:
+  description: 37863_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_BlueWhite.png
+  iconFile: res:/UI/Asset/mannequin/outer/37863_female_Outer_ArmorSuitCF01_Types_ArmorSuitCF01_BlueWhite.png
+21498:
+  description: 37810_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Black.png
+  iconFile: res:/UI/Asset/mannequin/outer/37810_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Black.png
+21499:
+  description: 37811_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Copper.png
+  iconFile: res:/UI/Asset/mannequin/outer/37811_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Copper.png
+21500:
+  description: 37815_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_SOERed.png
+  iconFile: res:/UI/Asset/mannequin/outer/37815_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_SOERed.png
+21501:
+  description: 37818_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Blue.png
+  iconFile: res:/UI/Asset/mannequin/outer/37818_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_Blue.png
+21502:
+  description: 37864_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_BlueWhite.png
+  iconFile: res:/UI/Asset/mannequin/outer/37864_male_outer_ArmorSuitMM01_Types_ArmorSuitMM01_BlueWhite.png
+21503:
+  description: 37816_female_Outer_JacketSLF_01_Types_JacketSLF_01_redcicles.png
+  iconFile: res:/UI/Asset/mannequin/outer/37816_female_Outer_JacketSLF_01_Types_JacketSLF_01_redcicles.png
+21504:
+  description: 37817_male_outer_JacketALM01_Types_JacketALM01_PurpleGold.png
+  iconFile: res:/UI/Asset/mannequin/outer/37817_male_outer_JacketALM01_Types_JacketALM01_PurpleGold.png
+21505:
+  description: 37806_female_Outer_JacketFBR01_Types_JacketFBR01_concord.png
+  iconFile: res:/UI/Asset/mannequin/outer/37806_female_Outer_JacketFBR01_Types_JacketFBR01_concord.png
+21506:
+  description: 37807_male_outer_JacketCLM01_Types_JacketCLM01_Concord.png
+  iconFile: res:/UI/Asset/mannequin/outer/37807_male_outer_JacketCLM01_Types_JacketCLM01_Concord.png
+21507:
+  description: 37808_female_TopMiddle_ShirtQF01_Types_ShirtQF01_Concord.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/37808_female_TopMiddle_ShirtQF01_Types_ShirtQF01_Concord.png
+21508:
+  description: 37809_male_topMiddle_ShirtQM01_Types_ShirtQM01_Concord.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/37809_male_topMiddle_ShirtQM01_Types_ShirtQM01_Concord.png
+21509:
+  description: 37865_female_TopMiddle_ShirtCF01_Types_ShirtF01_Serpentis.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/37865_female_TopMiddle_ShirtCF01_Types_ShirtF01_Serpentis.png
+21510:
+  description: 37866_male_topMiddle_ShirtCM01_Types_ShirtM01_Serpentis.png
+  iconFile: res:/UI/Asset/mannequin/topmiddle/37866_male_topMiddle_ShirtCM01_Types_ShirtM01_Serpentis.png
+21512:
+  description: icon for the station service slot
+  iconFile: res:/UI/Texture/classes/Fitting/stationServiceSlot.png
+21513:
+  description: Focused Warp Disruption Script
+  iconFile: '118_12'
