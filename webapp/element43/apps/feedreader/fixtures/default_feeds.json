@@ -12,7 +12,7 @@
    "pk":2,
    "model":"feedreader.feed",
    "fields":{
-      "url":"http://newsfeed.eveonline.com/en-US/2/articles/page/1/20",
+      "url":"https://newsfeed.eveonline.com/en-US/2/articles/page/1/20",
       "next_update":"2014-01-01T00:00:00Z",
       "name":"EVE Dev Blogs",
       "icon_file":"eve.svg"
@@ -22,7 +22,7 @@
    "pk":3,
    "model":"feedreader.feed",
    "fields":{
-      "url":"http://newsfeed.eveonline.com/en-US/44/articles/page/1/20",
+      "url":"https://newsfeed.eveonline.com/en-US/44/articles/page/1/20",
       "next_update":"2014-01-01T00:00:00Z",
       "name":"EVE Online News",
       "icon_file":"eve.svg"
@@ -42,7 +42,7 @@
    "pk":5,
    "model":"feedreader.feed",
    "fields":{
-      "url":"http://evenews24.com/feed/",
+      "url":"https://evenews24.com/feed/",
       "next_update":"2014-01-01T00:00:00Z",
       "name":"EVE News24",
       "icon_file":"en24.svg"
