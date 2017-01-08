@@ -39,7 +39,7 @@ $(document).ready(function() {
             // Tree's name
             autoCollapse: true,
             // Auto-collapse other branches
-            imagePath: "https://cdn.zweizeichen.org/Icons/items/",
+            imagePath: "https://imageserver.eveonline.com/Icons/items/",
             // Initial AJAX location
             fx: {
                 height: "toggle",
