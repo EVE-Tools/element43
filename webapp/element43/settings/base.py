@@ -346,4 +346,4 @@ LOGGING = {
     }
 }
 
-IMAGE_SERVER = 'https://cdn.zweizeichen.org'
+IMAGE_SERVER = 'https://imageserver.eveonline.com'
