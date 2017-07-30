@@ -102,7 +102,14 @@
                   - csrf_token
                   %input#main-search.form-control{'type':'text', 'placeholder':'Search anything...', 'name':'query'}
     .container
-        - include '_base_messages.haml'
+      .alert{'class':'alert-warning'}
+        .button.close{'type':'button', 'data-dismiss':'alert'} &times;
+        %i.glyphicon.glyphicon-warning-sign
+        %strong Hey there!
+        This version of Element43 will be replaced with a complete redesign on Friday 24th of January 2017. Please expect extended downtime during that weekend. For additional information consult
+        %a{'href':'https://news.element-43.com/redesigning-element43/', 'target': '_blank'} this page
+        please. Thank you!
+      - include '_base_messages.haml'
     - block top
     .container
       .panel-wrapper.clearfix
