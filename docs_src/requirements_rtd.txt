@@ -1,3 +1,0 @@
-pytz
-ujson
-git+http://github.com/gtaylor/django-eve-db.git

@@ -1,5 +1,0 @@
--r _base.txt
-
-# Sentry error reporting
-raven>=5.7.2,<5.8
-gunicorn>=19.3,<20.0
