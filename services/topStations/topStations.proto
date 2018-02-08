@@ -1,0 +1,32 @@
+syntax = "proto3";
+package topStations;
+
+import "google/api/annotations.proto";
+
+service TopStations {
+    rpc GetTopStations (GetTopStationsRequest) returns (GetTopStationsResponse) {
+        option (google.api.http) = {
+            get: "/v1/market/stats/stations/top"
+        };
+    }
+}
+
+message GetTopStationsRequest {}
+
+message GetTopStationsResponse {
+    // Station list
+    repeated StationStats stations = 1;
+}
+
+message StationStats {
+    // The station's ID
+    int64 id = 1;
+    // The station's ask orders total volume
+    double ask_volume = 2;
+    // The station's bid orders total volume
+    double bid_volume = 3;
+    // The station's orders total volume
+    double total_volume = 4;
+    // The station's total number of orders
+    double total_orders = 5;
+}

@@ -1,0 +1,105 @@
+syntax = "proto3";
+package marketStats;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service MarketStats {
+    rpc GetRegionHistory (GetRegionRequest) returns (GetHistoryStatsResponse) {
+        option (google.api.http) = {
+            get: "/v1/market/stats/history/region/{region_id}"
+        };
+    }
+
+    rpc GetTypeHistory (GetTypeRequest) returns (GetHistoryStatsResponse) {
+        option (google.api.http) = {
+            get: "/v1/market/stats/history/type/{type_id}"
+        };
+    }
+
+    rpc GetRegionTypeHistory (GetRegionTypeRequest) returns (HistoryStats) {
+        option (google.api.http) = {
+            get: "/v1/market/stats/history/region/{region_id}/type/{type_id}"
+        };
+    }
+}
+
+message GetRegionRequest {
+    // Defines which region the data is fetched for
+    uint64 region_id = 1;
+}
+
+message GetTypeRequest {
+    // Defines which type the data is fetched for
+    uint64 type_id = 1;
+}
+
+message GetRegionTypeRequest {
+    // Defines which region the data is fetched for
+    uint64 region_id = 1;
+    // Defines which type the data is fetched for
+    uint64 type_id = 2;
+}
+
+message GetHistoryStatsResponse {
+    // The matching history stats
+    repeated HistoryStats history_stats = 1;
+}
+
+message HistoryStats {
+    // The result's region's ID
+    int64 region_id = 1;
+    // The result's type's ID
+    int64 type_id = 2;
+    // Date this dataset was fetched from the server (usually at midnight)
+    google.protobuf.Timestamp generated_at = 3;
+    // Latest available datapoint (usually from yesterday)
+    HistoryDataPoint current_stats = 4;
+    // Previous datapoint
+    HistoryDataPoint previous_stats = 5;
+    // Last week's *weighted* average of the average price - use this for calculations!
+    double week_price_weighted_average = 6;
+    // Last week's average average price (ignores volume)
+    double week_price_average = 7;
+    // Last week's absolute standard deviation of the average price
+    double week_price_average_standard_deviation = 8;
+    // Last week's absolute standard deviation of the average price, can be used for analyzing price's volatility
+    double week_price_average_relative_standard_deviation = 9;
+    // Last week's average daily ISK volume
+    double week_isk_volume_average = 10;
+    // Last week's average daily ISK volume's standard deviation
+    double week_isk_volume_average_standard_deviation = 11;
+    // Last week's relative daily ISK volume's standard deviation, can be used for analyzing general market's volatility
+    double week_isk_volume_average_relative_standard_deviation = 12;
+    // Total number of orders for that type last week
+    int64 week_order_count_total = 13;
+    // Average daily order count last week
+    double week_order_count_average = 14;
+    // Average daily order count's standard deviation last week
+    double week_order_count_standard_deviation = 15;
+    // Average daily order count's relative standard deviation last week, again can be used for volatility
+    double week_order_count_relative_standard_deviation = 16;
+    // Total number of items of that type traded last week
+    int64 week_volume_total = 17;
+    // Average daily items traded of that type last week
+    double week_volume_average = 18;
+    // Standard deviation of that value
+    double week_volume_standard_deviation = 19;
+    // Relative standard deviation, interesting for checking if there are non-continuous patterns (volatility)
+    double week_volume_relative_standard_deviation = 20;
+}
+
+message HistoryDataPoint {
+    // Date of the datapoint
+    google.protobuf.Timestamp date = 1;
+    // Highest price the type was traded for that day
+    double highest = 2;
+    // Lowest price the type was traded for that day
+    double lowest = 3;
+    // Average price the type was traded for that day
+    double average = 4;
+    // Total number of items of the type traded that day
+    int64 volume = 5;
+    // Total number orders for the type that day
+    int64 order_count = 6;
+}

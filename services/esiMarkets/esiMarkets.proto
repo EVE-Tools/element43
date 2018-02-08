@@ -1,0 +1,96 @@
+syntax = "proto3";
+package esiMarkets;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service ESIMarkets {
+    rpc GetOrder (GetOrderRequest) returns (GetOrdersResponse) {
+        option (google.api.http) = {get: "/v1/market/orders/order/{order_id}"};
+    }
+
+    rpc GetRegion (GetRegionRequest) returns (GetOrdersResponse) {
+        option (google.api.http) = {get: "/v1/market/orders/region/{region_id}"};
+    }
+
+    rpc GetType (GetTypeRequest) returns (GetOrdersResponse) {
+        option (google.api.http) = {get: "/v1/market/orders/type/{type_id}"};
+    }
+
+    rpc GetRegionType (GetRegionTypeRequest) returns (GetOrdersResponse) {
+        option (google.api.http) = {get: "/v1/market/orders/region/{region_id}/type/{type_id}"};
+    }
+
+    rpc GetRegionTypeUpdateStream (google.protobuf.Empty) returns (stream GetRegionTypeUpdateStreamResponse) {
+        option (google.api.http) = {get: "/v1/market/orders/updates"};
+    }
+}
+
+message GetOrderRequest {
+    // Fetch recorded history of an order
+    uint64 order_id = 1;
+}
+
+message GetRegionRequest {
+    // Defines which region the data is fetched for
+    uint64 region_id = 1;
+}
+
+message GetTypeRequest {
+    // Defines which type the data is fetched for
+    uint64 type_id = 1;
+}
+
+message GetRegionTypeRequest {
+    // Defines which region the data is fetched for
+    uint64 region_id = 1;
+    // Defines which type the data is fetched for
+    uint64 type_id = 2;
+}
+
+message GetOrdersResponse {
+    // Matching orders
+    repeated Order orders = 1;
+}
+
+message GetRegionTypeUpdateStreamResponse {
+    // Region/tye pairs affected by update
+    repeated RegionType region_types = 1;
+}
+
+message RegionType {
+    // The update's region's ID
+    uint64 region_id = 1;
+    // The update's type's ID
+    uint64 type_id = 2;
+}
+
+message Order {
+    // The order's ID
+    uint64 order_id = 1;
+    // The order's type's ID
+    uint64 type_id = 2;
+    // The order's region's ID
+    uint64 region_id = 3;
+    // ID of the order's location/station
+    uint64 location_id = 4;
+    // Initital number of items of the order
+    uint64 volume_total = 5;
+    // Number of items remaining
+    uint64 volume_remain = 6;
+    // Minimum volume to be traded for this order
+    uint64 min_volume = 7;
+    // The price the type is bought/sold for
+    double price = 8;
+    // True: Bid/buy order | False: ask/sell order
+    bool is_buy_order = 9;
+    // Defines how long the order exists after creation
+    int32 duration = 10;
+    // Order's range
+    string range = 11;
+    // Date the order was issued
+    google.protobuf.Timestamp issued = 12;
+    // When the order was last seen in this state: when using market-streamer the last-modified date from EMDRToNSQService
+    google.protobuf.Timestamp seen_at = 13;
+}

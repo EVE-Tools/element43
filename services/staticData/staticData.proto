@@ -1,0 +1,86 @@
+syntax = "proto3";
+package staticData;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service StaticData {
+    rpc GetLocations (GetLocationsRequest) returns (GetLocationsResponse) {
+        option (google.api.http) = {
+            post: "/v1/universe/locations"
+            body: "*"
+        };
+    }
+}
+
+message GetLocationsRequest {
+    // Get data for these location IDs
+    repeated int64 location_ids = 1;
+}
+
+message GetLocationsResponse {
+    // Locations retrieved
+    map<int64, Location> locations = 1;
+}
+
+message Location {
+    // Information about a region
+    Region region = 1;
+    // Information about a constellation
+    Constellation constellation = 2;
+    // Information about a solar system
+    SolarSystem solar_system = 3;
+    // Information about a station
+    Station station = 4;
+}
+
+message Station {
+    // The station's ID
+    int64 id = 1;
+    // The station's name
+    string name = 2;
+    // The station's typeID (only for structures)
+    int64 type_id = 3;
+    // The station type's name (only for structures)
+    string type_name = 4;
+    // When the station was last seen (only for structures)
+    google.protobuf.Timestamp last_seen = 5;
+    // Whether this station is public (only for structures)
+    bool public = 6;
+    // When the station was first seen (only for structures)
+    google.protobuf.Timestamp first_seen = 7;
+    // The station's coordinates (only for structures)
+    Coordinates coordinates = 8;
+}
+
+message Coordinates {
+    // X-Coordinate
+    double x = 1;
+    // Y-Coordinate
+    double y = 2;
+    // Z-Coordinate
+    double z = 3;
+}
+
+message SolarSystem {
+    // The system's ID
+    int64 id = 1;
+    // The system's true security status
+    double security_status = 2;
+    // The system's name
+    string name = 3;
+}
+
+message Constellation {
+    // The constellation's id
+    int64 id = 1;
+    // The constellation's name
+    string name = 2;
+}
+
+message Region {
+    // The region's id
+    int64 id = 1;
+    // The region's name
+    string name = 2;
+}
