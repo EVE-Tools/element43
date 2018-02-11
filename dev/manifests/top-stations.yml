@@ -1,0 +1,49 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: top-stations
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: top-stations
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+      - name: top-stations
+        image: evetools/top-stations:latest
+        imagePullPolicy: Always
+        env:
+        - name: TOP_STATIONS_PORT
+          value: "43000"
+        - name: DB_PATH
+          value: "./data/top-stations.db"
+        ports:
+        - containerPort: 43000
+        volumeMounts:
+        - mountPath: /data
+          name: top-stations-volume
+      volumes:
+      - name: top-stations-volume
+        hostPath:
+          path: "/top-stations"
+          type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: top-stations
+spec:
+  selector:
+    app: element43
+    e43-service: top-stations
+  ports:
+    - name: grpc
+      port: 43000
+      targetPort: 43000

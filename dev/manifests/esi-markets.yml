@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: esi-markets
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: esi-markets
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      terminationGracePeriodSeconds: 180
+      containers:
+      - name: esi-markets
+        image: evetools/esi-markets:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 43000
+        env:
+        - name: CLIENT_ID
+          value: ""
+        - name: SECRET_KEY
+          value: ""
+        - name: REFRESH_TOKEN
+          value: ""
+        volumeMounts:
+        - mountPath: /cache
+          name: esi-markets
+      volumes:
+      - name: esi-markets
+        hostPath:
+          path: "/esi-markets"
+          type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: esi-markets
+  labels:
+    app: element43
+    e43-service: esi-markets
+spec:
+  selector:
+    app: element43
+    e43-service: esi-markets
+  ports:
+  - name: grpc
+    port: 43000
+    targetPort: 43000

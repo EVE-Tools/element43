@@ -1,0 +1,97 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: market-stats
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: market-stats
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+      - name: market-stats
+        image: evetools/market-stats:latest
+        imagePullPolicy: Always
+        env:
+        - name: MARKET_STATS_PORT
+          value: "43000"
+        - name: SEED_DB
+          value: "false"
+        - name: POSTGRES_URL
+          value: "postgres://market-stats:market-stats@market-stats-postgres.default.svc.cluster.local:5432/market-stats?sslmode=disable"
+        ports:
+        - containerPort: 43000
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: market-stats-postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: market-stats-postgres
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      serviceAccountName: unprivileged
+      containers:
+      - name: market-stats-postgres
+        image: postgres:10-alpine
+        env:
+        - name: MARKET_STATS_PORT
+          value: "43000"
+        - name: POSTGRES_DB
+          value: market-stats
+        - name: POSTGRES_USER
+          value: market-stats
+        - name: POSTGRES_PASSWORD
+          value: market-stats
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: market-stats-postgres-volume
+      volumes:
+      - name: market-stats-postgres-volume
+        hostPath:
+          path: "/volumes/market-stats-postgres"
+          type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: market-stats
+spec:
+  selector:
+    app: element43
+    e43-service: market-stats
+  ports:
+    - name: grpc
+      port: 43000
+      targetPort: 43000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: market-stats-postgres
+spec:
+  selector:
+    app: element43
+    e43-service: market-stats-postgres
+  ports:
+    - name: pg
+      port: 5432
+      targetPort: 5432

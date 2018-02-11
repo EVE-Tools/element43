@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jumpgate
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: jumpgate
+    spec:
+      containers:
+      - name: jumpgate
+        image: evetools/jumpgate:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: JUMPGATE_PORT
+          value: "8000"
+        - name: ESI_MARKETS_HOST
+          value: "esi-markets.default.svc.cluster.local:43000"
+        - name: MARKET_STATS_HOST
+          value: "market-stats.default.svc.cluster.local:43000"
+        - name: STATIC_DATA_HOST
+          value: "static-data.default.svc.cluster.local:43000"
+        - name: TOP_STATIONS_HOST
+          value: "top-stations.default.svc.cluster.local:43000"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jumpgate
+spec:
+  selector:
+    app: element43
+    e43-service: jumpgate
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000

@@ -1,0 +1,51 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: static-data
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: element43
+        e43-service: static-data
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+      - name: static-data
+        image: evetools/static-data:latest
+        imagePullPolicy: Always
+        env:
+        - name: STATIC_DATA_PORT
+          value: "43000"
+        - name: LOG_LEVEL
+          value: "debug"
+        - name: DB_PATH
+          value: "./data/static-data.db"
+        ports:
+        - containerPort: 43000
+        volumeMounts:
+        - mountPath: /data
+          name: static-data-volume
+      volumes:
+      - name: static-data-volume
+        hostPath:
+          path: "/static-data"
+          type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-data
+spec:
+  selector:
+    app: element43
+    e43-service: static-data
+  ports:
+    - name: grpc
+      port: 43000
+      targetPort: 43000
