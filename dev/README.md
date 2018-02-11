@@ -43,4 +43,4 @@ This one requires special consideration. Maybe start with defining your service'
 * Add CI to new service, publish Docker image
 * Deploy service to production
 * Deploy changes to jumpgate if needed
-* Implement/merge/deploy frontend changes if nedded
+* Implement/merge/deploy frontend changes if needed
