@@ -2,6 +2,7 @@ syntax = "proto3";
 package staticData;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service StaticData {
@@ -9,6 +10,12 @@ service StaticData {
         option (google.api.http) = {
             post: "/v1/universe/locations"
             body: "*"
+        };
+    }
+
+    rpc GetMarketTypes (google.protobuf.Empty) returns (GetMarketTypesResponse) {
+        option (google.api.http) = {
+            get: "/v1/universe/types/market"
         };
     }
 }
@@ -83,4 +90,9 @@ message Region {
     int64 id = 1;
     // The region's name
     string name = 2;
+}
+
+message GetMarketTypesResponse {
+    // Locations retrieved
+    repeated int32 type_ids = 1;
 }
