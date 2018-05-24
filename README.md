@@ -2,15 +2,14 @@
 <img src="43.png" alt="logo 43"></img>
 <br />
 <span>
-    <a href="https://element-43.com" target="_blank">Website</a> |
-    <a href="https://news.element-43.com" target="_blank">News</a> |
-    <a href="https://element-43.com/about" target="_blank">About</a> |
     <a href="https://tweetfleet.slack.com/messages/element43/" target="_blank">Slack</a>
 </span>
 </p>
 
 # element43
-[Element43](https://element-43.com) is a free and open web application providing market data for players of the MMORPG [EVE Online](https://www.eveonline.com). This includes the near real-time collection and processing of order book data of the entire game's economy as well as the calculation of various metrics for analytics based on historic price data. Data can be accessed via a modern web-based UI or a simple HTTP API serving JSON while internal communication is based on [gRPC](https://grpc.io). The application's  backend is split into multiple modular components/services implemented in a variety of languages. Builds are executed automatically and the application can be deployed as a collection of Docker containers. Work on element43 was started by a small group of developers spread all over the globe in summer 2012. More info can be found on the project's ['about' page](https://element-43.com/about).
+Element43 is a free and open web application providing market data for players of the MMORPG [EVE Online](https://www.eveonline.com). This includes the near real-time collection and processing of order book data of the entire game's economy as well as the calculation of various metrics for analytics based on historic price data. Data can be accessed via a modern web-based UI or a simple HTTP API serving JSON while internal communication is based on [gRPC](https://grpc.io). The application's  backend is split into multiple modular components/services implemented in a variety of languages. Builds are executed automatically and the application can be deployed as a collection of Docker containers. Work on element43 was started by a small group of developers spread all over the globe in summer 2012.
+
+**Note:** *Currently there is no hosted version of Element43 available. However, you can easily self-host the components listed below by using the Docker images.*
 
 ## Contributing
 Contributions are always welcome! Feel free to get in touch with us on Slack or file an issue in this repository. PRs can be made in individual service's repositories. We also have a [getting started guide](dev/README.md) for new developers.
