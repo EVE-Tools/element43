@@ -28,5 +28,5 @@ message StationStats {
     // The station's orders total volume
     double total_volume = 4;
     // The station's total number of orders
-    double total_orders = 5;
+    int64 total_orders = 5;
 }
