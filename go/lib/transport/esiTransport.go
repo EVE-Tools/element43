@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
+	"golang.org/x/sync/semaphore"
 )
 
 // ESITransport is a custom transport for rate-limiting requests to ESI
@@ -16,14 +17,16 @@ type ESITransport struct {
 	timeout      time.Duration
 	blockedUntil time.Time
 	mutex        sync.RWMutex
+	limiter      *semaphore.Weighted
 }
 
 // NewESITransport generates a new custom transport
-func NewESITransport(userAgent string, timeout time.Duration) *ESITransport {
+func NewESITransport(userAgent string, timeout time.Duration, concurrencyLimit int64) *ESITransport {
 	return &ESITransport{
 		userAgent:    userAgent,
 		timeout:      timeout,
 		blockedUntil: time.Now(),
+		limiter:      semaphore.NewWeighted(concurrencyLimit),
 	}
 }
 
@@ -47,7 +50,9 @@ func (transport *ESITransport) RoundTrip(request *http.Request) (*http.Response,
 
 	request.Header.Set("User-Agent", transport.userAgent)
 
+	transport.limiter.Acquire(request.Context(), 1)
 	response, err := http.DefaultTransport.RoundTrip(request)
+	transport.limiter.Release(1)
 
 	if err != nil {
 		return response, err
