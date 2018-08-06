@@ -49,8 +49,6 @@ spec:
       - name: market-stats-postgres
         image: postgres:10-alpine
         env:
-        - name: MARKET_STATS_PORT
-          value: "43000"
         - name: POSTGRES_DB
           value: market-stats
         - name: POSTGRES_USER
