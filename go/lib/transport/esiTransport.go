@@ -62,7 +62,7 @@ func (transport *ESITransport) RoundTrip(request *http.Request) (*http.Response,
 		}
 
 		// We're blocked or at least close, defer/skip requests until reset of error window
-		if remainingErrors <= 3 || response.StatusCode == 420 || response.Header.Get("X-ESI-Error-Limited") != "" {
+		if remainingErrors <= 10 || response.StatusCode == 420 || response.Header.Get("X-ESI-Error-Limited") != "" {
 			reset := response.Header.Get("X-ESI-Error-Limit-Reset")
 
 			logrus.WithField("reset_in", reset).Warn("Too many errors when calling ESI, waiting until error window resets!")
